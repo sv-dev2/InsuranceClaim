@@ -1,0 +1,220 @@
+﻿@model InsuranceClaim.Models.BasicCommissionReportSearchModel
+@{
+    ViewBag.Title = "BasicCommissionReport";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+<div class="productsave-section">
+
+    <div class="container" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>Basic Commission Report</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    @*<button type="button" class="btn btn-primary">Add</button>*@
+                    <input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+        @using (Html.BeginForm("BasicCommissionSearchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.FromDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew'>
+                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                        @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew12'>
+                                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+        <div class="product-table-grid">
+            <table class="table table-striped tablesorter" id="report2excel">
+                <thead style='display:none;'>
+
+
+                    <tr>
+                        <td>
+                            <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+
+                            <script>
+                                var dt = new Date();
+                                document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                            </script>
+                        </td>
+                        <td></td>
+                        <td>
+                            <h3><u>@ViewBag.Title</u></h3>
+                            <strong></strong>
+                            <strong></strong>
+
+                        </td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
+
+                        <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
+                        <td><label for="EndDate">@ViewBag.enddate</label></td>
+                    </tr>
+
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Policy Number</th>
+                        <th>Transaction Date</th>
+                        <th>Currency</th>
+                        <th>Sum Insured</th>
+                        <th>Premium Due</th>
+                        <th>Commission </th>
+                        <th style="text-align: left;">Management Commission</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ 
+                        decimal sumInsuredTotal = 0;
+                        decimal premiumDueTotal = 0;
+                        decimal commissionTotal = 0;
+                        decimal managementCommissionTotal = 0;
+                    }
+
+
+                    @foreach (var item in Model.BasicCommissionReport.ToList())
+                    {                      
+                            sumInsuredTotal += Convert.ToDecimal(item.SumInsured);
+                            premiumDueTotal += Convert.ToDecimal(item.Premium);
+                            commissionTotal += Convert.ToDecimal(item.Commission);
+                            managementCommissionTotal += Convert.ToDecimal(item.ManagementCommission);
+
+                        <tr>
+                            <td>@item.FirstName @item.LastName</td>
+                            @*<td>@item.LastName</td>*@
+                            <td>@item.PolicyNumber</td>
+                            <td>@item.TransactionDate</td>
+                            <td>@item.Currency </td>
+                            <td>@item.SumInsured</td>
+                            <td>@item.Premium</td>
+                            <td>@item.Commission</td>
+                            <td>@item.ManagementCommission</td>
+                            @*<td>
+                                <div class="tbl-btn-list">
+                                    <ul class="list-inline"></ul>
+                                </div>
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total:</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>@sumInsuredTotal</strong></td>
+                        <td><strong>@premiumDueTotal</strong></td>
+                        <td><strong>@commissionTotal</strong></td>
+                        <td><strong>@managementCommissionTotal</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    
+    $(document).ready(function () {
+
+        $(".tablesorter").tablesorter();
+        $("#datetimenew").datetimepicker({
+            format: 'MM/D/YYYY'
+        });
+        $("#datetimenew12").datetimepicker({
+            format: 'MM/D/YYYY'
+
+        });
+
+
+    });
+    function removeSearchBox() {
+        window.location.href = "/Report/BasicCommissionReport";
+    }
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "BasicCommissionReport" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    $('#generatePdf').click(function () {
+
+        doc.fromHTML($('#content').html(), 80, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('BasicCommissionReport.pdf');
+
+    });
+
+
+</script>

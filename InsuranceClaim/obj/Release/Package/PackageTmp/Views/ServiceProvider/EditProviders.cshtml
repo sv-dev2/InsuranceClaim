@@ -1,0 +1,74 @@
+﻿@model InsuranceClaim.Models.ServiceProviderModel
+@{
+    ViewBag.Title = "EditProviders";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Edit Providers</h4>
+                        </div>
+                        <div class="form-group-input">
+
+                            @using (Html.BeginForm("EditProviders", "ServiceProvider", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-select">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ServiceProviderType, new { @class = "gender-label" })
+                                            @Html.DropDownListFor(x => x.ServiceProviderType, new SelectList(ViewBag.ProviderTypes, "Id", "ProviderType"), "Select Provider", new { @class = "form-control", @id = "ddlProviders" })
+                                            @Html.ValidationMessageFor(x => x.ServiceProviderType, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ServiceProviderName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ServiceProviderName, new { @class = "form-control", @name = "ProviderName", @autocomplete = "off", @id = "PolicyNumber", @placeholder = "Enter Provider Name" })
+                                            @Html.ValidationMessageFor(x => x.ServiceProviderName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ServiceProviderContactDetails, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ServiceProviderContactDetails, new { @class = "form-control", @name = "ProviderContactDetails", @autocomplete = "off", @id = "Place", @placeholder = "Enter Contact Details" })
+                                            @Html.ValidationMessageFor(x => x.ServiceProviderContactDetails, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ServiceProviderFees, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ServiceProviderFees, new { @class = "form-control", @name = "ProviderFees", @autocomplete = "off", @id = "ProviderFees", @placeholder = "Enter Provider Fees" })
+                                            @Html.ValidationMessageFor(x => x.ServiceProviderFees, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 next-btn">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-left">
+                                                <button type="button" class="btn" onclick="window.location.href='@Url.Action("ProvidersList","ServiceProvider")'">Cancel</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-right">
+                                                <button type="submit" class="btn">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

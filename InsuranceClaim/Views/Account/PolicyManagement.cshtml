@@ -1,0 +1,236 @@
+﻿@model IEnumerable<InsuranceClaim.Models.PolicyListViewModel>
+
+
+
+@{
+    ViewBag.Title = "PolicyManagement";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+
+
+<div class="productsave-section">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>PolicyManagement</h2>
+                </div>
+            </div>
+            @*<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    <form>
+                        <input class="btn btn-primary" type="button" value="Add" onclick="window.location.href='@Url.Action("Index", "CustomerRegistration")'" />
+                    </form>
+                </div>
+            </div*@
+        </div>
+
+
+        <br />
+        <br />
+        @using (Html.BeginForm("SearchPolicy", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="row">
+                <div class="col-md-12 next-btn">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4">
+                            <div class="text-left">
+                                @Html.TextBox("searchText", null, new { @class = "form-control", @placeholder = "Policy Number / Customer Name / Registration Number" })
+                            </div>
+                        </div>
+                        @*<div class="col-sm-4 col-md-4">
+                                <div class="text-left">
+                                    @Html.TextBox("Customer Name", null, new { @class = "form-control", @placeholder = "Customer Name" })
+
+                                </div>
+                            </div>*@
+                        <div class="col-sm-3 col-md-3">
+                        </div>
+                        <div class="col-sm-5 col-md-5">
+                            <div class="text-left search-btn">
+                                <button type="submit" class="btn btn-success">Search</button>
+                                <button type="button" onclick="removeSearchBoxText();" class="btn btn-danger">Clear Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <br />
+        <br />
+        <div class="policy-table-grid-main">
+
+
+            <table class="table table-striped">
+                <tr class="policyheading-tr">
+                    <th>
+                        Policy Number
+                    </th>
+                    <th>
+                        Customer Name
+                    </th>
+                    <th>
+                        Payment Method
+                    </th>
+                    <th>
+                        Total Sum Insured
+                    </th>
+                    <th>
+                        Total Premium
+                    </th>
+                    <th>
+                        Created On
+                    </th>
+                    <th>
+                        Action(s)
+                    </th>
+                </tr>
+
+
+                <tbody>
+
+                    @{
+
+                        string policyNumber = "";
+
+                        foreach (var item in Model)
+                        {
+                            if (item.PolicyNumber != policyNumber)
+                            {
+                                <tr class="policynumber-tr">
+                                    <td>@item.PolicyNumber</td>
+                                    <td>@item.CustomerName</td>
+                                    <td>@item.PaymentMethod</td>
+                                    <td>@item.TotalSumInsured</td>
+                                    <td>@item.TotalPremium</td>
+                                    <td>@item.createdOn.ToString("dd-MMM-yyyy")</td>
+                                    <td>
+                                        <div class="tbl-btn-list">
+                                            <ul class="list-inline">
+                                                <li>@Html.ActionLink("View Policy", "RiskDetail", "Account", new { id = item.SummaryId }, new { @class = "btn-sm btn-primary" })</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+
+
+                            policyNumber = item.PolicyNumber;
+
+                            <tr>
+                                <td colspan="7" >
+                                    <table class="policy-table-grid policyList" style="width:100%">
+                                        <tr>
+                                            <th>Registration No   </th>
+                                            <th> Vehicle  </th>
+                                            <th> Currency  </th>
+                                            <th> Sum Insured  </th>
+                                            <th> Auto-Fac Sum Insured  </th>
+                                            <th> AutoFac Premium  </th>
+                                            <th> Fac Premium  </th>
+                                            <th> Reinsurance Broker Commission  </th>
+                                            <th> Facultative Commission </th>
+                                            <th>Status </th>
+                                            <th colspan="3" >Actions(s) </th>
+                                        </tr>
+
+                                        <tr>
+                                            <td>@item.RegisterationNumber </td>
+                                            <td>@item.Make @item.Model </td>
+                                            <td>  @item.Currency </td>
+                                            <td>@item.VehicleSumInsured </td>
+                                            <td>@item.AutoFacReinsuranceAmount</td>
+                                            <td>@item.AutoFacPremium</td>
+                                            <td>@item.FacReinsuranceAmount</td>
+                                            <td>@item.FacPremium</td>
+                                            <td>@item.BrokerCommission</td>
+                                            <td>@item.FacultativeCommission</td>
+                                            @if (item.isLapsed && item.IsActive == false)
+                                            {
+                                                <td>Renewed</td>
+                                                <td class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
+
+                                            }
+                                            else if (!item.IsActive)
+                                            {
+                                                <td>Disabled</td>
+                                                <td colspan="3">
+                                                    <div class="tbl-btn-list">
+                                                        <ul class="list-inline">
+                                                            <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="ActivateVehicle('@item.VehicleDetailId')">Activate</button></li>
+                                                            <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
+                                                            <li class="btn-width-auto"><a href="javascript:void(0)" class="btn-sm btn-primary" onclick="RsendPolicys(@item.VehicleDetailId)">Resend Policy </a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+
+                                            }
+                                            else if (DateTime.Now < Convert.ToDateTime(item.RenewalDate).AddMonths(-2))
+                                            {
+                                                <td>In Force</td>
+                                                <td colspan="3">
+                                                    <div class="tbl-btn-list">
+                                                        <ul class="list-inline">
+                                                            <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+                                                            <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
+                                                            <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
+                                                            <li class="btn-width-auto"><a href="javascript:void(0)" class="btn-sm btn-primary" onclick="RsendPolicys(@item.VehicleDetailId)">Resend Policy </a></li>
+                                                        </ul>
+                                                    </div>
+
+                                                </td>
+                                            }
+                                            else if (DateTime.Now >= Convert.ToDateTime(item.RenewalDate).AddMonths(-2) && DateTime.Now <= Convert.ToDateTime(item.RenewalDate)) // else if (DateTime.Now >= _item.RenewalDate.AddDays(-21) && DateTime.Now <= _item.RenewalDate)
+                                            {
+                                                <td class="btn-width-auto"> @Html.ActionLink("Renew", "Index", "Renew", new { vehicleid = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
+                                                <td>
+                                                    <ul class="list-inline">
+                                                        <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+                                                        <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
+                                                        <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
+                                                        <li class="btn-width-auto"><a href="javascript:void(0)" class="btn-sm btn-primary" onclick="RsendPolicys(@item.VehicleDetailId)">Resend Policy </a></li>
+                                                    </ul>
+                                                </td>
+
+                                            }
+                                            else if (DateTime.Now > Convert.ToDateTime(item.RenewalDate))
+                                            {
+                                                <td>Lapsed</td>
+                                                <td class="btn-width-auto"> @Html.ActionLink("Renew", "Index", "Renew", new { vehicleid = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
+
+                                                <td colspan="2">
+                                                    <ul class="list-inline">
+
+                                                        <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
+                                                        <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
+
+                                                    </ul>
+
+                                                </td>
+
+                                            }
+                                        </tr>
+
+
+
+
+
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>

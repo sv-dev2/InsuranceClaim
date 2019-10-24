@@ -1,0 +1,111 @@
+﻿@model List<Insurance.Domain.AgentCommission>
+@{
+    ViewBag.Title = "CommissionList";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+@using (Html.BeginForm("CommissionEdit", "AgentCommission", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="productsave-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                    <div class="head-title">
+                        <h2>Commission List</h2>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                    <div class="text-right">
+                        @*<button type="button" class="btn btn-primary">Add</button>*@
+                        <form>
+                            <input class="btn btn-primary" type="button" value="Add" onclick="window.location.href='@Url.Action("Index", "Commission")'" />
+                        </form>
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="product-table-grid">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Commission Name</th>
+                            <th>Commission Amount</th>
+                            <th>Management Commission</th>
+                            <th class="action-th">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Insurance.Domain.AgentCommission item in Model)
+                        {
+                            <tr>
+                                <td>@item.CommissionName</td>
+                                <td>@item.CommissionAmount</td>
+                                <td>@item.ManagementCommission</td>
+                                <td>
+                                    <div class="tbl-btn-list">
+                                        <ul class="list-inline">
+                                            <li>@Html.ActionLink("Edit", "CommissionEdit", new { id = item.Id }, new { @class = "btn-sm btn-primary" })</li>
+                                            <li><button type="button" class="btn-sm btn-danger" onclick="SowPopupp('@item.Id')">Delete</button></li>
+                                        </ul>
+                                    </div>
+
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="mymodal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align: center;color: #00bcea;font-weight: bold;">Are you sure you want to delete this?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="ConfirmDelete();">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+
+
+
+
+
+
+<script>
+
+        let CommissionId;
+        function SowPopupp(Id) {
+         debugger;
+         $("#mymodal").modal("show");
+         CommissionId = Id;
+         }
+             function ConfirmDelete() {
+                 debugger;
+                 var url = "@Url.Action("DeleteCommission", "Commission", new { Id =12012 })";
+                 var newurl = url.replace("12012", CommissionId);
+                 window.location.href = newurl;
+
+             }
+
+</script>
+

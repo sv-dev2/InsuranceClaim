@@ -1,0 +1,249 @@
+﻿@model InsuranceClaim.Models.VehicleRiskAboutSearchExpireModels
+@{
+    ViewBag.Title = "VehicleRiskAboutExpire";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+<div class="productsave-section VehicleRiskAboutToExpire">
+
+    <div class="container" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>Vehicle Risk About To Expire</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    @*<button type="button" class="btn btn-primary">Add</button>*@
+                    @*<input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />*@
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+
+
+
+                </div>
+            </div>
+        </div>
+
+          @using (Html.BeginForm("VehicleRiskAboutSearchExpire", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.FromDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew'>
+                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                        @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew12'>
+                                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+        @*<div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <input type="text" id="txtdate" placeholder="Enter date" class="form-control" />
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 add-btn">
+                <button type="button" class="btn btn-primary pull-right" onclick="searchBydate()">Search</button>
+
+            </div>
+        </div>
+        <br />*@
+        <div class="product-table-grid">
+            <table class="table table-striped tablesorter" id="report2excel">
+                <thead style='display:none;'>
+
+
+                    <tr>
+                        <td>
+                            <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+
+                            <script>
+                                var dt = new Date();
+                                document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                            </script>
+                        </td>
+                        <td></td>
+                        <td>
+                            <h3><u>@ViewBag.Title</u></h3>
+                            <strong></strong>
+                            <strong></strong>
+
+                        </td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
+
+                        <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
+                        <td><label for="EndDate">@ViewBag.enddate</label></td>
+                    </tr>
+
+                </thead>
+                <thead>
+                    <tr>
+                        <th style="width:140px;">Customer Name</th>
+                        <th>Customer Phone</th>
+                        <th>Policy Number</th>
+                        <th>Registration</th>
+                        <th>vehicle make and model</th>
+                        <th>Start Dates</th>
+                        <th>End Dates</th>
+                        @*<th>vehicle/risk end date</th>
+                            <th>Transaction Date</th>*@
+                        <th>Currency</th>
+                        <th>Sum Insured</th>
+                        <th style="width:130px; text-align: left;">Premium Due</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{ 
+                        decimal sumInsuredTotal = 0;
+                        decimal premiumDueTotal = 0;
+                    }
+
+                    @foreach (var item in Model.ListVehicleRiskAboutExpiredata.ToList())
+                    {
+                       
+                            sumInsuredTotal += item.Sum_Insured;
+                            premiumDueTotal += item.Premium_due;
+                       
+
+                        <tr>
+                            <td><span class="customer_title" data-toggle="tooltip" data-placement="bottom" title="@item.Customer_Name">@item.Customer_Name</span></td>
+                            <td>@item.phone_number</td>
+                            <td>@item.Policy_Number</td>
+                            <td> @item.RegistrationNumber </td>
+                            <td>@item.Vehicle_makeandmodel</td>
+
+                            <td>@item.Vehicle_startdate</td>
+                            <td>@item.Vehicle_enddate</td>
+                            <td>@item.Currency</td>
+                            <td>@item.Sum_Insured</td>
+                            <td>@item.Premium_due</td>
+
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total:</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>@sumInsuredTotal</strong></td>
+                        <td><strong>@premiumDueTotal</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".tablesorter").tablesorter({
+
+            headers: {
+
+                8: {
+                    sorter: false
+                },
+
+            }
+        });
+
+        $("#txtdate").datetimepicker().on("changeDate", function (ev) {
+            $("#txtdate").datetimepicker('hide');
+        });
+
+
+        $("#datetimenew").datetimepicker({
+            format: 'MM/D/YYYY'
+        });
+        $("#datetimenew12").datetimepicker({
+            format: 'MM/D/YYYY'
+
+        });
+
+    })
+    function removeSearchBox() {
+        window.location.href = "/Report/VehicleRiskAboutExpire";
+    }
+    //function searchBydate() {
+    //    var date = $("#txtdate").val();
+    //    window.location.href = "/Report/VehicleRiskAboutExpire?Date=" + date
+    //}
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "VehicleRiskAboutExpire" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    $('#generatePdf').click(function () {
+
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('VehicleRiskAboutExpireReport.pdf');
+
+    });
+
+
+
+
+</script>

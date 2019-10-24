@@ -1,0 +1,141 @@
+﻿@model  List<Insurance.Domain.VehicleMake>
+@{
+    ViewBag.Title = "VehicleMakeList";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+@using (Html.BeginForm("VehicleMakeList", "VehicleMake", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="productsave-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 products-top">
+                    <div class="head-title">
+                        <h2>Vehicle Make List</h2>
+                    </div>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 products-top">
+                    <div class="text-left">
+                        @Html.TextBox("searchText", null, new { @class = "form-control", @placeholder = "Name" })
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 add-btn">
+                    <div class="">
+                        <form>
+                            <input class="btn btn-primary" type="button" value="Add" onclick="window.location.href='@Url.Action("Index", "VehicleMake")'" />
+                        </form>
+                    </div>
+                </div>
+
+               
+
+            </div>
+
+            <div class="row">
+                <br />
+                @if (TempData["errorMsg"] != null)
+                {
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>@TempData["errorMsg"]</strong> .
+                    </div>
+                }
+
+            </div>
+
+
+
+
+            <div class="product-table-grid">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Make Description</th>
+                            <th>Make Code</th>
+                            <th>Short Description</th>
+                            <th class="action-th">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Insurance.Domain.VehicleMake item in Model)
+                        {
+                            <tr>
+                                <td>@item.MakeDescription</td>
+                                <td>@item.MakeCode</td>
+                                <td>@item.ShortDescription</td>
+                                <td>
+                                    <div class="tbl-btn-list">
+                                        <ul class="list-inline">
+                                            <li>@Html.ActionLink("Edit", "VehicleMakeEdit", new { id = item.Id }, new { @class = "btn-sm btn-primary" })</li>
+                                            <li><button type="button" class="btn-sm btn-danger" onclick="ShowPopupp('@item.Id')">Delete</button></li>
+                                        </ul>
+                                    </div>
+
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="modal fade" id="MyModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="text-align: center;color: #00bcea;font-weight: bold;">Are you sure you want to delete this?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="ConfirmDelete();">Yes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+<script>
+    let MakeId;
+    function ShowPopupp(Id) {
+        debugger;
+        $("#MyModal").modal("show");
+        MakeId = Id;
+    }
+    function ConfirmDelete() {
+        debugger;
+
+        var url = "@Url.Action("DeleteMake", "VehicleMake", new { Id=123 })";
+        var newurl = url.replace("123", MakeId);
+        window.location.href = newurl;
+    }
+
+
+    $(document).ready(function () {
+        $("#searchText").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".table>tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+
+</script>

@@ -1,0 +1,77 @@
+﻿@model InsuranceClaim.Models.PolicyRenewReminderSettingViewModel
+@{
+    ViewBag.Title = "PolicyRenewReminderSetting";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Add Policy Renew Reminder Setting</h4>
+                        </div>
+                        <div class="form-group-input">
+                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
+                            @using (Html.BeginForm("SavePolicyRenewReminderSetting", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.HiddenFor(x => x.Id)
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("Number Of Days", new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.NoOfDays, new { @class = "form-control", @name = "NoOfDays", @autocomplete = "off", @id = "NoOfDays", @placeholder = "Enter Number of Days" })
+                                            @Html.ValidationMessageFor(x => x.NoOfDays, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-select">
+                                        <div class="form-group">
+                                            @Html.Label("Notification Type", new { @class = "gender-label" })
+                                            <div style="width:100% !important" class="container-2-checkbox">
+                                                @Html.Label("SMS Enabled", new { @class = "gender-label" })
+                                                @Html.CheckBoxFor(x => x.SMS, new { @style = "width: 40px;height: 36px;" })
+                                                @Html.Label("Email Enabled", new { @class = "gender-label", @style = "margin-left: 30px;" })
+                                                @Html.CheckBoxFor(x => x.Email, new { @style = "width: 40px;height: 36px;" })
+                                                @Html.HiddenFor(x => x.NotificationType)
+                                            </div>
+                                            @Html.ValidationMessageFor(x => x.NotificationType, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 next-btn">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-left">
+                                                 <button type="button" class="btn" onclick="window.location.href='@Url.Action("ListPolicyRenewReminderSetting","Account")'">Back To List</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-right">
+                                                @if (Model.Id > 0)
+                                                {
+                                                    <button type="submit" class="btn">Update</button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" class="btn">Add</button>
+
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

@@ -1,0 +1,55 @@
+﻿@model List<InsuranceClaim.Models.CltyModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+<div class="body-content-section">
+    <div class="city-section-top">
+        <div class="container">
+
+            <div class="row">
+
+                <div class="city-add-btn">
+                    @Html.ActionLink("Add City", "Create", "City", new { @class = "btn-sm btn-primary" })
+
+                </div>
+
+
+                <div class="product-table-grid">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>City</th>
+                                <th>Created On</th>
+                                <th class="action-th">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (InsuranceClaim.Models.CltyModel item in Model)
+            {
+                                <tr>
+                                    <td>@item.CityName</td>
+                                    <td>@item.CreatedOn</td>
+                                    <td class="text-center">
+                                        
+                                            <ul class="list-inline">
+                                                <li>@Html.ActionLink("Edit", "Edit" ,"City", new { id = item.Id }, new { @class = "btn-sm btn-primary" })</li>
+                                              
+                                            </ul>
+                                     
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

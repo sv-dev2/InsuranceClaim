@@ -1,0 +1,98 @@
+﻿@model InsuranceClaim.Models.AgentCommissionModel
+@{
+    ViewBag.Title = "AddCommision";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h2>Add Commision</h2>
+                        </div>
+
+                        <div>
+
+                            @if (TempData["errorMsg"] != null)
+                            {
+                                <div class="alert alert-danger">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    <strong>@TempData["errorMsg"]</strong> .
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <div class="form-group-input">
+                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
+                            @using (Html.BeginForm("AddCommision", "BusinessSource", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.HiddenFor(x => x.Id)
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-select">
+                                        <div class="form-group">
+
+                                            <label class="gender-label">Source</label>
+
+                                            @Html.DropDownListFor(x => x.BusinessSourceId, new SelectList(ViewBag.Sources, "Id", "Source"), "Select Source", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(x => x.BusinessSourceId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.CommissionName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.CommissionName, new { @class = "form-control", @name = "CommissionName", @autocomplete = "off", @id = "CommissionName", @placeholder = "Enter Commission Name" })
+                                            @Html.ValidationMessageFor(x => x.CommissionName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.CommissionAmount, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.CommissionAmount, new { @class = "form-control", @name = "ModelCode", @autocomplete = "off", @id = "CommissionAmount", @placeholder = "Enter Commission Amount" })
+                                            @Html.ValidationMessageFor(x => x.CommissionAmount, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                @*<input type="submit"  class="btn btn-primary"name="Save"/>*@
+                                <div class="col-md-12 next-btn">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-left">
+                                                <button type="button" class="btn" onclick="window.location.href='@Url.Action("Commission","BusinessSource")'">Cancel</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-right">
+                                                <button type="submit" class="btn">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+

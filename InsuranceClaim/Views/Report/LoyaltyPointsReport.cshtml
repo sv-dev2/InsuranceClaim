@@ -1,0 +1,202 @@
+﻿@model InsuranceClaim.Models.LoyaltyPointsReportSeachModels
+@{
+    ViewBag.Title = "LoyaltyPointsReport";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="container" id="content">
+    <div class="row">
+        <div class="col-xs-16 col-sm-6 col-md-6 col-lg-6 products-top">
+            <div class="head-title">
+                <h2>Loyalty Points Report</h2>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 products-top">
+            <div class="text-right">             
+                <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 next-btn">
+            <div class="row">
+                <div class="col-sm-4 col-md-4">
+                    <div class="text-left">
+                        @Html.TextBox("searchText", null, new { @class = "form-control", @placeholder = "Search" })
+                    </div>
+                </div>
+
+                
+               
+            </div>
+        </div>
+    </div>
+
+
+    @using (Html.BeginForm("LoyaltyPointsSearchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <div class="container-main">
+            <div class="form-group-section-date">
+                <div class="form-group-input">
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 form-group-text">
+                            <div class="form-group">
+                                <div class='input-group' id='datetimenew'>
+                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                    @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 form-group-text">
+                            <div class="form-group">
+                                
+                                <div class='input-group' id='datetimenew12'>
+                                    @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                    @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 form-group-btn">
+                            <div class="form-group">
+                                <ul class="list-inline">
+                                    <li><button type="submit" class="btn btn-success">Search</button></li>
+                                    <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+
+
+
+    <div class="product-table-grid">
+        <table class="table table-striped tablesorter" id="report2excel">
+            <thead style='display:none;'>
+
+
+                <tr>
+                    <td>
+                        <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+
+                        <script>
+                                var dt = new Date();
+                                document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                        </script>
+                    </td>
+                    <td></td>
+                    <td>
+                        <h3><u>@ViewBag.Title</u></h3>
+                        <strong></strong>
+                        <strong></strong>
+
+                    </td>
+                    <td></td>
+                    <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
+
+                    <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
+                    <td></td>
+                    <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
+                    <td><label for="EndDate">@ViewBag.enddate</label></td>
+                </tr>
+
+            </thead>
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th style="width:260px">Address</th>
+                    <th>Cellphone Number</th>
+                    <th>Email Address</th>
+                    <th>Currency</th>
+                    <th>Sum Insured</th>
+                    <th>Premium Paid</th>
+                    <th>Loyalty Points</th>
+                    <th>Transaction Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.LoyaltyPoints.ToList())
+                {
+                    <tr>
+                        <td>@item.CustomerName</td>
+                        <td>@item.Address</td>
+                        <td>@item.CellPhoneNumber</td>
+                        <td>@item.EmailAddress</td>
+                        <td>@item.Currency</td>
+                        <td>@item.SumInsured</td>
+                        <td>@item.PremiumPaid</td>
+                        <td>@item.LoyaltyPoints</td>
+                        <td>@item.TransactionDate.ToShortDateString() </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#searchText").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".table>tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "Loyaltypointsreport" //do not include extension
+
+        });
+    });
+
+
+    
+
+
+
+</script>
+
+<script>
+        $(document).ready(function () {
+
+            $("#datetimenew").datetimepicker({
+                format: 'MM/D/YYYY'
+            });
+            $("#datetimenew12").datetimepicker({
+                format: 'MM/D/YYYY'
+
+            });
+
+        });
+        function removeSearchBox() {
+            window.location.href = "/Report/LoyaltyPointsReport";
+        }
+</script>

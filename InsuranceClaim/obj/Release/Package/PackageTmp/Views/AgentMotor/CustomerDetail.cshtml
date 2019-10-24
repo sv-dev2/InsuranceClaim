@@ -1,0 +1,422 @@
+﻿@model InsuranceClaim.Models.CustomerModel
+@{
+    ViewBag.Title = "Customer";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+    bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated && ViewBag.CurrentUserRole != "Staff";
+
+    string email = "";
+    string disableClass = "";
+    if (Session["CustomerDataModal"] != null)
+    {
+        var customerDetail = (InsuranceClaim.Models.CustomerModel)Session["CustomerDataModal"];
+        email = customerDetail.EmailAddress;
+        disableClass = "non-editable";
+    }
+}
+
+<div class="top-banner-section">
+    <div class="container">
+        <div class="car-insurance-content">
+            <h2>Get Car Insurance In Less<br>Than 5 Minutes<h2>
+        </div>
+    </div>
+</div>
+
+<div class="body-content-section">
+    <div class="Process-step-section">
+        <div class="container">
+            <div class="row bs-wizard">
+                <div class="process-block">
+                    <div class="col-xs-2 bs-wizard-step active">
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Client Details</div>
+                    </div>
+
+                    @*<div class="col-xs-2 bs-wizard-step disabled">
+                             complete
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Product Details</div>
+                        </div>*@
+
+                    <div class="col-xs-2 bs-wizard-step disabled">
+                        <!-- complete -->
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                    </div>
+
+                    <div class="col-xs-2 bs-wizard-step disabled">
+                        <!-- active -->
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                    </div>
+
+                    <div class="col-xs-2 bs-wizard-step disabled">
+                        <!-- active -->
+
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Client Details</h4>
+                        </div>
+
+                        <div>
+
+                            @*<select id="Make2"></select>*@
+
+                        </div>
+
+
+                        <div class="form-group-input">
+                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
+                            @using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", null, new AjaxOptions() { OnSuccess = "GoToMotorProductsDetails" }, null))
+                            {
+                                <input type="hidden" id="clinetId" name="clinetId" />
+                                @Html.HiddenFor(x => x.Id)
+                                @Html.HiddenFor(x => x.UserID)
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.FirstName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", @name = "FirstName", @autocomplete = "off", @id = "FirstName", @placeholder = "First Name" })
+                                            @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.LastName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", @name = "LastName", @autocomplete = "off", @id = "LastName", @placeholder = "Last Name" })
+                                            @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="row">
+                                                @*<div class="row @disableClass">*@
+
+                                                <div class="form-group">
+                                                    <div class="col-md-5">
+                                                        <div class="checkbox-label">
+                                                            @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "SetCustomerEmail();" }) No email address</label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        @*@if (email != "")
+                                                            {
+                                                                @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control non-editable", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" });
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" });
+                                                            }*@
+
+                                                        @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" })
+
+
+                                                        @Html.ValidationMessageFor(x => x.EmailAddress, "", new { @class = "text-danger" })
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.PhoneNumber, new { @class = "gender-label" })
+                                                @*@Html.TextBoxFor(x => x.CountryCode, new { @class = "form-control countrycode", @name = "CountryCode", @autocomplete = "off", @id = "CountryCode", @placeholder = "Code", @maxlength = "4" })*@
+                                                @Html.DropDownListFor(x => x.CountryCode, new SelectList(ViewBag.Countries, "code", "DisplayName", "+263"), new { @class = "form-control countrycode" })
+                                                @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phonenumber", @name = "PhoneNumber", @autocomplete = "off", @id = "PhoneNumber", @placeholder = "Phone Number", @maxlength = "9", onkeypress = "return isNumber(event)" })
+                                                @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
+                                                @*@Html.ValidationMessageFor(x => x.CountryCode, "", new { @class = "text-danger" })*@
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.Gender, new { @class = "gender-label" })
+                                                <div class="form-group-label">
+                                                    <label>@Html.RadioButtonFor(model => model.Gender, "Male", true)<span class="outside"><span class="inside"></span></span><strong>Male</strong></label>
+                                                    <label>@Html.RadioButtonFor(model => model.Gender, "Female", true)<span class="outside"><span class="inside"></span></span><strong>Female</strong></label>
+                                                </div>
+                                                @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.DateOfBirth, new { @class = "gender-label" })
+                                                <div class="form-group-label">
+
+                                                    <div class='input-group' id='datetimepicker1'>
+                                                        @Html.TextBoxFor(x => x.DateOfBirth, new { @class = "form-control", @autocomplete = "off", @placeholder = "DOB" })
+
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.AddressLine1, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.AddressLine1, new { @class = "form-control", @name = "AddressLine1", @autocomplete = "off", @id = "AddressLine1", @placeholder = "Address Line 1" })
+                                                @Html.ValidationMessageFor(x => x.AddressLine1, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.AddressLine2, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.AddressLine2, new { @class = "form-control", @name = "AddressLine2", @autocomplete = "off", @id = "AddressLine2", @placeholder = "Address Line 2" })
+                                                @Html.ValidationMessageFor(x => x.AddressLine2, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.TextBoxFor(x => x.City, new { @class = "form-control", @name = "State", @autocomplete = "off", @placeholder = "Enter City Name" })
+                                                    @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.TextBoxFor(x => x.State, new { @class = "form-control", @name = "State", @autocomplete = "off", @placeholder = "Enter State Name" })
+                                                    @Html.ValidationMessageFor(x => x.State, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>*@
+
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-select">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.City, new { @class = "gender-label" })
+                                                @Html.DropDownListFor(x => x.City, new SelectList(ViewBag.Cities, "CityName", "CityName"), "----Select City----", new { @class = "form-control ", @onchange = "removeValidation(this)" })
+                                                @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger valMessage" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.NationalIdentificationNumber, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.NationalIdentificationNumber, new { @class = "form-control", @name = "State", @autocomplete = "off", @id = "State", @placeholder = "National Identification Number" })
+                                                @Html.ValidationMessageFor(x => x.NationalIdentificationNumber, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.Zipcode, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.Zipcode, new { @class = "form-control", @name = "Zipcode", @autocomplete = "off", @id = "Zipcode", @placeholder = "Zip Code", @maxlength = "10" })
+                                                @Html.ValidationMessageFor(x => x.Zipcode, "", new { @class = "text-danger" })
+                                            </div>                                       
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-12 next-btn">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">                                        
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="text-right">
+                                                    <button type="submit" id="buttonNext" class="btn">Next</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">*@
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
+@*<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="~/Scripts/CustomerRegistration/CustomerRegistration.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>*@
+
+
+<script type="text/javascript">
+
+
+    function GoToMotorProductsDetails(json) {
+        if (json.IsError == true) {
+            window.location.href = '/AgentMotor/ProductDetail';
+        }
+        else {
+            var errorMessage = json.error;
+            if (errorMessage != null && errorMessage != '') {
+                toastr.error(errorMessage)
+                if (errorMessage == "Please Try Again") {
+                    window.location.href = '/AgentMotor/CustomerDetail';
+                }
+            }
+        }
+    }
+
+
+
+    function removeValidation(e) {
+        debugger
+        if (e.value != "") {
+            $(".valMessage").text('');
+        } else {
+            $(".valMessage").text('The City field is required.');
+
+        }
+    }
+    function isNumber(evt) {
+        debugger;
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+
+    $(document).ready(function () { // will trigger when the document is ready
+
+
+        $("#City").select2();
+        $("#CountryCode").select2();
+
+        $('#datetimepicker1').datetimepicker({
+            format: 'MM/D/YYYY',
+            maxDate: new Date()
+        });
+        debugger
+        var errorMessage = $('#ErrorMessage').val();
+        if (errorMessage != null && errorMessage != '') {
+            toastr.error(errorMessage)
+        }
+    });
+
+    $(document).ready(function () { // will trigger when the document is ready
+        debugger;
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        maxDate: today
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+
+        var today = mm + '/' + dd + '/' + yyyy;
+
+        if (Session["CustomerDataModal"] == null)
+        {
+            $("#DateOfBirth").val(today);
+        }
+    });
+
+
+
+    function GetVehicleMake() {
+
+        debugger;
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@Url.Action("GetVehicleMake1", "CustomerRegistration")",
+            //url: "/CustomerRegistration/GetVehicleMake",
+            dataType: "json",
+            success: function (Result) {
+
+                $.each(Result, function (key, value) {
+                    $("#Make2").append($("<option></option>").val
+                    (value.MakeCode).html(value.MakeDescription));
+                });
+                // Another way of writing
+                //  for (var i = 0; i < Result.length; i++) {
+                // $("#ddlcountry").append("<option value=" + Result[i].ID + ">" +
+                //     Result[i].Name + "</option>");
+                //  }
+
+                // One more way of writing
+                // for (var i in Result) {
+                //  $("#ddlcountry").append($("<option></option>").val(Result[i].ID).
+                //   text(Result[i].Name));
+                //  }
+
+            },
+            error: function (Result) {
+                alert("Error");
+            }
+        });
+
+
+
+    }
+
+    function SetCustomerEmail() {
+        if ($("#IsCustomEmail").prop("checked") == true) {
+            $.ajax({
+                url: "@Url.Action("GetCustomerId", "CustomerRegistration")",
+                type: "POST",
+                dataType: "json",
+                success: function (result) {
+                    $("#EmailAddress").val(result);
+                }
+            });
+        }
+        else {
+            $("#EmailAddress").val('');
+        }
+    }
+
+
+
+
+
+
+
+
+
+</script>

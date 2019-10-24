@@ -1,0 +1,85 @@
+﻿@model  IEnumerable<Insurance.Domain.Branch>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+<div class="productsave-section">
+    <div class="container">
+        
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 add-btn">
+                <div class="">
+                    @Html.ActionLink("Create New", "Create")
+                </div>
+            </div>
+        </div>
+
+   
+        <div class="product-table-grid">
+            <table class="table">
+                <tr>
+                    <th>
+                        Branch
+                    </th>
+                    <th>ALM Id</th>
+                    <th>Action</th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BranchName)
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.AlmId)  </td>
+                        <td align="center">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) 
+                            @*@Html.ActionLink("Details", "Details", new { id = item.Id })*@ 
+                            @*@Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>
+
+
+  
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,367 @@
+﻿@model  InsuranceClaim.Models.ReinsuranceSearchReport
+@{
+    ViewBag.Title = "ReinsuranceReport";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="productsave-section ReinuranceReport">
+
+    <div class="container" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>Reinsurance Report</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                   
+                    @*<input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />*@
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+        @using (Html.BeginForm("ReinsuranceSearchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.FromDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew'>
+                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                        @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew12'>
+                                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 add-btn">
+                @*<input type="text" id="txtdate" placeholder="Enter date" class="form-control" />*@
+            </div>
+            @*<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 add-btn">
+                    <button type="button" class="btn btn-primary pull-right" onclick="searchBydate()">Search</button>
+
+                </div>*@
+        </div>
+
+        <div class="product-table-grid">
+            <table class="table table-striped tablesorter" id="report2excel">
+                <thead style='display:none;'>
+
+
+                    <tr>
+                        <td>
+                            <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+
+                            <script>
+                                var dt = new Date();
+                                document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                            </script>
+                        </td>
+                        <td></td>
+                        <td>
+                            <h3><u>@ViewBag.Title</u></h3>
+                            <strong></strong>
+                            <strong></strong>
+
+                        </td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
+
+                        <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
+                        <td><label for="EndDate">@ViewBag.enddate</label></td>
+                    </tr>
+
+                </thead>
+                <thead>
+                    <tr>
+                        <th style="width:180px;">Customer Name</th>
+                        <th>Contact number</th>
+                        <th>Policy Number</th>
+                        <th style="width:180px;">Policy Dates</th>
+                        <th style="width:200px;">Currency</th>
+                        @*<th>Policy End Date</th>*@
+                        @*<th>Transaction Date</th>*@
+                        
+                        <th style="width:200px;">Sum Insured</th>
+                        @*<th>Auto-Fac Sum Insured</th>
+                            <th>Facultive Sum Insured</th>*@
+                        <th style="width:180px;">Premium</th>
+                        @*<th>Auto-Fac Premium</th>
+                            <th>Facultive Premium</th>*@
+                        <th style="width:180px;text-align: left;">Commission</th>
+                        @*<th>Facultive Commission</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{ 
+                        decimal sumInsuredTotal = 0;
+                        decimal autoFacSumInsuredTotal = 0;
+                        decimal facSumInsuredTotal = 0;
+                        decimal premiumTotal = 0;
+                        decimal autoFacPremiumTotal = 0;
+                        decimal facPremiumTotal = 0;
+                        decimal autoFacCommissionTotal = 0;
+                        decimal facCommissionTotal = 0;
+                    }
+
+
+                    @foreach (var item in Model.ReinsuranceReport.ToList())
+                    {
+                       
+                            sumInsuredTotal += Convert.ToDecimal(item.SumInsured);
+                            autoFacSumInsuredTotal += item.AutoFacSumInsured;
+                            facSumInsuredTotal += item.FacSumInsured;
+                            premiumTotal += Convert.ToDecimal(item.Premium);
+                            autoFacPremiumTotal += item.AutoFacPremium;
+                            facPremiumTotal += item.FacPremium;
+                            autoFacCommissionTotal += item.AutoFacCommission;
+                            facCommissionTotal += item.FacCommission;
+
+                        <tr>
+                            <td>@item.FirstName @item.LastName</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.PolicyNumber</td>
+                            
+
+                            <td>
+                                <table class="sub-table">
+                                    <tr>
+                                        <td><b>Policy Start Date :</b><br />@item.StartDate<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Policy End Date : </b><br />@item.EndDate<br /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td><b>Transaction Date :</b><br />@item.TransactionDate<br /></td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                           
+                            @*<td>@item.EndDate</td>
+                                <td>@item.TransactionDate</td>*@
+                            <td>@item.Currency</td>
+
+                            <td>
+                                <table class="sub-table">
+                                    <tr>
+                                        <td><b>Total Sum Insured :</b><br />@item.SumInsured<br /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td><b>Auto-Fac Sum Inured : </b><br />@item.AutoFacSumInsured<br /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td><b>Fac Sum Inured :</b><br />@item.FacSumInsured<br /></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            @*<td>@item.AutoFacSumInsured</td>*@
+                            @*<td>@item.FacSumInsured</td>*@
+
+                            <td>
+                                <table class="sub-table">
+                                    <tr>
+                                        <td><b>Total Premium :</b><br />@item.Premium<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Auto-Fac Premium : </b><br />@item.AutoFacPremium<br /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td><b>Fac Premium :</b><br />@item.FacPremium<br /></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            @*<td>@item.AutoFacPremium</td>
+                                <td>@item.FacPremium</td>*@
+                            <td>
+                                <table class="sub-table">
+                                    <tr>
+                                        <td><b>Auto-Fac Commission :</b><br />@item.AutoFacCommission<br /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td><b>Fac Commission : </b><br />@item.FacCommission<br /></td>
+
+                                    </tr>
+                                </table>
+                            </td>
+                            @*<td>@item.FacCommission</td>*@
+                            <td>
+                                <div class="tbl-btn-list">
+                                    <ul class="list-inline"></ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>Total:</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <table class="sub-table">
+                                <tr>
+                                    <td><b>Total Sum Insured :</b><br /><b>@sumInsuredTotal</b><br /></td>
+
+                                </tr>
+                                <tr>
+                                    <td><b>Auto-Fac Sum Inured : </b><br /><b>@autoFacSumInsuredTotal</b><br /></td>
+
+                                </tr>
+                                <tr>
+                                    <td><b>Fac Sum Inured :</b><br /><b>@facSumInsuredTotal</b><br /></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="sub-table">
+                                <tr>
+                                    <td><b>Total Premium :</b><br /><b>@premiumTotal</b><br /></td>
+
+                                </tr>
+                                <tr>
+                                    <td><b>Auto-Fac Premium : </b><br /><b>@autoFacPremiumTotal</b><br /></td>
+
+                                </tr>
+                                <tr>
+                                    <td><b>Fac Premium :</b><br /><b>@facPremiumTotal</b><br /></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="sub-table">
+                                <tr>
+                                    <td><b>Auto-Fac Commission :</b><br /><b>@autoFacCommissionTotal</b><br /></td>
+
+                                </tr>
+                                <tr>
+                                    <td><b>Fac Commission : </b><br /><b>@facCommissionTotal</b><br /></td>
+
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tfoot>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        $(".tablesorter").tablesorter({
+            headers: {
+                3: {
+                    sorter: false
+                },
+                4: {
+                    sorter: false
+                },
+                5: {
+                    sorter: false
+                },
+                6: {
+                    sorter: false
+                },
+            }
+        });
+        $("#datetimenew").datetimepicker({
+            format: 'MM/D/YYYY'
+        });
+        $("#datetimenew12").datetimepicker({
+            format: 'MM/D/YYYY'
+
+        });
+    });
+
+    function removeSearchBox() {
+        window.location.href = "/Report/ReinsuranceReport";
+    }
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "ReinsuranceReport" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    $('#generatePdf').click(function () {
+
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('ReinsuranceReport.pdf');
+
+    });
+
+
+
+</script>

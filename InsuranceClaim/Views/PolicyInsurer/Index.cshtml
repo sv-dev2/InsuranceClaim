@@ -1,0 +1,77 @@
+﻿@model InsuranceClaim.Models.PolicyInsurerModel
+@{
+    ViewBag.Title = "Add Policy Insurer";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Add Policy Insurer</h4>
+                        </div>
+                        <div class="form-group-input">
+                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
+                           @using (Html.BeginForm("PolicySave", "PolicyInsurer", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                           {
+                                @Html.HiddenFor(x => x.Id)
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.InsurerName, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.InsurerName, new { @class = "form-control", @name = "InsurerName", @autocomplete = "off", @id = "InsurerName", @placeholder = "Enter Insurer Name" })
+                                            @Html.ValidationMessageFor(x => x.InsurerName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.InsurerCode, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.InsurerCode, new { @class = "form-control", @name = "InsurerCode", @autocomplete = "off", @id = "InsurerCode", @placeholder = "Enter Insurer Code" })
+                                            @Html.ValidationMessageFor(x => x.InsurerCode, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.InsurerAddress, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.InsurerAddress, new { @class = "form-control", @name = "InsurerAddress", @autocomplete = "off", @id = "InsurerAddress", @placeholder = "Enter Insurer Address" })
+                                            @Html.ValidationMessageFor(x => x.InsurerAddress, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @*<input type="submit"  class="btn btn-primary"name="Save"/>*@
+                                <div class="col-md-12 next-btn">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-left">
+
+                                                <button type="button" class="btn" onclick="window.location.href='@Url.Action("PolicyInsurerList","PolicyInsurer")'">Cancel</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-right">
+                                                <button type="submit" class="btn">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

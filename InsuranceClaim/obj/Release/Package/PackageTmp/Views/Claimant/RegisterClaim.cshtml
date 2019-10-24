@@ -1,0 +1,470 @@
+﻿@*@model InsuranceClaim.Models.ClaimRegistrationModel*@
+@model InsuranceClaim.Models.RegisterClaimViewModel
+@{
+    ViewBag.Title = "RegisterClaim";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+    //var a = ViewBag.Checklists;
+}
+
+@{
+    var getregisterId = "";
+    if (Request.QueryString["dbmodel"] != null)
+    {
+        getregisterId = Request.QueryString["dbmodel"];
+    }
+}  
+
+<div class="body-content-section">
+    <div class="form-section-top-riskdetail">
+        <div class="container">
+            @{
+                var menutab = Html.Partial("ClaimRegister");
+            }
+            @menutab
+            <div class="row">
+                <div class="form-title">
+                    <h4>Claim Registration</h4>
+                </div>
+                <div class="form-group-input">
+
+                    @using (Html.BeginForm("SaveRegisterClaim", "Claimant", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(model => Model.ClaimId)
+                        @Html.HiddenFor(model => Model.Claimnumber)
+                        @Html.HiddenFor(model => model.ThirdPartyInvolvement)
+                        <input type="hidden" value=@getregisterId name="RegisterId" />
+                        //---------------------Changes--------------------------------------------
+
+                        if (Model.RiskViewModel.Count > 0)
+                        {
+                            <div class="details-heading">
+                                <h4>Claim Details</h4>
+                            </div>
+                            <div class="riskdetail-section">
+                                <div class="container-riskdetail">
+
+                                    <div class="riskdetail-box">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <label>Policy Number</label>
+                                                <span>@Model.PolicyNumber</span>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <label>Name Of Insured</label>
+                                                <span>@Model.FirstName  @Model.LastName</span>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <label>Date Of Loss</label><span>@Model.DateOfLoss</span>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <label>Date Of Notifications</label><span>@Model.DateOfNotifications</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="riskdetail-box">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <label>Place Of Loss</label>
+                                                @Html.TextBoxFor(x => x.PlaceOfLoss, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Place Of Loss", @id = "txtPlaceOfLoss", @Value = Model.PlaceOfLoss, required = "required" })
+                                                @Html.ValidationMessageFor(x => x.PlaceOfLoss, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <label>Description Of Loss</label>
+                                                @*<span>@Model.DescriptionOfLoss</span>*@
+                                                @*<input type="text" id="txtplaceofloss" value="@Model.DescriptionOfLoss" />*@
+                                                @Html.TextBoxFor(x => x.DescriptionOfLoss, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Description Of Loss", @id = "txtDescriptionOfLoss", @Value = Model.DescriptionOfLoss })
+                                                @Html.ValidationMessageFor(x => x.DescriptionOfLoss, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <label>Estimated Value Of Loss</label>
+                                                @*<span>@Model.EstimatedValueOfLoss</span>*@
+                                                @*<input type="text" id="txtplaceofloss" value="@Model.EstimatedValueOfLoss" />*@
+
+                                                @Html.TextBoxFor(x => x.EstimatedValueOfLoss, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Estimated Value Of Loss", @id = "txtEstimatedValueOfLoss", @Value = Model.EstimatedValueOfLoss })
+                                                @Html.ValidationMessageFor(x => x.EstimatedValueOfLoss, "", new { @class = "text-danger" })
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+
+                                                @if (Model.ThirdPartyInvolvement == true)
+                                                {
+                                                    <label>Third Party Damage Value</label>
+                                                    @Html.TextBoxFor(x => x.ThirdPartyDamageValue, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Third Party Damage Value", @id = "txtThirdPartyDamageValue", @Value = Model.ThirdPartyDamageValue, required = "required" })
+                                                    <span id="spnthirdPartyDamageValue"></span>
+                                                    @*<span>@Model.ThirdPartyDamageValue</span>*@
+                                                    @*@Html.ValidationMessageFor(x => x.ThirdPartyDamageValue, "", new { @class = "text-danger" })*@
+                                                    @*<input type="text" id="txtplaceofloss" value="@Model.ThirdPartyDamageValue" />*@
+                                                }
+                                                else if (Model.ThirdPartyInvolvement == false)
+                                                {
+                                                    <label>Third Party Damage Value</label>
+                                                    @Html.TextBoxFor(x => x.ThirdPartyDamageValue, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Third Party Damage Value", @id = "txtThirdPartyDamageValue", @Value = Model.ThirdPartyDamageValue, @readonly = "readonly" })
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="riskdetail-box">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 claim-status">
+                                                <label>Claim Status</label>
+                                                @*@Html.DropDownListFor(x => x.Status, new SelectList(ViewBag.ClaimStatus, "Id", "Status"), new { @class = "form-control", @id = "ddlClaimStatus", @onchange = "removeValidation(this)" })
+                                                    @Html.TextBoxFor(x => x.RejectionStatus, new { @class = "form-control", @autocomplete = "off", @placeholder = "", @id = "txtClaimStatus", style = "display:none" })
+                                                    @Html.ValidationMessageFor(x => x.RejectionStatus, "", new { @class = "text-danger valMessage" })*@
+
+                                                @Html.DropDownListFor(x => x.Status, new SelectList(ViewBag.ClaimStatus, "Id", "Status"), new { @class = "form-control", @id = "ddlClaimStatus", @onchange = "removeValidation(this)" })
+                                                @Html.TextBoxFor(x => x.RejectionStatus, new { @class = "form-control", @autocomplete = "off", @placeholder = "", @id = "txtClaimStatus", style = "display:none", @onkeyup = "RejectedValueKeyup()" })
+                                                <span id="spanRejectVal" style="display:none;color:red">Please Enter Rejected Reason.</span>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 claim-label">
+                                                <label class="claim-txt">Claim satisfaction</label>
+                                                <span>
+                                                    <label>@Html.RadioButtonFor(model => model.Claimsatisfaction, true)Yes</label>
+                                                    <label>@Html.RadioButtonFor(model => model.Claimsatisfaction, false)No</label>
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                <label class="list-label">Check list</label>
+                                                <span>
+                                                    @for (int i = 0; i < Model.chklist.Count; i++)
+                                                    {
+
+                                                        <label>@Html.CheckBoxFor(x => Model.chklist[i].IsChecked, new { @class = "custom-checkbox" }) @Model.chklist[i].ChecklistDetail</label>
+                                                        @Html.HiddenFor(x => Model.chklist[i].Id)
+                                                        @Html.HiddenFor(x => Model.chklist[i].ChecklistDetail)
+                                                    }
+                                                </span>
+
+                                                @*@Html.TextBoxFor(x => x.Files, new { type = "file", multiple = "multiple", value = "", id = (string)null })
+
+
+
+                                                <div class="upload-file-area">
+                                                    <span class='label label-info' id="upload-file-info"></span>
+
+                                                </div>*@
+
+
+                                                @Html.TextBoxFor(x => x.Files, new { type = "file", multiple = "multiple", value = "", id = (string)null })
+                                                <div class="upload-file-area">
+                                                    <span class='label label-info' id="upload-file-info"></span>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="row">
+                                        <div class="text-left">
+                                            <button type="submit" class="btn" onclick="return Rejectval()">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="details-heading">
+                                <h4>Risk Details</h4>
+                            </div>
+                            <div class="riskdetail-section border-box">
+                                @foreach (var item in Model.RiskViewModel)
+                                {
+
+
+                                    <div class="container-riskdetail">
+                                        <div class="riskdetail-box">
+                                            <ul class="list-inline">
+                                                <li><label>Registration No</label><span>@item.RegisterNumber</span></li>
+                                                <li><label>Payment Term</label><span>@item.paymentTerm</span></li>
+                                                <li><label>Product</label><span>@item.Product</span></li>
+                                                <li><label>Vehicle Usage</label><span>@item.VehUsage</span></li>
+                                                <li><label>Cover Type</label><span>@item.CoverType</span></li>
+                                                <li><label>Suggested Value</label><span>@item.SuggestedValue</span></li>
+                                                <li><label>Sum Insured</label><span>@item.SumInsured</span></li>
+                                                <li><label>Cover Start Date </label><span>@item.CoverStartDate</span></li>
+                                                <li><label>Cover End Date</label><span>@item.CoverEndDate</span></li>
+                                                <li><label>Make</label><span>@item.Make @item.Model @item.VehicleYear</span></li>
+
+
+
+
+                                                <li><label>Cubic Capacity</label><span>@item.CubicCapacity</span></li>
+                                                <li><label>Engine Number</label><span>@item.EngineNumber</span></li>
+                                                <li><label>Chasis Number</label><span>@item.ChasisNumber</span></li>
+                                                <li><label>Add Third Party Insurance</label><span>@item.Addthirdparty</span></li>
+                                                <li><label>Add Third Party Amount</label><span>@item.AddThirdPartyAmount</span></li>
+
+                                                <li>
+                                                    <label>Excess Type</label>
+                                                    <span>
+                                                        @(item.ExcessType == "1" ? "Percentage" : "Fixed Amount")
+
+                                                    </span>
+                                                </li>
+
+                                                <li><label>Excess</label><span>@item.Excess</span></li>
+
+                                                @*<li class="full-width-li"><label>Optional Covers</label></li>*@
+
+
+
+                                                <li><label>Passenger Accident Cover</label><span>@item.PassengerAccidentCover</span></li>
+                                                <li><label>Excess BuyBack</label><span>@item.ExcessBuyBack</span></li>
+                                                <li><label>Roadside Assistance</label><span>@item.RoadsideAssistance </span></li>
+                                                <li><label>Medical Expenses</label><span>@item.MedicalExpenses </span></li>
+
+                                                <li><label>Number of Persons</label><span>0</span></li>
+                                                <li><label>Basic Premium</label><span>@item.Premium</span></li>
+                                                <li><label>Stamp Duty</label><span>@item.StampDuty</span></li>
+                                                <li><label>ZTSC Levy</label><span>@item.ZTSCLevy</span></li>
+                                                <li><label>Discount</label><span>@item.Discount</span></li>
+                                                <li><label>Include Radio License Cost</label><span>@item.IncludeRadioLicenseCost</span></li>
+                                                <li><label>Radio License Cost</label><span>@item.RadioLicenseCost</span></li>
+                                                <li><label>Vehicle Licence Fee</label><span>@item.VehicleLicenceFee</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                }
+                            </div>
+                        }
+
+
+
+                        //for other information
+
+                        @*<div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Check list</label>:
+                                        @for (int i = 0; i < Model.chklist.Count; i++)
+                                        {
+                                            @Html.CheckBoxFor(x => x.chklist[i].IsChecked, new { @class = "custom-checkbox" })
+                                            <label>@Model.chklist[i].ChecklistDetail</label>
+                                            @Html.HiddenFor(x => x.chklist[i].Id)
+                                            @Html.HiddenFor(x => x.chklist[i].ChecklistDetail)
+                                        }
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Date Of Loss:</label>
+                                        @Html.LabelFor(x => x.DateOfLoss, Model.DateOfLoss)
+
+                                    </div>
+                                </div>
+                            </div>*@
+
+                        @*<div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Date Of Notifications:</label>
+                                        @Html.LabelFor(x => x.DateOfNotifications, Model.DateOfNotifications)
+
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Place Of Loss</label>:
+                                        @Html.LabelFor(x => x.PlaceOfLoss, Model.PlaceOfLoss)
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Description Of Loss</label>:
+                                        @Html.LabelFor(x => x.DescriptionOfLoss, Model.DescriptionOfLoss)
+
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Estimated Value Of Loss</label>:
+                                        @Html.Raw(Model.EstimatedValueOfLoss)
+
+                                    </div>
+                                </div>
+                            </div>*@
+                        @*<div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Third Party Damage Value</label>:
+                                        @Html.LabelFor(x => x.ThirdPartyDamageValue, Model.ThirdPartyDamageValue)
+
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Claim satisfaction</label>:
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6 form-group-text">
+                                    <div class="form-group">
+                                        <label>Claim Status</label>:
+
+                                        @Html.DropDownListFor(x => x.Status, new SelectList(ViewBag.ClaimStatus, "Id", "Status"), new { @class = "form-control", @id = "ddlProviders" })
+
+                                    </div>
+                                </div>
+                            </div>*@
+                        <br />
+                        <div class="next-btn">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="text-left">
+                                        <button type="button" class="btn" onclick="window.location.href='@Url.Action("ClaimantList", "Claimant")'">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger;
+        $("#ddlClaimStatus").change(function () {
+            var getddlValue = $("#ddlClaimStatus").val();
+            if (getddlValue == "3") {
+                $("#txtClaimStatus").show();
+            }
+
+            else {
+                $("#txtClaimStatus").hide();
+            }
+        });
+
+        @*$("#txtPlaceOfLoss").keyup(function () {
+            debugger;
+            var placeofloss=$("#txtPlaceOfLoss").val();
+            if (placeofloss == "")
+            {
+                $("#txtPlaceOfLoss").val('@Model.PlaceOfLoss');
+            }
+        });*@
+    });
+
+    $("#txtThirdPartyDamageValue").focusout(function () {
+        debugger;
+        if ($("#txtThirdPartyDamageValue").val() != "") {
+            $("#spnthirdPartyDamageValue").hide();
+        }
+    })
+    //function removeValidation(e) {
+    //    debugger
+    //    if (e.value == "3") {
+    //        $(".valMessage").text('');
+    //        $(".valMessage").text('Please Enter Rejected Reason.');
+    //        return false;
+    //    } else {
+
+    //        $(".valMessage").text('');
+
+    //    }
+    //}
+    //function Rejectval() {
+    //    debugger;
+    //    var a = $("#ddlClaimStatus option:selected").text();
+    //    if (a=="Rejected") {
+    //        return false;
+    //    }
+    //}
+
+
+    function removeValidation(e) {
+        debugger;
+        if (e.value == "3") {
+            $("#txtClaimStatus").show();
+        }
+
+        else {
+            $("#txtClaimStatus").show();
+        }
+
+    }
+    function RejectedValueKeyup() {
+        debugger;
+        var getRejectedValue = $("#txtClaimStatus").val();
+        if (getRejectedValue == "") {
+            $("#spanRejectVal").show();
+        }
+
+        else {
+            $("#spanRejectVal").hide();
+        }
+    }
+    function Rejectval() {
+        debugger;
+        var getvalue = $("#ThirdPartyInvolvement").val();
+        if (getvalue == true) {
+            $("#spnthirdPartyDamageValue").text("This is Required Field").css("color", "#a94442");
+            return false;
+        }
+        var getVal = $("#txtClaimStatus").val();
+        var getddlvalue = $("#ddlClaimStatus").val();
+        if (getddlvalue != "3") {
+            return true;
+        }
+
+        else {
+            if (getVal == "") {
+                $("#spanRejectVal").show();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+    }
+
+
+
+    $(function () {
+        $(':file').change(function () {
+            debugger;
+
+            if (this.files.length > 0) {
+                debugger;
+                $('#upload-file-info').html("");
+                var real = $(this);
+                for (var i = 0; i < this.files.length; i++) {
+                    $("#upload-file-info").append(this.files[i].name + '</br>');
+                }
+                //var cloned = real.clone(true);
+                //real.hide();
+                //cloned.insertAfter(real);
+                //real.appendTo('form');
+            }
+        });
+    });
+
+</script>
+
+

@@ -1,0 +1,784 @@
+Error Time: 9/6/2018 3:33:06 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 3:33:20 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 3:33:32 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 3:56:19 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 3:56:24 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 3:56:51 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 6:26:36 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 6:28:02 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 6:56:32 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 6:56:37 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 6:56:48 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 7:11:54 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 7:25:30 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 7:25:33 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 7:25:34 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 9/6/2018 7:25:35 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/16/2019 11:15:56 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 11:44:46 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 5:02:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 5:05:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 5:21:13 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 5:21:56 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 5:22:39 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 6:50:49 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/16/2019 7:10:25 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/17/2019 11:25:14 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/17/2019 11:48:59 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/17/2019 11:53:13 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/17/2019 11:54:45 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/17/2019 12:03:15 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/17/2019 12:06:31 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/17/2019 3:39:05 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 1:04:58 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 1:05:41 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 3:17:08 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 3:17:55 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 3:32:29 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 3:33:11 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 3:44:12 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 3:44:54 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 4:27:33 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 4:28:16 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 5:26:32 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 5:27:14 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 5:49:14 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 5:49:57 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 6:32:19 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 6:59:19 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:16:23 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:17:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:25:51 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:26:35 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:27:29 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:30:40 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:40:06 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/22/2019 7:41:14 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/23/2019 1:26:17 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/23/2019 1:27:00 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/23/2019 1:27:42 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/23/2019 1:40:22 PMexception during insert vehicel :Object reference not set to an instance of an object.-----------------------------------------------------------
+
+Error Time: 1/23/2019 1:42:22 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/23/2019 1:44:38 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/23/2019 5:40:11 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/23/2019 5:41:04 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/23/2019 5:41:52 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 12:43:21 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 12:44:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 12:44:49 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 12:56:54 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 12:57:50 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 12:58:35 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 4:29:21 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 4:30:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 4:30:48 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 4:45:42 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 4:47:27 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 5:02:42 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 5:08:39 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 5:18:22 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 5:20:12 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 6:27:33 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 6:28:17 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 6:29:00 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/24/2019 6:31:43 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 6:54:29 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 7:02:18 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/24/2019 7:06:42 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 11:47:38 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 11:48:27 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 11:49:16 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 11:55:49 AMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 11:56:39 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 12:21:41 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 12:22:25 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 12:23:45 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 12:27:28 PMPolicy Retrieved-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:03:24 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:04:08 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:04:50 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:06:34 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:07:29 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:20:47 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:21:32 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:22:15 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:23:26 PMexception during insert vehicel :Object reference not set to an instance of an object.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:27:19 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:28:03 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:28:51 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:32:07 PM1/25/2019-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:32:08 PMcheckVehicleExists :1 quotes generated. 0 failed-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:41:48 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:42:34 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:43:18 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:57:02 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:57:47 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 3:58:30 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 5:57:54 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 6:23:31 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 6:43:31 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 6:46:27 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 7:19:19 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/25/2019 7:20:04 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/25/2019 7:20:48 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/28/2019 11:40:56 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/28/2019 11:41:40 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/28/2019 11:42:22 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/28/2019 11:50:50 AMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 11:51:44 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/28/2019 11:52:37 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 1/28/2019 1:55:46 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 1:56:04 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 1:56:09 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:28:47 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:29:10 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:29:39 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:45:48 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:48:26 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:54:04 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:54:19 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:54:22 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:58:04 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:58:08 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 3:58:11 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 4:09:43 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 4:09:46 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 4:09:47 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:02:38 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:02:43 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:02:45 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:04:34 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:04:37 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:04:44 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:11:09 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:11:18 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:11:21 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:17:20 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:17:23 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 5:17:28 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 6:59:17 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 7:27:50 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/28/2019 7:27:54 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/28/2019 7:27:57 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/29/2019 11:25:17 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/29/2019 11:25:27 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/29/2019 11:25:33 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/29/2019 11:25:34 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/29/2019 1:59:31 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/29/2019 1:59:35 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/29/2019 1:59:37 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/30/2019 6:14:03 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/30/2019 6:14:05 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/30/2019 6:14:12 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 11:29:36 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 11:29:39 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 11:29:41 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 11:46:34 AMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/31/2019 11:46:36 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 11:46:37 AMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 1:36:06 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 4:15:25 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 4:15:27 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 4:15:29 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 4:26:01 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/31/2019 4:26:03 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 4:26:04 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 5:43:44 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 1/31/2019 5:43:46 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 1/31/2019 5:43:47 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:02:49 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:07:28 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:16:16 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:16:34 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:17:24 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:49:28 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:50:11 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:56:34 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:56:36 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 4:56:45 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:04:13 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:05:16 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:22:08 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:22:10 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:22:53 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:57:26 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:57:28 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 5:57:31 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 6:00:32 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 6:00:33 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/1/2019 6:00:36 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/4/2019 1:57:18 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/4/2019 1:58:48 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/4/2019 7:00:23 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 2/4/2019 7:00:24 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/4/2019 7:00:26 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:14:43 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:14:45 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:14:46 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:14:48 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:14:50 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:14:51 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:51:53 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:51:55 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:51:56 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:51:58 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:51:59 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:52:01 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:59:01 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:59:03 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:59:05 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:59:06 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:59:08 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 1:59:10 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:09:18 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:09:26 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:09:31 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:09:38 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:09:48 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:09:53 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:12:27 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:12:32 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:12:36 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:12:44 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:12:53 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/6/2019 3:12:54 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 5:24:13 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 5:24:16 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 5:24:17 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 6:48:45 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 6:48:50 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 6:48:51 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 7:04:32 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 2/7/2019 7:04:34 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/7/2019 7:04:37 PMServer does not support secure connections.-----------------------------------------------------------
+
+Error Time: 2/11/2019 1:22:36 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/11/2019 1:23:19 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/11/2019 1:24:02 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/11/2019 3:27:04 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 2/11/2019 3:27:46 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/11/2019 3:28:29 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/12/2019 7:10:56 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/12/2019 7:12:51 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/13/2019 12:54:23 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/18/2019 6:33:23 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/18/2019 6:34:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 2/22/2019 5:12:03 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/1/2019 11:22:59 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/1/2019 11:23:22 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/1/2019 11:24:34 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/1/2019 11:31:17 AMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 3/1/2019 3:31:13 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/1/2019 3:31:34 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/1/2019 3:36:48 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 11:51:35 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 11:51:57 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 11:52:27 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 1:44:07 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 3/4/2019 1:44:30 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 1:44:52 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 7:01:39 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 7:02:01 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/4/2019 7:02:22 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:15:54 AMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:16:16 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:31:52 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:45:32 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:45:54 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:46:16 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:52:05 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/5/2019 11:52:26 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/6/2019 11:08:24 AMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/6/2019 3:41:16 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/6/2019 5:15:52 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/6/2019 5:16:52 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/6/2019 5:40:19 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/6/2019 5:40:41 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/6/2019 5:41:02 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/12/2019 5:23:55 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/12/2019 5:24:17 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/12/2019 6:53:24 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/12/2019 7:04:24 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/12/2019 7:04:46 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/12/2019 7:05:08 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 1:37:33 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 1:37:55 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 1:38:57 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 1:43:17 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 1:43:40 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 1:54:44 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 1:55:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 3:00:41 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 3:01:02 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/18/2019 3:17:34 PMThe parameter 'address' cannot be an empty string.
+Parameter name: address-----------------------------------------------------------
+
+Error Time: 3/18/2019 3:17:56 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 1:07:58 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 1:08:22 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 1:08:44 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 1:09:05 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:10:45 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:11:06 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:13:36 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:13:59 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:14:21 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:15:34 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:15:56 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:18:24 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:18:48 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:19:11 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:19:32 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:20:56 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/20/2019 3:21:18 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 1:56:00 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 1:56:25 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 1:56:47 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 7:00:18 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 7:00:41 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 7:08:16 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 7:08:38 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 7:10:54 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 7:34:24 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/25/2019 7:35:37 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/29/2019 5:05:51 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/29/2019 5:06:12 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/29/2019 5:11:45 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/29/2019 5:12:07 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/29/2019 5:18:17 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 3/29/2019 5:18:39 PMFailure sending mail.-----------------------------------------------------------
+
+Error Time: 9/19/2019 09:01:33Object reference not set to an instance of an object.-----------------------------------------------------------
+
+Error Time: 9/20/2019 3:50:48 PMObject reference not set to an instance of an object.-----------------------------------------------------------
+
+Error Time: 9/20/2019 3:53:53 PMObject reference not set to an instance of an object.-----------------------------------------------------------
+
+Error Time: 9/30/2019 1:44:43 PMTPIPolicy :{"PartnerReference":"1ce42c1a-f786-41ee-a621-2478ea7b519c","Date":"20190930014428","Version":"2.0","Response":{"Function":"TPIPolicy","Result":25,"Message":"Partner Token has expired. "}}-----------------------------------------------------------
+
+Error Time: 9/30/2019 1:45:06 PMTPIPolicy :{"PartnerReference":"414535f1-a61f-4b94-8f1e-495e89280e27","Date":"20190930014456","Version":"2.0","Response":{"Function":"TPIPolicy","Result":25,"Message":"Partner Token has expired. "}}-----------------------------------------------------------
+
+Error Time: 9/30/2019 1:47:17 PMTPIPolicy :{"PartnerReference":"7aa56359-04ed-491b-85bb-ec880d1efd4f","Date":"20190930014711","Version":"2.0","Response":{"Function":"TPIPolicy","Result":25,"Message":"Partner Token has expired. "}}-----------------------------------------------------------
+
+Error Time: 9/30/2019 1:54:58 PMTPIPolicy :{"PartnerReference":"1b079a9f-9a95-4389-a921-0f1e000652b2","Date":"20190930014957","Version":"2.0","Response":{"Function":"TPIPolicy","Result":25,"Message":"Partner Token has expired. "}}-----------------------------------------------------------
+
+Error Time: 9/30/2019 3:21:48 PMTPIPolicy :{"PartnerReference":"00052e4a-3258-419d-96f0-fec390111b01","Date":"20190930032128","Version":"2.0","Response":{"Function":"TPIPolicy","Result":0,"Message":"Unable to find policy using provided reference."}}-----------------------------------------------------------
+
+Error Time: 9/30/2019 3:22:11 PMTPIPolicy :{"PartnerReference":"25535096-972c-48bc-a826-3d9769c1e195","Date":"20190930032205","Version":"2.0","Response":{"Function":"TPIPolicy","Result":0,"Message":"Unable to find policy using provided reference."}}-----------------------------------------------------------
+
+Error Time: 9/30/2019 3:26:19 PMTPIPolicy :{"PartnerReference":"cd88b56b-a679-48aa-b05f-70a9009bd2c5","Date":"20190930115457","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"","VRN":"ABL4640","Insurance_Status_ID":"","Status":"Rejected","InsuranceType":"1","LoadedBy":" Genetic Financial Services","LoadedDate":"201909281139","ApprovedBy":" Genetic Financial Services","ApprovedDate":"","IDNumber":"58113078N25","FirstName":"MICHAEL","LastName":"NYAMAYARO","MSISDN":"263772529238","Email":"","Address1":"CRANMBONE","Address2":"WEST SHOPS","Town":"Harare","EntityType":"Personal","CompanyName":"","Owner_Email":"","StartDate":"20190928","EndDate":"20200127","DurationMonths":"4","Amount":"175.50","Rate":"450.0000","StampDuty":"7.50","GovernmentLevy":"18.00","CoverAmount":"150.00","PremiumAmount":"175.50","ValueAmount":"0.00","Make":"HONDA","Model":"CR-V","TaxClass":"1","YearManufacture":"1996","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/1/2019 7:37:22 PMTPIPolicy :{"PartnerReference":"bd51f735-6371-4c92-988a-e81f71b875ed","Date":"20191001160702","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"ICGEN190051604","VRN":"IEI385TST","Status":"Approved","InsuranceType":"1","LoadedBy":"Geneinsure ","LoadedDate":"201910011604","ApprovedBy":"Geneinsure ","ApprovedDate":"201910011606","IDNumber":"12123456A12","FirstName":"ashwani","LastName":"k","MSISDN":"263123456789","Email":"","Address1":"test","Address2":"dd","Town":"Kadoma","EntityType":"Corporate","CompanyName":"GeneInsure","Owner_Email":"","StartDate":"20200401","EndDate":"20200731","DurationMonths":"4","Amount":"175.50","Rate":"450.0000","StampDuty":"7.50","GovernmentLevy":"18.00","CoverAmount":"150.00","PremiumAmount":"175.50","ValueAmount":"0.00","Make":"AAD","Model":"17290ME","TaxClass":"1","YearManufacture":"2019","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/3/2019 11:55:53 AMTPIPolicy :{"PartnerReference":"bf32ea07-8415-454c-8b47-f906f833d991","Date":"20191003082549","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"ICGEN190051611","VRN":"TBA","Status":"Approved","InsuranceType":"1","LoadedBy":"Geneinsure ","LoadedDate":"201910030822","ApprovedBy":"Geneinsure ","ApprovedDate":"201910030825","IDNumber":"12123456A12","FirstName":"ashwnai","LastName":"k","MSISDN":"263123456789","Email":"","Address1":"test","Address2":"dd","Town":"dd","EntityType":"Corporate","CompanyName":"GeneInsure","Owner_Email":"","StartDate":"20191003","EndDate":"20200202","DurationMonths":"4","Amount":"175.50","Rate":"450.0000","StampDuty":"7.50","GovernmentLevy":"18.00","CoverAmount":"150.00","PremiumAmount":"175.50","ValueAmount":"0.00","Make":"MK1002","Model":"MDL0002","TaxClass":"1","YearManufacture":"2005","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/3/2019 1:18:37 PMTPIPolicy :{"PartnerReference":"03a3a4e9-a35a-4da5-8b25-11a494e0339e","Date":"20191003011746","Version":"2.0","Response":{"Function":"TPIPolicy","Result":23,"Message":"Invalid Partner Token. "}}-----------------------------------------------------------
+
+Error Time: 10/3/2019 1:25:44 PMTPIPolicy :{"PartnerReference":"c63ba0d7-921e-4e89-b395-478eb62cc068","Date":"20191003012539","Version":"2.0","Response":{"Function":"TPIPolicy","Result":23,"Message":"Invalid Partner Token. "}}-----------------------------------------------------------
+
+Error Time: 10/3/2019 1:26:29 PMTPIPolicy :{"PartnerReference":"59e56a4e-8830-4989-8253-709434fc18d7","Date":"20191003095624","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"ICGEN190051617","VRN":"IEI385TST","Status":"Approved","InsuranceType":"1","LoadedBy":"Geneinsure ","LoadedDate":"201910030953","ApprovedBy":"Geneinsure ","ApprovedDate":"201910030955","IDNumber":"12123456A12","FirstName":"ashwani","LastName":"k","MSISDN":"263123456789","Email":"","Address1":"test address","Address2":"test address2","Town":"Kadoma","EntityType":"Personal","CompanyName":"GeneInsure","Owner_Email":"","StartDate":"20201201","EndDate":"20210331","DurationMonths":"4","Amount":"175.50","Rate":"450.0000","StampDuty":"7.50","GovernmentLevy":"18.00","CoverAmount":"150.00","PremiumAmount":"175.50","ValueAmount":"0.00","Make":"AAD","Model":"17290ME","TaxClass":"1","YearManufacture":"2019","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/4/2019 4:06:04 PMTPIPolicy :{"PartnerReference":"46965a95-6110-4095-9611-632c71298c0f","Date":"20191004123600","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"ICGEN190051660","VRN":"IEI40TST","Status":"Approved","InsuranceType":"4","LoadedBy":"Geneinsure ","LoadedDate":"201910041228","ApprovedBy":"Geneinsure ","ApprovedDate":"201910041235","IDNumber":"2324343","FirstName":"Test12","LastName":"test","MSISDN":"263123232323","Email":"","Address1":"121323232","Address2":"232323","Town":"Ruwa","EntityType":"Personal","CompanyName":"","Owner_Email":"","StartDate":"20191201","EndDate":"20201130","DurationMonths":"12","Amount":"1235.25","Rate":"0.0450","StampDuty":"56.25","GovernmentLevy":"54.00","CoverAmount":"1125.00","PremiumAmount":"1235.25","ValueAmount":"5000.00","Make":"ABCO","Model":"ABCO RANGER","TaxClass":"2","YearManufacture":"2019","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/17/2019 6:36:49 PMObject reference not set to an instance of an object.-----------------------------------------------------------
+
+Error Time: 10/18/2019 4:20:57 PMTPIPolicy :{"PartnerReference":"b7cb88e0-15d9-4174-a49a-b462739ddd48","Date":"20191018125050","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"ICGEN190051850","VRN":"IEI385TST","Status":"Approved","InsuranceType":"1","LoadedBy":"Geneinsure ","LoadedDate":"201910181244","ApprovedBy":"Geneinsure ","ApprovedDate":"201910181250","IDNumber":"12123456A12","FirstName":"ashwnai","LastName":"k","MSISDN":"263123456789","Email":"","Address1":"test","Address2":"dd","Town":"Mutare","EntityType":"Personal","CompanyName":"GeneInsure","Owner_Email":"","StartDate":"20200218","EndDate":"20200717","DurationMonths":"5","Amount":"219.38","Rate":"450.0000","StampDuty":"9.38","GovernmentLevy":"22.50","CoverAmount":"187.50","PremiumAmount":"219.38","ValueAmount":"0.00","Make":"AAD","Model":"17290ME","TaxClass":"1","YearManufacture":"2019","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/18/2019 4:24:44 PMTPIPolicy :{"PartnerReference":"8973a6d2-e703-4b7c-9a0a-9a347b24f4fb","Date":"20191018125437","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"ICGEN190051851","VRN":"IEI40TST","Status":"Approved","InsuranceType":"1","LoadedBy":"Geneinsure ","LoadedDate":"201910181253","ApprovedBy":"Geneinsure ","ApprovedDate":"201910181254","IDNumber":"12123456A12","FirstName":"ashwani","LastName":"k","MSISDN":"263123456789","Email":"","Address1":"test","Address2":"dfdfds","Town":"Harare","EntityType":"Personal","CompanyName":"GeneInsure","Owner_Email":"","StartDate":"20200618","EndDate":"20201017","DurationMonths":"4","Amount":"175.50","Rate":"450.0000","StampDuty":"7.50","GovernmentLevy":"18.00","CoverAmount":"150.00","PremiumAmount":"175.50","ValueAmount":"0.00","Make":"ABCO","Model":"ABCO RANGER","TaxClass":"2","YearManufacture":"2019","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/18/2019 4:46:15 PMTPIPolicy :{"PartnerReference":"d678a988-cba8-4f16-bc1d-0471b9523c94","Date":"20191018131609","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"ICGEN190051853","VRN":"IEI40TST","Status":"Approved","InsuranceType":"1","LoadedBy":"Geneinsure ","LoadedDate":"201910181313","ApprovedBy":"Geneinsure ","ApprovedDate":"201910181315","IDNumber":"12123456A12","FirstName":"ashwani","LastName":"k","MSISDN":"263123456789","Email":"","Address1":"test","Address2":"dfdfds","Town":"Harare","EntityType":"Personal","CompanyName":"GeneInsure","Owner_Email":"","StartDate":"20201018","EndDate":"20210217","DurationMonths":"4","Amount":"175.50","Rate":"450.0000","StampDuty":"7.50","GovernmentLevy":"18.00","CoverAmount":"150.00","PremiumAmount":"175.50","ValueAmount":"0.00","Make":"ABCO","Model":"ABCO RANGER","TaxClass":"2","YearManufacture":"2019","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+
+Error Time: 10/24/2019 10:50:57 AMTPIPolicy :{"PartnerReference":"8d685275-73ce-4c60-880c-e401677686c3","Date":"20191024072056","Version":"2.0","Response":{"Function":"TPIPolicy","Result":"1","Message":"Policy Retrieved","PolicyNo":"","VRN":"ABL4640","Insurance_Status_ID":"","Status":"Rejected","InsuranceType":"1","LoadedBy":" Genetic Financial Services","LoadedDate":"201909281139","ApprovedBy":" Genetic Financial Services","ApprovedDate":"","IDNumber":"58113078N25","FirstName":"MICHAEL","LastName":"NYAMAYARO","MSISDN":"263772529238","Email":"","Address1":"CRANMBONE","Address2":"WEST SHOPS","Town":"Harare","EntityType":"Personal","CompanyName":"","Owner_Email":"","StartDate":"20190928","EndDate":"20200127","DurationMonths":"4","Amount":"175.50","Rate":"450.0000","StampDuty":"7.50","GovernmentLevy":"18.00","CoverAmount":"150.00","PremiumAmount":"175.50","ValueAmount":"0.00","Make":"HONDA","Model":"CR-V","TaxClass":"1","YearManufacture":"1996","VehicleType":"1","Customer_Reference":""}}-----------------------------------------------------------
+

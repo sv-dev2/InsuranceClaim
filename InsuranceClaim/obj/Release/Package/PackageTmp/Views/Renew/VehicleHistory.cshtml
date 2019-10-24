@@ -1,0 +1,145 @@
+﻿@model List<Insurance.Domain.VehicleDetail>
+
+@{
+    ViewBag.Title = "VehicleHistory";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+<div class="productsave-section DailyReceiptsReport">
+
+    <div class="container-fluid" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>Vehicle History</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn products-top">
+                <div class="text-right">
+                    @*<button type="button" class="btn btn-primary">Add</button>*@
+                    @*<input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />*@
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+
+
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+        @*@using (Html.BeginForm("DailyReceiptsSearchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="container-main">
+                    <div class="form-group-section-date">
+                        <div class="form-group-input">
+                            <div class="row">
+                                <div class="col-sm-3 col-md-3 form-group-text">
+                                    <div class="form-group">
+
+                                        <div class='input-group' id='datetimenew'>
+                                            @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                            @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3 form-group-text">
+                                    <div class="form-group">
+
+                                        <div class='input-group' id='datetimenew12'>
+                                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                            @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-btn">
+                                    <div class="form-group">
+                                        <ul class="list-inline">
+                                            <li><button type="submit" class="btn btn-success">Search</button></li>
+                                            <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }*@
+
+
+
+        <div class="product-table-grid">
+            <div class="table-responsive">
+                <table class="table table-striped tablesorter" id="report2excel">
+
+                    <thead>
+                        <tr>
+                            <th>Policy Number</th>
+                            <th>CustomerName</th>
+                            <th>Registration Number</th>
+                            <th>Make</th>
+                            <th>Model</th>
+                            <th>Currency</th>
+                            <th style="text-align:left;">Total Premium</th>
+                            @*<th>Receipt Number</th>
+                                <th>Premium Due</th>
+                                <th>Amount Paid</th>
+                                <th>Balance</th>
+                                <th>Transaction Reference</th>
+                                <th style="text-align:left;">Payment Type</th>*@
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.EngineNumber</td>
+                                <td>@item.ChasisNumber</td>
+                                <td>@item.RegistrationNo</td>
+                                <td>@item.MakeId</td>
+                                <td>@item.ModelId</td>
+                                <td>@item.Currency</td>
+                                <td style="text-align:left;">@item.Premium</td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                    @*<tfoot>
+                            <tr>
+
+                                <td><strong>Total:</strong></td>
+                                <td></td>
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>$@premiumDueTotal</strong></td>
+                                <td><strong>$@amountPaidTotal</strong></td>
+                                <td><strong>$@balanceTotal</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>*@
+
+
+                </table>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>     }

@@ -1,0 +1,328 @@
+﻿@model InsuranceClaim.Models.PolicyDetailModel
+@{
+    ViewBag.Title = "ProductDetail";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+<div class="top-banner-section">
+    <div class="container">
+        <div class="car-insurance-content">
+            <h2>Get Car Insurance In Less<br>Than 5 Minutes<h2>
+        </div>
+    </div>
+</div>
+
+<div class="body-content-section">
+    <div class="Process-step-section">
+        <div class="container">
+            <div class="row bs-wizard">
+                <div class="process-block">
+                    <div class="col-xs-2 bs-wizard-step complete">
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Client Details</div>
+                    </div>
+
+                    @*<div class="col-xs-2 bs-wizard-step active">
+                         complete 
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Product Details</div>
+                    </div>*@
+
+                    <div class="col-xs-2 bs-wizard-step disabled">
+                        <!-- complete -->
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                    </div>
+
+                    <div class="col-xs-2 bs-wizard-step disabled">
+                        <!-- active -->
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                    </div>
+
+                    <div class="col-xs-2 bs-wizard-step disabled">
+                        <!-- active -->
+
+                        <div class="progress"><div class="progress-bar"></div></div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Product Details</h4>
+                        </div>
+                        <div class="form-group-input">
+                            @using (Ajax.BeginForm("SavePolicyData", "CustomerRegistration", null, new AjaxOptions() { OnSuccess = "GoToRiskDetail" }, null))
+                            {
+                                @*@Html.HiddenFor(x => x.InsurerId, new { @Value = ViewBag.InsurerId });*@
+                                @Html.HiddenFor(m => m.Id)
+                                @*<div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-select">
+                                        <div class="form-group">                                            
+                                            @Html.Label("Product Name", new { @class = "gender-label" })
+                                            @Html.DropDownListFor(x => x.PolicyName, new SelectList(ViewBag.Products, "Id", "ProductName"), new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(x => x.PolicyName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group-select">
+                                        <div class="form-group">
+                                            @Html.Label("Payment Term", new { @class = "gender-label" })
+                                            @Html.DropDownListFor(x => x.PaymentTermId, ViewBag.ePaymentTermData as SelectList, "Select Payment Term", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(x => x.PaymentTermId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    
+                                </div>*@
+                               
+                                <div class="row" style="display:none">
+                                    <div class="col-md-6 form-group-select">
+                                        <div class="form-group">
+                                            @Html.Label("Currency", new { @class = "gender-label" })
+                                            @Html.DropDownListFor(x => x.CurrencyId, new SelectList(ViewBag.Currency, "Id", "Name"), new { @class = "form-control inputDisabled" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group" >
+                                            @Html.Label("Policy Number", new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.PolicyNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "Policy Number", @Value = ViewBag.Policynumber, @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(x => x.PolicyNumber, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.StartDate, new { @class = "gender-label" })
+                                            <div class='input-group date' id='datetimepicker1'>
+                                                @Html.TextBoxFor(x => x.StartDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Policy Start Date" })
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                            @Html.ValidationMessageFor(x => x.StartDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("End Date", new { @class = "gender-label" })
+                                            <div class='input-group date' id='datetimepicker2'>
+                                                @Html.TextBoxFor(x => x.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Policy End Date" })
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                            @Html.ValidationMessageFor(x => x.EndDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="display:none">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("Renewal Date", new { @class = "gender-label" })
+                                            <div class='input-group date' id='datetimepicker3'>
+                                                @Html.TextBoxFor(x => x.RenewalDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Policy Renewal Date" })
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("Transaction Date", new { @class = "gender-label" })
+                                            <div class='input-group' id='datetimepicker4'>
+                                                @Html.TextBoxFor(x => x.TransactionDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Policy Transaction/Effective Date" })
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="display:none">
+                                    <div class="col-md-12 form-group-select">
+                                        <div class="form-group">
+                                            @Html.Label("Business Source", new { @class = "gender-label" })
+                                            @Html.DropDownListFor(x => x.BusinessSourceId, new SelectList(ViewBag.BusinessSource, "Id", "Source"), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="display:none">
+                                    
+                                    <div class="col-sm-6 col-md-6 form-group-select"  >
+                                        <div class="form-group">
+                                            @Html.Label("Policy Status", new { @class = "gender-label" })
+                                            @Html.DropDownListFor(x => x.PolicyStatusId, new SelectList(ViewBag.PoliCyStatus, "Id", "Status"), new { @class = "form-control " })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-select"  >
+                                        <div class="form-group">
+                                            @Html.Label("GeneInsure", new { @class = "gender-label" })
+                                            @Html.DropDownListFor(x => x.InsurerId, new SelectList(ViewBag.Insurer, "Id", "InsurerName"), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-type"></div>
+                                <div class="row">
+                                    <div class="col-md-12 next-btn">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="text-left">
+                                                    <div class="back-left"><button type="button" onclick="gotoPeriviouse()" class="btn">Back</button></div>
+                                                    <a style="display:none" id="previouselink" href="/CustomerRegistration/Index?id=@Session["UserId"]" class="back"></a>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn">Next</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function gotoPeriviouse() {
+        $("#previouselink")[0].click();
+
+    }
+</script>
+
+@*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">*@
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
+@*<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="~/Scripts/CustomerRegistration/CustomerRegistration.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>*@
+
+
+<script type="text/javascript">
+
+    var today;
+
+    function setPolicyEndDate(numberOfMonth) {
+        debugger;
+        today = new Date();
+        today.setMonth(today.getMonth() + numberOfMonth);
+
+        var dd = "";
+        if (today.getDate() == 1) {
+            today = new Date(today.getFullYear(), today.getMonth(), 0);
+            dd = today.getDate();
+        }
+        else {
+            dd = today.getDate() - 1;
+        }
+
+
+        var mm = today.getMonth() + 1; //January is 0!  
+
+        //var dd = today.getDate()-1;
+        //var mm = today.getMonth() + 1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = mm + '/' + dd + '/' + yyyy;
+        $("#EndDate").val(today);
+        debugger;
+        var dateParts = today.split("/");        
+        today = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+        today.setDate(today.getDate() + 1);
+        dd = today.getDate();
+        mm = today.getMonth() + 1; //January is 0!
+
+        yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = mm + '/' + dd + '/' + yyyy;
+        $("#RenewalDate").val(today);
+    }
+
+    $(document).ready(function () { // will trigger when the document is ready
+        today = new Date();
+        debugger;
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = mm + '/' + dd + '/' + yyyy;
+
+        $("#StartDate").val(today);
+        $("#TransactionDate").val(today).css("background-color", "lightgray");
+
+
+        $("#PaymentTermId").change(function () {
+            debugger;
+            var selectedTerm = $("#PaymentTermId option:selected").val();
+            debugger;
+            switch (parseInt(selectedTerm)) {
+                case 1:
+                    setPolicyEndDate(12);
+                    break;
+                case 2:
+                    setPolicyEndDate(1)
+                    break;
+                case 3:
+                    setPolicyEndDate(3);
+                    break;
+                case 4:
+                    setPolicyEndDate(4);
+                    break;
+            }
+
+        });
+
+    });
+</script>

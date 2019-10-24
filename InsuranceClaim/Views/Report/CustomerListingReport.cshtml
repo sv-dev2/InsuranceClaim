@@ -1,0 +1,242 @@
+﻿@model InsuranceClaim.Models.CustomerListingSearchReportModel
+@{
+    ViewBag.Title = "CustomerListingReport";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="productsave-section">
+    <div class="container" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>Customer Listing Report</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    @*<button type="button" class="btn btn-primary">Add</button>*@
+                    <input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                </div>
+            </div>
+        </div>
+
+
+        @using (Html.BeginForm("CustomerListingSearchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.FromDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew'>
+                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                        @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew12'>
+                                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+        <div class="product-table-grid">
+
+            <table class="table table-striped tablesorter" id="report2excel">
+
+                <thead style='display:none;'>
+
+
+                    <tr>
+                        <td>
+                            <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+
+                            <script>
+                                var dt = new Date();
+                                document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                            </script>
+                        </td>
+                        <td></td>
+                        <td>
+                            <h3><u>@ViewBag.Title</u></h3>
+                            <strong></strong>
+                            <strong></strong>
+
+                        </td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
+
+                        <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
+                        <td><label for="EndDate">@ViewBag.enddate</label></td>
+                    </tr>
+
+                </thead>
+
+                <thead>
+                    <tr>
+                        <th style="width:270px;">Customer Details</th>
+                        @*<th>Gender</th>
+                            <th>Date of birth</th>
+                            <th>National Identification Number</th>
+                            <th>Contact Number</th>
+                            <th>Email address</th>
+                            <th>Town/City</th>*@
+                        <th style="width:170px;">Product</th>
+                        <th style="width:170px;">Make and Model</th>
+                        <th>Vehicle Usage</th>
+                        <th style="text-align: left;">Payment Details</th>
+                        @*<th>Payment Type/Mode</th>*@
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CustomerListingReport.ToList())
+                    {
+                        <tr>
+                            <td>
+                                <table class="sub-table">
+                                    <tr>
+                                        <td><b>Customer Name :</b><br />@item.FirstName @item.LastName<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Gender : </b><br />@item.Dateofbirth<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>National Identification Number :</b><br />@item.NationalIdentificationNumber<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Contact Number :</b><br />@item.ContactNumber<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Email address :</b><br />@item.EmailAddress<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Town/City :</b><br />@item.City<br /></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            @*<td>@item.Gender</td>
+                                <td>@item.Dateofbirth</td>
+                                <td>@item.NationalIdentificationNumber</td>
+                                <td>@item.ContactNumber</td>
+                                <td>@item.EmailAddress</td>
+                                <td>@item.City</td>*@
+                            <td>@item.Product</td>
+                            <td>@item.VehicleMake / @item.VehicleModel</td>
+                            <td>@item.VehicleUsage</td>
+                            <td>
+
+                                <table class="sub-table">
+                                    <tr>
+                                        <td><b>Payment Term :</b><br />@item.PaymentTerm<br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Payment Mode : </b><br />@item.PaymentType<br /></td>
+                                </tr>
+                            </table>
+                        </td>
+                        @*<td>@item.PaymentType</td>*@
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        $(".tablesorter").tablesorter({
+
+            headers: {
+                0: {
+                    sorter: false
+                },
+                3: {
+                    sorter: false
+                }
+            }
+
+
+        });
+
+        $("#datetimenew").datetimepicker({
+            format: 'MM/D/YYYY'
+        });
+        $("#datetimenew12").datetimepicker({
+            format: 'MM/D/YYYY'
+
+        });
+
+    });
+
+    function removeSearchBox() {
+        window.location.href = "/Report/CustomerListingReport";
+    }
+
+
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "CustomerListingReport" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    $('#generatePdf').click(function () {
+
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('CustomerListingReport.pdf');
+
+    });
+
+
+</script>

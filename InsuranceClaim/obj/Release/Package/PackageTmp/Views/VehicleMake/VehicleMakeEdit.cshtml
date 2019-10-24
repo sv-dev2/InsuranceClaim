@@ -1,0 +1,101 @@
+﻿@model InsuranceClaim.Models.VehiclesMakeModel
+@{
+    ViewBag.Title = "VehicleMakeEdit";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h2>Vehicle Make Edit</h2>
+                        </div>
+
+                        
+
+
+                        <div class="form-group-input">
+                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
+                            @using (Html.BeginForm("VehicleMakeEdit", "VehicleMake", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.HiddenFor(x => x.Id)
+
+                                if (TempData["errorMsg"] != null)
+                                {
+                                    <div class="alert alert-danger ">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <strong>@TempData["errorMsg"]</strong> .
+                                    </div>
+                                }
+
+
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.MakeDescription, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.MakeDescription, new { @class = "form-control", @name = "MakeDescription", @autocomplete = "off", @id = "MakeDescription", @placeholder = "Enter Make Description" })
+                                            @Html.ValidationMessageFor(x => x.MakeDescription, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.MakeCode, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.MakeCode, new { @class = "form-control", @name = "MakeCode", @autocomplete = "off", @id = "MakeCode", @placeholder = "Enter Make Code" })
+                                            @Html.ValidationMessageFor(x => x.MakeCode, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.ShortDescription, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.ShortDescription, new { @class = "form-control", @name = "ShortDescription", @autocomplete = "off", @id = "ShortDescription", @placeholder = "Enter Short Description" })
+                                            @Html.ValidationMessageFor(x => x.ShortDescription, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    @*<div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.MinCompAmount, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.MinCompAmount, new { @class = "form-control", @name = "MinCompAmount", @autocomplete = "off", @id = "MinCompAmount", @placeholder = "Enter Min Comp Amount" })
+                                                @Html.ValidationMessageFor(x => x.MinCompAmount, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>*@
+                                </div>
+
+
+                                @*<input type="submit"  class="btn btn-primary"name="Save"/>*@
+                                <div class="col-md-12 next-btn">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-left">
+                                                <button type="button" class="btn" onclick="window.location.href='@Url.Action("VehicleMakeList","VehicleMake")'">Cancel</button>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="text-right">
+                                                <button type="submit" class="btn">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+

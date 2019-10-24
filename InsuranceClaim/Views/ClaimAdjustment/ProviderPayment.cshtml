@@ -1,0 +1,102 @@
+﻿@model InsuranceClaim.Models.ClaimAdjustmentModel
+@{
+    ViewBag.Title = "ProviderPayment";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            @{
+                var menutab = Html.Partial("ClaimRegister");
+            }
+            @menutab
+
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Payment</h4>
+                        </div>
+                        <div class="form-group-input">
+
+                            @using (Html.BeginForm("ProviderPayment", "ClaimAdjustment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.HiddenFor(x => x.Id)
+                                @Html.HiddenFor(x => x.RegistrationProviderId)
+
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-select">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.PayeeBankDetails, new { @class = "gender-label" })
+                                                @Html.DropDownListFor(x => x.PayeeBankDetails, ViewBag.ePaymentDetailData as SelectList, "Select Payment Type", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(x => x.PayeeBankDetails, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text " id="div_PhoneNumber" style="display:none">
+                                            <div class="form-group">
+                                                <div class="number-block">
+                                                    @Html.LabelFor(x => x.PhoneNumber, new { @class = "gender-label" })
+                                                    <small> In The Format: 0123456789</small>
+                                                    @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control", @name = "PhoneNumber", @autocomplete = "off", @id = "PhoneNumber", @placeholder = "Enter Phone Number" })
+                                                    @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <br />
+                                    <div class="col-md-12 next-btn">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="text-left">
+                                                    <button type="button" class="btn" onclick="window.location.href='@Url.Action("ListClaimAdjustment","ClaimAdjustment")'">Cancel</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn">Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        $("#PayeeBankDetails").change(function () {
+            debugger;
+            var getddlvalue = $('#PayeeBankDetails option:selected').val();
+            if (getddlvalue == "2") {
+                $("#div_PhoneNumber").show();
+            }
+            else {
+                $("#div_PhoneNumber").hide();
+            }
+        })
+
+        //$("#radiotest").addClass("btnDisabled").attr("style", "background-color: #e1e1e1 !important");
+        //$("#Driver21").addClass("btnDisabled").attr("style", "background-color: #e1e1e1 !important");
+
+    });
+
+
+</script>
+

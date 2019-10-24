@@ -1,0 +1,180 @@
+﻿@model InsuranceClaim.Models.ClaimAdjustmentModel
+@{
+    ViewBag.Title = "EditClaimAdjustment";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Claim Adjustment Edit</h4>
+                        </div>
+                        <div class="form-group-input">
+                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
+                            @using (Html.BeginForm("EditClaimAdjustment", "ClaimAdjustment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.HiddenFor(x => x.Id)
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            <label class="radio-label">Driver is under 21 or not ?</label>
+                                            @*@Html.LabelFor(x => x.Gender, new { @class = "gender-label" })*@
+                                            <div class="form-group-radio">
+                                                <label>@Html.RadioButtonFor(model => model.DriverIsUnder21, true)Yes</label>
+                                                <label>@Html.RadioButtonFor(model => model.DriverIsUnder21, false)No</label>
+                                                @Html.ValidationMessageFor(x => x.DriverIsUnder21, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 form-group-text">
+                                        <div class="form-group">
+                                            <label class="radio-label">Driver licensed  for less then 60 months ?</label>
+                                            <div class="form-group-radio">
+                                                <label>@Html.RadioButtonFor(model => model.Islicensedless60months, true)Yes</label>
+                                                <label>@Html.RadioButtonFor(model => model.Islicensedless60months, false)No</label>
+                                                @Html.ValidationMessageFor(x => x.Islicensedless60months, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            <label class="radio-label">Is stolen or not ?</label>
+                                            <label>@Html.RadioButtonFor(model => model.IsStolen, true)Yes</label>
+                                            <label>@Html.RadioButtonFor(model => model.IsStolen, false)No</label>
+                                            @Html.ValidationMessageFor(x => x.IsStolen, "", new { @class = "text-danger" })
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-6 form-group-text">
+                                        <div class="form-group">
+                                            <label class="radio-label">Loss is in Zimbabwe or not ?</label>
+                                            <div class="form-group-radio">
+                                                <label>@Html.RadioButtonFor(model => model.IsLossInZimbabwe, true)Yes</label>
+                                                <label>@Html.RadioButtonFor(model => model.IsLossInZimbabwe, false)No</label>
+                                                @Html.ValidationMessageFor(x => x.IsLossInZimbabwe, "", new { @class = "text-danger" })
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            <label class="radio-label">Weather its a partial loss or full loss ?</label>
+                                            <div class="form-group-radio">
+                                                <label>@Html.RadioButtonFor(model => model.IsPartialLoss, true)Yes</label>
+                                                <label>@Html.RadioButtonFor(model => model.IsPartialLoss, false)No</label>
+                                                @Html.ValidationMessageFor(x => x.IsPartialLoss, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.AmountToPay, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.AmountToPay, new { @class = "form-control", @name = "AmountToPay", @autocomplete = "off", @id = "AmountToPay", @placeholder = "Enter Amount" })
+                                                @Html.ValidationMessageFor(x => x.AmountToPay, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.EstimatedLoss, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.EstimatedLoss, new { @class = "form-control", @name = "EstimatedLoss", @autocomplete = "off", @id = "EstimatedLoss", @placeholder = "Enter Estimated Loss Amount" })
+                                                @Html.ValidationMessageFor(x => x.EstimatedLoss, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group-text">
+                                            <div class="form-group">
+
+                                                @Html.LabelFor(x => x.FirstName, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", @name = "FirstName", @autocomplete = "off", @id = "FirstName", @placeholder = "Enter First Name" })
+                                                @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.LastName, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", @name = "LastName", @autocomplete = "off", @id = "LastName", @placeholder = "Enter Last Name" })
+                                                @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.ExcessesAmount, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.ExcessesAmount, new { @class = "form-control", @name = "ExcessesAmount", @autocomplete = "off", @id = "ExcessesAmount", @placeholder = "Enter Excesses Amount" })
+                                                @Html.ValidationMessageFor(x => x.ExcessesAmount, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 form-group-text">
+                                            <div class="form-group">
+
+                                                @Html.LabelFor(x => x.PayeeName, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.PayeeName, new { @class = "form-control", @name = "PayeeName", @autocomplete = "off", @id = "PayeeName", @placeholder = "Enter Payee Name" })
+                                                @Html.ValidationMessageFor(x => x.PayeeName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.PolicyholderName, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.PolicyholderName, new { @class = "form-control", @name = "PolicyholderName", @autocomplete = "off", @id = "PolicyholderName", @placeholder = "Enter Policy Holder Name" })
+                                                @Html.ValidationMessageFor(x => x.PolicyholderName, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+
+                                                @Html.LabelFor(x => x.PayeeBankDetails, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.PayeeBankDetails, new { @class = "form-control", @name = "PayeeBankDetails", @autocomplete = "off", @id = "PayeeBankDetails", @placeholder = "Please Payee Bank Details" })
+                                                @Html.ValidationMessageFor(x => x.PayeeBankDetails, "", new { @class = "text-danger" })
+                                                @*@Html.DropDownListFor(x => x.PayeeBankDetails, new SelectList(ViewBag.ePayeeBankData, "ID", "Name"), "Select Payee Bank Detail", new { @class = "form-control" })*@
+                                                @*@Html.DropDownListFor(x => x.PayeeBankDetails, ViewBag.ePayeeBankData as SelectList, "Select Payment Term", new { @class = "form-control" })*@
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <br />
+                                    <div class="col-md-12 next-btn">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="text-left">
+                                                    <button type="button" class="btn" onclick="window.location.href='@Url.Action("ListClaimAdjustment","ClaimAdjustment")'">Cancel</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn">Update</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

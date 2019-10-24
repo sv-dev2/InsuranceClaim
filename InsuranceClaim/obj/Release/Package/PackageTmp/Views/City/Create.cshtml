@@ -1,0 +1,62 @@
+﻿@model InsuranceClaim.Models.CltyModel
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+
+
+<div class="body-content-section">
+    <div class="container">
+        <div class="form-group-section">
+
+            <div class="form-title"><h2>Create</h2></div>
+
+            @using (Html.BeginForm("Create", "City", FormMethod.Post, new { @class = "form-horizontal-center", role = "form" }))
+            {
+
+
+                if (TempData["errorMsg"] != null)
+                {
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>@TempData["errorMsg"]</strong> .
+                    </div>
+                }
+
+
+
+
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 form-group-text">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.CityName, new { @class = "gender-label" })
+                            @Html.TextBoxFor(x => x.CityName, new { @class = "form-control", @name = "CityName", @autocomplete = "off", @id = "CityName", @placeholder = "CityName" })
+                            @Html.ValidationMessageFor(x => x.CityName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 next-btn">
+                        <div class="text-left">
+                            <ul>
+                                <li><button type="button" class="btn" onclick="window.location.href='@Url.Action("Index","City")'">Cancel</button></li>
+                                <li class="pull-right"><button type="submit" class="btn">Add</button></li>
+                            </ul>
+                            
+                           
+                        </div>
+                    </div>
+                   
+                </div>
+
+            }
+
+
+        </div>
+    </div>
+</div>

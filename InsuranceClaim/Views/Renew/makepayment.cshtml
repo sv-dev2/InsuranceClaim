@@ -1,0 +1,33 @@
+﻿@using System.Web.Configuration;
+@{
+    ViewBag.Title = "makepayment";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+
+}
+
+<br />
+@*<form  action="http://localhost:49873/CustomerRegistration/returnurl" class="paymentWidgets" data-brands="VISA MASTER AMEX"></form>*@
+@*<form action="@Url.Action("returnurl", "CustomerRegistration")" class="paymentWidgets" data-brands="VISA MASTER AMEX"></form>*@
+
+
+<form action="@WebConfigurationManager.AppSettings["urlPath"]/Renew/returnurl" class="paymentWidgets" data-brands="VISA MASTER AMEX"></form>
+
+<script src="https://test.oppwa.com/v1/paymentWidgets.js?checkoutId=@ViewBag.checkoutId"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    var wpwlOptions = {
+        onReady: function () {
+            var numberOfInstallmentsHtml =
+              '<div class="wpwl-wrapper wpwl-wrapper-custom" style="display:inline-block">' +
+              '<input type="button" id=btnBack value="Back"/ style="background: #acacac;padding: 6px 12px;margin-bottom: 0;font-size: 14px;font-weight: 400;line-height: 1.42857143;">' +
+              '<a style="display:none" id="previouselink" href="/CustomerRegistration/SummaryDetail" class="back"></a>'
+              '</div>';
+            $('form.wpwl-form-card').find('.wpwl-button').before(numberOfInstallmentsHtml);
+
+            $("#btnBack").click(function () {
+                $("#previouselink")[0].click();
+            });
+        }
+    }
+</script>

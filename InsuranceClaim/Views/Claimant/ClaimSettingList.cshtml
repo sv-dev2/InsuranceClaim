@@ -1,0 +1,99 @@
+﻿@model List<Insurance.Domain.ClaimSetting>
+@using InsuranceClaim.Models;
+@using Insurance.Domain;
+@{
+    ViewBag.Title = "ClaimSettingList";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+<div class="productsave-section">
+    <div class="container">
+        <div class="row">
+            <div class="claims-list-section">
+                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top-claim">
+                    <div class="head-title">
+                        <h2>Claim Setting List</h2>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                    <div class="text-right">
+                        @*<button type="button" class="btn btn-primary">Add</button>*@
+                        <form>
+                            <input class="btn btn-primary" type="button" value="Add" onclick="window.location.href='@Url.Action("ClaimSetting", "Claimant")'" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*@using (Html.BeginForm("EditClaimant", "Claimant", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {*@
+        <div class="product-table-grid claimant-list-grid">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Key Name</th>
+                        <th>Value</th>
+                        <th>Value Type</th>
+                        <th>Vehicle Type</th>
+                        @*<th class="action-th">Action</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Insurance.Domain.ClaimSetting item in Model)
+                    {
+
+                        <tr>
+                            <td>@item.KeyName</td>
+                            <td>@item.Value</td>
+                            <td>
+                                @{
+
+                                    if (item.Valuetype == 1)
+                                    {
+                                        <span>@eSettingValueType.percentage</span>
+                                    }
+                                }
+
+                                @{
+
+                                    if (item.Valuetype == 2)
+                                    {
+                                        <span>@eSettingValueType.amount</span>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @{ 
+
+                                    if (item.VehicleType == 1)
+                                    {
+                                        <span>@eVehicleType.Private</span>
+                                    }
+                                }
+                                @{ 
+                                    if (item.VehicleType == 2)
+                                    {
+                                        <span>@eVehicleType.Commercial</span>
+                                    }
+                                }
+
+                            </td>
+                            @*<td>@item.ThirdPartyInvolvement</td>
+                                <td>
+                                    <div class="tbl-btn-list">
+                                        <ul class="list-inline">
+                                            <li>@Html.ActionLink("Register Claim", "SaveUpdatedata", new { PolicyNumber = item.PolicyNumber, id = item.Id }, new { @class = "btn-sm btn-primary" })</li>
+                                            <li>@Html.ActionLink("Edit", "EditClaimant", new { id = item.Id }, new { @class = "btn-sm btn-primary" })</li>
+                                            <li><button type="button" class="btn-sm btn-danger" onclick="ShowPopup('@item.Id')">Delete</button></li>
+                                        </ul>
+                                    </div>
+                                </td>*@
+                        </tr>
+                                    }
+                </tbody>
+            </table>
+        </div>
+        @*}*@
+    </div>
+</div>

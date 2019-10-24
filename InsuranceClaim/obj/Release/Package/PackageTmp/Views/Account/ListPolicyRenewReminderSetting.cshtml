@@ -1,0 +1,152 @@
+﻿@model List<Insurance.Domain.PolicyRenewReminderSetting>
+@using InsuranceClaim.Models;
+@using Insurance.Domain;
+@{
+    ViewBag.Title = "ListPolicyRenewReminderSetting";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+
+}
+
+
+<div class="productsave-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>List Policy Renew Reminder Setting</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    @*<button type="button" class="btn btn-primary">Add</button>*@
+                    <form>
+                        <input class="btn btn-primary" type="button" value="Add" onclick="window.location.href='@Url.Action("PolicyRenewReminderSetting", "Account" )'" />
+                    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="product-table-grid">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Number Of Days</th>
+                        <th>Notification Type</th>
+                        <th>Created By</th>
+                        <th>Created On</th>
+
+                        <th class="action-th">Action</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+
+                    @foreach (var item in Model)
+
+                    {
+                        <tr>
+                            <td>@item.NoOfDays</td>
+                            <td>
+                                @{
+                                    if (item.Email && item.SMS)
+                                    {
+                                        <span>@ePolicyRenewReminderType.Email</span> 
+                                        <span>& @ePolicyRenewReminderType.SMS</span>
+                                    }
+                                    else if (item.Email && !item.SMS)
+                                    {
+                                        <span>@ePolicyRenewReminderType.Email</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@ePolicyRenewReminderType.SMS</span>
+                                    }
+                                }
+
+                                @*@{
+
+                                    if (item.SMS)
+                                    {
+                                        <span>@ePolicyRenewReminderType.SMS</span>
+                                    }
+                                }*@
+
+                            </td>
+                            @{
+
+                                var username = InsuranceContext.Customers.Single(where: $"Id = {item.CreatedBy}");
+
+                                //var username = InsuranceContext.Customers.Single(item.CreatedBy);
+                                    <td>@username.FirstName @username.LastName</td>
+                                }
+
+                            
+                            <!--Created on - formatting it to display as dd/MM/yyyy -->
+                            <td>
+                                @{ 
+                                    var createdOnDateTime = item.CreatedOn;
+                                    var createdOnDateOnly = createdOnDateTime.ToString("dd/MM/yyyy");
+                                }
+                            @createdOnDateOnly
+                            </td>
+                            
+                            
+                            
+                            
+                            
+                            <td>
+                                <div class="tbl-btn-list">
+                                    <ul class="list-inline">
+                                        <li>@Html.ActionLink("Edit", "PolicyRenewReminderSetting", new { id = item.Id }, new { @class = "btn-sm btn-primary" })</li>
+                                            <li><button type="button" class="btn-sm btn-danger" onclick="showPopupp('@item.Id')">Delete</button></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="mymodals" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center;color: #00bcea;font-weight: bold;">Are you sure you want to delete this?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="ConfirmDelete();">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    let SettingListId;
+    function showPopupp(Id) {
+        debugger;
+        $("#mymodals").modal("show");
+        SettingListId = Id;
+    }
+    function ConfirmDelete() {
+        debugger;
+        var url = "@Url.Action("DeletePolicyRenewReminderSetting", "Account", new {Id=0 })";
+        var newurl = url.replace("0", SettingListId);
+        window.location.href = newurl;
+    }
+</script>s
