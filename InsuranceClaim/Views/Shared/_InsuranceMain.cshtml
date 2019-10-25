@@ -205,9 +205,10 @@
 
                                 @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff"))
                                 {
-                                    <li><a href="/Account/PolicyList">Policy Management</a></li>
+                                    @*<li><a href="/Account/PolicyList">Policy Management</a></li>*@
+                                     <li><a href="/Account/PolicyManagement">Policy Management</a></li>
                                     <li><a href="/Account/UserManagementList">Users</a></li>
-                                   
+
                                 }
 
 

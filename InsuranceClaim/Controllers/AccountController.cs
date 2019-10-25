@@ -1686,7 +1686,7 @@ namespace InsuranceClaim.Controllers
             return View(policylist);
         }
 
-
+        [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff")]
         public ActionResult PolicyManagement()
         {
 
@@ -2289,7 +2289,9 @@ namespace InsuranceClaim.Controllers
             {
 
             }
-            return View("PolicyList", policylist);
+            //return View("PolicyList", policylist);
+
+            return View("PolicyManagement", policylist);
         }
 
         // Setting Methods
