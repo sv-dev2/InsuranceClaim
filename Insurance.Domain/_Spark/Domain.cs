@@ -439,6 +439,7 @@ namespace Insurance.Domain
         public string ManufacturerYear { get; set; }
 
         public bool? IsRefund { get; set; }
+        public int ALMBranchId { get; set; }
 
     }
 

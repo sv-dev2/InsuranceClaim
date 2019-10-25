@@ -1551,7 +1551,6 @@ namespace InsuranceClaim.Controllers
                     CreatedOn = x.CreatedOn
                 }).ToList();
             }
-
             else if (role == "Agent")
             {
                 SummaryList = InsuranceContext.SummaryDetails.All(where: $"AgentId=" + customerID + " and isQuotation = '0'  ").OrderByDescending(x => x.Id).ToList();
@@ -1700,7 +1699,7 @@ namespace InsuranceClaim.Controllers
             query += " join VehicleDetail on VehicleDetail.CustomerId = PolicyDetail.CustomerId ";
             query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
             query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
-            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId ";
+            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId where SummaryDetail.isQuotation=0  ";
             query += " order by SummaryDetail.CreatedOn desc";
 
             ListPolicy policylist = new ListPolicy();
@@ -2050,248 +2049,302 @@ namespace InsuranceClaim.Controllers
         {
             return View();
         }
+        //public ActionResult SearchPolicy(string searchText)
+        //{
+        //    ListPolicy policylist = new ListPolicy();
+
+        //    try
+        //    {
+
+        //        var SummaryList = new List<SummaryDetail>();
+
+        //        policylist.listpolicy = new List<PolicyListViewModel>();
+        //        if (searchText != null && searchText != "")
+        //        {
+
+        //            var custom = searchText.Split(' ');
+
+        //            var customers = new List<Customer>();
+        //            if (custom.Length == 2)
+        //            {
+        //                var searchtext1 = Convert.ToString(custom[0]);
+        //                var searchtext2 = Convert.ToString(custom[1]);
+
+        //                customers = InsuranceContext.Customers.All(where: $"FirstName like '%{searchtext1}%' and LastName like '%{searchtext2}%' ").ToList();
+        //            }
+        //            if (custom.Length == 1)
+        //            {
+        //                customers = InsuranceContext.Customers.All(where: $"FirstName like '%{searchText}%' or LastName like '%{searchText}%' ").ToList();
+
+        //                if (customers.Count == 0)
+        //                {
+        //                    var vehicleDetails = InsuranceContext.VehicleDetails.All(where: $"RegistrationNo like '%{searchText}%' and IsActive=1 ");
+
+        //                    foreach (var item in vehicleDetails)
+        //                    {
+        //                        var summaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.Single(where: $"VehicleDetailsId= '{item.Id}' ");
+
+        //                        if (summaryVehicleDetails != null)
+        //                        {
+        //                            var summaryDetails = InsuranceContext.SummaryDetails.Single(where: $"Id= '{summaryVehicleDetails.SummaryDetailId}' ");
+        //                            if (summaryDetails != null)
+        //                            {
+        //                                SummaryList.Add(summaryDetails);
+        //                            }
+        //                        }
+
+
+        //                    }
+        //                }
+
+
+        //            }
+        //            if (customers != null && customers.Count > 0)
+        //            {
+        //                var commaSeperatedCustomerIds = "";
+        //                foreach (var item in customers)
+        //                {
+        //                    if (commaSeperatedCustomerIds == "")
+        //                    {
+        //                        commaSeperatedCustomerIds = item.Id.ToString();
+        //                    }
+        //                    else
+        //                    {
+        //                        commaSeperatedCustomerIds += "," + item.Id.ToString();
+        //                    }
+        //                }
+
+        //                SummaryList = InsuranceContext.SummaryDetails.All(where: $"CustomerId in ({commaSeperatedCustomerIds})").ToList();
+        //            }
+        //            else if (SummaryList.Count > 0)
+        //            {
+
+        //            }
+        //            else
+        //            {
+        //                //var policye = InsuranceContext.PolicyDetails.Query("Select * From PolicyDetail Where PolicyNumber Like '%" + searchText + "%'").FirstOrDefault();
+        //                var policye = InsuranceContext.PolicyDetails.Query("Select * From PolicyDetail Where PolicyNumber Like '%" + searchText + "%'").FirstOrDefault();
+        //                if (policye != null)
+        //                {
+
+
+        //                    var policyId = policye.Id;
+        //                    var vehicle = InsuranceContext.VehicleDetails.Single(where: $"PolicyId = '" + policyId + "'");
+
+        //                    if (vehicle != null)
+        //                    {
+        //                        if (vehicle.Id != 0)
+        //                        {
+        //                            var vehiclesummaryid = vehicle.Id;
+
+        //                            var SummaryVehicleDetail = InsuranceContext.SummaryVehicleDetails.Single(where: $"VehicleDetailsId =" + vehiclesummaryid);
+
+        //                            if (SummaryVehicleDetail.SummaryDetailId != 0)
+        //                            {
+        //                                SummaryList = InsuranceContext.SummaryDetails.All(Convert.ToString(SummaryVehicleDetail.SummaryDetailId)).ToList();
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+
+
+        //            var _User = UserManager.FindById(User.Identity.GetUserId().ToString());
+        //            var role = UserManager.GetRoles(_User.Id.ToString()).FirstOrDefault();
+
+        //            var customerID = InsuranceContext.Customers.Single(where: $"userid='{User.Identity.GetUserId().ToString()}'").Id;
+
+
+
+
+        //            if (role == "Staff")
+        //            {
+        //                // SummaryList = InsuranceContext.SummaryDetails.All(where: $"CreatedBy={customerID} and isQuotation = '0'  ").OrderByDescending(x => x.Id).ToList();
+
+        //                SummaryList = SummaryList.Where(c => c.CreatedBy == customerID && c.isQuotation == false).OrderByDescending(c => c.Id).ToList();
+        //            }
+        //            else if (role == "Administrator" || role == "Renewals")
+        //            {
+        //                //  SummaryList = InsuranceContext.SummaryDetails.All(where: $"isQuotation = '0'  ").OrderByDescending(x => x.Id).ToList();
+        //                SummaryList = SummaryList.Where(c => c.isQuotation == false).OrderByDescending(c => c.Id).ToList();
+        //            }
+        //            else
+        //            {
+        //                SummaryList = SummaryList.Where(c => c.CreatedBy == customerID && c.isQuotation == false).OrderByDescending(c => c.Id).ToList();
+        //            }
+
+
+        //            var paymentlList = InsuranceContext.PaymentInformations.All();
+
+
+        //            if (SummaryList != null && SummaryList.Count > 0)
+        //            {
+        //                foreach (var item in SummaryList)
+        //                {
+
+        //                    var paymentDetails = paymentlList.FirstOrDefault(c => c.SummaryDetailId == item.Id);
+        //                    if (paymentDetails == null)
+        //                    {
+        //                        continue;
+        //                    }
+
+        //                    PolicyListViewModel policylistviewmodel = new PolicyListViewModel();
+
+        //                    policylistviewmodel.Vehicles = new List<VehicleReinsuranceViewModel>();
+        //                    policylistviewmodel.TotalPremium = Convert.ToDecimal(item.TotalPremium);
+        //                    policylistviewmodel.TotalSumInsured = Convert.ToDecimal(item.TotalSumInsured);
+        //                    policylistviewmodel.PaymentMethodId = Convert.ToInt32(item.PaymentMethodId);
+        //                    policylistviewmodel.CustomerId = Convert.ToInt32(item.CustomerId);
+        //                    policylistviewmodel.SummaryId = item.Id;
+
+        //                    policylistviewmodel.PaymentMethod = MiscellaneousService.GetPaymentMethodNamebyID(item.PaymentMethodId == null ? 1 : item.PaymentMethodId.Value);
+
+
+
+        //                    var SummaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={item.Id}").ToList();
+        //                    var vehicle = InsuranceContext.VehicleDetails.Single(SummaryVehicleDetails[0].VehicleDetailsId);
+        //                    if (vehicle != null)
+        //                    {
+        //                        policylistviewmodel.CustomerName = MiscellaneousService.GetCustomerNamebyID(vehicle.CustomerId.Value);
+
+
+        //                        if (vehicle.PolicyId != 0)
+        //                        {
+        //                            var policy = InsuranceContext.PolicyDetails.Single(vehicle.PolicyId);
+
+        //                            //if (policy.PolicyName!="")
+        //                            //{
+        //                            var product = InsuranceContext.Products.Single(Convert.ToInt32(policy.PolicyName));
+        //                            policylistviewmodel.PolicyNumber = policy.PolicyNumber;
+        //                            //}
+
+        //                        }
+        //                    }
+
+
+
+
+        //                    foreach (var _item in SummaryVehicleDetails)
+        //                    {
+        //                        VehicleReinsuranceViewModel obj = new VehicleReinsuranceViewModel();
+        //                        var _vehicle = InsuranceContext.VehicleDetails.Single(_item.VehicleDetailsId);
+        //                        if (_vehicle != null)
+        //                        {
+
+
+
+
+        //                            if (_vehicle.Id != 0)
+        //                            {
+        //                                // var _reinsurenaceTrans = InsuranceContext.ReinsuranceTransactions.All(where: $"SummaryDetailId={item.Id} and VehicleId={_item.VehicleDetailsId}").ToList();
+        //                                var _reinsurenaceTrans = InsuranceContext.ReinsuranceTransactions.All(where: $"SummaryDetailId={item.Id} and VehicleId={_item.VehicleDetailsId}").ToList();
+        //                                obj.CoverType = Convert.ToInt32(_vehicle.CoverTypeId);
+        //                                obj.isReinsurance = (_vehicle.SumInsured > 100000 ? true : false);
+        //                                obj.MakeId = _vehicle.MakeId;
+        //                                obj.ModelId = _vehicle.ModelId;
+
+        //                                obj.Make = MiscellaneousService.GetMakeNamebyMakeCode(_vehicle.MakeId);
+        //                                obj.Model = MiscellaneousService.GetModelNamebyModelCode(_vehicle.ModelId);
+
+
+        //                                //obj.Premium = Convert.ToDecimal(_vehicle.Premium);
+        //                                obj.RegistrationNo = _vehicle.RegistrationNo;
+        //                                obj.SumInsured = Convert.ToDecimal(_vehicle.SumInsured);
+        //                                obj.VehicleId = _vehicle.Id;
+        //                                obj.startdate = Convert.ToDateTime(_vehicle.CoverStartDate);
+        //                                obj.enddate = Convert.ToDateTime(_vehicle.CoverEndDate);
+        //                                obj.isActive = Convert.ToBoolean(_vehicle.IsActive);
+        //                                obj.RenewalDate = Convert.ToDateTime(_vehicle.RenewalDate);
+        //                                if (_reinsurenaceTrans != null && _reinsurenaceTrans.Count > 0)
+        //                                {
+        //                                    obj.BrokerCommission = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsuranceCommission);
+        //                                    obj.AutoFacPremium = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsurancePremium);
+        //                                    obj.AutoFacReinsuranceAmount = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsuranceAmount);
+        //                                    if (_reinsurenaceTrans.Count > 1)
+        //                                    {
+        //                                        obj.FacultativeCommission = Convert.ToDecimal(_reinsurenaceTrans[1].ReinsuranceCommission);
+        //                                        obj.FacPremium = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsurancePremium);
+        //                                        obj.FacReinsuranceAmount = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsuranceAmount);
+        //                                    }
+        //                                }
+        //                            }
+        //                            policylistviewmodel.Vehicles.Add(obj);
+
+        //                        }
+
+        //                        //else
+        //                        //{
+        //                        //    return View("PolicyList", policylist);
+        //                        //}
+        //                    }
+
+        //                    policylist.listpolicy.Add(policylistviewmodel);
+        //                }
+        //            }
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //    //return View("PolicyList", policylist);
+
+        //    return View("PolicyManagement", policylist);
+        //}
+
+
+        [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff")]
         public ActionResult SearchPolicy(string searchText)
         {
+
+
+            string query = "select top 100 PolicyDetail.PolicyNumber, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
+            query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
+            query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
+            query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
+            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id join SummaryDetail on SummaryDetail.CustomerId = PolicyDetail.CustomerId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            query += " join VehicleDetail on VehicleDetail.CustomerId = PolicyDetail.CustomerId ";
+            query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
+            query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
+            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId ";
+            query += "  where PolicyDetail.PolicyNumber like '%" + searchText +"%' or Customer.FirstName like '%"+ searchText +"%' or VehicleDetail.RegistrationNo like'%"+ searchText + "%' and SummaryDetail.isQuotation=0  ";
+            query += " order by SummaryDetail.CreatedOn desc";
+
             ListPolicy policylist = new ListPolicy();
+            policylist.listpolicy = new List<PolicyListViewModel>();
+            PolicyListViewModel policylistviewmodel = new PolicyListViewModel();
 
-            try
+
+            List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
             {
+                PolicyNumber = x.PolicyNumber,
+                CustomerName = x.CustomerName,
+                PaymentMethod = x.PaymentMethod,
+                TotalSumInsured = x.TotalSumInsured,
+                TotalPremium = x.TotalPremium,
+                createdOn = x.CreatedOn,
+                SummaryId = x.Id,
+                RegisterationNumber = x.RegistrationNo,
+                Make = x.Make,
+                Model = x.Model,
+                Currency = x.currency,
+                VehicleSumInsured = x.SumInsured,
+                isLapsed = x.isLapsed,
+                IsActive = x.IsActive,
+                VehicleDetailId = x.VehicleId,
+                RenewalDate = x.RenewalDate == null ? "" : Convert.ToString(x.RenewalDate),
+                RenewPolicyNumber = x.RenewPolicyNumber,
+                BrokerCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
+                AutoFacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
+                FacultativeCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
+                FacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
+                FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount)
+            }).ToList();
 
-                var SummaryList = new List<SummaryDetail>();
-
-                policylist.listpolicy = new List<PolicyListViewModel>();
-                if (searchText != null && searchText != "")
-                {
-
-                    var custom = searchText.Split(' ');
-
-                    var customers = new List<Customer>();
-                    if (custom.Length == 2)
-                    {
-                        var searchtext1 = Convert.ToString(custom[0]);
-                        var searchtext2 = Convert.ToString(custom[1]);
-
-                        customers = InsuranceContext.Customers.All(where: $"FirstName like '%{searchtext1}%' and LastName like '%{searchtext2}%' ").ToList();
-                    }
-                    if (custom.Length == 1)
-                    {
-                        customers = InsuranceContext.Customers.All(where: $"FirstName like '%{searchText}%' or LastName like '%{searchText}%' ").ToList();
-
-                        if (customers.Count == 0)
-                        {
-                            var vehicleDetails = InsuranceContext.VehicleDetails.All(where: $"RegistrationNo like '%{searchText}%' and IsActive=1 ");
-
-                            foreach (var item in vehicleDetails)
-                            {
-                                var summaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.Single(where: $"VehicleDetailsId= '{item.Id}' ");
-
-                                if (summaryVehicleDetails != null)
-                                {
-                                    var summaryDetails = InsuranceContext.SummaryDetails.Single(where: $"Id= '{summaryVehicleDetails.SummaryDetailId}' ");
-                                    if (summaryDetails != null)
-                                    {
-                                        SummaryList.Add(summaryDetails);
-                                    }
-                                }
-
-
-                            }
-                        }
-
-
-                    }
-                    if (customers != null && customers.Count > 0)
-                    {
-                        var commaSeperatedCustomerIds = "";
-                        foreach (var item in customers)
-                        {
-                            if (commaSeperatedCustomerIds == "")
-                            {
-                                commaSeperatedCustomerIds = item.Id.ToString();
-                            }
-                            else
-                            {
-                                commaSeperatedCustomerIds += "," + item.Id.ToString();
-                            }
-                        }
-
-                        SummaryList = InsuranceContext.SummaryDetails.All(where: $"CustomerId in ({commaSeperatedCustomerIds})").ToList();
-                    }
-                    else if (SummaryList.Count > 0)
-                    {
-
-                    }
-                    else
-                    {
-                        //var policye = InsuranceContext.PolicyDetails.Query("Select * From PolicyDetail Where PolicyNumber Like '%" + searchText + "%'").FirstOrDefault();
-                        var policye = InsuranceContext.PolicyDetails.Query("Select * From PolicyDetail Where PolicyNumber Like '%" + searchText + "%'").FirstOrDefault();
-                        if (policye != null)
-                        {
-
-
-                            var policyId = policye.Id;
-                            var vehicle = InsuranceContext.VehicleDetails.Single(where: $"PolicyId = '" + policyId + "'");
-
-                            if (vehicle != null)
-                            {
-                                if (vehicle.Id != 0)
-                                {
-                                    var vehiclesummaryid = vehicle.Id;
-
-                                    var SummaryVehicleDetail = InsuranceContext.SummaryVehicleDetails.Single(where: $"VehicleDetailsId =" + vehiclesummaryid);
-
-                                    if (SummaryVehicleDetail.SummaryDetailId != 0)
-                                    {
-                                        SummaryList = InsuranceContext.SummaryDetails.All(Convert.ToString(SummaryVehicleDetail.SummaryDetailId)).ToList();
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-
-                    var _User = UserManager.FindById(User.Identity.GetUserId().ToString());
-                    var role = UserManager.GetRoles(_User.Id.ToString()).FirstOrDefault();
-
-                    var customerID = InsuranceContext.Customers.Single(where: $"userid='{User.Identity.GetUserId().ToString()}'").Id;
-
-
-
-
-                    if (role == "Staff")
-                    {
-                        // SummaryList = InsuranceContext.SummaryDetails.All(where: $"CreatedBy={customerID} and isQuotation = '0'  ").OrderByDescending(x => x.Id).ToList();
-
-                        SummaryList = SummaryList.Where(c => c.CreatedBy == customerID && c.isQuotation == false).OrderByDescending(c => c.Id).ToList();
-                    }
-                    else if (role == "Administrator" || role == "Renewals")
-                    {
-                        //  SummaryList = InsuranceContext.SummaryDetails.All(where: $"isQuotation = '0'  ").OrderByDescending(x => x.Id).ToList();
-                        SummaryList = SummaryList.Where(c => c.isQuotation == false).OrderByDescending(c => c.Id).ToList();
-                    }
-                    else
-                    {
-                        SummaryList = SummaryList.Where(c => c.CreatedBy == customerID && c.isQuotation == false).OrderByDescending(c => c.Id).ToList();
-                    }
-
-
-                    var paymentlList = InsuranceContext.PaymentInformations.All();
-
-
-                    if (SummaryList != null && SummaryList.Count > 0)
-                    {
-                        foreach (var item in SummaryList)
-                        {
-
-                            var paymentDetails = paymentlList.FirstOrDefault(c => c.SummaryDetailId == item.Id);
-                            if (paymentDetails == null)
-                            {
-                                continue;
-                            }
-
-                            PolicyListViewModel policylistviewmodel = new PolicyListViewModel();
-
-                            policylistviewmodel.Vehicles = new List<VehicleReinsuranceViewModel>();
-                            policylistviewmodel.TotalPremium = Convert.ToDecimal(item.TotalPremium);
-                            policylistviewmodel.TotalSumInsured = Convert.ToDecimal(item.TotalSumInsured);
-                            policylistviewmodel.PaymentMethodId = Convert.ToInt32(item.PaymentMethodId);
-                            policylistviewmodel.CustomerId = Convert.ToInt32(item.CustomerId);
-                            policylistviewmodel.SummaryId = item.Id;
-
-                            policylistviewmodel.PaymentMethod = MiscellaneousService.GetPaymentMethodNamebyID(item.PaymentMethodId == null ? 1 : item.PaymentMethodId.Value);
-
-
-
-                            var SummaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={item.Id}").ToList();
-                            var vehicle = InsuranceContext.VehicleDetails.Single(SummaryVehicleDetails[0].VehicleDetailsId);
-                            if (vehicle != null)
-                            {
-                                policylistviewmodel.CustomerName = MiscellaneousService.GetCustomerNamebyID(vehicle.CustomerId.Value);
-
-
-                                if (vehicle.PolicyId != 0)
-                                {
-                                    var policy = InsuranceContext.PolicyDetails.Single(vehicle.PolicyId);
-
-                                    //if (policy.PolicyName!="")
-                                    //{
-                                    var product = InsuranceContext.Products.Single(Convert.ToInt32(policy.PolicyName));
-                                    policylistviewmodel.PolicyNumber = policy.PolicyNumber;
-                                    //}
-
-                                }
-                            }
-
-
-
-
-                            foreach (var _item in SummaryVehicleDetails)
-                            {
-                                VehicleReinsuranceViewModel obj = new VehicleReinsuranceViewModel();
-                                var _vehicle = InsuranceContext.VehicleDetails.Single(_item.VehicleDetailsId);
-                                if (_vehicle != null)
-                                {
-
-
-
-
-                                    if (_vehicle.Id != 0)
-                                    {
-                                        // var _reinsurenaceTrans = InsuranceContext.ReinsuranceTransactions.All(where: $"SummaryDetailId={item.Id} and VehicleId={_item.VehicleDetailsId}").ToList();
-                                        var _reinsurenaceTrans = InsuranceContext.ReinsuranceTransactions.All(where: $"SummaryDetailId={item.Id} and VehicleId={_item.VehicleDetailsId}").ToList();
-                                        obj.CoverType = Convert.ToInt32(_vehicle.CoverTypeId);
-                                        obj.isReinsurance = (_vehicle.SumInsured > 100000 ? true : false);
-                                        obj.MakeId = _vehicle.MakeId;
-                                        obj.ModelId = _vehicle.ModelId;
-
-                                        obj.Make = MiscellaneousService.GetMakeNamebyMakeCode(_vehicle.MakeId);
-                                        obj.Model = MiscellaneousService.GetModelNamebyModelCode(_vehicle.ModelId);
-
-
-                                        //obj.Premium = Convert.ToDecimal(_vehicle.Premium);
-                                        obj.RegistrationNo = _vehicle.RegistrationNo;
-                                        obj.SumInsured = Convert.ToDecimal(_vehicle.SumInsured);
-                                        obj.VehicleId = _vehicle.Id;
-                                        obj.startdate = Convert.ToDateTime(_vehicle.CoverStartDate);
-                                        obj.enddate = Convert.ToDateTime(_vehicle.CoverEndDate);
-                                        obj.isActive = Convert.ToBoolean(_vehicle.IsActive);
-                                        obj.RenewalDate = Convert.ToDateTime(_vehicle.RenewalDate);
-                                        if (_reinsurenaceTrans != null && _reinsurenaceTrans.Count > 0)
-                                        {
-                                            obj.BrokerCommission = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsuranceCommission);
-                                            obj.AutoFacPremium = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsurancePremium);
-                                            obj.AutoFacReinsuranceAmount = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsuranceAmount);
-                                            if (_reinsurenaceTrans.Count > 1)
-                                            {
-                                                obj.FacultativeCommission = Convert.ToDecimal(_reinsurenaceTrans[1].ReinsuranceCommission);
-                                                obj.FacPremium = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsurancePremium);
-                                                obj.FacReinsuranceAmount = Convert.ToDecimal(_reinsurenaceTrans[0].ReinsuranceAmount);
-                                            }
-                                        }
-                                    }
-                                    policylistviewmodel.Vehicles.Add(obj);
-
-                                }
-
-                                //else
-                                //{
-                                //    return View("PolicyList", policylist);
-                                //}
-                            }
-
-                            policylist.listpolicy.Add(policylistviewmodel);
-                        }
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-            }
-            //return View("PolicyList", policylist);
-
-            return View("PolicyManagement", policylist);
+            //FacultativeCommission
+            return View("PolicyManagement", list);
         }
 
         // Setting Methods
