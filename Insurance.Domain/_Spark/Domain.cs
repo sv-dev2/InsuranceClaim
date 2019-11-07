@@ -1326,6 +1326,8 @@ namespace Insurance.Domain
         public int? EndorsementVehicleId { get; set; }
         public int? EndorsementPolicyId { get; set; }
 
+        public decimal PayableAmount { get; set; }
+
     }
 
     public partial class EndorsementSummaryVehicleDetail : Entity<EndorsementSummaryVehicleDetail>

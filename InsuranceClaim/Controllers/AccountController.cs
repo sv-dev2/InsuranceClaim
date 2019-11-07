@@ -1690,7 +1690,7 @@ namespace InsuranceClaim.Controllers
         {
 
 
-            string query = "select top 100 PolicyDetail.PolicyNumber, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
+            string query = "select top 100 PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
             query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
             query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
@@ -1711,6 +1711,7 @@ namespace InsuranceClaim.Controllers
             {
                 PolicyNumber = x.PolicyNumber,
                 CustomerName = x.CustomerName,
+                CustomerId = x.CustomerId,
                 PaymentMethod = x.PaymentMethod,
                 TotalSumInsured = x.TotalSumInsured,
                 TotalPremium = x.TotalPremium,
@@ -2299,7 +2300,7 @@ namespace InsuranceClaim.Controllers
         {
 
 
-            string query = "select top 100 PolicyDetail.PolicyNumber, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
+            string query = "select top 100 PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
             query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
             query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
@@ -2320,6 +2321,7 @@ namespace InsuranceClaim.Controllers
             List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
             {
                 PolicyNumber = x.PolicyNumber,
+                CustomerId=x.CustomerId,
                 CustomerName = x.CustomerName,
                 PaymentMethod = x.PaymentMethod,
                 TotalSumInsured = x.TotalSumInsured,

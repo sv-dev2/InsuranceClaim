@@ -125,5 +125,6 @@ namespace InsuranceClaim.Models
 
         public string Currency { get; set; }
 
+        
     }
 }

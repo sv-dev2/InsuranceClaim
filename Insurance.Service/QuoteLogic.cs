@@ -40,7 +40,7 @@ namespace Insurance.Service
 
             decimal ratingPremium = 0;
 
-
+            
             var additionalchargeatp = 0.0m;
             var additionalchargepac = 0.0m;
             var additionalchargeebb = 0.0m;
@@ -663,11 +663,11 @@ namespace Insurance.Service
 
             this.Premium = this.Premium + ratingPremium;
 
-            
 
-          //  if (IsEndorsment && coverType == eCoverType.Comprehensive)
-               // this.Premium = CalculatPremiumAccourdingDay(premium, PaymentTermid, vehicleEndDate);
-            
+
+            if (IsEndorsment && coverType == eCoverType.Comprehensive)
+                this.Premium = CalculatPremiumAccourdingDay(premium, PaymentTermid, vehicleEndDate);
+
 
 
             return this;
