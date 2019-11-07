@@ -797,19 +797,15 @@
     }
 
     function EditVehicleDetails(index) {
-
         debugger;
         var redirecturl = '@Url.Action("RiskDetail", "ContactCentre", new { id= 0 })';
         redirecturl = redirecturl.replace("0", index);
         location.href = redirecturl;
-
-
     }
 
     function DeleteVehicleDetails(index) {
         var obj = {};
         obj.index = index;
-
         $.ajax({
             url: "@Url.Action("DeleteVehicle", "CustomerRegistration")",
             data: obj,

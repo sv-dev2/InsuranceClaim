@@ -56,5 +56,8 @@ namespace InsuranceClaim.Models
         public int? CustomerId { get; set; }
         public int? VehicleDetailId { get; set; }
         public int? EndorsementVehicleId { get; set; }
+        public decimal PayableAmount { get; set; }
+
+
     }
 }

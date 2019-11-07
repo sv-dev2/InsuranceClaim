@@ -187,30 +187,11 @@ namespace InsuranceClaim.Controllers
                                 InsuranceContext.SummaryDetails.Update(summaryDetails);
 
                             }
-
-
-                        }
-
-                      
-
+                        }                    
                     }
-
-
-
                 }
-
-
-               
-
-
-
-
-
-
             }
         }
-
-
 
         public ActionResult BackToCustomerDetail(int id = 0)
         {
@@ -3125,12 +3106,8 @@ namespace InsuranceClaim.Controllers
                     var list = (List<RiskDetailModel>)Session["RenewVehicleDetails"];
                     List<VehicleListModel> vehiclelist = new List<VehicleListModel>();
 
-
                     foreach (var item in list)
                     {
-
-
-
                         VehicleListModel obj = new VehicleListModel();
                         obj.make = InsuranceContext.VehicleMakes.Single(where: $" MakeCode='{item.MakeId}'").MakeDescription;
                         obj.model = InsuranceContext.VehicleModels.Single(where: $"ModelCode='{item.ModelId}'").ModelDescription;
@@ -3260,6 +3237,7 @@ namespace InsuranceClaim.Controllers
                     }
 
                     // Invalid Partner Token.
+
 
                     var res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
                     if (res.Response != null && (res.Response.Message.Contains("Partner Token has expired") || res.Response.Message.Contains("Invalid Partner Token")))

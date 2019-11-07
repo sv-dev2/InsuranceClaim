@@ -873,7 +873,8 @@ namespace InsuranceClaim.Controllers
                 result = true;
             }
 
-           // result = false; // to do
+            
+             result = false; // to do
             return result;
         }
 
@@ -3074,8 +3075,9 @@ namespace InsuranceClaim.Controllers
                     //  ResultRootObject quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
                     ResultRootObject quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
 
+                    // Invalid Partner Token. 
 
-                    if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                    if (quoteresponse.Response != null && (quoteresponse.Response.Message.Contains("Partner Token has expired") || quoteresponse.Response.Message.Contains("Invalid Partner Token")))
                     {
                       tokenObject=  ICEcashService.getToken();
                         SummaryDetailService.UpdateToken(tokenObject);
@@ -3101,7 +3103,6 @@ namespace InsuranceClaim.Controllers
                         {
                             Session["InsuranceId"] = quoteresponse.Response.Quotes[0].InsuranceID;
                         }
-
                     }
                 }
 
