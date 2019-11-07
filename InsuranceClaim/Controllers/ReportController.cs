@@ -590,6 +590,245 @@ namespace InsuranceClaim.Controllers
         //    return View(Model);
         //}
 
+        public ActionResult SummaryProductivityReport() 
+        {
+            return View();
+        }
+
+        public ActionResult SummaryProductivityReportData()
+        {
+            //var ListProductiviyReport = new List<ProductiviyReportModel>();
+            List<ProductiviyReportModel> listProductiviyReport = new List<ProductiviyReportModel>();
+            List<UserDetails> data = new List<UserDetails>();
+            List<ProductiviyReportModel> listProductiviyReport_Endorsed = new List<ProductiviyReportModel>();
+            ListProductiviyReportModel _listListProductiviyReport = new ListProductiviyReportModel();
+            _listListProductiviyReport.ListProductiviyReport = new List<ProductiviyReportModel>();
+            ProductiviySearchReportModel model = new ProductiviySearchReportModel();
+            List<UserDetails> userDetail = new List<UserDetails>();
+            //   var vehicledetail = InsuranceContext.VehicleDetails.All(where: $"IsActive = 'True'or IsActive is null").OrderByDescending(c=>c.Id).ToList();
+
+            try
+            {
+                // var query = "select * from AspNetUsers";
+                var name = "Staff";
+                var secondQuery = "select AspNetUsers.* from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id  where AspNetRoles.Name ='" + name + "'";
+
+                var userSum = InsuranceContext.Query(secondQuery).Select(x => new AspNetUsersModel()
+                {
+                    Email = x.Email,
+                    UserName = x.UserName
+                }).ToList();
+
+                
+                foreach (var i in userSum)
+                {
+                    var emailUsername = i.Email;
+                    var vehicleDetailsQuery = "select SummaryDetail.TotalSumInsured as Sum_Insured, AspNetUsers.Email as PolicyCreatedBy from VehicleDetail join SummaryVehicleDetail on VehicleDetail.Id = SummaryVehicleDetail.VehicleDetailsId join SummaryDetail on SummaryVehicleDetail.SummaryDetailId = SummaryDetail.Id join Customer on SummaryDetail.CreatedBy = Customer.Id join AspNetUsers on Customer.UserID = AspNetUsers.Id where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and AspNetUsers.Email ='" + emailUsername + "'";
+
+
+                    var vehicleDetailsSummary = InsuranceContext.Query(vehicleDetailsQuery).
+                         Select(x => new GrossWrittenPremiumReportModels()
+                         {
+                             Sum_Insured = x.Sum_Insured,
+                             PolicyCreatedBy = x.PolicyCreatedBy
+
+                         }).ToList();
+
+
+                    UserDetails userDetails = new UserDetails();
+                    var count = 0;
+                    decimal sum = 0;
+
+                    foreach (var v in vehicleDetailsSummary) 
+                    {
+                        sum = sum + v.Sum_Insured;
+                        count++;
+                    }
+                    userDetails.UserName = i.UserName;
+                    userDetails.counts = count;
+                    userDetails.SumInsured = sum;
+                    userDetail.Add(userDetails);
+
+                }
+                data = userDetail;
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Json(new { data = data }, JsonRequestBehavior.AllowGet);
+        }
+
+        [Authorize(Roles = "Administrator,Reports")]
+        public ActionResult SearchManagementReports(GrossWrittenPremiumReportSearchModels _model)
+        {
+            try
+            {
+                List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
+                ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
+                _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
+                GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
+                BranchModel Branch = new BranchModel();
+                List<BranchModel> ListBranchModel = new List<BranchModel>();
+
+                var branchQuery = "select Branch.BranchName, Branch.AlmId from Branch";
+
+                ListBranchModel = InsuranceContext.Branches.Query(branchQuery).Select(x => new BranchModel()
+                {
+                    BranchName = x.BranchName,
+                    AlmId = x.AlmId
+                }).ToList();
+
+
+                var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else Customer.ALMId end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+                query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+                query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+                query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+                query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+                query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+                query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+                query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+                query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+                query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+                query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+                query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+                query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+                query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+                query += " join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+                query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+                query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+                query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+                query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101))";
+
+                ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
+                    Select(x => new GrossWrittenPremiumReportModels()
+                    {
+
+                        Policy_Number = x.Policy_Number,
+                        BranchName = x.BranchName,
+                        PolicyCreatedBy = x.PolicyCreatedBy,
+                        Customer_Name = x.Customer_Name,
+                        Transaction_date = x.Transaction_date.ToShortDateString(),
+                        CoverNoteNum = x.CoverNoteNum,
+                        Payment_Mode = x.Payment_Mode,
+                        Payment_Term = x.Payment_Term,
+                        CoverType = x.CoverType,
+                        Currency = x.Currency,
+                        Premium_due = x.Premium_due,
+                        Stamp_duty = x.Stamp_duty,
+                        ZTSC_Levy = x.ZTSC_Levy,
+                        ALMId = x.ALMId,
+                        Comission_Amount = x.Comission_Amount,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        RadioLicenseCost = x.RadioLicenseCost,
+                        Zinara_License_Fee = x.Zinara_License_Fee,
+                        PolicyRenewalDate = x.PolicyRenewalDate,
+                        IsActive = x.IsActive,
+                        RenewPolicyNumber = x.RenewPolicyNumber,
+                        // BusinessSourceName = x.BusinessSourceName,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        SourceDetailName = x.SourceDetailName,
+                    }).ToList();
+
+                Model.ListGrossWrittenPremiumReportdata = ListGrossWrittenPremiumReport.OrderByDescending(p => p.Id).ToList();
+                Model.ListBranchModelData = ListBranchModel.OrderByDescending(p => p.Id).ToList();
+
+
+                return View("ManagementReport", Model);
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Authorize(Roles = "Administrator,Reports")]
+        public ActionResult ManagementReport()
+        {
+            try
+            {
+                List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
+                ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
+                _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
+                GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
+                BranchModel Branch = new BranchModel();
+                List<BranchModel> ListBranchModel = new List<BranchModel>();
+
+                var branchQuery = "select Branch.BranchName, Branch.AlmId from Branch";
+
+                ListBranchModel = InsuranceContext.Branches.Query(branchQuery).Select(x => new BranchModel()
+                {
+                    BranchName = x.BranchName,
+                    AlmId = x.AlmId
+                }).ToList();
+
+
+                var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else Customer.ALMId end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+                query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+                query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+                query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+                query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+                query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+                query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+                query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+                query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+                query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+                query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+                query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+                query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+                query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+                query += " join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+                query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+                query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+                query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+                query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0  order by  VehicleDetail.Id desc ";
+
+                ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
+                    Select(x => new GrossWrittenPremiumReportModels()
+                    {
+
+                        Policy_Number = x.Policy_Number,
+                        BranchName = x.BranchName,
+                        PolicyCreatedBy = x.PolicyCreatedBy,
+                        Customer_Name = x.Customer_Name,
+                        Transaction_date = x.Transaction_date.ToShortDateString(),
+                        CoverNoteNum = x.CoverNoteNum,
+                        Payment_Mode = x.Payment_Mode,
+                        Payment_Term = x.Payment_Term,
+                        CoverType = x.CoverType,
+                        Currency = x.Currency,
+                        Premium_due = x.Premium_due,
+                        Stamp_duty = x.Stamp_duty,
+                        ZTSC_Levy = x.ZTSC_Levy,
+                        ALMId = x.ALMId,
+                        Comission_Amount = x.Comission_Amount,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        RadioLicenseCost = x.RadioLicenseCost,
+                        Zinara_License_Fee = x.Zinara_License_Fee,
+                        PolicyRenewalDate = x.PolicyRenewalDate,
+                        IsActive = x.IsActive,
+                        RenewPolicyNumber = x.RenewPolicyNumber,
+                        // BusinessSourceName = x.BusinessSourceName,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        SourceDetailName = x.SourceDetailName,
+                    }).ToList();
+
+                Model.ListGrossWrittenPremiumReportdata = ListGrossWrittenPremiumReport.OrderByDescending(p => p.Id).ToList();
+                Model.ListBranchModelData = ListBranchModel.OrderByDescending(p => p.Id).ToList();
+           
+
+                return View(Model);
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         [Authorize(Roles = "Administrator,Reports")]
         public ActionResult GrossWrittenPremiumReport()
         {

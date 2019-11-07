@@ -59,6 +59,7 @@ namespace InsuranceClaim.Models
     }
     public class GrossWrittenPremiumReportSearchModels
     {
+        public List<BranchModel> ListBranchModelData { get; set; }
         public List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReportdata { get; set; }
         
         [Required(ErrorMessage = "Please Enter Start Date.")]

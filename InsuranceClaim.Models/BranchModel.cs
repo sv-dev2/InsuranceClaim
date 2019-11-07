@@ -14,5 +14,7 @@ namespace InsuranceClaim.Models
         [Display(Name = "Provider Type")]
         [Required(ErrorMessage = "Please Enter BranchName")]
         public string BranchName { get; set; }
+
+        public string AlmId { get; set; }
     }
 }
