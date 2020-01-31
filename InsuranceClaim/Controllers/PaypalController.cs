@@ -1335,23 +1335,23 @@ namespace InsuranceClaim.Controllers
                             }
 
 
-                            if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee > 0)
-                            {
-                                quoteresponse = ICEcashService.LICQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                            //if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee > 0)
+                            //{
+                            //    quoteresponse = ICEcashService.LICQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
 
-                                if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
-                                {
-                                    //  log.WriteLog(quoteresponse.Response.Quotes[0].Message + " reg no: " + vichelDetails.RegistrationNo);
-                                    tokenObject = iceCash.getToken();
-                                    // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-                                    //  tokenObject = service.CheckSessionExpired();
-                                    SummaryDetailService.UpdateToken(tokenObject);
-                                    PartnerToken = tokenObject.Response.PartnerToken;
+                            //    if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                            //    {
+                            //        //  log.WriteLog(quoteresponse.Response.Quotes[0].Message + " reg no: " + vichelDetails.RegistrationNo);
+                            //        tokenObject = iceCash.getToken();
+                            //        // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                            //        //  tokenObject = service.CheckSessionExpired();
+                            //        SummaryDetailService.UpdateToken(tokenObject);
+                            //        PartnerToken = tokenObject.Response.PartnerToken;
 
 
-                                    ICEcashService.LICQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
-                                }
-                            }
+                            //        ICEcashService.LICQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                            //    }
+                            //}
                             //   System.Threading.Thread.Sleep(10000); // wait for 20 second       
 
                              res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
