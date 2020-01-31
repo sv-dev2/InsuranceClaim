@@ -12,4 +12,9 @@ namespace InsuranceClaim.Models
         public string CityName { get; set; }
         public DateTime? CreatedOn { get; set; }
     }
+
+
+    
+
+
 }

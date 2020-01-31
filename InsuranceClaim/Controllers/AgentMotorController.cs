@@ -28,7 +28,6 @@ namespace InsuranceClaim.Controllers
         string AdminEmail = WebConfigurationManager.AppSettings["AdminEmail"];
         string ZimnatEmail = WebConfigurationManager.AppSettings["ZimnatEmail"];
         public static string _AgentModule = "AgentModule";
-
         Insurance.Service.smsService objsmsService = new Insurance.Service.smsService();
 
         public ApplicationUserManager UserManager
@@ -42,6 +41,7 @@ namespace InsuranceClaim.Controllers
                 _userManager = value;
             }
         }
+
 
         // GET: AgentMotor
         public ActionResult Index()
@@ -172,8 +172,6 @@ namespace InsuranceClaim.Controllers
                 return View(customerModel);
             }
         }
-
-
         public void SetCustomerValueIntoSession(int summaryId)
         {
             Session["ICEcashToken"] = null;
@@ -194,7 +192,6 @@ namespace InsuranceClaim.Controllers
             }
             Session["CustomerDataModal"] = custModel;
         }
-
 
         private void RemoveSession()
         {
@@ -220,7 +217,6 @@ namespace InsuranceClaim.Controllers
 
                 if (userLoggedin)
                 {
-
                     //var AllUsers = UserManager.Users.ToList();
                     //var isExist = AllUsers.Any(p => p.Email.ToLower() == model.EmailAddress.ToLower() || p.UserName.ToLower() == model.EmailAddress);
                     //if (isExist)
@@ -238,7 +234,6 @@ namespace InsuranceClaim.Controllers
                         //}
 
                         var email = LoggedUserEmail();
-
                         if (email == model.EmailAddress)
                         {
                             return Json(new { IsError = false, error = "Staff and customer email can not be same" }, JsonRequestBehavior.AllowGet);
@@ -713,11 +708,8 @@ namespace InsuranceClaim.Controllers
         }
 
 
-
         public ActionResult SummaryDetail(int summaryDetailId = 0, string paymentError = "")
         {
-
-
             if (Session["CustomerDataModal"] == null && summaryDetailId == 0)
             {
                 // return RedirectToAction("Index", "CustomerRegistration");
@@ -732,13 +724,11 @@ namespace InsuranceClaim.Controllers
             var model = new SummaryDetailModel();
             try
             {
-
                 Session["issummaryformvisited"] = true;
                 var summarydetail = (SummaryDetailModel)Session["SummaryDetailed"];
                 SummaryDetailService SummaryDetailServiceObj = new SummaryDetailService();
 
                 ViewBag.SummaryDetailId = summaryDetailId;
-
 
                 var role = "";
                 if (System.Web.HttpContext.Current.User.Identity.GetUserId() != null)
@@ -746,15 +736,12 @@ namespace InsuranceClaim.Controllers
                     role = UserManager.GetRoles(System.Web.HttpContext.Current.User.Identity.GetUserId()).FirstOrDefault();
                 }
 
-
                 ViewBag.CurrentUserRole = role;
 
                 //if (summarydetail != null) // on 05-oct while editing qutation
                 //{
                 //    return View(summarydetail);
                 //}
-
-
 
                 var summary = new SummaryDetailService();
                 var vehicle = (List<RiskDetailModel>)Session["VehicleDetails"];// summary.GetVehicleInformation(id);
@@ -1956,7 +1943,7 @@ namespace InsuranceClaim.Controllers
                             var ExcessAmount = 0.00m;
 
                             var ePaymentTermData = from ePaymentTerm e in Enum.GetValues(typeof(ePaymentTerm)) select new { ID = (int)e, Name = e.ToString() };
-
+                            string converType = "";
 
                             foreach (var item in ListOfVehicles)
                             {
@@ -1973,7 +1960,7 @@ namespace InsuranceClaim.Controllers
                                 ExcessAmount = ExcessAmount + Convert.ToDecimal(item.ExcessAmount);
 
 
-                                string converType = "";
+                               
 
                                 if (item.CoverTypeId == 1)
                                 {
@@ -2096,7 +2083,13 @@ namespace InsuranceClaim.Controllers
                             Insurance.Service.smsService objsmsService = new Insurance.Service.smsService();
 
                             // done
-                            string Recieptbody = "Hi " + customer.FirstName + "\nPlease pay" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " to merchant code 249341 activate your policy with GeneInsure. Shortcode *151*2*2*249341*<amount>#." + "\n" + "\nThank you.";
+                            // string Recieptbody = "Hi " + customer.FirstName + "\nPlease pay" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " to merchant code 249341 activate your policy with GeneInsure. Shortcode *151*2*2*249341*<amount>#." + "\n" + "\nThank you.";
+
+                            //string Recieptbody = "Dear " + customer.FirstName + "\nPlease pay" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " to merchant code 249341 activate your policy with GeneInsure. Shortcode *151*2*2*249341*<amount>#." + "\n" + "\nThank you.";
+
+
+                            string Recieptbody = "Dear " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " for a " + converType + " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
+
                             var Recieptresult = await objsmsService.SendSMS(customer.CountryCode.Replace("+", "") + user.PhoneNumber, Recieptbody);
 
                             SmsLog objRecieptsmslog = new SmsLog()

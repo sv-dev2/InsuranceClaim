@@ -43,6 +43,12 @@ namespace InsuranceClaim.Models
 
         public DateTime? CreatedOn { get; set;}
 
+        public decimal ZinaraFee { get; set; }
+
+        public decimal RadioCost { get; set; }
+
+     
+
     }
     public class ListReceiptModule
     {

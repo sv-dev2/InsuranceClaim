@@ -37,6 +37,7 @@ namespace InsuranceClaim.Controllers
         string _superUser = "fe19c887-f8a9-4353-939f-65e19afe0D5L";
         static string _staff = "bbbeffe0-94fa-41b7-bd8b-72d9ddc7f8f0";
         static string _Agentstaff = "bbbeffe0-94fa-41b7-bd8b-72d9ddc7HGTR";
+        static string _Customer = "3eb6f5f5-32dc-43cf-a2c0-0354670c5b6c";
 
         public AccountController()
         {
@@ -80,7 +81,6 @@ namespace InsuranceClaim.Controllers
         {
             Session.Abandon();
             Session.Clear();
-
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -112,7 +112,7 @@ namespace InsuranceClaim.Controllers
                     Session["lastname"] = customer.LastName;
 
 
-                    if (role == "Administrator" || role == "SuperUser" || role == "Agent" || role == "AgentStaff" || role == "Reports")
+                    if (role == "Administrator" || role == "SuperUser" || role == "Agent" || role == "AgentStaff" || role == "Reports" || role == "Finance")
                     {
                         return RedirectToAction("Dashboard", "Account");
                     }
@@ -1012,10 +1012,139 @@ namespace InsuranceClaim.Controllers
                 test.Name = model.RoleName;
                 roleManager.Update(test);
             }
-
-
-
             return RedirectToAction("RoleManagementList");
+        }
+
+
+        [Authorize(Roles = "Customer")]
+        public ActionResult Detail()
+        {
+
+            bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+            string path = Server.MapPath("~/Content/Countries.txt");
+            var _countries = System.IO.File.ReadAllText(path);
+            var resultt = Newtonsoft.Json.JsonConvert.DeserializeObject<RootObject>(_countries);
+            ViewBag.Countries = resultt.countries;
+
+            ViewBag.Cities = InsuranceContext.Cities.All();
+            ViewBag.Branches = InsuranceContext.Branches.All();
+
+
+            var userid = "";
+
+            if (userLoggedin)
+            {
+                userid = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            }
+            else
+            {
+                return RedirectToAction("Index", "CustomerRegistration");
+            }
+
+            CustomerModel obj = new CustomerModel();
+            //  List<IdentityRole> roles = roleManager.Roles.Where(c => c.Id == _Customer).ToList();
+            InsuranceClaim.Models.RoleManagementListViewModel _roles = new RoleManagementListViewModel();
+
+
+            //  _roles.RoleList = roles;
+            // ViewBag.Adduser = _roles.RoleList;
+
+            var customer = InsuranceContext.Customers.Single(where: "UserId='" + userid + "'");
+
+
+            if (customer != null)
+            {
+                //var data = InsuranceContext.Customers.Single(id);
+                var branchs = InsuranceContext.Branches.Single(customer.BranchId) == null ? "" : InsuranceContext.Branches.Single(customer.BranchId).BranchName;
+                var user = UserManager.FindById(customer.UserID);
+                var email = user.Email;
+                var phone = user.PhoneNumber;
+                var role = UserManager.GetRoles(customer.UserID).FirstOrDefault();
+
+                obj.FirstName = customer.FirstName;
+                obj.LastName = customer.LastName;
+                obj.AddressLine1 = customer.AddressLine1;
+                obj.AddressLine2 = customer.AddressLine2;
+                obj.City = customer.City;
+                obj.Branch = Convert.ToString(customer.BranchId);
+                obj.CountryCode = customer.Countrycode;
+                obj.Gender = customer.Gender;
+                obj.Id = customer.Id;
+                obj.DateOfBirth = customer.DateOfBirth;
+                obj.NationalIdentificationNumber = customer.NationalIdentificationNumber;
+                obj.Zipcode = customer.Zipcode;
+                obj.role = role;
+                obj.PhoneNumber = Convert.ToString(phone);
+                obj.EmailAddress = Convert.ToString(email);
+
+            }
+            return View(obj);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPost]
+        public ActionResult Detail(CustomerModel model)
+        {
+            try
+            {
+
+                string path = Server.MapPath("~/Content/Countries.txt");
+                var _countries = System.IO.File.ReadAllText(path);
+                var resultt = Newtonsoft.Json.JsonConvert.DeserializeObject<RootObject>(_countries);
+                ViewBag.Countries = resultt.countries;
+
+                ViewBag.Cities = InsuranceContext.Cities.All();
+                ViewBag.Branches = InsuranceContext.Branches.All();
+
+
+                Customer customer = InsuranceContext.Customers.Single(model.Id);
+                var user = UserManager.FindById(customer.UserID);
+                // var role = UserManager.GetRoles(customer.UserID).FirstOrDefault();
+                user.PhoneNumber = model.PhoneNumber;
+
+                //if (role == null)
+                //{
+                //    UserManager.AddToRole(user.Id, model.role);
+                //}
+                //else if (role != model.role)
+                //{
+                //    UserManager.RemoveFromRole(user.Id, role);
+                //    UserManager.AddToRole(user.Id, model.role);
+                //    //update role                    
+                //}
+
+                customer.CustomerId = model.CustomerId;
+                customer.Id = customer.Id;
+                customer.AddressLine1 = model.AddressLine1;
+                customer.AddressLine2 = model.AddressLine2;
+                customer.City = model.City;
+                // customer.BranchId = Convert.ToInt32(model.Branch);
+                customer.Countrycode = model.CountryCode;
+                customer.DateOfBirth = model.DateOfBirth;
+                customer.FirstName = model.FirstName;
+                customer.LastName = model.LastName;
+                customer.NationalIdentificationNumber = model.NationalIdentificationNumber;
+                customer.Zipcode = model.Zipcode;
+                customer.Gender = model.Gender;
+                customer.Country = model.Country;
+                customer.IsActive = model.IsActive;
+                customer.IsLicenseDiskNeeded = model.IsLicenseDiskNeeded;
+                customer.IsOTPConfirmed = model.IsOTPConfirmed;
+                customer.IsPolicyDocSent = model.IsPolicyDocSent;
+                customer.IsWelcomeNoteSent = model.IsWelcomeNoteSent;
+                customer.PhoneNumber = model.PhoneNumber;
+
+                InsuranceContext.Customers.Update(customer);
+                UserManager.Update(user);
+
+                TempData["SuccessMsg"] = "Successfully updated.";
+
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMsg"] = "Error Occured, pelase try again.";
+            }
+            return View(model);
         }
 
         [Authorize(Roles = "Administrator")]
@@ -1038,9 +1167,7 @@ namespace InsuranceClaim.Controllers
 
 
             List<IdentityRole> roles = roleManager.Roles.ToList();
-
             InsuranceClaim.Models.RoleManagementListViewModel _roles = new RoleManagementListViewModel();
-
             _roles.RoleList = roles;
 
             return View(_roles);
@@ -1508,9 +1635,8 @@ namespace InsuranceClaim.Controllers
             Session["ViewlistVehicles"] = null;
             ListPolicy policylist = new ListPolicy();
             policylist.listpolicy = new List<PolicyListViewModel>();
-            //   var SummaryList = InsuranceContext.SummaryDetails.All().OrderByDescending(x => x.Id).ToList(); // commented 
-
-            //      var SummaryList = InsuranceContext.SummaryDetails.All().OrderByDescending(x => x.Id).ToList();
+            //  var SummaryList = InsuranceContext.SummaryDetails.All().OrderByDescending(x => x.Id).ToList(); // commented 
+            //  var SummaryList = InsuranceContext.SummaryDetails.All().OrderByDescending(x => x.Id).ToList();
 
             var SummaryList = new List<SummaryDetail>();
             var currenyList = _summaryDetailService.GetAllCurrency();
@@ -1693,7 +1819,7 @@ namespace InsuranceClaim.Controllers
             string query = "select top 100 PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
             query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
-            query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
+            query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.LicExpiryDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id join SummaryDetail on SummaryDetail.CustomerId = PolicyDetail.CustomerId ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += " join VehicleDetail on VehicleDetail.CustomerId = PolicyDetail.CustomerId ";
@@ -1724,10 +1850,10 @@ namespace InsuranceClaim.Controllers
                 VehicleSumInsured = x.SumInsured,
                 isLapsed = x.isLapsed,
                 IsActive = x.IsActive,
-                VehicleDetailId=x.VehicleId,
-                RenewalDate = x.RenewalDate==null? "" : Convert.ToString(x.RenewalDate),
+                VehicleDetailId = x.VehicleId,
+                RenewalDate = GetRenewalDate(x.RenewalDate==null? "" : Convert.ToDateTime(x.RenewalDate).ToShortDateString(), x.LicExpiryDate),
                 RenewPolicyNumber = x.RenewPolicyNumber,
-                BrokerCommission = x.ReinsuranceCommission==null?0 : Convert.ToDecimal(x.ReinsuranceCommission),
+                BrokerCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 AutoFacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
                 FacultativeCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 FacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
@@ -1739,6 +1865,23 @@ namespace InsuranceClaim.Controllers
         }
 
 
+        //public string GetRenewalDate(string renewDate)
+        //{
+        //    DateTime date = DateTime.Now;
+
+        //    return date.ToShortDateString();
+        //}
+
+        public string GetRenewalDate(string renewDate = "", string licExpDate = "")
+        {
+            DateTime date = DateTime.Now;
+
+            if (!string.IsNullOrEmpty(licExpDate))
+                date = Convert.ToDateTime(licExpDate);
+            else if (!string.IsNullOrEmpty(renewDate))
+                date = Convert.ToDateTime(renewDate);
+            return date.ToShortDateString();
+        }
 
 
         [Authorize(Roles = "Staff,Administrator")]
@@ -2045,7 +2188,7 @@ namespace InsuranceClaim.Controllers
         }
 
         // GET: Dashboard
-        [Authorize(Roles = "Administrator, AgentStaff, Agent, SuperUser,Reports")]
+        [Authorize(Roles = "Administrator, AgentStaff, Agent, SuperUser,Reports,Finance")]
         public ActionResult Dashboard()
         {
             return View();
@@ -2303,14 +2446,14 @@ namespace InsuranceClaim.Controllers
             string query = "select top 100 PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
             query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
-            query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
+            query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.LicExpiryDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id join SummaryDetail on SummaryDetail.CustomerId = PolicyDetail.CustomerId ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += " join VehicleDetail on VehicleDetail.CustomerId = PolicyDetail.CustomerId ";
             query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
             query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId ";
-            query += "  where PolicyDetail.PolicyNumber like '%" + searchText +"%' or Customer.FirstName like '%"+ searchText +"%' or VehicleDetail.RegistrationNo like'%"+ searchText + "%' and SummaryDetail.isQuotation=0  ";
+            query += "  where PolicyDetail.PolicyNumber like '%" + searchText + "%' or Customer.FirstName like '%" + searchText + "%' or VehicleDetail.RegistrationNo like'%" + searchText + "%' and SummaryDetail.isQuotation=0  ";
             query += " order by SummaryDetail.CreatedOn desc";
 
             ListPolicy policylist = new ListPolicy();
@@ -2321,7 +2464,7 @@ namespace InsuranceClaim.Controllers
             List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
             {
                 PolicyNumber = x.PolicyNumber,
-                CustomerId=x.CustomerId,
+                CustomerId = x.CustomerId,
                 CustomerName = x.CustomerName,
                 PaymentMethod = x.PaymentMethod,
                 TotalSumInsured = x.TotalSumInsured,
@@ -2336,7 +2479,8 @@ namespace InsuranceClaim.Controllers
                 isLapsed = x.isLapsed,
                 IsActive = x.IsActive,
                 VehicleDetailId = x.VehicleId,
-                RenewalDate = x.RenewalDate == null ? "" : Convert.ToString(x.RenewalDate),
+                //RenewalDate = x.RenewalDate == null ? "" : Convert.ToString(x.RenewalDate),
+                RenewalDate = GetRenewalDate(x.RenewalDate == null ? "" : Convert.ToDateTime(x.RenewalDate).ToShortDateString(), x.LicExpiryDate),
                 RenewPolicyNumber = x.RenewPolicyNumber,
                 BrokerCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 AutoFacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
@@ -3534,6 +3678,8 @@ namespace InsuranceClaim.Controllers
                 Session["SummaryDetailIdView"] = id;
                 SetValueIntoSession(Convert.ToInt32(Session["SummaryDetailIdView"]));
                 viewModel.SummaryId = Convert.ToInt32(Session["SummaryDetailIdView"]);
+
+                Session["SummaryDetailIdView"] = null; // 22_nov 2019
             }
 
 
@@ -3756,15 +3902,15 @@ namespace InsuranceClaim.Controllers
 
 
 
-                var currentUrl=   HttpContext.Request.Url.AbsoluteUri;
+                var currentUrl = HttpContext.Request.Url.AbsoluteUri;
 
-                if(currentUrl.Contains("Renew"))
+                if (currentUrl.Contains("Renew"))
                 {
-                     list = (List<RiskDetailModel>)Session["RenewVehicleView"];
+                    list = (List<RiskDetailModel>)Session["RenewVehicleView"];
                 }
                 else
                 {
-                     list = (List<RiskDetailModel>)Session["ViewlistVehicles"];
+                    list = (List<RiskDetailModel>)Session["ViewlistVehicles"];
                 }
 
                 foreach (var item in list)
@@ -3781,7 +3927,7 @@ namespace InsuranceClaim.Controllers
                     vehiclelist.Add(obj);
                 }
 
-                if(list.Count>1)
+                if (list.Count > 0)
                 {
                     return Json(vehiclelist, JsonRequestBehavior.AllowGet);
                 }
@@ -4124,8 +4270,8 @@ namespace InsuranceClaim.Controllers
                     string make = VehicleMakes.Where(x => x.MakeCode == items.MakeId).Select(x => x.ShortDescription).FirstOrDefault();
                     string model = VehicleModels.Where(x => x.ModelCode == items.ModelId).Select(x => x.ShortDescription).FirstOrDefault();
 
-
-                    string body = "Hello " + customerData.FirstName + "\nYour Vehicle " + make + " " + model + " will Expire in " + item.NoOfDays + " days i.e on " + items.RenewalDate.Value.ToString("dd/MM/yyyy") + ". Please Renew/Repay for your next Payment Term before the Renewal date of " + items.RenewalDate.Value.ToString("dd/MM/yyyy") + " to continue your services otherwise your vehicle will get Lapsed." + "\nThank you.";
+                    // string body = "Hello " + customerData.FirstName + "\nYour Vehicle " + make + " " + model + " will Expire in " + item.NoOfDays + " days i.e on " + items.RenewalDate.Value.ToString("dd/MM/yyyy") + ". Please Renew/Repay for your next Payment Term before the Renewal date of " + items.RenewalDate.Value.ToString("dd/MM/yyyy") + " to continue your services otherwise your vehicle will get Lapsed." + "\nThank you.";
+                    string body = "Dear Customer, Please be advised that your motor vehicle insurance is due for renewals. Our renewals team will call you to assist with the renewal process.";
 
                     try
                     {
@@ -4140,7 +4286,6 @@ namespace InsuranceClaim.Controllers
                         };
 
                         InsuranceContext.SmsLogs.Insert(objsmslog);
-
                     }
                     catch (Exception ex)
                     {

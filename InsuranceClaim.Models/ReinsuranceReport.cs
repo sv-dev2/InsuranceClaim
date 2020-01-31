@@ -26,6 +26,11 @@ namespace InsuranceClaim.Models
         public decimal FacCommission { get; set; }
 
         public string Currency { get; set; }
+
+        public string Make { get; set; }
+        public string Model { get; set; }
+
+        public string RegistrationNumber { get; set; }
     }
 
     public class ListReinsuranceReport

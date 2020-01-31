@@ -52,10 +52,15 @@ namespace InsuranceClaim.Models
 
         public string Currency { get; set; }
 
-
+        // risk cover
         public string Error { get; set; }
+        [Display(Name = "Basic Premium")]
+        public decimal? AnnualRiskPremium { get; set; }
+        public decimal? Premium { get; set; }
+        [Display(Name = "Premium Due")]
+        public decimal? PremiumDue { get; set; }
 
-      //  public IceCashModel IceCashModel { get; set; }
+        //  public IceCashModel IceCashModel { get; set; }
 
     }
 }

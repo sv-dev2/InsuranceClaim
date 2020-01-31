@@ -86,12 +86,9 @@ namespace InsuranceClaim.Controllers
 
 
             string url = HttpContext.Request.Url.Authority;
-
-            //		Authority	"localhost:49873"	string
-
+            // Authority	"localhost:49873"	string
 
             var branchList = InsuranceContext.Branches.All();
-
 
             var query = "select Customer. * , AspNetUsers.Email, AgentLogo.LogoPath from Customer ";
             query += "   join AspNetUsers on Customer.UserID = AspNetUsers.Id ";

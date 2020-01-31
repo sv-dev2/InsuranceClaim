@@ -50,19 +50,15 @@ namespace InsuranceClaim.Controllers
             try
             {
                 var cityDetails = InsuranceContext.Cities.Single(where: $"CityName = '" + model.CityName + "'");
-
                 if (cityDetails != null)
                 {
                     TempData["errorMsg"] = "City already exist.";
-
                     return View(model);
                 }
-
 
                 // TODO: Add insert logic here
                 if (ModelState.IsValid)
                 {
-
                     try
                     {
                         City city = new City { CityName = model.CityName, CreatedOn = DateTime.Now };
@@ -70,12 +66,8 @@ namespace InsuranceClaim.Controllers
                     }
                     catch (Exception ex)
                     {
-
                     }
-
-
                 }
-
                 return RedirectToAction("Index");
             }
             catch

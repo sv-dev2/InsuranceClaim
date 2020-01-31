@@ -11,21 +11,18 @@
     var fname = "";
     var lname = "";
     var LoyalyPoints = 0.00m;
+    
     if (userLoggedin)
     {
         var customer = InsuranceContext.Customers.Single(where: $"userid='{userId}'");
-
         if (customer != null)
-        {
+        {       
             LoyalyPoints = Convert.ToDecimal(InsuranceContext.LoyaltyDetails.All(where: $"CustomerId={customer.Id}").Sum(x => x.PointsEarned));
             role = System.Web.HttpContext.Current.User.IsInRole("Administrator") ? "Administrator" : (System.Web.HttpContext.Current.User.IsInRole("Customer") ? "Customer" : "");
             fname = customer.FirstName;
             lname = customer.LastName;
         }
     }
-
-
-  
 
 }
 @{
@@ -45,9 +42,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 
-    @*<script src="~/Scripts/jquery-1.10.2.js"></script>*@
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
 
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    @*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
    
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="~/Scripts/bootstrap.min.js"></script>
@@ -56,13 +53,22 @@
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
     @*<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>*@
     <script src="~/Scripts/CustomerRegistration/CustomerRegistration.js"></script>
-    @*<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>*@
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>*@
+    <script src="~/Scripts/moment-with-locales.js"></script>
+
+    @*<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>*@
+
+  
+    <script src="~/Scripts/bootstrap-datetimepicker_new.js"></script>
+
+
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <script src="~/Scripts/toastr.js"></script>
     <script src="~/Scripts/bootbox.min.js"></script>
-    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    @*<link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">*@
+    <link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
     <link href="~/Content/style-sorting.css" rel="stylesheet" />
     <script src="~/Scripts/jquery.tablesorter.js"></script>
     <link href="~/Content/select2.css" rel="stylesheet" />
@@ -180,7 +186,8 @@
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav">
 
-                              
+                                @*<li><a href="/Individual/RegisterUser">Individual motor</a></li>
+                                <li><a href="/Domestic/RegisterUser">Domestic</a></li>*@
 
                                 @if (userLoggedin && (User.IsInRole("Staff")|| User.IsInRole("Renewals")))
                                 {
@@ -190,7 +197,6 @@
                                 {
                                     <li><a href="/CustomerRegistration/Index">Request Quote</a></li>
                                 }
-
 
 
                                 @*<li><a href="#">Renew Policy</a></li>*@
@@ -208,17 +214,12 @@
                                     @*<li><a href="/Account/PolicyList">Policy Management</a></li>*@
                                      <li><a href="/Account/PolicyManagement">Policy Management</a></li>
                                     <li><a href="/Account/UserManagementList">Users</a></li>
-
                                 }
-
-
 
                                 @if (User.IsInRole("Agent"))
                                 {
                                     <li><a href="/AgentStaff/Index">Agent Staff</a></li>                              
                                 }
-
-
 
                                 @if (User.IsInRole("Claim"))
                                 {
@@ -249,20 +250,19 @@
                                 }
 
 
-                                @if (User.IsInRole("Finance"))
+                                @*@if (User.IsInRole("Finance"))
                                 {
-                                    @*<li><a class="DashboardButton" href="@Url.Action("Dashboard","Account")">Dashboard</a></li>*@
 
                                     <li><a  href="@Url.Action("ReconciliationReport", "Report")">Reconciliation</a></li> 
 
                                     <li><a  href="@Url.Action("ReceiptModule", "CustomerRegistration")">Receipt</a></li>                             
-                                }
+                                }*@
 
 
-                                @*@if (User.IsInRole("Finance"))
+                                @if (User.IsInRole("Finance"))
                                 {
                                     <li><a class="DashboardButton" href="@Url.Action("Dashboard","Account")">Dashboard</a></li>
-                                }*@
+                                }
 
                                     @if (User.IsInRole("AgentStaff"))
                                     {
@@ -274,8 +274,6 @@
                                 {
                                     <li><a class="DashboardButton" href="@Url.Action("Index","Agent")">Agent</a></li>
                                 }
-
-
                             </ul>
                             <ul class="navbar-nav navbar-right login-btn" style="@(userLoggedin ? "display:none;" : "display:inline-block;")">
                                 <li><a href="/Account/Login">Login</a></li>
@@ -292,6 +290,11 @@
                                                 <li><a href="/Account/Logout">Logout</a></li>
                                                 <li><a href="/Account/MyPolicies">My Policies</a></li>
                                                 <li><a href="/Account/QuotationList">My Quotation</a></li>
+
+                                                if (User.IsInRole("Customer"))
+                                                {
+                                                    <li><a href="/Account/Detail">Account</a></li>
+                                                }
                                                 @*if (User.IsInRole("Staff"))
                                                     {
                                                         <li><a href="/Endorsement/EndorsementDetail">Endorsement View</a></li>
@@ -310,10 +313,6 @@
                 </div>
             </nav>
         </div>
-
-
-
-
 
     </div>
     <div>

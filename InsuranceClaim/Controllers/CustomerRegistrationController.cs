@@ -49,15 +49,11 @@ namespace InsuranceClaim.Controllers
 
 
         // [Authorize(Roles = "Staff,Administrator")]
-
         public ActionResult Index(int id = 0)
         {
             // var res = MaxCustoermId();
-
             // var res = InsuranceContext.Query("select * from Customer").Select(x => new CustomerModel() { AddressLine1 = x.AddressLine1 }).ToList();
-
             // var roles = UserManager.GetRoles("Guest-1161@gmail.com").FirstOrDefault();
-
 
             if (id != -1) // -1 use for getting session value when click on back button
             {
@@ -259,7 +255,6 @@ namespace InsuranceClaim.Controllers
             return Json(new { IsError = false, error = TempData["ErrorMessage"].ToString() }, JsonRequestBehavior.AllowGet);
         }
 
-
         public void AddOrUpdateCustomerInformation(CustomerModel model)
         {
             var summaryDetails = InsuranceContext.SummaryDetails.Single(model.Id);
@@ -295,10 +290,9 @@ namespace InsuranceClaim.Controllers
 
         }
 
-
-
         public ActionResult ProductDetail()
         {
+
             var model = new PolicyDetailModel();
             var InsService = new InsurerService();
             model.CurrencyId = InsuranceContext.Currencies.All().FirstOrDefault().Id;
@@ -346,12 +340,10 @@ namespace InsuranceClaim.Controllers
         [HttpPost]
         public JsonResult SavePolicyData(PolicyDetailModel model)
         {
-
             JsonResult json = new JsonResult();
             var response = new Response();
             try
             {
-
                 response.Message = "Success";
                 response.Status = true;
                 json.Data = response;
@@ -367,7 +359,6 @@ namespace InsuranceClaim.Controllers
                 json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
                 return json;
             }
-
         }
         public ActionResult RiskDetail(int? id = 1)
         {
@@ -586,7 +577,6 @@ namespace InsuranceClaim.Controllers
             return View(viewModel);
         }
 
-
         public void SetValueIntoSession(int summaryId)
         {
             Session["ICEcashToken"] = null;
@@ -616,7 +606,6 @@ namespace InsuranceClaim.Controllers
             Session["SummaryDetailed"] = summarymodel;
 
         }
-
 
         [HttpPost]
         public ActionResult GenerateQuote(RiskDetailModel model, string btnAddVehicle = "")
@@ -726,7 +715,7 @@ namespace InsuranceClaim.Controllers
                 }
                 catch (Exception ex)
                 {
-                  //  WriteLog(ex.Message);
+                    //  WriteLog(ex.Message);
 
                     if (User.IsInRole("Staff"))
                     {
@@ -849,7 +838,7 @@ namespace InsuranceClaim.Controllers
                 }
                 catch (Exception ex)
                 {
-                  //  WriteLog(ex.Message);
+                    //  WriteLog(ex.Message);
                     return RedirectToAction("SummaryDetail");
                 }
             }
@@ -859,7 +848,6 @@ namespace InsuranceClaim.Controllers
         {
 
             bool result = false;
-
             var query = "select VehicleDetail.RegistrationNo from VehicleDetail join SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.VehicleDetailsId ";
             query += " join SummaryDetail on SummaryVehicleDetail.SummaryDetailId = SummaryDetail.Id where RegistrationNo = '" + vrn + "' and VehicleDetail.IsActive=1 and SummaryDetail.isQuotation <> 1";
 
@@ -873,8 +861,7 @@ namespace InsuranceClaim.Controllers
                 result = true;
             }
 
-            
-             result = false; // to do
+            result = false; // to do
             return result;
         }
 
@@ -1071,8 +1058,6 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult SummaryDetail(int summaryDetailId = 0, string paymentError = "")
         {
-
-
             if (Session["CustomerDataModal"] == null && summaryDetailId == 0)
             {
                 // return RedirectToAction("Index", "CustomerRegistration");
@@ -1266,7 +1251,7 @@ namespace InsuranceClaim.Controllers
             }
             catch (Exception ex)
             {
-               // WriteLog(ex.Message);
+                // WriteLog(ex.Message);
                 return View(model);
             }
 
@@ -1296,6 +1281,8 @@ namespace InsuranceClaim.Controllers
             }
             return new string(chars);
         }
+
+
 
 
         //public int MaxCustoermId1()
@@ -1713,12 +1700,28 @@ namespace InsuranceClaim.Controllers
                         var listReinsuranceTransaction = new List<ReinsuranceTransaction>();
                         var vehicle = (List<RiskDetailModel>)Session["VehicleDetails"];
 
+                        string format = "yyyyMMdd";
+
 
                         if (vehicle != null && vehicle.Count > 0)
                         {
                             foreach (var item in vehicle.ToList())
                             {
+                                if (!string.IsNullOrEmpty(item.LicExpiryDate))
+                                {
+                                    var LicExpiryDate = DateTime.ParseExact(item.LicExpiryDate, format, CultureInfo.InvariantCulture);
+                                    item.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                                    if (item.VehicleLicenceFee > 0)
+                                        item.IceCashRequest = "InsuranceAndLicense";
+                                }
+                                else
+                                    item.IceCashRequest = "Insurance";
+
+
                                 var _item = item;
+
+
+
 
                                 //List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
                                 ////objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo });
@@ -1744,7 +1747,7 @@ namespace InsuranceClaim.Controllers
                                 }
 
 
-                                if (item.Id == null || item.Id == 0)
+                                if (item.Id == 0)
                                 {
                                     var service = new RiskDetailService();
                                     _item.CustomerId = customer.Id;
@@ -2337,7 +2340,7 @@ namespace InsuranceClaim.Controllers
                                 ExcessAmount = ExcessAmount + Convert.ToDecimal(item.ExcessAmount);
 
 
-                               
+
 
                                 if (item.CoverTypeId == 1)
                                 {
@@ -2451,7 +2454,11 @@ namespace InsuranceClaim.Controllers
 
 
                             // done
-                            string Recieptbody = "Hi " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " for a " + converType+ " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
+                            // string Recieptbody = "Hi " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " for a " + converType+ " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
+
+                            string Recieptbody = "Dear " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " for a " + converType + " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
+
+
                             var Recieptresult = await objsmsService.SendSMS(customer.CountryCode.Replace("+", "") + user.PhoneNumber, Recieptbody);
 
                             SmsLog objRecieptsmslog = new SmsLog()
@@ -2546,8 +2553,6 @@ namespace InsuranceClaim.Controllers
                 doc.Add(phrase);
                 Paragraph para = new Paragraph();
                 doc.Add(para);
-
-
             }
         }
         public string LoggedUserEmail()
@@ -2559,15 +2564,12 @@ namespace InsuranceClaim.Controllers
                 var _User = UserManager.FindById(User.Identity.GetUserId().ToString());
                 email = _User.Email;
             }
-
-
             return email;
-
         }
 
 
         [HttpPost]
-        public JsonResult CalculatePremium(int vehicleUsageId, decimal sumInsured, int coverType, int excessType, decimal excess, decimal? AddThirdPartyAmount, int NumberofPersons, Boolean Addthirdparty, Boolean PassengerAccidentCover, Boolean ExcessBuyBack, Boolean RoadsideAssistance, Boolean MedicalExpenses, decimal? RadioLicenseCost, Boolean IncludeRadioLicenseCost, int policytermid, Boolean isVehicleRegisteredonICEcash, string BasicPremium, string StampDuty, string ZTSCLevy, int ProductId = 0, string vehicleStartDate = "", string vehicleEndDate = "", string manufacturerYear = "", Boolean IsEndorsment=false)
+        public JsonResult CalculatePremium(int vehicleUsageId, decimal sumInsured, int coverType, int excessType, decimal excess, decimal? AddThirdPartyAmount, int NumberofPersons, Boolean Addthirdparty, Boolean PassengerAccidentCover, Boolean ExcessBuyBack, Boolean RoadsideAssistance, Boolean MedicalExpenses, decimal? RadioLicenseCost, Boolean IncludeRadioLicenseCost, int policytermid, Boolean isVehicleRegisteredonICEcash, string BasicPremium, string StampDuty, string ZTSCLevy, int ProductId = 0, string vehicleStartDate = "", string vehicleEndDate = "", string manufacturerYear = "", Boolean IsEndorsment = false)
         {
 
             //var policytermid = (int)Session["policytermid"];
@@ -2619,7 +2621,7 @@ namespace InsuranceClaim.Controllers
         }
 
 
-       
+
 
 
 
@@ -2746,18 +2748,14 @@ namespace InsuranceClaim.Controllers
                 VehicleYear = "1900";
 
 
-
-
             var vehilceType = InsuranceContext.Products.Single(where: $"Id = '" + ProductId + "'");
             if (vehilceType != null)
             {
                 ProductId = Convert.ToString(vehilceType.VehicleTypeId);
             }
 
-
             try
             {
-
                 Insurance.Service.ICEcashService ICEcashService = new Insurance.Service.ICEcashService();
                 var tokenObject = new ICEcashTokenResponse();
 
@@ -2802,9 +2800,9 @@ namespace InsuranceClaim.Controllers
                     ResultRootObject quoteresponse = ICEcashService.checkVehicleExists(objVehicles, patnerToken, tokenObject.PartnerReference);
 
 
-                    if (quoteresponse.Response!= null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                    if (quoteresponse.Response != null && (quoteresponse.Response.Message.Contains("Partner Token has expired") || quoteresponse.Response.Message.Contains("Invalid Partner Token")))
                     {
-                        tokenObject=ICEcashService.getToken();
+                        tokenObject = ICEcashService.getToken();
                         //tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
 
                         SummaryDetailService.UpdateToken(tokenObject);
@@ -2812,11 +2810,6 @@ namespace InsuranceClaim.Controllers
                         //  tokenObject = service.CheckSessionExpired();
                         quoteresponse = ICEcashService.checkVehicleExists(objVehicles, tokenObject.Response.PartnerToken, tokenObject.PartnerReference);
                     }
-
-
-
-
-
 
                     response.result = quoteresponse.Response.Result;
                     if (response.result == 0)
@@ -2829,14 +2822,14 @@ namespace InsuranceClaim.Controllers
                         if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
                         {
 
-                          tokenObject=  ICEcashService.getToken();
+                            tokenObject = ICEcashService.getToken();
                             // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
                             SummaryDetailService.UpdateToken(tokenObject);
 
                             // tokenObject = service.CheckSessionExpired();
                             quoteresponse = ICEcashService.checkVehicleExists(objVehicles, tokenObject.Response.PartnerToken, tokenObject.PartnerReference);
 
-                           // response.message = "A Connection Error Occured, please add manually.";
+                            // response.message = "A Connection Error Occured, please add manually.";
                             response.result = 0;
                             json.Data = response;
                         }
@@ -2871,7 +2864,8 @@ namespace InsuranceClaim.Controllers
             }
             catch (Exception ex)
             {
-                response.message = "A Connection Error Occured, please add manually.";
+                // response.message = "A Connection Error Occured, please add manually.";
+                response.message = ex.Message;
                 response.result = 0;
                 json.Data = response;
             }
@@ -2880,37 +2874,39 @@ namespace InsuranceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetZinaraLicenseFee(string regNo)
+        public JsonResult GetZinaraLicenseFee(string regNo, string paymentTerm)
         {
             JsonResult json = new JsonResult();
             Insurance.Service.ICEcashService ICEcashService = new Insurance.Service.ICEcashService();
+
 
             #region get ICE cash token
             var tokenObject = new ICEcashTokenResponse();
 
 
 
-            if (Session["ICEcashToken"] != null)
-            {
-                var icevalue = (ICEcashTokenResponse)Session["ICEcashToken"];
-                string format = "yyyyMMddHHmmss";
-                var IceDateNowtime = DateTime.Now;
-                var IceExpery = DateTime.ParseExact(icevalue.Response.ExpireDate, format, CultureInfo.InvariantCulture);
-                if (IceDateNowtime > IceExpery)
-                {
-                    ICEcashService.getToken();
-                }
 
-                tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-            }
-            else
-            {
-                ICEcashService.getToken();
-                tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-            }
+            ICEcashService.getToken();
+
+
+            tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+
+
+
             #endregion
 
-            ResultRootObject quoteresponse = ICEcashService.LICQuote(regNo, tokenObject.Response.PartnerToken);
+            ResultRootObject quoteresponse = ICEcashService.LICQuote(regNo, paymentTerm, tokenObject.Response.PartnerToken);
+
+            if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+            {
+                //  log.WriteLog(quoteresponse.Response.Quotes[0].Message + " reg no: " + vichelDetails.RegistrationNo);
+                ICEcashService.getToken();
+                tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                quoteresponse = ICEcashService.LICQuote(regNo, paymentTerm, tokenObject.Response.PartnerToken);
+            }
+
+
+
 
 
             json.Data = quoteresponse;
@@ -2990,8 +2986,6 @@ namespace InsuranceClaim.Controllers
             Session.Remove("issummaryformvisited");
             Session.Remove("PaymentId");
             Session.Remove("InsuranceId");
-
-
         }
 
 
@@ -3014,7 +3008,7 @@ namespace InsuranceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, string VehicleYear, int CoverTypeId, int VehicleUsage, string CoverStartDate, string CoverEndDate)
+        public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, string VehicleYear, int CoverTypeId, int VehicleType, string CoverStartDate, string CoverEndDate, bool VehilceLicense, string taxClassId)
         {
             checkVRNwithICEcashResponse response = new checkVRNwithICEcashResponse();
             JsonResult json = new JsonResult();
@@ -3039,7 +3033,7 @@ namespace InsuranceClaim.Controllers
 
                 //   SummaryDetailService service = new SummaryDetailService();
 
-                //  tokenObject= service.CheckSessionExpired();
+                 // tokenObject= service.CheckSessionExpired();
 
 
                 // ICEcashService.getToken();
@@ -3047,7 +3041,7 @@ namespace InsuranceClaim.Controllers
 
                 string patnerToken = SummaryDetailService.GetLatestToken();
 
-                if(patnerToken=="")
+                if (patnerToken == "")
                 {
                     tokenObject = ICEcashService.getToken();
                     SummaryDetailService.UpdateToken(tokenObject);
@@ -3071,19 +3065,29 @@ namespace InsuranceClaim.Controllers
                     DateTime Cover_StartDate = CoverStartDate == null ? DateTime.Now : Convert.ToDateTime(CoverStartDate);
                     DateTime Cover_EndDate = CoverEndDate == null ? DateTime.Now : Convert.ToDateTime(CoverEndDate);
 
+                    ResultRootObject quoteresponse = new ResultRootObject();
 
                     //  ResultRootObject quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
-                    ResultRootObject quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
+
+                    if (VehilceLicense)
+                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+                    else
+                        quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+
 
                     // Invalid Partner Token. 
 
                     if (quoteresponse.Response != null && (quoteresponse.Response.Message.Contains("Partner Token has expired") || quoteresponse.Response.Message.Contains("Invalid Partner Token")))
                     {
-                      tokenObject=  ICEcashService.getToken();
+                        tokenObject = ICEcashService.getToken();
                         SummaryDetailService.UpdateToken(tokenObject);
-                     //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                        //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
                         //tokenObject = service.CheckSessionExpired();
-                        quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
+                        if (VehilceLicense)
+                            quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+                        else
+                            quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate,taxClassId);
+
                     }
 
 
@@ -3112,6 +3116,9 @@ namespace InsuranceClaim.Controllers
             catch (Exception ex)
             {
                 response.message = "Error occured.";
+
+                json.Data = new ResultResponse();
+
             }
             return json;
         }
@@ -3387,16 +3394,8 @@ namespace InsuranceClaim.Controllers
 
             }
 
-
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
-
-       
-
-
-
-
 
         public JsonResult GetCustomername(string txtvalue)
         {
@@ -3411,8 +3410,7 @@ namespace InsuranceClaim.Controllers
             var policyAndRegistrationNumberArray = policyAndRegistrationNumber.Split(',');
             if (policyAndRegistrationNumberArray.Length > 1)
             {
-                policyNumber = policyAndRegistrationNumberArray[0]; //Policy Number
-                                                                    //  invoiceNumber = policyAndRegistrationNumberArray[2];//VRN Number
+                policyNumber = policyAndRegistrationNumberArray[0]; //Policy Number    //  invoiceNumber = policyAndRegistrationNumberArray[2];//VRN Number
             }
             else
             {
@@ -3438,7 +3436,6 @@ namespace InsuranceClaim.Controllers
                 }).FirstOrDefault();
                 //   var receiptid=InsuranceContext.r
 
-
                 customerName = customerdetail.FirstName + " " + customerdetail.LastName;
                 model.Id = receipt.Id + 1;
                 model.AmountDue = Convert.ToInt32(summarydetail.TotalPremium);
@@ -3447,14 +3444,12 @@ namespace InsuranceClaim.Controllers
                 model.PolicyNo = policyNumber;
                 model.PaymentMethodId = summarydetail.PaymentMethodId;
                 model.DatePosted = DateTime.Now.ToUniversalTime();
-                String.Format("{0:MM/dd/yyyy}", model.DatePosted);
+                // String.Format("{0:MM/dd/yyyy}", model.DatePosted);
                 model.PolicyId = policyId.PolicyId;
                 model.CustomerId = customerdetail.Id;
 
                 if (summarydetail != null)
                     model.SummaryDetailId = summarydetail.Id;
-
-
 
                 return Json(model, JsonRequestBehavior.AllowGet);
             }
@@ -3655,17 +3650,6 @@ namespace InsuranceClaim.Controllers
 
 
 
-        public class Country
-        {
-            public string code { get; set; }
-            public string name { get; set; }
-            public string DisplayName { get; set; }
-        }
-
-        public class RootObject
-        {
-            public List<Country> countries { get; set; }
-        }
 
         public class City
         {

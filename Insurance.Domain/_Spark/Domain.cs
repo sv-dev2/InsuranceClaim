@@ -116,6 +116,56 @@ namespace Insurance.Domain
     }
 
 
+    public partial class Domestic_Vehicle : Entity<Domestic_Vehicle>
+    {
+        public Domestic_Vehicle() { }
+        public Domestic_Vehicle(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int PolicyId { get; set; }
+        public int NoOfCarsCovered { get; set; }
+
+        public int CustomerId { get; set; }
+
+        public DateTime CoverStartDate { get; set; }
+        public DateTime CoverEndDate { get; set; }
+        public int ProductId { get; set; }
+
+        public int RiskCoverId { get; set; }
+
+        public int RiskItemId { get; set; }
+
+        public string RiskAddress { get; set; }
+
+        public int PaymentTermId { get; set; }
+
+        public int PaymentTypeId { get; set; }
+
+        public decimal CoverAmount { get; set; }
+        public decimal Rate { get; set; }
+        public string Notes { get; set; }
+        public decimal BasicPremium { get; set; }
+        public decimal StampDuty { get; set; }
+        public decimal PremiumDue { get; set; }
+        public DateTime TransactionDate { get; set; }
+
+        public DateTime RenewDate { get; set; }
+
+        public DateTime PolicyExpireDate { get; set; }
+
+        public string RenewPolicyNumber { get; set; }
+
+        public int CurrencyId { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public int? ModifiedBy { get; set; }
+    }
+
+
     public partial class RefundPolicy : Entity<RefundPolicy>
     {
         public RefundPolicy() { }
@@ -132,7 +182,7 @@ namespace Insurance.Domain
         public decimal Deduction { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
- 
+
     }
 
 
@@ -300,7 +350,7 @@ namespace Insurance.Domain
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
         public string Status { get; set; }
-    
+
 
     }
 
@@ -346,10 +396,9 @@ namespace Insurance.Domain
         public DateTime? BalancePaidDate { get; set; }
         public string Notes { get; set; }
         public bool isQuotation { get; set; }
-
         public int AgentId { get; set; }
-
         public string ModuleName { get; set; }
+        public bool PaymentStatus { get; set; }
 
     }
 
@@ -408,6 +457,7 @@ namespace Insurance.Domain
         public decimal? MedicalExpensesPercentage { get; set; }
         public decimal? ExcessAmount { get; set; }
         public DateTime? RenewalDate { get; set; }
+        public DateTime? PolicyExpireDate { get; set; }
         public DateTime? TransactionDate { get; set; }
         public int PaymentTermId { get; set; }
         public int ProductId { get; set; }
@@ -435,11 +485,24 @@ namespace Insurance.Domain
         public string CoverNote { get; set; }
 
         public int TaxClassId { get; set; }
-        public string Currency { get; set; }      
+        public string Currency { get; set; }
         public string ManufacturerYear { get; set; }
 
         public bool? IsRefund { get; set; }
         public int ALMBranchId { get; set; }
+
+        public string IceCashRequest { get; set; }
+
+        public int ZinaraPaymentTermId { get; set; }
+        public int ZinaraRadioPaymentTermId { get; set; }
+
+        public string LicExpiryDate { get; set; }
+
+        public string RadioTVExpiryDate { get; set; }
+
+        public bool IsIndividual { get; set; }
+        public string CombinedID { get; set; }
+
 
     }
 
@@ -476,11 +539,6 @@ namespace Insurance.Domain
 
     }
 
- 
-
-
-
-
 
     public partial class Branch : Entity<Branch>
     {
@@ -492,6 +550,18 @@ namespace Insurance.Domain
         public string AlmId { get; set; }
 
     }
+
+    public partial class RiskCoverItem : Entity<RiskCoverItem>
+    {
+        public RiskCoverItem() { }
+        public RiskCoverItem(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public string RiskCover { get; set; }
+
+    }
+
 
 
     public partial class MachineBranch : Entity<MachineBranch>
@@ -578,6 +648,78 @@ namespace Insurance.Domain
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
         public bool? IsActive { get; set; }
+    }
+
+    public partial class DomesticPayment : Entity<DomesticPayment>
+    {
+        public DomesticPayment() { }
+        public DomesticPayment(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int SummaryDetailId { get; set; }
+        public int VehicleDetailId { get; set; }
+        public int PolicyId { get; set; }
+        public int CustomerId { get; set; }
+        public int CurrencyId { get; set; }
+        public string DebitNote { get; set; }
+        public int ProductId { get; set; }
+        public string PaymentType { get; set; }
+        public Guid InvoiceId { get; set; }
+        public string InvoiceNumber { get; set; }
+  
+        public DateTime CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public int? ModifiedBy { get; set; }
+        public string TransactionId { get; set; }
+    }
+
+    public partial class DomesticSummaryDetail : Entity<DomesticSummaryDetail>
+    {
+        public DomesticSummaryDetail() { }
+        public DomesticSummaryDetail(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int CustomerId { get; set; }
+        public int PaymentTermId { get; set; }
+        public int PaymentMethodId { get; set; }
+        public decimal TotalCoverAmount { get; set; }
+        public decimal TotalBasicPremium { get; set; }
+        public decimal TotalStampDuty { get; set; }
+        public decimal TotalPremium { get; set; }
+        public decimal TotalDiscount { get; set; }
+        public string DebitNote { get; set; }
+        public string ReceiptNumber { get; set; }
+        public bool SMSConfirmation { get; set; }
+        public decimal AmountPaid { get; set; }
+        public decimal MaxAmounttoPaid { get; set; }
+        public decimal MinAmounttoPaid { get; set; }
+        public DateTime BalancePaidDate { get; set; }
+        public string Notes { get; set; }
+        public bool isQuotation { get; set; }
+        public int CarInsuredCount { get; set; }
+        public string InvoiceNumber { get; set; }
+        public string Currency { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public int? ModifiedBy { get; set; }
+    }
+
+
+    public partial class DomesticVehicleSummary : Entity<DomesticVehicleSummary>
+    {
+        public DomesticVehicleSummary() { }
+        public DomesticVehicleSummary(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int SummaryDetailId { get; set; }
+        public int VehicleDetailsId { get; set; }       
+        public DateTime? CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public int? ModifiedBy { get; set; }
     }
 
     public partial class SpecificExcess : Entity<SpecificExcess>
@@ -724,6 +866,7 @@ namespace Insurance.Domain
         public int? CreatedBy { get; set; }
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
+        public int RiskCoverId { get; set; }
 
     }
     public partial class PaymentInformation : Entity<PaymentInformation>
@@ -750,7 +893,26 @@ namespace Insurance.Domain
         public string TransactionId { get; set; }
         public string InvoiceNumber { get; set; }
 
+
+
     }
+
+
+    public partial class PartialPayment : Entity<PartialPayment>
+    {
+        public PartialPayment() { }
+        public PartialPayment(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int SummaryDetailId { get; set; }
+        public decimal PartialAmount { get; set; }
+
+        public string RegistratonNumber { get; set; }
+
+        public string CustomerEmail { get; set; }
+        public DateTime? CreatedOn { get; set; }
+    }
+
 
     public partial class SmsLog : Entity<SmsLog>
     {
@@ -766,6 +928,20 @@ namespace Insurance.Domain
         public int? ModifiedBy { get; set; }
 
     }
+
+    public partial class LogDetailTbl : Entity<LogDetailTbl>
+    {
+        public LogDetailTbl() { }
+        public LogDetailTbl(bool defaults) : base(defaults) { }
+        public int Id { get; set; }
+        public string Request { get; set; }
+        public string Response { get; set; }  
+        public string Method { get; set; }
+        public string VRN { get; set; }
+        public string BranchId { get; set; }
+        public DateTime? CreatedOn { get; set; }
+    }
+
     public partial class Setting : Entity<Setting>
     {
         public Setting() { }
@@ -1494,6 +1670,50 @@ namespace Insurance.Domain
 
 
     }
+
+
+
+    public partial class Domestic_Product : Entity<Domestic_Product>
+    {
+        public Domestic_Product() { }
+        public Domestic_Product(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public string ProductName { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+    }
+
+    public partial class Domestic_RiskCover : Entity<Domestic_RiskCover>
+    {
+        public Domestic_RiskCover() { }
+        public Domestic_RiskCover(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public string CoverName { get; set; }
+        public int ProductId { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+    }
+
+    public partial class Domestic_RiskItem : Entity<Domestic_RiskItem>
+    {
+        public Domestic_RiskItem() { }
+        public Domestic_RiskItem(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int CoverId { get; set; }
+        public string RiskItem { get; set; }
+        public decimal Rate { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+    }
+
+
+  
+
+    //   Domestic_RiskCover
+
 
 
     //public class VehicleLicense : Entity<VehicleLicense>

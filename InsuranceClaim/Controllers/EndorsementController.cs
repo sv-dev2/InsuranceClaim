@@ -41,7 +41,6 @@ namespace InsuranceClaim.Controllers
             {
                 // RemoveSession();
                 RemoveEndorsementSession();
-
             }
 
             EndorsementCustomerModel endorcustom = new EndorsementCustomerModel();
@@ -2040,7 +2039,7 @@ namespace InsuranceClaim.Controllers
                 {
                     email = "ankit.dhiman-facilitator@kindlebit.com",
                     first_name = "Genetic Financial Services",
-                    last_name = "11 Routledge Street Milton Park",
+                    last_name = "ZB Centre, 4th Floor, South Wing, cnr First Street & Kwame Nkrumah Avenue, Harare",
                     business_name = "Insurance Claim",
                     website = "insuranceclaim.com",
                     //tax_id = "47-4559942",
@@ -2185,7 +2184,7 @@ namespace InsuranceClaim.Controllers
 
             foreach (var item in policyinfo)
             {
-                if (role == "Staff")
+                if (role == "Staff" || role == "Administrator")
                 {
                     var endorsementssummryinfo = InsuranceContext.EndorsementSummaryDetails.Single(where: $"CreatedBy ='{custome}'and IsCompleted = 'true'and EndorsementPolicyId = '{item.Id}'");
                     if (endorsementssummryinfo != null)

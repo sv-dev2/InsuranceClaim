@@ -1,0 +1,612 @@
+﻿@model InsuranceClaim.Models.GrossWrittenPremiumReportSearchModels
+@{
+    ViewBag.Title = "Gross Written Premium Report";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="productsave-section GrossWrittenPremiumReport">
+    <div class="container-fluid" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>GWP Summary Report</h2>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
+                <div class="text-right">
+                    @*<button type="button" class="btn btn-primary">Add</button>*@
+                    @*<input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />*@
+                    <span>
+                        <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("SearchManagementReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.FromDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew'>
+                                        @Html.TextBoxFor(m => m.FormDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                        @Html.ValidationMessageFor(m => m.FormDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew12'>
+                                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="management-table">
+            <div>
+                <table width="1600" class="table table-dark" style="width:1600px" id="report2excel">
+
+
+                    <tbody>
+                        @foreach (var ite in Model.ListBranchModelData.ToList())
+                        {
+
+                            decimal sumInsuredTotal = 0;
+                            decimal annualPremiumTotal = 0;
+                            decimal premiumDueTotal = 0;
+                            decimal netPremiumTotal = 0;
+                            decimal stampdutyTotal = 0;
+                            decimal ztscLevyTotal = 0;
+                            decimal commissionAmountTotal = 0;
+                            decimal radioLicenseCostTotal = 0;
+                            decimal ZinaraLicenseFee = 0;
+                            decimal TotalUs = 0;
+                            decimal TotalRTGS = 0;
+                            decimal TotalUSD = 0;
+                            decimal TotalINR = 0;
+                            int count = 0;
+                            int count1 = 0;
+                            int count2 = 0;
+                            int count3 = 0;
+                            //Newbusiness
+                            decimal rtgstotal = 0;
+                            decimal ustotal = 0;
+                            int rtgscount = 0;
+                            int uscount = 0;
+                            //Renewal
+                            decimal Rertgstotal = 0;
+                            decimal Reustotal = 0;
+                            int Rertgscount = 0;
+                            int Reuscount = 0;
+
+                            foreach (var item in Model.ListGrossWrittenPremiumReportdata.ToList())
+                            {
+                                //15 may D
+                                if (item.BranchName == ite.BranchName)
+                                {
+                                    if (item.RenewPolicyNumber == null)
+                                    {
+                                        if (item.Currency == "US$ FCA")
+                                        {
+                                            ustotal += item.Premium_due;
+                                            uscount = uscount + 1;
+                                        }
+                                        if (item.Currency == "RTGS$")
+                                        {
+                                            rtgstotal += item.Premium_due;
+                                            rtgscount = rtgscount + 1;
+                                        }
+                                    }
+
+                                    else if (Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
+                                    {
+                                        if (item.Currency == "US$ FCA")
+                                        {
+                                            Reustotal += item.Premium_due;
+                                            Reuscount = Reuscount + 1;
+                                        }
+                                        if (item.Currency == "RTGS$")
+                                        {
+                                            Rertgstotal += item.Premium_due;
+                                            Rertgscount = Rertgscount + 1;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (item.Currency == "US$ FCA")
+                                        {
+                                            ustotal += item.Premium_due;
+                                            uscount = uscount + 1;
+                                        }
+                                        if (item.Currency == "RTGS$")
+                                        {
+                                            rtgstotal += item.Premium_due;
+                                            rtgscount = rtgscount + 1;
+                                        }
+                                    }
+                                    ///End
+
+                                    if (item.Currency == "US$ FCA")
+                                    {
+                                        TotalUs += item.Premium_due;
+                                        count = count + 1;
+                                    }
+                                    if (item.Currency == "RTGS$")
+                                    {
+                                        TotalRTGS += item.Premium_due;
+                                        count1 = count1 + 1;
+                                    }
+                                    if (item.Currency == "USD" || item.Currency == null)
+                                    {
+                                        TotalUSD += item.Premium_due;
+                                        count2 = count2 + 1;
+                                    }
+                                    if (item.Currency == "INR")
+                                    {
+                                        TotalINR += item.Premium_due;
+                                        count3 = count3 + 1;
+                                    }
+
+                                    sumInsuredTotal += item.Sum_Insured;
+                                    annualPremiumTotal += item.Annual_Premium;
+                                    premiumDueTotal += item.Premium_due;
+                                    netPremiumTotal += Convert.ToDecimal(item.Net_Premium);
+                                    stampdutyTotal += item.Stamp_duty;
+                                    ztscLevyTotal += item.ZTSC_Levy;
+                                    commissionAmountTotal += item.Comission_Amount;
+                                    radioLicenseCostTotal += Convert.ToDecimal(item.RadioLicenseCost);
+                                    ZinaraLicenseFee += Convert.ToDecimal(item.Zinara_License_Fee);
+
+                                }
+
+                            }
+
+                            <tr>
+                                <td><strong>Branch: @ite.BranchName</strong></td>
+                                <td></td>
+                                <td></td>
+
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                </td>
+                                <td></td>
+                                <td> </td>
+
+                            </tr>
+
+                            @*<tr>
+                    <td><strong>Currency Total:</strong></td>
+                    <td></td>
+                    <td><strong>Us$ Total:</strong></td>
+                    <td>@TotalUs</td>
+                    <td>Us$ Total Count:@count</td>
+                    <td><strong>RTGS$ Total:</strong></td>
+                    <td>@TotalRTGS</td>
+                    <td>RTGS$ Total Count:@count1</td>
+                    <td><strong>USD Total:</strong></td>
+                    <td>@TotalUSD</td>
+                    <td>USD Total:@count2</td>
+                    <td><strong>INR Total:</strong></td>
+                    <td>@TotalINR</td>
+                    <td>INR Total Count:@count3</td>
+                    <td></td>
+                    <td></td>
+                </tr>*@
+
+                            <tr>
+
+                                <td colspan="3"></td>
+                                <td colspan="3"><strong>Currency</strong></td>
+                                <td colspan="3"><strong>Amount</strong></td>
+                                <td colspan="3"><strong>Count</strong></td>
+
+                                <td colspan="2"></td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="3"><strong>New Business:</strong></td>
+
+
+                                <td colspan="3">US$ FCA</td>
+                                <td colspan="3">@ustotal</td>
+                                <td colspan="3">@uscount</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">RTGS$</td>
+                                <td colspan="3">@rtgstotal</td>
+                                <td colspan="3">@rtgscount</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="12"></td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><strong>Renewals</strong></td>
+
+                                <td colspan="3">US$ FCA</td>
+                                <td colspan="3">@Reustotal</td>
+                                <td colspan="3">@Reuscount</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">RTGS$</td>
+
+                                <td colspan="3">@Rertgstotal</td>
+                                <td colspan="3">@Rertgscount</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="12"></td>
+                                <td colspan="2"></td>
+                            </tr>
+
+
+                            <tr>
+                                <td colspan="3"><strong>Branch Total</strong></td>
+
+
+                                <td colspan="3"> US$ FCA</td>
+                                <td colspan="3">@(ustotal + Reustotal)</td>
+                                <td colspan="3"> @(uscount + Reuscount) </td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">RTGS$</td>
+                                <td colspan="3">@(rtgstotal + Rertgstotal)</td>
+                                <td colspan="3">@(rtgscount + Rertgscount)</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">TOTAL RTGS$</td>
+                                <td colspan="3">@(ustotal + Reustotal + rtgstotal + Rertgstotal)</td>
+                                <td colspan="3">@(uscount + Reuscount + rtgscount + Rertgscount)</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="14">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="14">
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        @{
+                            decimal sumInsuredTotal1 = 0;
+                            decimal annualPremiumTotal1 = 0;
+                            decimal premiumDueTotal1 = 0;
+                            decimal netPremiumTotal1 = 0;
+                            decimal stampdutyTotal1 = 0;
+                            decimal ztscLevyTotal1 = 0;
+                            decimal commissionAmountTotal1 = 0;
+                            decimal radioLicenseCostTotal1 = 0;
+                            decimal ZinaraLicenseFee1 = 0;
+                            decimal TotalUs1 = 0;
+                            decimal TotalRTGS1 = 0;
+                            decimal TotalUSD1 = 0;
+                            decimal TotalINR1 = 0;
+                            int count_1 = 0;
+                            int count11 = 0;
+                            int count21 = 0;
+                            int count31 = 0;
+                            //Newbusiness
+                            decimal rtgstotal1 = 0;
+                            decimal ustotal1 = 0;
+                            int rtgscount1 = 0;
+                            int uscount1 = 0;
+                            //Renewal
+                            decimal Rertgstotal1 = 0;
+                            decimal Reustotal1 = 0;
+                            int Rertgscount1 = 0;
+                            int Reuscount1 = 0;
+
+                        }
+
+                        @foreach (var item in Model.ListGrossWrittenPremiumReportdata.ToList())
+                        {
+                            //15 may D
+                            if (item.RenewPolicyNumber == null)
+                            {
+                                if (item.Currency == "US$ FCA")
+                                {
+                                    ustotal1 += item.Premium_due;
+                                    uscount1 = uscount1 + 1;
+                                }
+                                if (item.Currency == "RTGS$")
+                                {
+                                    rtgstotal1 += item.Premium_due;
+                                    rtgscount1 = rtgscount1 + 1;
+                                }
+                            }
+
+                            else if (Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
+                            {
+                                if (item.Currency == "US$ FCA")
+                                {
+                                    Reustotal1 += item.Premium_due;
+                                    Reuscount1 = Reuscount1 + 1;
+                                }
+                                if (item.Currency == "RTGS$")
+                                {
+                                    Rertgstotal1 += item.Premium_due;
+                                    Rertgscount1 = Rertgscount1 + 1;
+                                }
+                            }
+                            else
+                            {
+                                if (item.Currency == "US$ FCA")
+                                {
+                                    ustotal1 += item.Premium_due;
+                                    uscount1 = uscount1 + 1;
+                                }
+                                if (item.Currency == "RTGS$")
+                                {
+                                    rtgstotal1 += item.Premium_due;
+                                    rtgscount1 = rtgscount1 + 1;
+                                }
+                            }
+                            ///End
+
+                            if (item.Currency == "US$ FCA")
+                            {
+                                TotalUs1 += item.Premium_due;
+                                count_1 = count_1 + 1;
+                            }
+                            if (item.Currency == "RTGS$")
+                            {
+                                TotalRTGS1 += item.Premium_due;
+                                count11 = count11 + 1;
+                            }
+                            if (item.Currency == "USD" || item.Currency == null)
+                            {
+                                TotalUSD1 += item.Premium_due;
+                                count21 = count21 + 1;
+                            }
+                            if (item.Currency == "INR")
+                            {
+                                TotalINR1 += item.Premium_due;
+                                count31 = count31 + 1;
+                            }
+
+                            sumInsuredTotal1 += item.Sum_Insured;
+                            annualPremiumTotal1 += item.Annual_Premium;
+                            premiumDueTotal1 += item.Premium_due;
+                            netPremiumTotal1 += Convert.ToDecimal(item.Net_Premium);
+                            stampdutyTotal1 += item.Stamp_duty;
+                            ztscLevyTotal1 += item.ZTSC_Levy;
+                            commissionAmountTotal1 += item.Comission_Amount;
+                            radioLicenseCostTotal1 += Convert.ToDecimal(item.RadioLicenseCost);
+                            ZinaraLicenseFee1 += Convert.ToDecimal(item.Zinara_License_Fee);
+
+                        }
+                            
+                            @*<tr>
+                <td><strong>Currency Total:</strong></td>
+                <td></td>
+                <td><strong>Us$ Total:</strong></td>
+                <td>@TotalUs</td>
+                <td>Us$ Total Count:@count</td>
+                <td><strong>RTGS$ Total:</strong></td>
+                <td>@TotalRTGS</td>
+                <td>RTGS$ Total Count:@count1</td>
+                <td><strong>USD Total:</strong></td>
+                <td>@TotalUSD</td>
+                <td>USD Total:@count2</td>
+                <td><strong>INR Total:</strong></td>
+                <td>@TotalINR</td>
+                <td>INR Total Count:@count3</td>
+                <td></td>
+                <td></td>
+            </tr>*@
+
+                            <tr>
+
+                                <td colspan="3"></td>
+                                <td colspan="3"><strong>Currency</strong></td>
+                                <td colspan="3"><strong>Amount</strong></td>
+                                <td colspan="3"><strong>Count</strong></td>
+
+                                <td colspan="2"></td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="3"><strong>New Business:</strong></td>
+
+
+                                <td colspan="3">US$ FCA</td>
+                                <td colspan="3">@ustotal1</td>
+                                <td colspan="3">@uscount1</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">RTGS$</td>
+                                <td colspan="3">@rtgstotal1</td>
+                                <td colspan="3">@rtgscount1</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="12"></td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><strong>Renewals</strong></td>
+
+                                <td colspan="3">US$ FCA</td>
+                                <td colspan="3">@Reustotal1</td>
+                                <td colspan="3">@Reuscount1</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">RTGS$</td>
+
+                                <td colspan="3">@Rertgstotal1</td>
+                                <td colspan="3">@Rertgscount1</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="12"></td>
+                                <td colspan="2"></td>
+                            </tr>
+
+
+                            <tr>
+                                <td colspan="3"><strong>Grand Total</strong></td>
+
+
+                                <td colspan="3"> US$ FCA</td>
+                                <td colspan="3">@(ustotal1 + Reustotal1)</td>
+                                <td colspan="3"> @(uscount1 + Reuscount1) </td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">RTGS$</td>
+                                <td colspan="3">@(rtgstotal1 + Rertgstotal1)</td>
+                                <td colspan="3">@(rtgscount1 + Rertgscount1)</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                            <tr>
+
+                                <td colspan="3"></td>
+
+                                <td colspan="3">TOTAL RTGS$</td>
+                                <td colspan="3">@(ustotal1 + Reustotal1 + rtgstotal1 + Rertgstotal1)</td>
+                                <td colspan="3">@(uscount1 + Reuscount1 + rtgscount1 + Rertgscount1)</td>
+                                <td colspan="2"></td>
+
+                            </tr>
+                        </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+            $(".tablesorter").tablesorter({
+
+                headers: {
+
+                    2: {
+                        sorter: false
+                    },
+                    4: {
+                        sorter: false
+                    },
+
+                    6: {
+                        sorter: false
+                    },
+                    9: {
+                        sorter: false
+                    },
+
+                }
+            });
+
+
+            $("#datetimenew").datetimepicker({
+                format: 'MM/D/YYYY'
+            });
+            $("#datetimenew12").datetimepicker({
+                format: 'MM/D/YYYY'
+
+            });
+        });
+
+
+        function removeSearchBox() {
+            window.location.href = "/Report/ManagementReport";
+        }
+
+            $("#generateExcel").click(function () {
+            debugger;
+            $("#report2excel").table2excel({
+                // exclude CSS class
+                exclude: ".noExl",
+                name: "Worksheet Name",
+                filename: "ManagementReport" //do not include extension
+
+            });
+        });
+</script>
+

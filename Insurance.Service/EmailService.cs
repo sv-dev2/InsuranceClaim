@@ -91,11 +91,9 @@ namespace Insurance.Service
             }
             catch (Exception ex)
             {
-
                 WriteLog(ex.Message);
-
             }
-        }
+        }                   
 
 
         public void WriteLog(string error)

@@ -18,6 +18,8 @@ namespace InsuranceClaim.Models
            
 
         public bool IncludeRadioLicenseCost { get; set; }
+
+        public bool IncludeLicenseFee { get; set; }
         public int Id { get; set; }
         public int PolicyId { get; set; }
         //[Required(ErrorMessage = "Please Enter No Of Cars Covered")]
@@ -32,7 +34,7 @@ namespace InsuranceClaim.Models
         public string ModelId { get; set; }
         [Required(ErrorMessage = "Please Enter Cubic Capacity")]
         public decimal? CubicCapacity { get; set; }
-        [Required(ErrorMessage = "Please Enter Vehicle Year")]
+       // [Required(ErrorMessage = "Please Enter Vehicle Year")]
         public int? VehicleYear { get; set; }
         [Required(ErrorMessage = "Please Enter Engine Number")]
         public string EngineNumber { get; set; }
@@ -103,6 +105,8 @@ namespace InsuranceClaim.Models
         public bool isWebUser { get; set; }
         public decimal SuggestedValue { get; set; }
         public decimal VehicleLicenceFee { get; set; }
+        public decimal ArrearsAmt { get; set; }
+        public decimal PenaltiesAmt { get; set; }
 
         public int? SummaryId { get; set; }
 
@@ -130,5 +134,33 @@ namespace InsuranceClaim.Models
 
         public string ErrorMessage { get; set; }
 
+        public bool IsIndividual { get; set; }
+
+        public int RiskItemId { get; set; }
+        public int RiskCoverId { get; set; }
+
+        public string RiskAddress { get; set; }
+
+        public int PaymentMethodId { get; set; }
+
+        public decimal ComprehensiveRate { get; set; }
+
+        public string CoverNote { get; set; }
+
+        public decimal PremiumDue { get; set; }
+
+        public string LicenseId { get; set; }
+
+        public string LicExpiryDate { get; set; }
+
+        public string CombinedID { get; set; }
+
+        public string IceCashRequest { get; set; }
+
+
     }
+
+
+   
+
 }

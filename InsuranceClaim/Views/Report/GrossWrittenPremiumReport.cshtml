@@ -13,23 +13,13 @@
                     <h2>Gross Written Premium Report</h2>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
-                <div class="text-right">
-                    @*<button type="button" class="btn btn-primary">Add</button>*@
-                    @*<input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />*@
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
+                <div class="text-right">         
                     <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 add-btn">
-                @*<input type="text" id="txtdate" placeholder="Enter date" class="form-control" />*@
-            </div>
-            @*<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 add-btn">
-                    <button type="button" class="btn btn-primary pull-right" onclick="searchBydate()">Search</button>
-
-                </div>*@
-        </div>
+        
 
         @using (Html.BeginForm("SearchGrossReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
@@ -179,6 +169,7 @@
                             int Rertgscount = 0;
                             int Reuscount = 0;
 
+
                         }
 
                         @foreach (var item in Model.ListGrossWrittenPremiumReportdata.ToList())
@@ -257,17 +248,7 @@
                             radioLicenseCostTotal += Convert.ToDecimal(item.RadioLicenseCost);
                             ZinaraLicenseFee += Convert.ToDecimal(item.Zinara_License_Fee);
                             <tr>
-                                <td>
-
-                                    @if (item.ALMId != null)
-                                    {
-                                        @item.ALMId
-                                    }
-                                    else
-                                    {
-                                        @item.PolicyCreatedBy
-                                    }
-
+                                <td>  @item.PolicyCreatedBy
                                 </td>
                                 <td>@item.BranchName</td>
                                 <td>@item.Customer_Name</td>

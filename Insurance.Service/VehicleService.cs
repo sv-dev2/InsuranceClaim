@@ -83,5 +83,57 @@ namespace Insurance.Service
             var Vehicleinfo = InsuranceContext.VehicleDetails.Single(policyId);
             return Vehicleinfo;
         }
+
+        public List<Product> GetAllProducts()
+        {
+            return InsuranceContext.Products.All().ToList();
+        }
+
+        public List<Domestic_Product> GetDemosticProducts()
+        {
+            return InsuranceContext.Domestic_Products.All(where: "ProductName = 'Domestic All In One'").ToList();
+        }
+
+        public List<RiskCoverModel> Domestic_RiskCovers(int ProductId)
+        {
+            return InsuranceContext.Domestic_RiskCovers.All(where: $"ProductId='{ProductId}'").ToList().Select(x => new RiskCoverModel { Id = x.Id, RiskCover = x.CoverName }).ToList();     
+        }
+
+        public Domestic_RiskItem Domestic_RiskItem(int riskId)
+        {
+            return InsuranceContext.Domestic_RiskItems.Single(riskId);
+        }
+
+        
+
+        public List<VehicleTaxClass> GetAllTaxClasses()
+        {
+            return InsuranceContext.VehicleTaxClasses.All().ToList();
+        }
+
+        public List<PaymentTerm> GetAllPaymentTerms()
+        {
+            return InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is null").ToList();
+        }
+
+        public List<Currency> GetAllCurrency()
+        {
+            return InsuranceContext.Currencies.All(where: $"IsActive = 'True'").ToList();
+        }
+
+        public List<VehicleUsage> GetVehicleUsageByRiskId(string RiskCoverId)
+        {
+            var list = InsuranceContext.VehicleUsages.All(where: $"RiskCoverId='{RiskCoverId}'").ToList();
+            return list;
+        }
+
+
+        public List<Domestic_RiskItem> GetRiskCoverItem(string RiskCoverId)
+        {
+            return InsuranceContext.Domestic_RiskItems.All(where: $"CoverId='{RiskCoverId}'").ToList();
+        }
+
+
+
     }
 }

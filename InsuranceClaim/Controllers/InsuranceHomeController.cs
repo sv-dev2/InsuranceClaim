@@ -27,6 +27,14 @@ namespace InsuranceClaim.Controllers
            return View();
         }
 
+        public ActionResult DownloadLogFile()
+        {
+            string path = Server.MapPath("/LogFile.txt"); 
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            string fileName = "LogFile.txt";
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
 
 
     }

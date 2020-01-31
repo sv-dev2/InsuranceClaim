@@ -43,8 +43,8 @@ namespace InsuranceClaim.Controllers
         public ActionResult Index(int id)
         {
 
-         
-              ApproveVRNToIceCash(11283, 1);
+
+            ApproveVRNToIceCash(11283, 1);
             return View();
         }
 
@@ -511,7 +511,7 @@ namespace InsuranceClaim.Controllers
                 {
                     email = "ankit.dhiman-facilitator@kindlebit.com",
                     first_name = "Genetic Financial Services",
-                    last_name = "11 Routledge Street Milton Park",
+                    last_name = "ZB Centre, 4th Floor, South Wing, cnr First Street & Kwame Nkrumah Avenue, Harare",
                     business_name = "Insurance Claim",
                     website = "insuranceclaim.com",
                     //tax_id = "47-4559942",
@@ -794,7 +794,7 @@ namespace InsuranceClaim.Controllers
                     Codes.Createdon = DateTime.Now;
                     Codes.Comment = "";
 
-                 //   var QRCodedata = Mapper.Map<QRCode, QRCode>(Codes);
+                    //   var QRCodedata = Mapper.Map<QRCode, QRCode>(Codes);
                     InsuranceContext.QRCodes.Insert(Codes);
                 }
 
@@ -874,7 +874,6 @@ namespace InsuranceClaim.Controllers
                 {
                     return RedirectToAction("SummaryDetail", "CustomerRegistration", new { summaryDetailId = id, paymentError = result });
                 }
-
             }
 
 
@@ -1001,11 +1000,7 @@ namespace InsuranceClaim.Controllers
             //var currencyDetails = currencylist.FirstOrDefault(c => c.Id == vehicle.CurrencyId);
             //if(currencyDetails!=null)
 
-
-
             currencyName = detailService.GetCurrencyName(currencylist, vehicle.CurrencyId);
-
-
 
             string userRegisterationEmailPath = "/Views/Shared/EmaiTemplates/Reciept.cshtml";
             string EmailBody2 = System.IO.File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath(userRegisterationEmailPath));
@@ -1047,8 +1042,12 @@ namespace InsuranceClaim.Controllers
             // done
             //   string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Your payment of " + "$" + Convert.ToString(summaryDetail.AmountPaid) + " has been received. Policy number is : " + policy.PolicyNumber + "\n" + "\nThanks.";
 
-           
+
+            //string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summaryDetail.AmountPaid) + " upon receiving your policy to merchant code 249341. Policy number is " + policy.PolicyNumber + "\n" + "\nThanks.";
+
             string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summaryDetail.AmountPaid) + " upon receiving your policy to merchant code 249341. Policy number is " + policy.PolicyNumber + "\n" + "\nThanks.";
+
+
 
             var Recieptresult = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, Recieptbody);
 
@@ -1067,8 +1066,8 @@ namespace InsuranceClaim.Controllers
 
             foreach (var itemSummaryVehicleDetails in SummaryVehicleDetails)
             {
-                var itemVehicle = InsuranceContext.VehicleDetails.Single(itemSummaryVehicleDetails.VehicleDetailsId);          
-              //  MiscellaneousService.AddLoyaltyPoints(summaryDetail.CustomerId.Value, policy.Id, Mapper.Map<VehicleDetail, RiskDetailModel>(itemVehicle), user.Email, filepath);      disable loyalty on 02_sep_2019
+                var itemVehicle = InsuranceContext.VehicleDetails.Single(itemSummaryVehicleDetails.VehicleDetailsId);
+                //  MiscellaneousService.AddLoyaltyPoints(summaryDetail.CustomerId.Value, policy.Id, Mapper.Map<VehicleDetail, RiskDetailModel>(itemVehicle), user.Email, filepath);      disable loyalty on 02_sep_2019
                 ListOfVehicles.Add(itemVehicle);
             }
 
@@ -1264,11 +1263,11 @@ namespace InsuranceClaim.Controllers
                 var tokenObject = new ICEcashTokenResponse();
                 var PartnerToken = "";
 
-                
+
                 var customerDetails = new Customer();
                 ICEcashService iceCash = new ICEcashService();
                 var summaryDetial = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId = '" + id + "'");
-            
+
                 if (summaryDetial != null)
                 {
 
@@ -1280,45 +1279,9 @@ namespace InsuranceClaim.Controllers
                         {
                             string InsuranceID = vichelDetails.InsuranceId;
 
-
-                            // InsuranceID is null
-
-                            //if (InsuranceID == null) // for now
-                            //{
-                            //    iceCash.getToken();
-
-                            //    if (Session["ICEcashToken"] != null)
-                            //        tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-
-
-
-                            //    List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
-                            //    //objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo });
-                            //    objVehicles.Add(new RiskDetailModel { RegistrationNo = vichelDetails.RegistrationNo, PaymentTermId = Convert.ToInt32(vichelDetails.PaymentTermId) });
-                            //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-
-
-                            //    ResultRootObject quoteresponse = iceCash.checkVehicleExists(objVehicles, tokenObject.Response.PartnerToken, tokenObject.PartnerReference);
-
-                            //    // if partern token expire
-                            //    if (quoteresponse.Response.Result != 0)
-                            //    {
-                            //        if (quoteresponse.Response.Quotes[0] != null)
-                            //        {
-                            //            vichelDetails.InsuranceId = quoteresponse.Response.Quotes[0].InsuranceID;
-                            //        }
-                            //    }
-                            //}
-
                             // end is null
                             customerDetails = InsuranceContext.Customers.Single(vichelDetails.CustomerId);
 
-                            //if (customerDetails != null)
-                            //{
-                            //    var _user = UserManager.FindById(customerDetails.UserID);
-
-                            //    var customerEmail = _user.Email;
-                            //}
 
                             var policyDetils = InsuranceContext.PolicyDetails.Single(vichelDetails.PolicyId);
 
@@ -1328,85 +1291,102 @@ namespace InsuranceClaim.Controllers
                             }
                         }
 
-                        if (vichelDetails != null && vichelDetails.InsuranceId != null)
+
+                        PartnerToken = SummaryDetailService.GetLatestToken();
+
+                        var res = new ResultRootObject();
+
+                        if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee>0)
                         {
-
-
-
-
-                            //if(Session["ICEcashToken"]!=null)
-                            //{
-                            //    tokenObject = (ICEcashTokenResponse)HttpContext.Session["ICEcashToken"];
-                            //    PartnerToken = tokenObject.Response.PartnerToken;
-                            //}
-
-
-                            //SummaryDetailService service = new SummaryDetailService();
-                            //tokenObject = service.CheckSessionExpired();
-                            //PartnerToken = tokenObject.Response.PartnerToken;
-
-                            PartnerToken = SummaryDetailService.GetLatestToken();
-
-                            ResultRootObject quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
-
-                            // if partern token expire
-                            //if (quoteresponse.Response.Result == 0)
-                            //{
+                            ResultRootObject quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
                             if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
                             {
-                                //  log.WriteLog(quoteresponse.Response.Quotes[0].Message + " reg no: " + vichelDetails.RegistrationNo);
-                                tokenObject= iceCash.getToken();
-                                // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-                                //  tokenObject = service.CheckSessionExpired();
+                                tokenObject = iceCash.getToken();
                                 SummaryDetailService.UpdateToken(tokenObject);
                                 PartnerToken = tokenObject.Response.PartnerToken;
+                                ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                            }
 
 
+                             res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
+                            if (res.Response != null && res.Response.Message.Contains("Partner Token has expired"))
+                            {
+                                tokenObject = iceCash.getToken();
+                                //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                                SummaryDetailService.UpdateToken(tokenObject);
+                                // tokenObject = service.CheckSessionExpired();
+                                PartnerToken = tokenObject.Response.PartnerToken;
+                                res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
+                            }
+
+                        }
+
+
+                        else if (vichelDetails != null && vichelDetails.InsuranceId != null)
+                        {
+                         
+                            ResultRootObject quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                            if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                            {
+                                tokenObject = iceCash.getToken();
+                                SummaryDetailService.UpdateToken(tokenObject);
+                                PartnerToken = tokenObject.Response.PartnerToken;
                                 ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
                             }
-                            //}
 
-                         //   System.Threading.Thread.Sleep(10000); // wait for 20 second
 
-                            var res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
+                            if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee > 0)
+                            {
+                                quoteresponse = ICEcashService.LICQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+
+                                if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                                {
+                                    //  log.WriteLog(quoteresponse.Response.Quotes[0].Message + " reg no: " + vichelDetails.RegistrationNo);
+                                    tokenObject = iceCash.getToken();
+                                    // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                                    //  tokenObject = service.CheckSessionExpired();
+                                    SummaryDetailService.UpdateToken(tokenObject);
+                                    PartnerToken = tokenObject.Response.PartnerToken;
+
+
+                                    ICEcashService.LICQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                                }
+                            }
+                            //   System.Threading.Thread.Sleep(10000); // wait for 20 second       
+
+                             res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
 
                             if (res.Response != null && res.Response.Message.Contains("Partner Token has expired"))
                             {
-                               tokenObject= iceCash.getToken();
+                                tokenObject = iceCash.getToken();
                                 //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-
                                 SummaryDetailService.UpdateToken(tokenObject);
-                               // tokenObject = service.CheckSessionExpired();
+                                // tokenObject = service.CheckSessionExpired();
                                 PartnerToken = tokenObject.Response.PartnerToken;
-
                                 res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
                             }
 
-
-                            if (res.Response != null && res.Response.Message == "Policy Retrieved")
-                            {
-                                //if (res.Response.Status == "Approved")
-                                //{
-                                    result = res.Response.Status;
-                                    vichelDetails.InsuranceStatus = "Approved";
-                                    vichelDetails.CoverNote = res.Response.PolicyNo;
-                                    //  vichelDetails.CoverNote = res.o
-                                    InsuranceContext.VehicleDetails.Update(vichelDetails);
-                                //}
-                                //else
-                                //{
-                                //    result = res.Response.Status;
-                                //}
-                            }
-                            else
-                            {
-                                result = res.Response.Message;
-                            }
+                           
                         }
+
+                        if (res.Response != null && res.Response.Message.Contains("Policy Retrieved"))
+                        {
+                            //if (res.Response.Status == "Approved")
+
+                            result = res.Response.Status;
+                            vichelDetails.InsuranceStatus = "Approved";
+                            vichelDetails.CoverNote = res.Response.PolicyNo;
+                            InsuranceContext.VehicleDetails.Update(vichelDetails);
+
+                        }
+                        else
+                        {
+                            result = res.Response.Message;
+                        }
+
 
                     }
                 }
-
             }
             catch (Exception ex)
             {

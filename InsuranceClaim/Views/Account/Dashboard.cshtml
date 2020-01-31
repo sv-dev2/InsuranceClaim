@@ -89,13 +89,76 @@
                         </div>
                     }
 
+                    @if (User.IsInRole("Finance"))
+                    {
+                        <div class="dashboard-section">
+                            <div class="form-title">
+                                <h4>Dashboard</h4>
+                            </div>
+
+                            <div class="admin-box">
+                                <div class="row">
+                                    <a href="@Url.Action("GrossWrittenPremiumReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Gross Written Premium Report</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="@Url.Action("DailyReceiptsReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Daily Receipts Report</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="@Url.Action("ReconciliationReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Reconciliation</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="@Url.Action("ReceiptModule", "CustomerRegistration")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Receipt</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="row">
+                                    <a href="@Url.Action("ZTSCLevyReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>ZTSC Levy Report</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="@Url.Action("LapsedPoliciesReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Lapsed Policies Report</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+
 
 
                     @if (User.IsInRole("Reports"))
                     {
                         <div class="dashboard-section">
                             <div class="form-title">
-                                <h4>Admin Dashboard</h4>
+                                <h4>Dashboard</h4>
                             </div>
 
                             <div class="admin-box">
@@ -129,9 +192,6 @@
                                             </div>
                                         </div>
                                     </a>
-
-
-
                                 </div>
 
                                 <div class="row">
@@ -142,15 +202,8 @@
                                             </div>
                                         </div>
                                     </a>
-
                                 </div>
-
-
-
-
-
                             </div>
-
                         </div>
                     }
 
@@ -481,6 +534,8 @@
                                         </div>
                                     </div>
                                 </a>
+
+
                                 <a href="@Url.Action("RadioLicenceReport", "Report")">
                                     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
                                         <div class="color-box">
@@ -598,6 +653,15 @@
                                     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
                                         <div class="color-box">
                                             <h4>Summary Productivity Report</h4>
+                                        </div>
+                                    </div>
+                                </a>
+
+
+                                <a href="@Url.Action("InsuranceReport", "Report")">
+                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                        <div class="color-box">
+                                            <h4>Insurance Report</h4>
                                         </div>
                                     </div>
                                 </a>

@@ -98,6 +98,8 @@ namespace Insurance.Domain
 
         //public static VehicleLicenses VehicleLicenses { get { return new VehicleLicenses(); } }
 
+        //public static RiskCoverItems RiskCoverItems { get { return new RiskCoverItems(); } }
+
 
         public static RegistrationDocuments RegistrationDocuments { get { return new RegistrationDocuments(); } }
         public static ClaimRegistrationProviderDetials ClaimRegistrationProviderDetials { get { return new ClaimRegistrationProviderDetials(); } }
@@ -121,7 +123,25 @@ namespace Insurance.Domain
 
         public static TokenRequests TokenRequests { get { return new TokenRequests(); } }
 
-        // UniqeTransactions
+        public static PartialPayments PartialPayments { get { return new PartialPayments(); } }
+
+        public static LogDetailTbls LogDetailTbls { get { return new LogDetailTbls(); } }
+
+        public static Domestic_Products Domestic_Products { get { return new Domestic_Products(); } }
+
+        public static Domestic_RiskCovers Domestic_RiskCovers { get { return new Domestic_RiskCovers(); } }
+
+        public static Domestic_RiskItems Domestic_RiskItems { get { return new Domestic_RiskItems(); } }
+
+        public static Domestic_Vehicles Domestic_Vehicles { get { return new Domestic_Vehicles(); } }
+
+        public static DomesticSummaryDetails DomesticSummaryDetails { get { return new DomesticSummaryDetails(); } }
+
+        public static DomesticVehicleSummaries DomesticVehicleSummaries { get { return new DomesticVehicleSummaries(); } }
+
+        public static DomesticPayments DomesticPayments { get { return new DomesticPayments(); } }
+
+        // DomesticPayments
         // general purpose operations
 
         public static void Execute(string sql, params object[] parms) { db.Execute(sql, parms); }

@@ -121,17 +121,16 @@
                                         }
 
 
-                                        @if (User.IsInRole("Staff") || User.IsInRole("Renewals"))
+                                        @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Administrator"))
                                         {
                                             @*<li>@Html.ActionLink("Endorsement", "EndorsementDetials", "Endorsement", new { sumaryid = item.SummaryId }, new { @class = "btn-sm btn-primary" })</li>*@
                                             <li>@Html.ActionLink("Endorsement", "EndorsementDetials", "Endorsement", new { summaryId = item.SummaryId, endorback = "0" }, new { @class = "btn-sm btn-primary" })</li>
 
                                         }
-                                        @if (User.IsInRole("Staff") || User.IsInRole("Renewals"))
+                                        @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Administrator"))
                                         {
                                             @*<li>@Html.ActionLink("Endorsement", "EndorsementDetials", "Endorsement", new { sumaryid = item.SummaryId }, new { @class = "btn-sm btn-primary" })</li>*@
                                             <li>@Html.ActionLink("Endorsement View", "EndorsementDetail", "Endorsement", new { Policynumber = item.PolicyNumber }, new { @class = "btn-sm btn-primary" })</li>
-
                                         }
 
                                     </ul>

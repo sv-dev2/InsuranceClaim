@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace InsuranceClaim.Models
 {
     public class CustomerModel
@@ -109,6 +110,11 @@ namespace InsuranceClaim.Models
         public bool IsCorporate { get; set; }
 
         public string Corporate { get; set; }
+
+
+      
+
+
 
     }
 }

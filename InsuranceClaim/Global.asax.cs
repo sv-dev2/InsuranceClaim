@@ -31,6 +31,7 @@ namespace InsuranceClaim
                 cfg.CreateMap<Customer, CustomerModel>().ReverseMap();
                 cfg.CreateMap<PolicyDetailModel, PolicyDetail>().ReverseMap();
                 cfg.CreateMap<RiskDetailModel, VehicleDetail>().ReverseMap();
+
                 cfg.CreateMap<VehicleModel, ClsVehicleModel>().ReverseMap();
                 cfg.CreateMap<Product, ProductModel>().ReverseMap();
                 cfg.CreateMap<AgentCommission, AgentCommissionModel>().ReverseMap();
@@ -84,7 +85,9 @@ namespace InsuranceClaim
 
                 cfg.CreateMap<VehicleTaxClass, VehicleTaxClassModel>().ReverseMap();
 
-
+                // domestic
+                cfg.CreateMap<DomesticRiskDetailModel, Domestic_Vehicle>().ReverseMap();
+                cfg.CreateMap<DomesticSummaryModel, DomesticSummaryDetail>().ReverseMap();         
             });
         }
     }

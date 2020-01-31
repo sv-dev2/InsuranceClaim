@@ -31,6 +31,8 @@ namespace InsuranceClaim.Controllers
 
         string AdminEmail = WebConfigurationManager.AppSettings["AdminEmail"];
         string ZimnatEmail = WebConfigurationManager.AppSettings["ZimnatEmail"];
+
+        int _currencId = 6; //RTGS$
         public RenewController()
         {
             // UserManager = userManager;
@@ -93,7 +95,7 @@ namespace InsuranceClaim.Controllers
             ViewBag.Countries = resultt.countries.OrderBy(x => x.code.Replace("+", ""));
 
 
-            
+
 
 
             if (GetUpdatedCustData == null)
@@ -148,9 +150,9 @@ namespace InsuranceClaim.Controllers
 
         public void UpdateDeactiveVehilce(int? vehicleid)
         {
-            if(vehicleid!=0)
+            if (vehicleid != 0)
             {
-                var vehicleDetails = InsuranceContext.VehicleDetails.Single(where : "Id=" + vehicleid + "and IsActive=1");
+                var vehicleDetails = InsuranceContext.VehicleDetails.Single(where: "Id=" + vehicleid + "and IsActive=1");
                 if (vehicleDetails != null)
                 {
                     vehicleDetails.IsActive = false;
@@ -161,20 +163,20 @@ namespace InsuranceClaim.Controllers
 
                     var renewVehicleDetails = InsuranceContext.VehicleDetails.Single(where: "RenewPolicyNumber='" + splitRenewPolicyNumber + "'");
 
-                    if(renewVehicleDetails!=null)
+                    if (renewVehicleDetails != null)
                     {
                         var summaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.Single(where: "VehicleDetailsId=" + renewVehicleDetails.Id);
 
-                        if(summaryVehicleDetails!=null)
+                        if (summaryVehicleDetails != null)
                         {
                             var summaryDetails = InsuranceContext.SummaryDetails.Single(summaryVehicleDetails.SummaryDetailId);
 
 
-                            if(summaryDetails!=null)
+                            if (summaryDetails != null)
                             {
 
                                 decimal radioLicenseCost = 0;
-                                if(renewVehicleDetails.IncludeRadioLicenseCost==true)
+                                if (renewVehicleDetails.IncludeRadioLicenseCost == true)
                                 {
                                     radioLicenseCost = renewVehicleDetails.RadioLicenseCost.Value;
                                 }
@@ -187,7 +189,7 @@ namespace InsuranceClaim.Controllers
                                 InsuranceContext.SummaryDetails.Update(summaryDetails);
 
                             }
-                        }                    
+                        }
                     }
                 }
             }
@@ -735,6 +737,7 @@ namespace InsuranceClaim.Controllers
 
                     viewModels.IsPolicyExpire = RiskDetail.IsPolicyExpire;
                     viewModels.TaxClassId = RiskDetail.TaxClassId;
+                    viewModels.CombinedID = RiskDetail.CombinedID;
 
 
                     var ser = new VehicleService();
@@ -752,11 +755,11 @@ namespace InsuranceClaim.Controllers
                         // viewModels.CoverStartDate = data.CoverStartDate;
                         // viewModels.CoverStartDate = DateTime.Now; // added 05 sep_2019
                         viewModels.CoverStartDate = data.CoverEndDate.Value.AddDays(1);
-                      //  viewModels.CoverStartDate = data.CoverEndDate.Value.AddDays(10);
+                        //  viewModels.CoverStartDate = data.CoverEndDate.Value.AddDays(10);
 
                         if (data.CoverEndDate < DateTime.Now)
                             viewModels.IsPolicyExpire = true;
-                        else if(DateTime.Now >= data.RenewalDate.Value.AddMonths(-2))
+                        else if (DateTime.Now >= data.RenewalDate.Value.AddMonths(-2))
                         {
                             viewModels.CoverStartDate = data.CoverStartDate.Value.AddDays(1);
                         }
@@ -776,7 +779,7 @@ namespace InsuranceClaim.Controllers
                         viewModels.OptionalCovers = data.OptionalCovers;
                         viewModels.PolicyId = data.PolicyId;
                         viewModels.Premium = data.Premium;
-                        viewModels.PremiumWithDiscount = data.Premium+data.Discount;
+                        viewModels.PremiumWithDiscount = data.Premium + data.Discount;
                         viewModels.RadioLicenseCost = (int)Math.Round(data.RadioLicenseCost == null ? 0 : data.RadioLicenseCost.Value, 0);
                         viewModels.Rate = data.Rate;
                         viewModels.RegistrationNo = data.RegistrationNo;
@@ -830,6 +833,7 @@ namespace InsuranceClaim.Controllers
                         viewModels.BusinessSourceDetailId = data.BusinessSourceDetailId;
                         viewModels.CurrencyId = data.CurrencyId;
                         viewModels.TaxClassId = data.TaxClassId;
+                        viewModels.CombinedID = data.CombinedID;
 
                         var ser = new VehicleService();
                         var model = ser.GetModel(data.MakeId);
@@ -1345,9 +1349,22 @@ namespace InsuranceClaim.Controllers
                         var vehicle = (RiskDetailModel)Session["RenewVehicleDetails"];
                         var summary = (SummaryDetailModel)Session["ReSummaryDetailed"];
 
-
+                        string format = "yyyyMMdd";
                         if (vehicle != null)
                         {
+                            vehicle.CurrencyId = _currencId; //RTGS$ only 
+
+                            if (!string.IsNullOrEmpty(vehicle.LicExpiryDate))
+                            {
+                                var LicExpiryDate = DateTime.ParseExact(vehicle.LicExpiryDate, format, CultureInfo.InvariantCulture);
+                                vehicle.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                                if (vehicle.VehicleLicenceFee > 0)
+                                    vehicle.IceCashRequest = "InsuranceAndLicense";
+                            }
+                            else
+                                vehicle.IceCashRequest = "Insurance";
+
+
                             var _item = vehicle;
 
                             //List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
@@ -1806,7 +1823,7 @@ namespace InsuranceClaim.Controllers
             }).FirstOrDefault();
 
 
-            if(renewPolicyNumberDetials!=null)
+            if (renewPolicyNumberDetials != null)
             {
                 renewPolicyNuber = renewPolicyNumberDetials.RenewPolicyNumber;
             }
@@ -1913,9 +1930,6 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult VehicleHistory()
         {
-
-
-
 
             SummaryDetailService _summaryDetailService = new SummaryDetailService();
 
@@ -2102,7 +2116,7 @@ namespace InsuranceClaim.Controllers
             SummaryDetailService detailService = new SummaryDetailService();
 
             var email = "";
-            
+
 
             var currencylist = detailService.GetAllCurrency();
             var currencyName = "";
@@ -2153,15 +2167,15 @@ namespace InsuranceClaim.Controllers
                 }
 
 
-                if(customer.IsCustomEmail)
+                if (customer.IsCustomEmail)
                     email = LoggedUserEmail();
                 else
                     email = user.Email;
-                
+
 
                 InsuranceContext.PaymentInformations.Insert(objSaveDetailListModel);
 
-              //  MiscellaneousService.AddLoyaltyPoints(summary.CustomerId.Value, policy.Id, _item, email); // disable 02_sep_2019
+                //  MiscellaneousService.AddLoyaltyPoints(summary.CustomerId.Value, policy.Id, _item, email); // disable 02_sep_2019
             }
             else
             {
@@ -2199,7 +2213,7 @@ namespace InsuranceClaim.Controllers
                 MiscellaneousService.AddLoyaltyPoints(summary.CustomerId.Value, policy.Id, Mapper.Map<VehicleDetail, RiskDetailModel>(vehicle));
             }
 
-            
+
 
 
             Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
@@ -2235,7 +2249,7 @@ namespace InsuranceClaim.Controllers
             #region Send Payment SMS
 
             // done
-            string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Your payment of" + "$" + Convert.ToString(summary.AmountPaid) + " has been received. Policy number is : " + policy.PolicyNumber + "\n" + "\nThanks.";
+            string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summary.AmountPaid) + " upon receiving your policy to merchant code 249341. Policy number is : " + policy.PolicyNumber + "\n" + "\nThanks.";
             var Recieptresult = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, Recieptbody);
 
             SmsLog objRecieptsmslog = new SmsLog()
@@ -2276,7 +2290,7 @@ namespace InsuranceClaim.Controllers
             //  var SummaryVehicleDetail = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={summary.Id}").ToList();
 
 
-            RenewApproveVRNToIceCash(customer, vehicle); 
+            RenewApproveVRNToIceCash(customer, vehicle); // need to uncomment
 
             string Summeryofcover = "";
             //for (int i = 0; i < SummaryVehicleDetail.Count; i++)
@@ -2372,7 +2386,6 @@ namespace InsuranceClaim.Controllers
                 radioLicenseAmount = vehicle.RadioLicenseCost.Value;
 
             var totalPremium = vehicle.Premium + vehicle.ZTSCLevy + vehicle.StampDuty + vehicle.VehicleLicenceFee + radioLicenseAmount;
-
 
 
             var Bodyy = MotorBody.Replace("##PolicyNo##", policy.PolicyNumber).Replace("##NINumber##", customer.NationalIdentificationNumber).Replace("##ReNewPolicyNo##", vehicle.RenewPolicyNumber).Replace("##path##", filepath).Replace("##Cellnumber##", user.PhoneNumber).Replace("##FirstName##", customer.FirstName).Replace("##LastName##", customer.LastName).Replace("##Email##", user.Email).Replace("##BirthDate##", customer.DateOfBirth.Value.ToString("dd/MM/yyyy")).Replace("##Address1##", customer.AddressLine1).Replace("##Address2##", customer.AddressLine2).Replace("##Renewal##", vehicle.RenewalDate.Value.ToString("dd/MM/yyyy")).Replace("##InceptionDate##", vehicle.CoverStartDate.Value.ToString("dd/MM/yyyy")).Replace("##package##", paymentTerm.Name).Replace("##Summeryofcover##", Summeryofcover).
@@ -2548,7 +2561,7 @@ namespace InsuranceClaim.Controllers
 
         private void ClearRenewSession()
         {
-            
+
 
 
             Session.Remove("RenewVehicleId");
@@ -2839,7 +2852,7 @@ namespace InsuranceClaim.Controllers
                 {
                     email = "ankit.dhiman-facilitator@kindlebit.com",
                     first_name = "Genetic Financial Services",
-                    last_name = "11 Routledge Street Milton Park",
+                    last_name = "ZB Centre, 4th Floor, South Wing, cnr First Street & Kwame Nkrumah Avenue, Harare",
                     business_name = "Insurance Claim",
                     website = "insuranceclaim.com",
                     //tax_id = "47-4559942",
@@ -2972,7 +2985,7 @@ namespace InsuranceClaim.Controllers
             if (parternToken != "")
             {
                 ResultRootObject quoteresponse = ICEcashService.checkVehicleExists(objVehicles, parternToken, tokenObject.PartnerReference);
-                if(quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                if (quoteresponse.Response.Message.Contains("Partner Token has expired"))
                 {
                     tokenObject = ICEcashService.getToken();
                     SummaryDetailService.UpdateToken(tokenObject);
@@ -2999,81 +3012,99 @@ namespace InsuranceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, int VehicleYear, int CoverTypeId, int VehicleUsage, string CoverStartDate, string CoverEndDate)
+        public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, int VehicleYear, int CoverTypeId, int VehicleType, string CoverStartDate, string CoverEndDate, bool VehilceLicense, string taxClassId)
         {
             CustomerRegistrationController.checkVRNwithICEcashResponse response = new CustomerRegistrationController.checkVRNwithICEcashResponse();
             JsonResult json = new JsonResult();
             json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             //json.Data = "";
 
-            Insurance.Service.ICEcashService ICEcashService = new Insurance.Service.ICEcashService();
-            var tokenObject = new ICEcashTokenResponse();
-
-            #region get ICE cash token
-            //if (Session["ICEcashToken"] != null)
-            //{
-            //    ICEcashService.getToken();
-            //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-            //}
-            //else
-            //{
-            //    ICEcashService.getToken();
-            //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-            //}
-
-
-            string patnerToken = SummaryDetailService.GetLatestToken();
-
-            if (patnerToken == "")
+            try
             {
-                tokenObject = ICEcashService.getToken();
-                SummaryDetailService.UpdateToken(tokenObject);
-            }
+                Insurance.Service.ICEcashService ICEcashService = new Insurance.Service.ICEcashService();
+                var tokenObject = new ICEcashTokenResponse();
+
+                #region get ICE cash token
+                //if (Session["ICEcashToken"] != null)
+                //{
+                //    ICEcashService.getToken();
+                //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                //}
+                //else
+                //{
+                //    ICEcashService.getToken();
+                //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                //}
 
 
+                string patnerToken = SummaryDetailService.GetLatestToken();
 
-            #endregion
-
-            List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
-            //objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo });
-            objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo, PaymentTermId = Convert.ToInt32(PaymentTerm) });
-
-
-            DateTime Cover_StartDate = CoverStartDate == null ? DateTime.Now : Convert.ToDateTime(CoverStartDate);
-            DateTime Cover_EndDate = CoverEndDate == null ? DateTime.Now : Convert.ToDateTime(CoverEndDate);
-
-
-            if (patnerToken != "")
-            {
-                ResultRootObject quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
-
-
-                if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                if (patnerToken == "")
                 {
-
-                    tokenObject= ICEcashService.getToken();
+                    tokenObject = ICEcashService.getToken();
                     SummaryDetailService.UpdateToken(tokenObject);
-                    //  tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-                    quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
-
-
                 }
 
 
 
+                #endregion
 
-                response.result = quoteresponse.Response.Result;
-                if (response.result == 0)
+                List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
+                //objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo });
+                objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo, PaymentTermId = Convert.ToInt32(PaymentTerm) });
+
+
+                DateTime Cover_StartDate = CoverStartDate == null ? DateTime.Now : Convert.ToDateTime(CoverStartDate);
+                DateTime Cover_EndDate = CoverEndDate == null ? DateTime.Now : Convert.ToDateTime(CoverEndDate);
+
+                ResultRootObject quoteresponse = new ResultRootObject();
+
+                if (patnerToken != "")
                 {
-                    response.message = quoteresponse.Response.Quotes[0].Message;
+                    if(VehilceLicense)
+                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+                    else
+                     quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate,taxClassId);
+
+
+                    if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                    {
+
+                        tokenObject = ICEcashService.getToken();
+                        SummaryDetailService.UpdateToken(tokenObject);
+                        //  tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+
+                        if (VehilceLicense)
+                            quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+                        else
+                            quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+
+
+
+                    }
+
+
+
+
+                    response.result = quoteresponse.Response.Result;
+                    if (response.result == 0)
+                    {
+                        response.message = quoteresponse.Response.Quotes[0].Message;
+                    }
+                    else
+                    {
+                        response.Data = quoteresponse;
+                    }
                 }
-                else
-                {
-                    response.Data = quoteresponse;
-                }
+                json.Data = response;
+            }
+            catch (Exception ex)
+            {
+                response.message = "Error occured.";
+                json.Data = new ResultResponse();
             }
 
-            json.Data = response;
+
 
             return json;
         }
@@ -3174,49 +3205,38 @@ namespace InsuranceClaim.Controllers
                 var PartnerToken = "";
 
                 ICEcashService iceCash = new ICEcashService();
-
-
-                // iceCash.getToken();
-                //if(Session["ICEcashToken"]!=null)
-                // {
-                //     tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-                //     PartnerToken = tokenObject.Response.PartnerToken;
-                // }
-
-
-                //SummaryDetailService service = new SummaryDetailService();
-                //tokenObject= service.CheckSessionExpired();
-
-                PartnerToken= SummaryDetailService.GetLatestToken();
-
-
-              //  PartnerToken = tokenObject.Response.PartnerToken;
-
-                //List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
-                ////objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo });
-                //objVehicles.Add(new RiskDetailModel { RegistrationNo = vichelDetails.RegistrationNo, PaymentTermId = Convert.ToInt32(vichelDetails.PaymentTermId), CoverTypeId = vichelDetails.CoverTypeId, ProductId = vichelDetails.ProductId, MakeId = vichelDetails.MakeId, ModelId = vichelDetails.ModelId, TaxClassId = vichelDetails.TaxClassId, VehicleYear = vichelDetails.VehicleYear });
+                PartnerToken = SummaryDetailService.GetLatestToken();
 
 
 
 
-                //ResultRootObject VehicalQuoteresponse = iceCash.checkVehicleExists(objVehicles, tokenObject.Response.PartnerToken, tokenObject.PartnerReference);
+                var res = new ResultRootObject();
+
+                if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee > 0)
+                {
+                    ResultRootObject quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, 1);
+                    if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+                    {
+                        tokenObject = iceCash.getToken();
+                        SummaryDetailService.UpdateToken(tokenObject);
+                        PartnerToken = tokenObject.Response.PartnerToken;
+                        ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, 1);
+                    }
 
 
-                //if (VehicalQuoteresponse.Response != null && VehicalQuoteresponse.Response.Message.Contains("Partner Token has expired"))
-                //{
-                //    iceCash.getToken();
-                //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-                //    VehicalQuoteresponse = iceCash.checkVehicleExists(objVehicles, tokenObject.Response.PartnerToken, tokenObject.PartnerReference);
+                    res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
+                    if (res.Response != null && res.Response.Message.Contains("Partner Token has expired"))
+                    {
+                        tokenObject = iceCash.getToken();
+                        //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                        SummaryDetailService.UpdateToken(tokenObject);
+                        // tokenObject = service.CheckSessionExpired();
+                        PartnerToken = tokenObject.Response.PartnerToken;
+                        res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
+                    }
 
-                //    log.WriteLog(DateTime.Now.ToShortDateString());
-                //    log.WriteLog("checkVehicleExists :" + VehicalQuoteresponse.Response.Message);
-                //}
-                //else if (VehicalQuoteresponse.Response.Quotes != null)
-                //{
-                //    vichelDetails.InsuranceId = VehicalQuoteresponse.Response.Quotes[0].InsuranceID;
-                //}
-
-                if (!string.IsNullOrEmpty(vichelDetails.InsuranceId))
+                }
+                else if (!string.IsNullOrEmpty(vichelDetails.InsuranceId))
                 {
 
                     ResultRootObject quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, 1);
@@ -3225,12 +3245,12 @@ namespace InsuranceClaim.Controllers
                     if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
                     {
                         //  log.WriteLog(quoteresponse.Response.Quotes[0].Message + " reg no: " + vichelDetails.RegistrationNo);
-                      tokenObject=  iceCash.getToken();
+                        tokenObject = iceCash.getToken();
 
-                       SummaryDetailService.UpdateToken(tokenObject);
-                       // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                        SummaryDetailService.UpdateToken(tokenObject);
+                        // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
 
-                       // tokenObject = service.CheckSessionExpired();
+                        // tokenObject = service.CheckSessionExpired();
 
                         PartnerToken = tokenObject.Response.PartnerToken;
                         ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, 1);
@@ -3239,28 +3259,38 @@ namespace InsuranceClaim.Controllers
                     // Invalid Partner Token.
 
 
-                    var res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
+                    res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
                     if (res.Response != null && (res.Response.Message.Contains("Partner Token has expired") || res.Response.Message.Contains("Invalid Partner Token")))
                     {
-                       tokenObject= iceCash.getToken();
+                        tokenObject = iceCash.getToken();
                         SummaryDetailService.UpdateToken(tokenObject);
-                       // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+                        // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
 
-                       // tokenObject = service.CheckSessionExpired();
+                        // tokenObject = service.CheckSessionExpired();
                         PartnerToken = tokenObject.Response.PartnerToken;
                         res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
                     }
 
-                   // service.WriteLog("TPIPolicy VRN :" + vichelDetails.RegistrationNo + " " + res.Response.Message);
-
-              
-                    if (res.Response != null && res.Response.Message == "Policy Retrieved")
-                    {
-                        vichelDetails.InsuranceStatus = "Approved";
-                        vichelDetails.CoverNote = res.Response.PolicyNo; // it's represent to Cover Note
-                        InsuranceContext.VehicleDetails.Update(vichelDetails);
-                    }
+                    // service.WriteLog("TPIPolicy VRN :" + vichelDetails.RegistrationNo + " " + res.Response.Message);                  
                 }
+
+
+                if (res.Response != null && res.Response.Message == "Policy Retrieved")
+                {
+                    vichelDetails.InsuranceStatus = "Approved";
+
+
+                    string format = "yyyyMMdd";
+                    vichelDetails.CoverStartDate = DateTime.ParseExact(res.Response.StartDate, format, CultureInfo.InvariantCulture);
+                    vichelDetails.CoverEndDate = DateTime.ParseExact(res.Response.EndDate, format, CultureInfo.InvariantCulture);
+                    vichelDetails.RenewalDate = vichelDetails.CoverEndDate.Value.AddDays(1);
+
+                    vichelDetails.CoverNote = res.Response.PolicyNo; // it's represent to Cover Note
+                    InsuranceContext.VehicleDetails.Update(vichelDetails);
+                }
+
+
+
             }
             catch (Exception ex)
             {

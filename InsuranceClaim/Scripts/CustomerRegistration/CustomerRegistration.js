@@ -2,8 +2,6 @@
 })
 
 function GoToProductDetail(json) {
-    debugger
-
     if (json.IsError == true) {
        window.location.href = '/CustomerRegistration/ProductDetail';
     }
@@ -14,8 +12,7 @@ function GoToProductDetail(json) {
             if (errorMessage == "Sucessfully update")
             {
                 window.location.href = '/Account/QuotationList';
-            }
-            
+            }           
         }
     }
 }
@@ -46,7 +43,6 @@ function GoToNextDetail(json) {
             toastr.error(errorMessage)
         }
     }
-
     if (errorMessage == "Sucessfully update") {            
         toastr.error(errorMessage)      
         window.location.href = '/Account/EndorsementRiskDetails';
@@ -79,8 +75,6 @@ function GoToPaymentDetail(json) {
 
 
 function GoToProductsDetails(json) {
-    debugger
-
     if (json.IsError == true) {
         window.location.href = '/Renew/RiskDetail';
     }
@@ -91,14 +85,11 @@ function GoToProductsDetails(json) {
             if (errorMessage == "Please Try Again") {
                 window.location.href = '/Renew/Index';
             }
-
         }
     }
 }
 
 function GoToRenewTo(json) {
-    debugger
-
     if (json.IsError == true) {
         window.location.href = '/Renew/Viewriskdetail';
     }
@@ -109,10 +100,14 @@ function GoToRenewTo(json) {
             if (errorMessage == "Sucessfully update") {
                 window.location.href = '/Account/QuotationList';
             }
-
         }
     }
 }
+
+
+
+
+
 
 
 

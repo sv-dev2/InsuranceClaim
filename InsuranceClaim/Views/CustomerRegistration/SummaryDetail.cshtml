@@ -1,7 +1,4 @@
 ﻿@model InsuranceClaim.Models.SummaryDetailModel
-
-
-
 @{
     ViewBag.Title = "SummaryDetail";
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
@@ -20,14 +17,9 @@
 
     var checkIsCustomer = false;
     var ClassForHide = "";
-
- 
 }
 
-
-
 @*<script type="text/javascript" src="http://test.api.ice.cash/assets/js/jquery.blockUI.2.7.js"></script>
-
 <form method="post" id="checkout-form" action="http://test.api.ice.cash/payments/test_send_request" class="form-horizontal">
     <input id="hddebug" type="hidden" name="hddebug" value="0" />
     <input type="hidden" class="form-control" name="partner_id" value="@Model.partner_id"  />

@@ -196,24 +196,16 @@
                                             {
                                                 <td>Lapsed</td>
                                                 <td class="btn-width-auto"> @Html.ActionLink("Renew", "Index", "Renew", new { vehicleid = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
-
                                                 <td colspan="2">
                                                     <ul class="list-inline">
                                                         <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
                                                         <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
                                                         <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
-
                                                     </ul>
 
                                                 </td>
-
                                             }
                                         </tr>
-
-
-
-
-
                                     </table>
                                 </td>
                             </tr>

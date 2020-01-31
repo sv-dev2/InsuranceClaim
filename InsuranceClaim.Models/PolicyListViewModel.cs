@@ -55,6 +55,7 @@ namespace InsuranceClaim.Models
         public DateTime CoverEndDate { get; set; }
 
         public DateTime RenewalDate1 { get; set; }
+        public string LicExpiryDate { get; set; }
 
         public bool isLapsed { get; set; }
 

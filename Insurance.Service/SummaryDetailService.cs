@@ -42,15 +42,12 @@ namespace Insurance.Service
 
         public string GetCurrencyName(List<Currency> currenyList, int? currencyId)
         {
-
-    
             var currencyDetails = currenyList.FirstOrDefault(c => c.Id == currencyId);
             if (currencyDetails != null)
                 return currencyDetails.Name;
             else
-                return  "USD";
+                return "USD";
         }
-
 
         public ICEcashTokenResponse CheckSessionExpired()
         {
@@ -75,19 +72,18 @@ namespace Insurance.Service
             }
             return tokenObject;
         }
-
         public static string GetLatestToken()
         {
             string token = "";
             var tokenDetails = InsuranceContext.TokenRequests.Single();
-            if(tokenDetails!=null)
+            if (tokenDetails != null)
             {
                 token = tokenDetails.Token;
             }
             return token;
         }
 
-        public static void UpdateToken( ICEcashTokenResponse tokenObject)
+        public static void UpdateToken(ICEcashTokenResponse tokenObject)
         {
             string format = "yyyyMMddHHmmss";
             var IceDateNowtime = DateTime.Now;
@@ -95,7 +91,7 @@ namespace Insurance.Service
 
             var tokenDetails = InsuranceContext.TokenRequests.Single();
 
-            if(tokenDetails!=null)
+            if (tokenDetails != null)
             {
                 tokenDetails.Token = tokenObject.Response.PartnerToken;
                 tokenDetails.ExpiryDate = IceExpery;
@@ -110,21 +106,29 @@ namespace Insurance.Service
 
 
 
-            
+
 
         }
 
-
-       
-
-        public void WriteLog(string error)
+        public static void WriteLog(string request, string response, string method)
         {
-            string message = string.Format("Error Time: {0}", DateTime.Now);
-            message += error;
+            string message = string.Format(" Time: {0}", DateTime.Now);
+            message += Environment.NewLine;
+            message += request;
+            message += Environment.NewLine;
+            message += Environment.NewLine;
             message += "-----------------------------------------------------------";
 
-            message += Environment.NewLine;
 
+            message += response;
+            message += Environment.NewLine;
+            message += Environment.NewLine;
+            message += "-----------------------------------------------------------";
+            message += method;
+            message += Environment.NewLine;
+            message += Environment.NewLine;
+            message += "-----------------------------------------------------------";
+            message += "-----------------------------------------------------------";
 
 
 
@@ -136,12 +140,67 @@ namespace Insurance.Service
             }
         }
 
+        //public static void WriteIceCashLog(string request, string response, string method, string vrn="")
+        //{
+        //    LogDetailTbl log = new LogDetailTbl();
+        //    log.Request = request;
+        //    log.Response = response;
+        //    log.CreatedOn = DateTime.Now;
+        //    log.Method = method;
+        //    log.VRN = vrn;
+        //    InsuranceContext.LogDetailTbls.Insert(log);
+        //}
+
+        public SummaryDetail GetSummaryDetail(int summaryId)
+        {
+            return InsuranceContext.SummaryDetails.Single(summaryId);
+        }
+
+        public List<SummaryVehicleDetail> GetSummaryVehicleList(int summaryId)
+        {
+            return InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={summaryId}").ToList();
+        }
+
+        public SummaryVehicleDetail GetSummaryVehicleDetails(int summaryId)
+        {
+            return InsuranceContext.SummaryVehicleDetails.Single(where: $"SummaryDetailId={summaryId}");
+        }
+
+        public List<SummaryVehicleDetail> GetSummaryVehicleDetailsByVehicle(int vehicleId)
+        {
+            return InsuranceContext.SummaryVehicleDetails.All(where: $"VehicleDetailsId={vehicleId}").ToList();
+        }
+
+        public int SaveSummaryDetails(SummaryDetail DbEntry)
+        {
+            int summaryId = 0;
+            try
+            {
+                InsuranceContext.SummaryDetails.Insert(DbEntry);
+                summaryId = DbEntry.Id;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return summaryId;
+        }
 
 
+        public void UpdateSummaryDetail(SummaryDetail summaryDetail)
+        {
+            InsuranceContext.SummaryDetails.Update(summaryDetail);
+        }
 
+        public void DeleteSummaryVehicleDetails(SummaryVehicleDetail SummaryVehicleDetail)
+        {
+            InsuranceContext.SummaryVehicleDetails.Delete(SummaryVehicleDetail);
+        }
 
-
-
+        public void SaveSummaryVehicleDetails(SummaryVehicleDetail SummaryVehicleDetail)
+        {
+            InsuranceContext.SummaryVehicleDetails.Insert(SummaryVehicleDetail);
+        }
 
 
 

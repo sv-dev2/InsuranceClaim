@@ -94,7 +94,7 @@
                             @Html.Hidden("stampDutyICEcash")
                             @Html.Hidden("LevyICEcash")
                             @Html.HiddenFor(m => m.ErrorMessage)
-                            
+
                             @Html.HiddenFor(m => m.InsuranceId)
                         </div>
                         <div class="form-group-section">
@@ -104,7 +104,7 @@
                                 <span> Name: <b>@customerDetail.FirstName  @customerDetail.LastName </b>,  Email: <b>@customerDetail.EmailAddress </b>  </span>
                             </div>
 
-                            @if (Model.ErrorMessage!=null)
+                            @if (Model.ErrorMessage != null)
                             {
                                 <div>
                                     <div class="alert alert-secondary" role="alert">
@@ -510,6 +510,12 @@
                                         </div>
 
                                         <div class="row">
+                                            <div class="col-sm-6 col-md-6 form-group-select">
+                                                <div id="thirdpartycheck" class="form-group">
+                                                    @Html.Label("Include VehicleLicence Fee", new { @class = "gender-label" })
+                                                    @Html.CheckBoxFor(x => x.IncludeLicenseFee, new { @style = "width: 40px;height: 36px;", onclick = "GetLicenseFee();" })
+                                                </div>
+                                            </div>
 
 
                                             <div class="col-sm-6 col-md-6 form-group-text">
@@ -792,6 +798,55 @@
         }
     });
 
+    function GetLicenseFee()
+    {
+
+        var isChecked = $("#IncludeLicenseFee").is(":checked");
+
+        if(isChecked)
+        {
+            $(".loading-area").show();
+            $.ajax({
+                url: "@Url.Action("GetZinaraLicenseFee", "CustomerRegistration")",
+                type: "POST",
+                data: { regNo:  $("#RegistrationNo").val() , paymentTerm:  $("#PaymentTermId").val()  },
+                dataType: "json",
+                success: function (result) {
+
+                    if(result.Response!=null && result.Response.Quotes[0]!=null)
+                    {
+                        var message= result.Response.Message
+                        var response = message.match("1 failed");
+
+                        if(response!=null &&  response.length>0)
+                        {
+                            alert(result.Response.Quotes[0].Message);
+                        }
+                        else
+                        {
+                            $("#LicenseId").val(result.Response.Quotes[0].LicenceID);
+                            $("#VehicleLicenceFee").val(result.Response.Quotes[0].TotalLicAmt);
+                            $("#LicExpiryDate").val(result.Response.Quotes[0].LicExpiryDate);
+                        }
+                    }
+
+                    $(".loading-area").hide();
+
+
+                }
+            });
+
+
+
+        }
+        else
+        {
+            $("#LicenseId").val("");
+            $("#VehicleLicenceFee").val("0");
+            $("#LicExpiryDate").val("");
+        }
+    }
+
 
     $("form").submit(function(){
 
@@ -955,14 +1010,14 @@
     }
 
     function CalculatePremiumByCoverType()
-    {   
-   
-        if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="" && ($("#TaxClassId").val()!="" && $("#TaxClassId").val()!=null)  ) 
-        {    
-            var coverytype = $('#CoverTypeId option:selected').val();    
-            if (coverytype != 4) {          
-                generateQuotewithICEcash();   
-                
+    {
+
+        if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="" && ($("#TaxClassId").val()!="" && $("#TaxClassId").val()!=null)  )
+        {
+            var coverytype = $('#CoverTypeId option:selected').val();
+            if (coverytype != 4) {
+                generateQuotewithICEcash();
+
             }
             else {
                 QuoteCalculation();
@@ -975,26 +1030,26 @@
 
     $(document).ready(function () {
         $("#datetimepicker2").datetimepicker({
-        format: 'MM/D/YYYY',
-        minDate: new Date()
-    })
-    $("#datetimepicker1").datetimepicker({
-        format: 'MM/D/YYYY',
-        minDate: new Date()
-    }).on('dp.change', function (e) {
-        debugger;
-        var incrementDay = moment(new Date(e.date));
-        incrementDay.add(1, 'days');
-        $('#datetimepicker2').data('DateTimePicker').minDate(incrementDay);
-        $(this).data("DateTimePicker").hide();
-        updateEndDate();
-    });
+            format: 'MM/D/YYYY',
+            minDate: new Date()
+        })
+        $("#datetimepicker1").datetimepicker({
+            format: 'MM/D/YYYY',
+            minDate: new Date()
+        }).on('dp.change', function (e) {
+            debugger;
+            var incrementDay = moment(new Date(e.date));
+            incrementDay.add(1, 'days');
+            $('#datetimepicker2').data('DateTimePicker').minDate(incrementDay);
+            $(this).data("DateTimePicker").hide();
+            updateEndDate();
+        });
 
-    var data= '@Model.isUpdate';
-    if (data == 'True') {
-        $("#CoverEndDate").val('@(Model.CoverEndDate != null ? Model.CoverEndDate.Value.ToString("MM/dd/yyyy") : DateTime.Now.ToString("MM/dd/yyyy"))');
+        var data= '@Model.isUpdate';
+        if (data == 'True') {
+            $("#CoverEndDate").val('@(Model.CoverEndDate != null ? Model.CoverEndDate.Value.ToString("MM/dd/yyyy") : DateTime.Now.ToString("MM/dd/yyyy"))');
 
-    }
+        }
 
 
 
@@ -1003,153 +1058,153 @@
 
 
 
-    if (@Model.VehicleUsage != null && @Model.VehicleUsage > 0)
-    {
-        $("#VehicleUsage").val('@Model.VehicleUsage');
-    }
-
-    if (@Model.PaymentTermId != null && @Model.PaymentTermId > 0)
-    {
-        $("#PaymentTermId").val('@Model.PaymentTermId');
-    }
-
-    if (@Model.ProductId != null && @Model.ProductId > 0)
-    {
-        $("#ProductId").val('@Model.ProductId');
-    }
-
-
-
-
-    today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    if (mm < 10) {
-        mm = '0' + mm;
-    }
-    var today = mm + '/' + dd + '/' + yyyy;
-
-    $("#CoverStartDate").val(today);
-    $("#TransactionDate").val(today).css("background-color", "lightgray");
-
-
-
-    $("#PaymentTermId").change(function () {
-        var selectedTerm = $("#PaymentTermId option:selected").val();
-        switch (parseInt(selectedTerm)) {
-            case 1:
-                setPolicyEndDate(12);
-                break;
-            case 2:
-                setPolicyEndDate(1)
-                break;
-            case 3:
-                setPolicyEndDate(3);
-                break;
-            case 4:
-                setPolicyEndDate(4);
-                break;
-            case 5:
-                setPolicyEndDate(5)
-                break;
-            case 6:
-                setPolicyEndDate(6);
-                break;
-            case 7:
-                setPolicyEndDate(7);
-                break;
-            case 8:
-                setPolicyEndDate(8)
-                break;
-            case 9:
-                setPolicyEndDate(9);
-                break;
-            case 10:
-                setPolicyEndDate(10);
-                break;
-
-            case 11:
-                setPolicyEndDate(11);
-                break;
-        }
-
-        CalculatePremiumByCoverType();
-        GetRadioLicenseCost();
-
-        if('@Model.ErrorMessage' !="")
+        if (@Model.VehicleUsage != null && @Model.VehicleUsage > 0)
         {
-            toastr.warning('@Model.ErrorMessage');
+            $("#VehicleUsage").val('@Model.VehicleUsage');
+        }
+
+        if (@Model.PaymentTermId != null && @Model.PaymentTermId > 0)
+        {
+            $("#PaymentTermId").val('@Model.PaymentTermId');
+        }
+
+        if (@Model.ProductId != null && @Model.ProductId > 0)
+        {
+            $("#ProductId").val('@Model.ProductId');
         }
 
 
 
-    });
+
+        today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = mm + '/' + dd + '/' + yyyy;
+
+        $("#CoverStartDate").val(today);
+        $("#TransactionDate").val(today).css("background-color", "lightgray");
 
 
-    isReinsuranceConfirmed = false;
-    getVehicleList();
 
-    if ($("#PassengerAccidentCover").is(":checked")) {
-        debugger;
+        $("#PaymentTermId").change(function () {
+            var selectedTerm = $("#PaymentTermId option:selected").val();
+            switch (parseInt(selectedTerm)) {
+                case 1:
+                    setPolicyEndDate(12);
+                    break;
+                case 2:
+                    setPolicyEndDate(1)
+                    break;
+                case 3:
+                    setPolicyEndDate(3);
+                    break;
+                case 4:
+                    setPolicyEndDate(4);
+                    break;
+                case 5:
+                    setPolicyEndDate(5)
+                    break;
+                case 6:
+                    setPolicyEndDate(6);
+                    break;
+                case 7:
+                    setPolicyEndDate(7);
+                    break;
+                case 8:
+                    setPolicyEndDate(8)
+                    break;
+                case 9:
+                    setPolicyEndDate(9);
+                    break;
+                case 10:
+                    setPolicyEndDate(10);
+                    break;
 
-        $("#NumberofPersons").removeClass("inputDisabled");
-    }
-    else {
-        $("#NumberofPersons").addClass("inputDisabled");
-    }
+                case 11:
+                    setPolicyEndDate(11);
+                    break;
+            }
+
+            CalculatePremiumByCoverType();
+            GetRadioLicenseCost();
+
+            if('@Model.ErrorMessage' !="")
+            {
+                toastr.warning('@Model.ErrorMessage');
+            }
 
 
-    ////////////////////////
 
-    if ($("#Addthirdparty").is(":checked")) {
-        debugger;
+        });
 
-        $("#AddThirdPartyAmount").removeClass("inputDisabled");
-    }
-    else {
-        $("#AddThirdPartyAmount").addClass("inputDisabled");
-    }
 
-    $("#chkAddVehicles").click(function () {
-        debugger;
-        if ($("#chkAddVehicles").is(":checked")) {
-            $("#btnAddVehicle").removeClass("btnDisabled"); $("#btnGenerateQuote").addClass("btnDisabled");
+        isReinsuranceConfirmed = false;
+        getVehicleList();
+
+        if ($("#PassengerAccidentCover").is(":checked")) {
+            debugger;
+
+            $("#NumberofPersons").removeClass("inputDisabled");
         }
         else {
-            $("#btnAddVehicle").addClass("btnDisabled"); $("#btnGenerateQuote").removeClass("btnDisabled");
+            $("#NumberofPersons").addClass("inputDisabled");
         }
 
-    });
 
+        ////////////////////////
 
-    $("#validationSumIns").css("display", "none");
+        if ($("#Addthirdparty").is(":checked")) {
+            debugger;
 
-    $("#btnGenerateQuote").click(function () {
-
-        var coverselected = $("#CoverTypeId option:selected").val();
-        if (coverselected == "1" && $("#SumInsured").val() == "") {
-            $("#validationSumIns").css("display", "block");
-            return false;
+            $("#AddThirdPartyAmount").removeClass("inputDisabled");
         }
         else {
-            $("#validationSumIns").css("display", "none");
+            $("#AddThirdPartyAmount").addClass("inputDisabled");
         }
 
-    });
+        $("#chkAddVehicles").click(function () {
+            debugger;
+            if ($("#chkAddVehicles").is(":checked")) {
+                $("#btnAddVehicle").removeClass("btnDisabled"); $("#btnGenerateQuote").addClass("btnDisabled");
+            }
+            else {
+                $("#btnAddVehicle").addClass("btnDisabled"); $("#btnGenerateQuote").removeClass("btnDisabled");
+            }
+
+        });
+
+
+        $("#validationSumIns").css("display", "none");
+
+        $("#btnGenerateQuote").click(function () {
+
+            var coverselected = $("#CoverTypeId option:selected").val();
+            if (coverselected == "1" && $("#SumInsured").val() == "") {
+                $("#validationSumIns").css("display", "block");
+                return false;
+            }
+            else {
+                $("#validationSumIns").css("display", "none");
+            }
+
+        });
 
 
 
-    if ($('#CoverTypeId option:selected').val() != 4) {
-        $("#divSumInsured").hide();
-    }
-    else {
-        $("#divSumInsured").show();
-    }
+        if ($('#CoverTypeId option:selected').val() != 4) {
+            $("#divSumInsured").hide();
+        }
+        else {
+            $("#divSumInsured").show();
+        }
 
 
 
@@ -1226,22 +1281,22 @@
                     type: "POST",
                     url: "@Url.Action("CheckIsVrnAlreadyExist", "CustomerRegistration")",
                     data: { vrn: $("#RegistrationNo").val() },
-                success: function (data) {
-                    debugger;
-                    if (data=="True") {
-                        toastr.warning("Vehicle Registration number already exist.");
-                        $("#RegistrationNo").focus();
-                    }
+                    success: function (data) {
+                        debugger;
+                        if (data=="True") {
+                            toastr.warning("Vehicle Registration number already exist.");
+                            $("#RegistrationNo").focus();
+                        }
 
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    if (textStatus == 'timeout') {
-                        //doe iets
-                    } else if (textStatus == 'error') {
-                        //doe iets
-                    }
-                } //EINDE error
-            }); //EINDE ajax
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        if (textStatus == 'timeout') {
+                            //doe iets
+                        } else if (textStatus == 'error') {
+                            //doe iets
+                        }
+                    } //EINDE error
+                }); //EINDE ajax
 
 
 
@@ -1290,7 +1345,7 @@
 
             CalculatePremiumByCoverType();
 
-          //  QuoteCalculation();
+            //  QuoteCalculation();
 
         });
 
@@ -1454,11 +1509,11 @@
         }); //EINDE ajax
     }
 
-    $("#TaxClassId").change(function() {              
+    $("#TaxClassId").change(function() {
         $(".loading-area").show();
         setTimeout(function(){
             $(".loading-area").hide();
-            CalculatePremiumByCoverType(); 
+            CalculatePremiumByCoverType();
         }, 1000);
 
     });
@@ -1559,23 +1614,23 @@
             toastr.warning("Please Select A Payment Term !!");
         }
 
-
-        debugger;
-
+ 
+        var isLicense = $("#IncludeLicenseFee").is(':checked');
+        var taxClass =  $("#TaxClassId").val();
 
         if (flag) {
-           $(".loading-area").show();
+            $(".loading-area").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("getPolicyDetailsFromICEcash", "CustomerRegistration")",
-                data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleUsage : $("#VehicleUsage").val() },
+                data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#ProductId").val(),CoverStartDate: $("#CoverStartDate").val() , CoverEndDate : $("#CoverEndDate").val(), VehilceLicense: isLicense, taxClassId: taxClass },
                 success: function (data) {
                     debugger;
                     if (data.result == 0) {
                         toastr.error(data.message);
                         $("fieldset").removeAttr("disabled");
                         //$("#ProductId").removeClass("inputDisabled")
-                      //  $(".loading-area").hide();
+                        //  $(".loading-area").hide();
                         $("#InsuranceId").val("");
                         $("#isVehicleRegisteredonICEcash").val(0);
                     }
@@ -1657,7 +1712,7 @@
 
     function GetVehicleTaxClass(productId)
     {
-         $.ajax({
+        $.ajax({
             url: "@Url.Action("GetVehicleTaxClass", "CustomerRegistration")",
             type: "POST",
             data: { vehicleTypeId: productId},
