@@ -692,7 +692,7 @@ namespace InsuranceClaim.Controllers
                 query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
                 query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
                 query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
-                query += " join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+                query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
                 query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
                 query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
                 query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
@@ -776,7 +776,7 @@ namespace InsuranceClaim.Controllers
                 query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
                 query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
                 query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
-                query += " join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+                query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
                 query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
                 query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
                 query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
@@ -914,21 +914,15 @@ namespace InsuranceClaim.Controllers
             foreach (var item in summaryList)
             {
                 var payment = paymentDetails.FirstOrDefault(c => c.SummaryDetailId == item.Id);
-
                 if(payment!=null)
                 {
-
                     var paymentMethod = paymentMethods.FirstOrDefault(c => c.Name == payment.PaymentId);
-
                     if(paymentMethod!=null)
                     {
                         item.PaymentMethodId = paymentMethod.Id;
                         InsuranceContext.SummaryDetails.Update(item);
                     }
-
-
                 }
-
             }
         }
 

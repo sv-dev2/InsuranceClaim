@@ -1874,7 +1874,7 @@ namespace InsuranceClaim.Controllers
 
         public string GetRenewalDate(string renewDate = "", string licExpDate = "")
         {
-            DateTime date = DateTime.Now;
+         DateTime date = DateTime.Now;
 
             if (!string.IsNullOrEmpty(licExpDate))
                 date = Convert.ToDateTime(licExpDate);

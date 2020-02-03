@@ -25,13 +25,13 @@ namespace Insurance.Service
                     //model.CoverStartDate = DateTime.Now;
 
                     if (model.PaymentTermId == 1)
-                        model.CoverEndDate = model.CoverStartDate.Value.AddMonths(12);
+                        db.CoverEndDate = model.CoverStartDate.Value.AddMonths(12);
                     else
-                        model.CoverEndDate = model.CoverStartDate.Value.AddMonths(model.PaymentTermId);
+                        db.CoverEndDate = model.CoverStartDate.Value.AddMonths(model.PaymentTermId);
 
-                    model.RenewalDate = model.CoverEndDate.Value.AddDays(1);
-                    model.TransactionDate = DateTime.Now;
-                    model.PolicyExpireDate = model.CoverEndDate.ToString();
+                    db.RenewalDate = model.CoverEndDate.Value.AddDays(1);
+                    db.TransactionDate = DateTime.Now;
+                    db.PolicyExpireDate = model.CoverEndDate;
                 }
                 InsuranceContext.VehicleDetails.Insert(db);
                 return db.Id;

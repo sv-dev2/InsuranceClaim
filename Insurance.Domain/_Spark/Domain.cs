@@ -867,6 +867,9 @@ namespace Insurance.Domain
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
         public int RiskCoverId { get; set; }
+        public decimal USDMinBenchmark { get; set; }
+
+        public bool IsActive { get; set; }
 
     }
     public partial class PaymentInformation : Entity<PaymentInformation>

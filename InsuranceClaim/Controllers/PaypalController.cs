@@ -1255,14 +1255,12 @@ namespace InsuranceClaim.Controllers
         {
             #region update  TPIQuoteUpdate
             Insurance.Service.EmailService log = new Insurance.Service.EmailService();
-
             string result = "";
 
             try
             {
                 var tokenObject = new ICEcashTokenResponse();
                 var PartnerToken = "";
-
 
                 var customerDetails = new Customer();
                 ICEcashService iceCash = new ICEcashService();
@@ -1383,8 +1381,6 @@ namespace InsuranceClaim.Controllers
                         {
                             result = res.Response.Message;
                         }
-
-
                     }
                 }
             }

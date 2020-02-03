@@ -122,7 +122,7 @@ namespace Insurance.Service
 
                 //   SummaryDetailService.WriteIceCashLog(data, response.Content, "PartnerToken_Web");
                 SummaryDetailService.WriteLog(data, response.Content, "PartnerToken");
-     
+
 
             }
             catch (Exception ex)
@@ -225,9 +225,9 @@ namespace Insurance.Service
 
             //string  = json.Reverse()
             string reversejsonString = new string(_json.ToArray());
-           
 
-            string concatinatedString = reversejsonString ;
+
+            string concatinatedString = reversejsonString;
 
             byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(concatinatedString);
 
@@ -287,7 +287,7 @@ namespace Insurance.Service
                 }
                 else
                 {
-                      obj.Add(new VehicleObject { VRN = item.RegistrationNo, IDNumber = CustomerInfo.NationalIdentificationNumber, FirstName = CustomerInfo.FirstName, LastName = CustomerInfo.LastName, MSISDN = CustomerInfo.CountryCode + CustomerInfo.PhoneNumber, Address1 = CustomerInfo.AddressLine1, Town = CustomerInfo.AddressLine2, EntityType = "Personal", DurationMonths = durationMonth, InsuranceType = item.CoverTypeId == null ? 0 : item.CoverTypeId.Value, VehicleType = item.ProductId, Make = item.MakeId, Model = item.ModelId, TaxClass = item.TaxClassId.ToString(), YearManufacture = item.VehicleYear == null ? 0 : item.VehicleYear.Value });                 
+                    obj.Add(new VehicleObject { VRN = item.RegistrationNo, IDNumber = CustomerInfo.NationalIdentificationNumber, FirstName = CustomerInfo.FirstName, LastName = CustomerInfo.LastName, MSISDN = CustomerInfo.CountryCode + CustomerInfo.PhoneNumber, Address1 = CustomerInfo.AddressLine1, Town = CustomerInfo.AddressLine2, EntityType = "Personal", DurationMonths = durationMonth, InsuranceType = item.CoverTypeId == null ? 0 : item.CoverTypeId.Value, VehicleType = item.ProductId, Make = item.MakeId, Model = item.ModelId, TaxClass = item.TaxClassId.ToString(), YearManufacture = item.VehicleYear == null ? 0 : item.VehicleYear.Value });
                 }
             }
 
@@ -346,7 +346,7 @@ namespace Insurance.Service
             IRestResponse response = client.Execute(request);
 
             ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
-           // SummaryDetailService.WriteIceCashLog(data, response.Content, "TPIQuote_Web", listofvehicles[0].RegistrationNo);
+            // SummaryDetailService.WriteIceCashLog(data, response.Content, "TPIQuote_Web", listofvehicles[0].RegistrationNo);
 
             SummaryDetailService.WriteLog(data, response.Content, "TPIQuote");
 
@@ -364,7 +364,7 @@ namespace Insurance.Service
 
             var CustomerInfo = (CustomerModel)HttpContext.Current.Session["CustomerDataModal"];
 
-            if(CustomerInfo==null)
+            if (CustomerInfo == null)
             {
                 CustomerInfo = (CustomerModel)HttpContext.Current.Session["ReCustomerDataModal"];// if renew
             }
@@ -381,7 +381,7 @@ namespace Insurance.Service
 
             //  obj.Add(new VehicleObject { VRN = RegistrationNo, DurationMonths = (PaymentTermId == 1 ? 12 : PaymentTermId), VehicleValue = Convert.ToInt32(suminsured), YearManufacture = Convert.ToInt32(VehicleYear), InsuranceType = Convert.ToInt32(CoverTypeId), VehicleType = Convert.ToInt32(VehicleUsage),  Make = make, Model = model, EntityType = "", Town = CustomerInfo.City, Address1 = CustomerInfo.AddressLine1, Address2 = CustomerInfo.AddressLine2, CompanyName = "", FirstName = CustomerInfo.FirstName, LastName = CustomerInfo.LastName, IDNumber = CustomerInfo.NationalIdentificationNumber, MSISDN = CustomerInfo.CountryCode + CustomerInfo.PhoneNumber, StartDate= CoverStartDate, EndDate=CoverEndDate });
 
-            obj.Add(new VehicleObject { VRN = RegistrationNo, DurationMonths = (PaymentTermId == 1 ? 12 : PaymentTermId), VehicleValue = Convert.ToInt32(suminsured), YearManufacture = Convert.ToInt32(VehicleYear), InsuranceType = Convert.ToInt32(CoverTypeId), VehicleType = Convert.ToInt32(VehicleUsage), Make = make, Model = model, EntityType = "", Town = CustomerInfo.City, Address1 = UserService.ReplaceSpecialChracter(CustomerInfo.AddressLine1) , Address2 = UserService.ReplaceSpecialChracter(CustomerInfo.AddressLine2) , CompanyName = "", FirstName = CustomerInfo.FirstName, LastName = CustomerInfo.LastName, IDNumber = CustomerInfo.NationalIdentificationNumber, MSISDN = CustomerInfo.CountryCode + CustomerInfo.PhoneNumber, TaxClass=TaxClass });
+            obj.Add(new VehicleObject { VRN = RegistrationNo, DurationMonths = (PaymentTermId == 1 ? 12 : PaymentTermId), VehicleValue = Convert.ToInt32(suminsured), YearManufacture = Convert.ToInt32(VehicleYear), InsuranceType = Convert.ToInt32(CoverTypeId), VehicleType = Convert.ToInt32(VehicleUsage), Make = make, Model = model, EntityType = "", Town = CustomerInfo.City, Address1 = UserService.ReplaceSpecialChracter(CustomerInfo.AddressLine1), Address2 = UserService.ReplaceSpecialChracter(CustomerInfo.AddressLine2), CompanyName = "", FirstName = CustomerInfo.FirstName, LastName = CustomerInfo.LastName, IDNumber = CustomerInfo.NationalIdentificationNumber, MSISDN = CustomerInfo.CountryCode + CustomerInfo.PhoneNumber, TaxClass = TaxClass });
 
             // obj.Add(new VehicleObject { VRN = RegistrationNo, DurationMonths = paymentTermId , VehicleValue = Convert.ToInt32(suminsured), YearManufacture = Convert.ToInt32(VehicleYear), InsuranceType = Convert.ToInt32(CoverTypeId), VehicleType = Convert.ToInt32(VehicleUsage), TaxClass = 1, Make = make, Model = model, EntityType = "", Town = CustomerInfo.City, Address1 = CustomerInfo.AddressLine1, Address2 = CustomerInfo.AddressLine2, CompanyName = "", FirstName = CustomerInfo.FirstName, LastName = CustomerInfo.LastName, IDNumber = CustomerInfo.NationalIdentificationNumber, MSISDN = CustomerInfo.CountryCode + CustomerInfo.PhoneNumber });
 
@@ -488,7 +488,7 @@ namespace Insurance.Service
             return json;
         }
 
-        public ResultRootObject TPILICQuote(string PartnerToken, string RegistrationNo, string suminsured, string make, string model, int PaymentTermId, int VehicleYear, int CoverTypeId, int VehicleType, string PartnerReference, DateTime CoverStartDate, DateTime CoverEndDate, string taxClassId)
+        public ResultRootObject TPILICQuote(string PartnerToken, string RegistrationNo, string suminsured, string make, string model, int PaymentTermId, int VehicleYear, int CoverTypeId, int VehicleType, string PartnerReference, DateTime CoverStartDate, DateTime CoverEndDate, string taxClassId, bool VehilceLicense, bool RadioLicense)
         {
             //string PSK = "127782435202916376850511";
             string _json = "";
@@ -504,16 +504,28 @@ namespace Insurance.Service
             List<VehicleCombObject> obj = new List<VehicleCombObject>();
 
             int LicFrequencyTerm = GetMonthKey(PaymentTermId);
-            int RadioTVUsage = 1; // for private car
+            string RadioTVUsage = "1"; // for private car
+            string RadioTVFreeQuency = null;
 
             if (VehicleType == 0)
-                RadioTVUsage = 1;
+                RadioTVUsage = "1";
             else if (VehicleType == 3 || VehicleType == 11) // fr 
-                RadioTVUsage = 2;
+                RadioTVUsage = "2";
 
             string clientIdType = "1";
             if (CustomerInfo.IsCorporate)
                 clientIdType = "2";
+
+            if (!RadioLicense)
+            {
+                RadioTVUsage = null;
+                RadioTVFreeQuency = null;
+            }
+            else
+                RadioTVFreeQuency = LicFrequencyTerm.ToString();
+
+
+
 
 
             obj.Add(new VehicleCombObject
@@ -529,8 +541,8 @@ namespace Insurance.Service
                 IDNumber = UserService.ReplaceSpecialChracter(CustomerInfo.NationalIdentificationNumber),
                 MSISDN = UserService.ReplaceSpecialChracter(CustomerInfo.CountryCode + CustomerInfo.PhoneNumber),
                 LicFrequency = LicFrequencyTerm.ToString(),
-                RadioTVUsage = RadioTVUsage.ToString(),
-                RadioTVFrequency = LicFrequencyTerm.ToString(),
+                RadioTVUsage = RadioTVUsage,
+                RadioTVFrequency = RadioTVFreeQuency,
                 SuburbID = "1",
                 ClientIDType = clientIdType,
                 TaxClass = taxClassId
@@ -668,7 +680,7 @@ namespace Insurance.Service
 
             var item = vehicleDetail;
 
-            if(paymentMethod==null || paymentMethod==0)
+            if (paymentMethod == null || paymentMethod == 0)
             {
                 paymentMethod = 1;
             }
@@ -688,7 +700,7 @@ namespace Insurance.Service
 
             qut.Add(new QuoteDetial { InsuranceID = item.InsuranceId, Status = "1" });
 
-            var quotesDetial = new RequestTPIQuoteUpdate { Function = "TPIQuoteUpdate", PaymentMethod = Convert.ToString(paymentMethod), Identifier = "1", MSISDN =  CustomerInfo.PhoneNumber, Quotes = qut };
+            var quotesDetial = new RequestTPIQuoteUpdate { Function = "TPIQuoteUpdate", PaymentMethod = Convert.ToString(paymentMethod), Identifier = "1", MSISDN = CustomerInfo.PhoneNumber, Quotes = qut };
 
 
 
@@ -780,7 +792,7 @@ namespace Insurance.Service
 
             List<LicQuoteDetial> qut = new List<LicQuoteDetial>();
 
-            qut.Add(new LicQuoteDetial { LicenceID = item.LicenseId, Status = "1", DeliveryMethod="3" });
+            qut.Add(new LicQuoteDetial { LicenceID = item.LicenseId, Status = "1", DeliveryMethod = "3" });
 
             var quotesDetial = new RequestLicQuoteUpdate { Function = "LICQuoteUpdate", PaymentMethod = Convert.ToString(paymentMethod), Identifier = "1", MSISDN = CustomerInfo.PhoneNumber, Quotes = qut };
 
@@ -843,7 +855,7 @@ namespace Insurance.Service
         }
 
 
-         public static ResultRootObject TPILICUpdate(Customer customer, VehicleDetail vehicleDetail, string PartnerToken, int? paymentMethod)
+        public static ResultRootObject TPILICUpdate(Customer customer, VehicleDetail vehicleDetail, string PartnerToken, int? paymentMethod)
         {
             //string PSK = "127782435202916376850511";
             string _json = "";
@@ -856,7 +868,7 @@ namespace Insurance.Service
 
             var item = vehicleDetail;
 
-            if(paymentMethod==null || paymentMethod==0)
+            if (paymentMethod == null || paymentMethod == 0)
             {
                 paymentMethod = 1;
             }
@@ -874,9 +886,9 @@ namespace Insurance.Service
 
             List<CombineQuoteDetial> qut = new List<CombineQuoteDetial>();
 
-            qut.Add(new CombineQuoteDetial { CombinedID = item.CombinedID, Status = "1", DeliveryMethod="3", LicenceCert="1" });
+            qut.Add(new CombineQuoteDetial { CombinedID = item.CombinedID, Status = "1", DeliveryMethod = "3", LicenceCert = "1" });
 
-            var quotesDetial = new RequesCombineQuoteUpdate { Function = "TPILICUpdate", PaymentMethod = Convert.ToString(paymentMethod), Identifier = "1", MSISDN =  CustomerInfo.PhoneNumber, Quotes = qut };
+            var quotesDetial = new RequesCombineQuoteUpdate { Function = "TPILICUpdate", PaymentMethod = Convert.ToString(paymentMethod), Identifier = "1", MSISDN = CustomerInfo.PhoneNumber, Quotes = qut };
 
 
 
@@ -1143,7 +1155,7 @@ namespace Insurance.Service
             List<VehicleLicObject> obj = new List<VehicleLicObject>();
             var CustomerInfo = (CustomerModel)HttpContext.Current.Session["CustomerDataModal"];
 
-           int paymentTermId= GetMonthKey(Convert.ToInt32(paymentTerm));
+            int paymentTermId = GetMonthKey(Convert.ToInt32(paymentTerm));
 
             //foreach (var item in listofvehicles)
             //{
@@ -1310,7 +1322,7 @@ namespace Insurance.Service
         }
 
 
-        
+
 
 
 
@@ -1379,9 +1391,9 @@ namespace Insurance.Service
         public string TaxClass { get; set; }
         public int YearManufacture { get; set; }
 
-       // public DateTime StartDate { get; set; }
+        // public DateTime StartDate { get; set; }
 
-      //  public DateTime EndDate { get; set; }
+        //  public DateTime EndDate { get; set; }
     }
 
     //LicFrequency
@@ -1402,7 +1414,7 @@ namespace Insurance.Service
 
         public string TaxClass { get; set; }
 
-          public string VehicleType { get; set; }
+        public string VehicleType { get; set; }
 
         public string DurationMonths { get; set; }
         public string LicFrequency { get; set; }
@@ -1446,7 +1458,7 @@ namespace Insurance.Service
     //VehicleCombObject
 
 
-    
+
 
     public class CombArguments
     {
@@ -1620,7 +1632,7 @@ namespace Insurance.Service
         public List<CombineQuoteDetial> Quotes { get; set; }
     }
 
-   
+
 
     //LicQuoteDetial
 
@@ -1722,7 +1734,7 @@ namespace Insurance.Service
         public string Mode { get; set; }
     }
 
-     
+
 
     public class TPIPolicyDetial
     {
