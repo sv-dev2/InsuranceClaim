@@ -651,6 +651,16 @@ namespace Insurance.Service
 
 
 
+
+
+
+      
+
+
+
+
+
+
         public string RemoveSpecialChars(string str)
         {
             // Create  a string array and add the special characters you want to remove
@@ -1067,13 +1077,15 @@ namespace Insurance.Service
 
             ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
 
-
             Insurance.Service.EmailService log = new Insurance.Service.EmailService();
             // log.WriteLog("TPIPolicy :" + response.Content);
             SummaryDetailService.WriteLog(data, response.Content, "TPIPolicy");
 
             return json;
         }
+
+
+
 
         public static ResultRootObject TPILICResult(VehicleDetail vehicleDetail, string PartnerToken)
         {
@@ -1583,6 +1595,8 @@ namespace Insurance.Service
         public string LicenceID { get; set; }
         public string CombinedID { get; set; }
 
+       // public string LicenceCert { get; set; }
+
         public string LicExpiryDate { get; set; }
         public string TotalLicAmt { get; set; }
         public string TotalAmount { get; set; }
@@ -1602,6 +1616,7 @@ namespace Insurance.Service
         public string EndDate { get; set; }
 
         public string Status { get; set; }
+        public string LicenceCert { get; set; }
         public List<ResultQuote> Quotes { get; set; }
     }
     public class ResultRootObject

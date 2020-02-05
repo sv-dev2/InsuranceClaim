@@ -79,7 +79,6 @@ namespace Insurance.Service
         public static string EmailPdf(string MotorBody, int custid, string policynumber, string filename, int vehcleId = 0)
         {
             StringReader sr = new StringReader(MotorBody.ToString());
-
             string path = "";
 
             try
@@ -91,9 +90,9 @@ namespace Insurance.Service
 
 
                 //  filename = Guid.NewGuid() + "," + filename;
-               // string file = Convert.ToString(DateTime.Now.ToString("ddMMyyyy"));
+                // string file = Convert.ToString(DateTime.Now.ToString("ddMMyyyy"));
                 string file = Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmss"));
-                
+
                 filename = file + "," + filename;
                 //  string[] nfilename=filename.Split(",");
                 //  filename = DateTime.Now.ToString("dd/MM/yyyy") + "" + filename;
@@ -162,32 +161,68 @@ namespace Insurance.Service
                         System.IO.File.WriteAllBytes(policyfolderpath + filename + ".pdf", memoryStream.ToArray());
                         //    System.IO.File.WriteAllBytes(Backuppath + filename + ".pdf", memoryStream.ToArray());
                         //    path = "http://" + HttpContext.Current.Request.Url.Authority + "/" + "~/Documents/" + custid + "/" + policynumber + "/" + filename + ".pdf";
-
-
                         path = "~/Documents/" + custid + "/" + policynumber + "/" + filename + ".pdf";
-
-
                     }
-
-
-
                 }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            sr.Close();
+            return path;
+        }
+
+        public static string LicensePdf(string body, string vrn)
+        {
+            StringReader sr = new StringReader(body.ToString());
+            string path = "";
+
+            try
+            {
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+                HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+                string vehiclefolderpath = "";
+
+                vehiclefolderpath = HttpContext.Current.Server.MapPath("~/Documents/License/" + vrn + "/");
+                if (!Directory.Exists(vehiclefolderpath))
+                {
+                    Directory.CreateDirectory(vehiclefolderpath);
+                }
+
+
+                string file = Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+                string filename =  "License" +""+ file ;
+
+                byte[] bytes = Convert.FromBase64String(body);
+
+                System.IO.File.WriteAllBytes(vehiclefolderpath + filename + ".pdf", bytes);
+                // path = vehiclefolderpath + filename + ".pdf";
+
+                
+
+                path = "/Documents/License/" + vrn + "/" + filename + ".pdf";
+
 
             }
             catch (Exception ex)
             {
-                
+
             }
 
             sr.Close();
-
             return path;
-
         }
 
+        //public void ConvertBase64ToPdf(string body)
+        //{
 
 
-     
+        //    byte[] bytes = Convert.FromBase64String(body);
+        //    File.WriteAllBytes(@"FolderPath\pdfFileName.pdf", bytes);
+        //}
 
 
 
@@ -310,7 +345,7 @@ namespace Insurance.Service
             Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
             bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
             //08 May D
-            
+
             SummaryDetailService detailService = new SummaryDetailService();
             var currencylist = detailService.GetAllCurrency();
             CurrencyName = detailService.GetCurrencyName(currencylist, vehicle.CurrencyId);
@@ -346,7 +381,7 @@ namespace Insurance.Service
         }
 
 
-        public static string AddAgentLoyaltyPoints(int CustomerId, int PolicyId, RiskDetailModel vehicle, string email = "", string filepath = "", Customer agentDetials = null, AgentLogo agentLogo=null, string agentEmail="")
+        public static string AddAgentLoyaltyPoints(int CustomerId, int PolicyId, RiskDetailModel vehicle, string email = "", string filepath = "", Customer agentDetials = null, AgentLogo agentLogo = null, string agentEmail = "")
         {
             string CurrencyName = "";
             var loaltyPointsSettings = InsuranceContext.Settings.Single(where: $"keyname='Points On Renewal'");
@@ -412,7 +447,7 @@ namespace Insurance.Service
             var TotalLoyaltyPoints = InsuranceContext.LoyaltyDetails.All(where: $"CustomerId={CustomerId}").Sum(x => x.PointsEarned);
             string ReminderEmailPath = "/Views/Shared/EmaiTemplates/AgentLoyalityPoints.cshtml";
             string EmailBody2 = System.IO.File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath(ReminderEmailPath));
-            var body = EmailBody2.Replace("##FirstName##", customer.FirstName).Replace("##path##", filepath+ agentLogo.LogoPath).Replace("##LastName##", customer.LastName)
+            var body = EmailBody2.Replace("##FirstName##", customer.FirstName).Replace("##path##", filepath + agentLogo.LogoPath).Replace("##LastName##", customer.LastName)
                  .Replace("##currencyName##", CurrencyName)
                    .Replace("#AgentFirstName#", agentDetials.FirstName).Replace("#AgentLastName#", agentDetials.LastName)
                  .Replace("#AgentAddress1#", agentDetials.AddressLine1).Replace("#AgentCity#", agentDetials.City)

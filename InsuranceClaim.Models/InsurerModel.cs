@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,5 +13,18 @@ namespace InsuranceClaim.Models
         public string InsurerName { get; set; }
         public string InsurerCode { get; set; }
         public string InsurerAddress { get; set; }
+    }
+
+
+    public class LicenseModel
+    {
+
+        [Required]
+        public string VRN { get; set; }
+        public string CombinedID { get; set; }
+
+        public string FilePath { get; set; }
+
+        public string SerialNumber { get; set; }
     }
 }

@@ -73,8 +73,6 @@ namespace InsuranceClaim.Controllers
 
             ViewBag.Cities = InsuranceContext.Cities.All();
 
-
-
             if (id > 0) // if staff try to edit Qutation
             {
                 SetCustomerValueIntoSession(id); // here id represent to summardetialid during edit the Qutation
@@ -3033,7 +3031,7 @@ namespace InsuranceClaim.Controllers
 
                 //   SummaryDetailService service = new SummaryDetailService();
 
-                 // tokenObject= service.CheckSessionExpired();
+                // tokenObject= service.CheckSessionExpired();
 
 
                 // ICEcashService.getToken();
@@ -3086,7 +3084,7 @@ namespace InsuranceClaim.Controllers
                         if (VehilceLicense)
                             quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
                         else
-                            quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate,taxClassId);
+                            quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
 
                     }
 
@@ -3346,6 +3344,123 @@ namespace InsuranceClaim.Controllers
         {
             return View();
         }
+
+        public ActionResult LicensePrint()
+        {
+            LicenseModel model = new LicenseModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult LicensePrint(LicenseModel model)
+        {
+
+            //string file1 = "/Documents/License/KJVV456456/License20200204153919.pdf";
+            //ViewBag.file = ConfigurationManager.AppSettings["urlPath"] + file1;
+            //TempData["filePath"] = ConfigurationManager.AppSettings["urlPath"] + file1;
+            //return RedirectToAction("CertificateSerialNumber");
+
+            var tokenObject = new ICEcashTokenResponse();
+            ICEcashService iceCash = new ICEcashService();
+
+            var query = "select  top  1  * from VehicleDetail where RegistrationNo='" + model.VRN + "' order by id desc";
+
+            var vehicle = InsuranceContext.Query(query).Select(x => new VehicleDetail()
+            {
+                Id = x.Id,
+                CombinedID = x.CombinedID
+            }).FirstOrDefault();
+
+            VehicleDetail detail = new VehicleDetail { CombinedID = vehicle.CombinedID };
+
+            tokenObject = iceCash.getToken();
+            //  SummaryDetailService.UpdateToken(tokenObject);
+            string PartnerToken = tokenObject.Response.PartnerToken;
+
+            var res = ICEcashService.TPILICResult(detail, PartnerToken);
+            string file = "";
+
+            if (res.Response != null && (res.Response.Message.Contains("Partner Token has expired") || res.Response.Message.Contains("Invalid Partner Token")))
+            {
+                tokenObject = iceCash.getToken();
+                SummaryDetailService.UpdateToken(tokenObject);
+                res = ICEcashService.TPILICResult(detail, tokenObject.Response.PartnerToken);
+            }
+
+            if (res.Response != null && res.Response.LicenceCert != null)
+            {
+                file = SavePdf(res.Response.LicenceCert, model.VRN);
+            }
+            else
+            {
+                TempData["Message"] = "Pdf not found.";
+                return View(model);
+            }
+            if (file != "")
+            {
+                TempData["Message"] = "Sucesfully download pdf.";
+            }
+
+            //TPILICResult
+
+            model.FilePath = ConfigurationManager.AppSettings["urlPath"] + file;
+
+           // return RedirectToAction("CertificateSerialNumber");
+
+            return View(model);
+        }
+
+
+        public ActionResult CertificateSerialNumber()
+        {
+            LicenseModel model = new LicenseModel();
+
+          
+
+            if (TempData["filePath"] != null)
+            {
+    
+                model.FilePath = (string)TempData["filePath"];
+            }
+            return View(model);
+        }
+
+        private string SavePdf(string base64BinaryStr, string vrn)
+        {
+            var path = "";
+            try
+            {
+                path = MiscellaneousService.LicensePdf(base64BinaryStr, vrn);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    //  DownloadLogFile(path);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return path;
+        }
+
+
+        public void DownloadLogFile(string file)
+        {
+
+            Response.ContentType = "Application/pdf";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=License.pdf");
+            Response.TransmitFile(Server.MapPath(file));
+            Response.End();
+
+
+
+            //string path = Server.MapPath(file);
+            //byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            //string fileName = "license.pdf";
+            //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
 
         //created by Rajat Khanna
         #region Receipt Module

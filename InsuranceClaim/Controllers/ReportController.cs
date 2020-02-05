@@ -908,9 +908,8 @@ namespace InsuranceClaim.Controllers
         {
             var summaryList = InsuranceContext.SummaryDetails.All(where: "PaymentMethodId is null");
             var paymentDetails = InsuranceContext.PaymentInformations.All();
-
             var paymentMethods = InsuranceContext.PaymentMethods.All();
-            
+                    
             foreach (var item in summaryList)
             {
                 var payment = paymentDetails.FirstOrDefault(c => c.SummaryDetailId == item.Id);
@@ -924,6 +923,7 @@ namespace InsuranceClaim.Controllers
                     }
                 }
             }
+
         }
 
 
