@@ -1399,6 +1399,64 @@ namespace InsuranceClaim.Controllers
         }
 
         [Authorize(Roles = "Administrator,Staff,Renewals,AgentStaff")]
+        public ActionResult CustomerManagementList(string msg = "")
+        {
+
+            bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+            if (userLoggedin)
+            {
+                var userid = System.Web.HttpContext.Current.User.Identity.GetUserId();
+                var roles = UserManager.GetRoles(userid).FirstOrDefault();
+                //if (roles != "SuperAdmin")
+                //{
+                //    return RedirectToAction("Index", "CustomerRegistration");
+                //}
+            }
+            else
+            {
+                return RedirectToAction("Index", "CustomerRegistration");
+            }
+
+            List<CustomerModel> ListUserViewModel = new List<CustomerModel>();
+
+            var name = "Customer";
+            var secondQuery = "select TOP 100 AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where AspNetRoles.Name ='" + name + "' or AspNetRoles.Name = 'Web Customer' order by Customer.Id desc";
+
+            ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
+            {
+                Id = x.Id,
+                EmailAddress = x.Email,
+                // UserName = x.UserName,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                UserID = x.UserID,
+                CustomerId = x.CustomerId,
+                PhoneNumber = x.PhoneNumber,
+                role = x.Name,
+
+                Branch = x.BranchName,
+                Gender = x.Gender,
+                DateOfBirth = x.DateOfBirth,
+                CountryCode = x.Countrycode,
+                City = x.City,
+                Country = x.Country,
+            }).ToList();
+
+
+            ListUserViewModel lstUserModel = new ListUserViewModel();
+            lstUserModel.ListUsers = ListUserViewModel;
+
+
+            if (msg != "")
+            {
+                TempData["SuccessMsg"] = "Successfully deactivated the user.";
+            }
+
+            return View(lstUserModel);
+
+        }
+
+        [Authorize(Roles = "Administrator,Staff,Renewals,AgentStaff")]
         public ActionResult UserManagementList(string msg = "")
         {
 
@@ -1420,44 +1478,33 @@ namespace InsuranceClaim.Controllers
 
 
             List<CustomerModel> ListUserViewModel = new List<CustomerModel>();
-            var user = InsuranceContext.Customers.All(where: "IsActive = 'True' or IsActive is null").OrderByDescending(x => x.Id).ToList().Take(50);
+            var name = "Customer";
+            var secondQuery = "select TOP 100 AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where AspNetRoles.Name !='" + name + "' and AspNetRoles.Name != 'Web Customer' order by Customer.Id desc";
 
-            var branchList = InsuranceContext.Branches.All();
-
-
-            foreach (var item in user)
+            ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
             {
-                CustomerModel cstmrModel = new CustomerModel();
-                cstmrModel.Id = item.Id;
-                cstmrModel.UserID = item.UserID;
-                cstmrModel.CustomerId = item.CustomerId;
-                cstmrModel.FirstName = item.FirstName;
-                cstmrModel.LastName = item.LastName;
-                cstmrModel.Gender = item.Gender;
-                cstmrModel.DateOfBirth = item.DateOfBirth;
-                cstmrModel.CountryCode = item.Countrycode;
-                cstmrModel.City = item.City;
-                cstmrModel.Country = item.Country;
-                cstmrModel.IsActive = item.IsActive;
-                cstmrModel.IsLicenseDiskNeeded = item.IsLicenseDiskNeeded;
-                cstmrModel.IsPolicyDocSent = item.IsPolicyDocSent;
-                cstmrModel.AddressLine1 = item.AddressLine1;
-                cstmrModel.AddressLine1 = item.AddressLine2;
-                cstmrModel.NationalIdentificationNumber = item.NationalIdentificationNumber;
-                cstmrModel.IsOTPConfirmed = item.IsOTPConfirmed;
-                cstmrModel.IsWelcomeNoteSent = item.IsWelcomeNoteSent;
+                Id = x.Id,
+                EmailAddress = x.Email,
+                // UserName = x.UserName,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                UserID = x.UserID,
+                CustomerId = x.CustomerId,
+                PhoneNumber = x.PhoneNumber,
+                role = x.Name,
 
-                cstmrModel.PhoneNumber = UserManager.GetPhoneNumber(item.UserID);
-                cstmrModel.EmailAddress = UserManager.GetEmail(item.UserID);
-                cstmrModel.role = Convert.ToString(UserManager.GetRoles(item.UserID).Count > 0 ? Convert.ToString(UserManager.GetRoles(item.UserID)[0]) : "");
+                Branch = x.BranchName,
+                Gender = x.Gender,
+                DateOfBirth = x.DateOfBirth,
+                CountryCode = x.Countrycode,
+                City = x.City,
+                Country = x.Country,
+            }).ToList();
 
-                cstmrModel.Branch = branchList.FirstOrDefault(c => c.Id == item.BranchId) == null ? "" : branchList.FirstOrDefault(c => c.Id == item.BranchId).BranchName;
-
-                ListUserViewModel.Add(cstmrModel);
-            }
 
             ListUserViewModel lstUserModel = new ListUserViewModel();
             lstUserModel.ListUsers = ListUserViewModel;
+
 
 
             if (msg != "")
@@ -1468,6 +1515,82 @@ namespace InsuranceClaim.Controllers
             return View(lstUserModel);
 
 
+        }
+
+        public ActionResult SearchCustomerManagementList(string searchText)
+        {
+            ListUserViewModel lstUserModel = new ListUserViewModel();
+            lstUserModel.ListUsers = new List<CustomerModel>();
+            List<CustomerModel> ListUserViewModel = new List<CustomerModel>();
+
+            var branchList = InsuranceContext.Branches.All();
+            if (searchText != null && searchText != "")
+            {
+                var custom = searchText.Split(' ');
+                var customers = new List<Customer>();
+
+                if (custom.Length == 2)
+                {
+                    var searchtext1 = Convert.ToString(custom[0]);
+                    var searchtext2 = Convert.ToString(custom[1]);
+
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name = 'Web Customer' or AspNetRoles.Name = 'Customer')";
+
+                    ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
+                    {
+                        Id = x.Id,
+                        EmailAddress = x.Email,
+                        // UserName = x.UserName,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        UserID = x.UserID,
+                        CustomerId = x.CustomerId,
+                        PhoneNumber = x.PhoneNumber,
+                        role = x.Name,
+
+                        Branch = x.BranchName,
+                        Gender = x.Gender,
+                        DateOfBirth = x.DateOfBirth,
+                        CountryCode = x.Countrycode,
+                        City = x.City,
+                        Country = x.Country,
+                    }).ToList();
+
+                    lstUserModel.ListUsers = ListUserViewModel;
+                    return View("CustomerManagementList", lstUserModel);
+
+                }
+                if (custom.Length == 1)
+                {
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchText + "%' or LastName like '%" + searchText + "%') AND (AspNetRoles.Name = 'Web Customer' or AspNetRoles.Name = 'Customer')";
+
+                    ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
+                    {
+                        Id = x.Id,
+                        EmailAddress = x.Email,
+                        // UserName = x.UserName,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        UserID = x.UserID,
+                        CustomerId = x.CustomerId,
+                        PhoneNumber = x.PhoneNumber,
+                        role = x.Name,
+
+                        Branch = x.BranchName,
+                        Gender = x.Gender,
+                        DateOfBirth = x.DateOfBirth,
+                        CountryCode = x.Countrycode,
+                        City = x.City,
+                        Country = x.Country,
+                    }).ToList();
+
+                    lstUserModel.ListUsers = ListUserViewModel;
+                    return View("CustomerManagementList", lstUserModel);
+                }
+
+
+            }
+            return View("UserManagementList", lstUserModel);
         }
 
         public ActionResult SearchUserManagementList(string searchText)
@@ -1489,96 +1612,60 @@ namespace InsuranceClaim.Controllers
                     var searchtext1 = Convert.ToString(custom[0]);
                     var searchtext2 = Convert.ToString(custom[1]);
 
-                    customers = InsuranceContext.Customers.All(where: $"FirstName like '%{searchtext1}%' and LastName like '%{searchtext2}%' ").ToList();
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer')";
+
+                    ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
+                    {
+                        Id = x.Id,
+                        EmailAddress = x.Email,
+                        // UserName = x.UserName,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        UserID = x.UserID,
+                        CustomerId = x.CustomerId,
+                        PhoneNumber = x.PhoneNumber,
+                        role = x.Name,
+
+                        Branch = x.BranchName,
+                        Gender = x.Gender,
+                        DateOfBirth = x.DateOfBirth,
+                        CountryCode = x.Countrycode,
+                        City = x.City,
+                        Country = x.Country,
+                    }).ToList();
+
+                    lstUserModel.ListUsers = ListUserViewModel;
+                    return View("UserManagementList", lstUserModel);
+
                 }
                 if (custom.Length == 1)
                 {
-                    customers = InsuranceContext.Customers.All(where: $"FirstName like '%{searchText}%' or LastName like '%{searchText}%' ").ToList();
-                }
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchText + "%' or LastName like '%" + searchText + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer')";
 
-                if (customers != null && customers.Count > 0)
-                {
-
-                    foreach (var item in customers)
+                    ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
                     {
-                        CustomerModel cstmrModel = new CustomerModel();
-                        cstmrModel.Id = item.Id;
-                        cstmrModel.UserID = item.UserID;
-                        cstmrModel.CustomerId = item.CustomerId;
-                        cstmrModel.FirstName = item.FirstName;
-                        cstmrModel.LastName = item.LastName;
-                        cstmrModel.Gender = item.Gender;
-                        cstmrModel.DateOfBirth = item.DateOfBirth;
-                        cstmrModel.CountryCode = item.Countrycode;
-                        cstmrModel.City = item.City;
-                        cstmrModel.Country = item.Country;
-                        cstmrModel.IsActive = item.IsActive;
-                        cstmrModel.IsLicenseDiskNeeded = item.IsLicenseDiskNeeded;
-                        cstmrModel.IsPolicyDocSent = item.IsPolicyDocSent;
-                        cstmrModel.AddressLine1 = item.AddressLine1;
-                        cstmrModel.AddressLine1 = item.AddressLine2;
-                        cstmrModel.NationalIdentificationNumber = item.NationalIdentificationNumber;
-                        cstmrModel.IsOTPConfirmed = item.IsOTPConfirmed;
-                        cstmrModel.IsWelcomeNoteSent = item.IsWelcomeNoteSent;
+                        Id = x.Id,
+                        EmailAddress = x.Email,
+                        // UserName = x.UserName,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        UserID = x.UserID,
+                        CustomerId = x.CustomerId,
+                        PhoneNumber = x.PhoneNumber,
+                        role = x.Name,
 
-                        cstmrModel.PhoneNumber = UserManager.GetPhoneNumber(item.UserID);
-                        cstmrModel.EmailAddress = UserManager.GetEmail(item.UserID);
-                        cstmrModel.role = Convert.ToString(UserManager.GetRoles(item.UserID).Count > 0 ? Convert.ToString(UserManager.GetRoles(item.UserID)[0]) : "");
+                        Branch = x.BranchName,
+                        Gender = x.Gender,
+                        DateOfBirth = x.DateOfBirth,
+                        CountryCode = x.Countrycode,
+                        City = x.City,
+                        Country = x.Country,
+                    }).ToList();
 
-
-                        cstmrModel.Branch = branchList.FirstOrDefault(c => c.Id == item.BranchId) == null ? "" : branchList.FirstOrDefault(c => c.Id == item.BranchId).BranchName;
-
-                        ListUserViewModel.Add(cstmrModel);
-
-                    }
                     lstUserModel.ListUsers = ListUserViewModel;
                     return View("UserManagementList", lstUserModel);
                 }
-                else
-                {
-                    var user = UserManager.Users.Where(m => m.Email.Contains(searchText)).ToList();
-                    if (user != null)
-                    {
-                        foreach (var item in user)
-                        {
-                            var customer = InsuranceContext.Customers.Single(where: $"UserId = '{item.Id}'");
-                            if (customer != null)
-                            {
 
-                                CustomerModel cstmrModel = new CustomerModel();
-                                cstmrModel.Id = customer.Id;
-                                cstmrModel.UserID = customer.UserID;
-                                cstmrModel.CustomerId = customer.CustomerId;
-                                cstmrModel.FirstName = customer.FirstName;
-                                cstmrModel.LastName = customer.LastName;
-                                cstmrModel.Gender = customer.Gender;
-                                cstmrModel.DateOfBirth = customer.DateOfBirth;
-                                cstmrModel.CountryCode = customer.Countrycode;
-                                cstmrModel.City = customer.City;
-                                cstmrModel.Country = customer.Country;
-                                cstmrModel.IsActive = customer.IsActive;
-                                cstmrModel.IsLicenseDiskNeeded = customer.IsLicenseDiskNeeded;
-                                cstmrModel.IsPolicyDocSent = customer.IsPolicyDocSent;
-                                cstmrModel.AddressLine1 = customer.AddressLine1;
-                                cstmrModel.AddressLine1 = customer.AddressLine2;
-                                cstmrModel.NationalIdentificationNumber = customer.NationalIdentificationNumber;
-                                cstmrModel.IsOTPConfirmed = customer.IsOTPConfirmed;
-                                cstmrModel.IsWelcomeNoteSent = customer.IsWelcomeNoteSent;
-
-                                cstmrModel.PhoneNumber = (item.PhoneNumber);
-                                cstmrModel.EmailAddress = item.Email;
-                                cstmrModel.role = Convert.ToString(UserManager.GetRoles(item.Id).Count > 0 ? Convert.ToString(UserManager.GetRoles(item.Id)[0]) : "");
-
-
-                                cstmrModel.Branch = branchList.FirstOrDefault(c => c.Id == customer.BranchId) == null ? "" : branchList.FirstOrDefault(c => c.Id == customer.BranchId).BranchName;
-
-                                ListUserViewModel.Add(cstmrModel);
-                            }
-                        }
-                        lstUserModel.ListUsers = ListUserViewModel;
-                        return View("UserManagementList", lstUserModel);
-                    }
-                }
             }
             return View("UserManagementList", lstUserModel);
         }

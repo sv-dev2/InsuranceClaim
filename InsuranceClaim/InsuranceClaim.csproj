@@ -1128,6 +1128,7 @@
     <Content Include="Views\Domestic\SummaryDetail.cshtml" />
     <Content Include="Views\CustomerRegistration\LicensePrint.cshtml" />
     <Content Include="Views\CustomerRegistration\CertificateSerialNumber.cshtml" />
+    <Content Include="Views\Account\CustomerManagementList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />
