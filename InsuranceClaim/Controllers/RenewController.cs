@@ -1365,6 +1365,11 @@ namespace InsuranceClaim.Controllers
                             else
                                 vehicle.IceCashRequest = "Insurance";
 
+                            if(vehicle.RadioLicenseCost>0)
+                            {
+                                vehicle.IncludeRadioLicenseCost = true;
+                            }
+
 
                             var _item = vehicle;
 

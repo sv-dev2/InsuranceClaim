@@ -39,7 +39,6 @@
                         @Html.TextBoxFor(x => x.VRN, new { @class = "form-control", @name = "CityName", @autocomplete = "off", @placeholder = "VRN" })
                         @Html.ValidationMessageFor(x => x.VRN, "", new { @class = "text-danger" })
 
-                        <a href="@Model.FilePath" id="btnPrint">pdf </a>
 
 
                     </div>
@@ -51,7 +50,7 @@
                 <div class="col-sm-12 col-md-12 next-btn">
                     <div class="text-left">
                         <ul>
-                            <li class="pull-right"><button type="submit" class="btn">Print</button></li>
+                            <li class="pull-right"><button type="submit" class="btn">Download</button></li>
                         </ul>
                     </div>
                 </div>
@@ -71,9 +70,6 @@
         if ('@Model.FilePath' != '') {
             window.open('@Model.FilePath', '_blank');
         }
-
-        //alert("test");
-        //$("#btnPrint").trigger("click");
 
     });
 

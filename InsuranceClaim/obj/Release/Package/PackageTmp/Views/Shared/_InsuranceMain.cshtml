@@ -206,14 +206,13 @@
                                 <li><a href="/Home/About">About Us</a></li>
 
                                 @*<li><a href="/Paypal/IceCashPayment">IceCash</a></li>*@
-
-                               
-
+                         
                                 @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff"))
                                 {
                                     @*<li><a href="/Account/PolicyList">Policy Management</a></li>*@
-                                     <li><a href="/Account/PolicyManagement">Policy Management</a></li>
+                                    <li><a href="/Account/PolicyManagement">Policy Management</a></li>
                                     <li><a href="/Account/UserManagementList">Users</a></li>
+                                    <li><a href="/CustomerRegistration/LicensePrint">License</a></li>
                                 }
 
                                 @if (User.IsInRole("Agent"))

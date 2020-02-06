@@ -1715,6 +1715,12 @@ namespace InsuranceClaim.Controllers
                                 else
                                     item.IceCashRequest = "Insurance";
 
+                                if(item.RadioLicenseCost>0)  // for now 
+                                {
+                                    item.IncludeRadioLicenseCost = true;
+                                }
+
+
 
                                 var _item = item;
 
@@ -3379,6 +3385,13 @@ namespace InsuranceClaim.Controllers
                 Id = x.Id,
                 CombinedID = x.CombinedID
             }).FirstOrDefault();
+
+
+            if(vehicle==null)
+            {
+                TempData["ErroMessage"] = "Pdf not found.";
+                return View(model);
+            }
 
             VehicleDetail detail = new VehicleDetail { CombinedID = vehicle.CombinedID };
 

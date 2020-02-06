@@ -80,7 +80,6 @@ namespace Insurance.Service
         {
             StringReader sr = new StringReader(MotorBody.ToString());
             string path = "";
-
             try
             {
 

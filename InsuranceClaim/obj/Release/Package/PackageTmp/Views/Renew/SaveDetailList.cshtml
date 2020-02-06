@@ -88,6 +88,14 @@
         </div>*@
 </div>
 <script>
+
+    $(document).ready(function () {
+        if ('@ViewBag.file' != null && '@ViewBag.file' != '') {
+            window.open('@ViewBag.file', '_blank');
+        }
+    });
+
+
     function saveAndRedirect() {
         var isCheck = $(this).is(':checked');
         var id = "@Model.SummaryDetailId"

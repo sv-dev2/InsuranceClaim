@@ -1,0 +1,68 @@
+﻿@model InsuranceClaim.Models.LicenseModel
+@{
+    ViewBag.Title = "CertificateSerialNumber";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<h2>CertificateSerialNumber</h2>
+
+<div class="body-content-section">
+    <div class="container">
+        <div class="form-group-section">
+
+            <div class="form-title"><h2>CertificateSerialNumber</h2></div>
+
+          @using (Html.BeginForm("LicensePrint", "CustomerRegistration", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+          {
+
+
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 form-group-text">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.SerialNumber, new { @class = "gender-label" })
+                            @Html.TextBoxFor(x => x.SerialNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "SerialNumber" })
+                            @Html.ValidationMessageFor(x => x.SerialNumber, "", new { @class = "text-danger" })
+                            <a href="@Model.FilePath"  target="_blank" id="lnkFile">pdf</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 next-btn">
+                        <div class="text-left">
+                            <ul>
+                                <li class="pull-right"><button type="submit" class="btn">Sumbit</button></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+          }
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+        alert('@Model.FilePath');
+        //$("#lnkFile").trigger("click");
+        //setTimeout(function () {
+        //    $("#lnkFile").trigger("click");
+        //}, 3000);
+
+       
+        window.open('@Model.FilePath', '_blank');
+
+
+        
+    });
+
+</script>

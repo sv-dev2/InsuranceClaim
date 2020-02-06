@@ -91,12 +91,9 @@
 
                             @Html.HiddenFor(m => m.IsPolicyExpire)
                             @Html.HiddenFor(m => m.InsuranceId)
-
                             @Html.HiddenFor(m => m.LicenseId)
                             @Html.HiddenFor(m => m.LicExpiryDate)
                             @Html.HiddenFor(m => m.CombinedID)
-
-
 
                         </div>
                         <div class="form-group-section">
@@ -472,7 +469,7 @@
                                         <div class="col-sm-3 col-md-3 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Licence Fee", new { @class = "gender-label" })
-                                                @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
+                                                @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @Value = "0" })
                                             </div>
                                         </div>
 
@@ -486,14 +483,14 @@
                                         <div class="col-sm-6 col-md-3 form-group-text" >
                                             <div class="form-group" >
                                                 @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
-                                                @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control inputDisabled", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
+                                                @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
                                             </div>
                                         </div>
 
                                         <div class="col-sm-6 col-md-3 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Radio License Cost", new { @class = "gender-label" })
-                                                @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control inputDisabled", @autocomplete = "off", @placeholder = "Vehicle Radio Licence Cost", @maxlength = "5" })
+                                                @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Vehicle Radio Licence Cost", @maxlength = "5" })
                                                 @Html.ValidationMessageFor(m => m.RadioLicenseCost, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -864,13 +861,13 @@
         {
             $("#LicenseId").val("");
             $("#VehicleLicenceFee").val("");
-            $("#VehicleLicenceFee").addClass("inputDisabled");
+          //  $("#VehicleLicenceFee").addClass("inputDisabled");
             $("#LicExpiryDate").val("");
         }
         else
         {
-            $("#VehicleLicenceFee").removeClass("inputDisabled");
-            CalculatePremiumByCoverType();
+          //  $("#VehicleLicenceFee").removeClass("inputDisabled");
+            //CalculatePremiumByCoverType();
         }
     }
 
@@ -924,12 +921,12 @@
         if(!$("#IncludeRadioLicenseCost").is(':checked'))
         {
             $("#RadioLicenseCost").val("");
-            $("#RadioLicenseCost").addClass("inputDisabled");
+           // $("#RadioLicenseCost").addClass("inputDisabled");
         }
         else
         {
-            $("#RadioLicenseCost").removeClass("inputDisabled");
-            CalculatePremiumByCoverType();
+            //$("#RadioLicenseCost").removeClass("inputDisabled");
+          //  CalculatePremiumByCoverType();
         }
 
         @*var selectedTerm = $("#PaymentTermId option:selected").val();
