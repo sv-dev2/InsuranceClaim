@@ -1402,6 +1402,7 @@ namespace InsuranceClaim.Controllers
         public ActionResult CustomerManagementList(string msg = "")
         {
 
+            //test
             bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
             if (userLoggedin)
             {
