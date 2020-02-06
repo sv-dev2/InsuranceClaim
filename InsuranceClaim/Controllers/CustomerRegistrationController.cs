@@ -3067,10 +3067,18 @@ namespace InsuranceClaim.Controllers
 
                     //  ResultRootObject quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate);
 
+                    VehicleService vehicleSerive = new VehicleService();
+                    var product = vehicleSerive.GetVehicleTypeByProductId(VehicleType);
+                    var tempVehicleType = VehicleType;
+                    if (product != null)
+                        tempVehicleType = product.VehicleTypeId;
+
+
+
                     if (VehilceLicense)
-                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
+                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
                     else
-                        quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+                        quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
 
 
                     // Invalid Partner Token. 
@@ -3394,19 +3402,19 @@ namespace InsuranceClaim.Controllers
             }
             else
             {
-                TempData["Message"] = "Pdf not found.";
+                TempData["ErroMessage"] = "Pdf not found.";
                 return View(model);
             }
             if (file != "")
             {
-                TempData["Message"] = "Sucesfully download pdf.";
+                TempData["Message"] = "Sucesfully pdf has been downloaded.";
             }
 
             //TPILICResult
 
             model.FilePath = ConfigurationManager.AppSettings["urlPath"] + file;
 
-           // return RedirectToAction("CertificateSerialNumber");
+            // return RedirectToAction("CertificateSerialNumber");
 
             return View(model);
         }
@@ -3416,11 +3424,11 @@ namespace InsuranceClaim.Controllers
         {
             LicenseModel model = new LicenseModel();
 
-          
+
 
             if (TempData["filePath"] != null)
             {
-    
+
                 model.FilePath = (string)TempData["filePath"];
             }
             return View(model);

@@ -26,6 +26,11 @@ namespace Insurance.Service
 
         }
 
+        public Product GetVehicleTypeByProductId(int productId)
+        {
+            return InsuranceContext.Products.Single(productId);
+        }
+
         //VehicleTaxClassModel
 
 

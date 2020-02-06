@@ -168,7 +168,21 @@
                                         </div>
                                     </div>
 
-                                   
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-select">
+                                            <div id="thirdpartycheck" class="form-group">
+                                                @Html.Label("Include VehicleLicence Fee", new { @class = "gender-label" })
+                                                @Html.CheckBoxFor(x => x.IncludeLicenseFee, new { @style = "width: 40px;height: 36px;", onclick = "ClearLicenseIfNotChek();" })
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-6 form-group-select">
+                                            <div id="thirdpartycheck" class="form-group">
+                                                @Html.Label("Include Radio License Cost", new { @class = "gender-label" })
+                                                @Html.CheckBoxFor(x => x.IncludeRadioLicenseCost, new { @style = "width: 40px;height: 36px;", onclick = "GetRadioLicenseCost();" })
+                                            </div>
+                                        </div>
+                                    </div>
 
 
                                     <div class="row">
@@ -453,28 +467,9 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-6 form-group-select">
-                                            <div id="thirdpartycheck" class="form-group">
-                                                @Html.Label("Include VehicleLicence Fee", new { @class = "gender-label" })
-                                                @Html.CheckBoxFor(x => x.IncludeLicenseFee, new { @style = "width: 40px;height: 36px;", onclick = "ClearLicenseIfNotChek();" })
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6 col-md-6 form-group-select">
-                                            <div id="thirdpartycheck" class="form-group">
-                                                @Html.Label("Include Radio License Cost", new { @class = "gender-label" })
-                                                @Html.CheckBoxFor(x => x.IncludeRadioLicenseCost, new { @style = "width: 40px;height: 36px;" })
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-
-
-
+                                  
                                     <div id="thridparty" class="row">
-                                        @*<div class="col-sm-3 col-md-3 form-group-text">
+                                        <div class="col-sm-3 col-md-3 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Licence Fee", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
@@ -486,26 +481,23 @@
                                                 @Html.Label("Penalties", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(x => x.PenaltiesAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
                                             </div>
-                                        </div>*@
+                                        </div>
 
-                                        <div class="col-sm-6 col-md-6 form-group-text" 
-                                            <div class="form-group" style="display:none">>
+                                        <div class="col-sm-6 col-md-3 form-group-text" >
+                                            <div class="form-group" >
                                                 @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
-                                                @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
+                                                @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control inputDisabled", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="col-sm-6 col-md-3 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Radio License Cost", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control inputDisabled", @autocomplete = "off", @placeholder = "Vehicle Radio Licence Cost", @maxlength = "5" })
                                                 @Html.ValidationMessageFor(m => m.RadioLicenseCost, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
-
                                     </div>
-
-
 
 
                                     @*</fieldset>*@
@@ -592,6 +584,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -871,11 +864,13 @@
         {
             $("#LicenseId").val("");
             $("#VehicleLicenceFee").val("");
+            $("#VehicleLicenceFee").addClass("inputDisabled");
             $("#LicExpiryDate").val("");
         }
         else
         {
-            //CalculatePremiumByCoverType();
+            $("#VehicleLicenceFee").removeClass("inputDisabled");
+            CalculatePremiumByCoverType();
         }
     }
 
@@ -924,19 +919,17 @@
 
 
      function GetRadioLicenseCost(){
-
-        debugger;
-
         ValidateRadioLicense();
-
 
         if(!$("#IncludeRadioLicenseCost").is(':checked'))
         {
             $("#RadioLicenseCost").val("");
+            $("#RadioLicenseCost").addClass("inputDisabled");
         }
         else
         {
-           // CalculatePremiumByCoverType();
+            $("#RadioLicenseCost").removeClass("inputDisabled");
+            CalculatePremiumByCoverType();
         }
 
         @*var selectedTerm = $("#PaymentTermId option:selected").val();
@@ -1024,17 +1017,11 @@
 
 
     $(document).ready(function () {
-        debugger;
 
         if('@Model.CombinedID'!=null && '@Model.CombinedID'!='')
         {
-
-
-            //$('#IncludeLicenseFee').prop('checked', true);
+            $('#IncludeLicenseFee').prop('checked', true);
         }
-
-
-
 
         if (parseInt($("#NoOfCarsCovered").val()) > 0) {
             $.ajax({
@@ -1219,7 +1206,7 @@
                     toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
                 }
             }
-            GetRadioLicenseCost();
+          //  GetRadioLicenseCost();
 
         });
 
@@ -1358,7 +1345,7 @@
                 CalculatePremiumByCoverType();
             }
 
-            GetRadioLicenseCost();
+           // GetRadioLicenseCost();
 
             if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="") {
                 QuoteCalculation();
@@ -1661,12 +1648,12 @@
 
 
 
-        //var isLicense = $("#IncludeLicenseFee").is(':checked');
-        //var isRadioLicense = $("#IncludeRadioLicenseCost").is(':checked');
+        var isLicense = $("#IncludeLicenseFee").is(':checked');
+        var isRadioLicense = $("#IncludeRadioLicenseCost").is(':checked');
 
 
-        var isLicense = false;
-        var isRadioLicense = false;
+        //var isLicense = false;
+        //var isRadioLicense = false;
 
         var taxClass =  $("#TaxClassId").val();
 
@@ -1774,7 +1761,7 @@
         if(isRadioLicense && !isLicense)
         {
             toastr.warning("Only Radio license will be not allowed.");
-            ("#IncludeRadioLicenseCost"). prop("checked", false);
+            $("#IncludeRadioLicenseCost").prop("checked", false);
         }
     }
 

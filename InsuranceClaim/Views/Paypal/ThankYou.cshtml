@@ -58,6 +58,14 @@
 </div>
 
 <script>
+
+    $(document).ready(function () {
+        if ('@ViewBag.file' != null && '@ViewBag.file' != '') {
+            window.open('@ViewBag.file', '_blank');
+        }
+    });
+
+
     function saveAndRedirect() {
         window.location.href = "/InsuranceHome/Index";
         @*var isCheck = $(this).is(':checked');

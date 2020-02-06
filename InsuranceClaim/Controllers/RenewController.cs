@@ -31,6 +31,7 @@ namespace InsuranceClaim.Controllers
 
         string AdminEmail = WebConfigurationManager.AppSettings["AdminEmail"];
         string ZimnatEmail = WebConfigurationManager.AppSettings["ZimnatEmail"];
+        string _pdfPath = "";
 
         int _currencId = 6; //RTGS$
         public RenewController()
@@ -2265,43 +2266,16 @@ namespace InsuranceClaim.Controllers
 
             #endregion
 
-
-
-
-            //}
-
-
             decimal totalpaymentdue = 0.00m;
 
-            //if (vehicle.PaymentTermId == 1)
-            //{
-            //    totalpaymentdue = (decimal)summary.TotalPremium;
-            //}
-            //else if (vehicle.PaymentTermId == 4)
-            //{
-            //    totalpaymentdue = (decimal)summary.TotalPremium * 3;
-            //}
-            //else if (vehicle.PaymentTermId == 3)
-            //{
-            //    totalpaymentdue = (decimal)summary.TotalPremium * 4;
-            //}
-
-
-            //  var SummaryVehicleDetail = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={summary.Id}").ToList();
-
-
+          
             RenewApproveVRNToIceCash(customer, vehicle); // need to uncomment
 
             string Summeryofcover = "";
-            //for (int i = 0; i < SummaryVehicleDetail.Count; i++)
-            //{
-
-
+           
             if (Session["RenewVehicleDetails"] != null)
             {
-
                 var _vehicle = (RiskDetailModel)Session["RenewVehicleDetails"];
-
                 var _Premium = (vehicle.Premium + vehicle.Discount) - vehicle.PassengerAccidentCoverAmount - vehicle.ExcessAmount - vehicle.ExcessBuyBackAmount - vehicle.MedicalExpensesAmount - vehicle.RoadsideAssistanceAmount;
 
 
@@ -2439,6 +2413,9 @@ namespace InsuranceClaim.Controllers
 
             ClearRenewSession();
 
+            if (path != "")
+               ViewBag.file = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
+
             return View(objSaveDetailListModel);
         }
 
@@ -2453,8 +2430,6 @@ namespace InsuranceClaim.Controllers
             return vehilcleTotalPremium;
 
         }
-
-
 
         public string SaveQRCode(string Policyno)
         {
@@ -2556,14 +2531,8 @@ namespace InsuranceClaim.Controllers
             return jsonResult;
         }
 
-
-
-
         private void ClearRenewSession()
         {
-
-
-
             Session.Remove("RenewVehicleId");
             Session.Remove("RenewPaymentId");
             Session.Remove("RenewInvoiceId");
@@ -3064,7 +3033,7 @@ namespace InsuranceClaim.Controllers
                     if (VehilceLicense)
                         quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
                     else
-                     quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate,taxClassId);
+                        quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
 
 
                     if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
@@ -3207,12 +3176,9 @@ namespace InsuranceClaim.Controllers
                 ICEcashService iceCash = new ICEcashService();
                 PartnerToken = SummaryDetailService.GetLatestToken();
 
-
-
-
                 var res = new ResultRootObject();
 
-                if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee > 0)
+                if (vichelDetails != null && vichelDetails.CombinedID != null && vichelDetails.VehicleLicenceFee > 0)
                 {
                     ResultRootObject quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, 1);
                     if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
@@ -3233,63 +3199,46 @@ namespace InsuranceClaim.Controllers
                         // tokenObject = service.CheckSessionExpired();
                         PartnerToken = tokenObject.Response.PartnerToken;
                         res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
-                    }
 
+                        if (res.Response != null && res.Response.LicenceCert != null)
+                            _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.RegistrationNo);
+
+                    }
                 }
                 else if (!string.IsNullOrEmpty(vichelDetails.InsuranceId))
                 {
-
                     ResultRootObject quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, 1);
 
                     // if partern token expire
                     if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
                     {
-                        //  log.WriteLog(quoteresponse.Response.Quotes[0].Message + " reg no: " + vichelDetails.RegistrationNo);
                         tokenObject = iceCash.getToken();
-
                         SummaryDetailService.UpdateToken(tokenObject);
-                        // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-
-                        // tokenObject = service.CheckSessionExpired();
-
                         PartnerToken = tokenObject.Response.PartnerToken;
                         ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, 1);
                     }
-
-                    // Invalid Partner Token.
-
 
                     res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
                     if (res.Response != null && (res.Response.Message.Contains("Partner Token has expired") || res.Response.Message.Contains("Invalid Partner Token")))
                     {
                         tokenObject = iceCash.getToken();
                         SummaryDetailService.UpdateToken(tokenObject);
-                        // tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-
-                        // tokenObject = service.CheckSessionExpired();
                         PartnerToken = tokenObject.Response.PartnerToken;
                         res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
                     }
-
-                    // service.WriteLog("TPIPolicy VRN :" + vichelDetails.RegistrationNo + " " + res.Response.Message);                  
                 }
 
 
-                if (res.Response != null && res.Response.Message == "Policy Retrieved")
+                if (res.Response != null && res.Response.Message.Contains("Policy Retrieved"))
                 {
                     vichelDetails.InsuranceStatus = "Approved";
-
-
                     string format = "yyyyMMdd";
                     vichelDetails.CoverStartDate = DateTime.ParseExact(res.Response.StartDate, format, CultureInfo.InvariantCulture);
                     vichelDetails.CoverEndDate = DateTime.ParseExact(res.Response.EndDate, format, CultureInfo.InvariantCulture);
                     vichelDetails.RenewalDate = vichelDetails.CoverEndDate.Value.AddDays(1);
-
                     vichelDetails.CoverNote = res.Response.PolicyNo; // it's represent to Cover Note
                     InsuranceContext.VehicleDetails.Update(vichelDetails);
                 }
-
-
 
             }
             catch (Exception ex)

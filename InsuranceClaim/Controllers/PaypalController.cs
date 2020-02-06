@@ -18,12 +18,15 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 
+
 namespace InsuranceClaim.Controllers
 {
     public class PaypalController : Controller
     {
         private ApplicationUserManager _userManager;
         Insurance.Service.smsService objsmsService = new Insurance.Service.smsService();
+
+        string _pdfPath = "";
 
 
         public ApplicationUserManager UserManager
@@ -42,9 +45,7 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult Index(int id)
         {
-
-
-            ApproveVRNToIceCash(11283, 1);
+            // ApproveVRNToIceCash(11283, 1);
             return View();
         }
 
@@ -92,16 +93,13 @@ namespace InsuranceClaim.Controllers
             return View(model);
         }
 
-
         public ActionResult success_url()
         {
-
             if (Session["IceCashPayment"] != null)
             {
                 var IceCashPaymentDetails = (IceCashCardDetailModel)Session["IceCashPayment"];
                 SaveDetailList(IceCashPaymentDetails.SummaryId, "", Convert.ToString(IceCashPaymentDetails.PaymentMethod));
             }
-
             return RedirectToAction("ThankYou");
         }
 
@@ -114,8 +112,6 @@ namespace InsuranceClaim.Controllers
         {
             return View();
         }
-
-
 
         public ActionResult PaymentWithCreditCard(CardDetailModel model)
         {
@@ -475,23 +471,18 @@ namespace InsuranceClaim.Controllers
 
         private bool isValid(string dateString)
         {
-
             DateTime dt1 = Convert.ToDateTime(dateString);
             DateTime dt2 = DateTime.Now.Date;
             int result = DateTime.Compare(dt1, dt2);
-
-
             if (result < 0)
                 return false;
             else
                 return true;
-
         }
 
 
         class Test
         {
-
             String test;
 
             String getTest() { return test; }
@@ -1234,6 +1225,10 @@ namespace InsuranceClaim.Controllers
 
             #endregion
 
+            if(path!="")
+                TempData["file"] = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
+            
+            
             return RedirectToAction("ThankYou");
         }
 
@@ -1294,7 +1289,7 @@ namespace InsuranceClaim.Controllers
 
                         var res = new ResultRootObject();
 
-                        if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee>0)
+                        if (vichelDetails != null && vichelDetails.CombinedID != null && vichelDetails.VehicleLicenceFee > 0)
                         {
                             ResultRootObject quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
                             if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
@@ -1305,8 +1300,7 @@ namespace InsuranceClaim.Controllers
                                 ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
                             }
 
-
-                             res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
+                            res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
                             if (res.Response != null && res.Response.Message.Contains("Partner Token has expired"))
                             {
                                 tokenObject = iceCash.getToken();
@@ -1317,12 +1311,15 @@ namespace InsuranceClaim.Controllers
                                 res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
                             }
 
+                            if (res.Response != null && res.Response.LicenceCert != null)
+                                _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.RegistrationNo);
+
                         }
 
 
                         else if (vichelDetails != null && vichelDetails.InsuranceId != null)
                         {
-                         
+
                             ResultRootObject quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
                             if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
                             {
@@ -1352,7 +1349,7 @@ namespace InsuranceClaim.Controllers
                             //}
                             //   System.Threading.Thread.Sleep(10000); // wait for 20 second       
 
-                             res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
+                            res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
 
                             if (res.Response != null && res.Response.Message.Contains("Partner Token has expired"))
                             {
@@ -1363,8 +1360,6 @@ namespace InsuranceClaim.Controllers
                                 PartnerToken = tokenObject.Response.PartnerToken;
                                 res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);
                             }
-
-                           
                         }
 
                         if (res.Response != null && res.Response.Message.Contains("Policy Retrieved"))
@@ -1481,8 +1476,12 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult ThankYou()
         {
+            if(TempData["file"]!=null)
+                ViewBag.file = (string)TempData["file"];
+                       
             return View();
         }
+
     }
 
 

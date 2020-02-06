@@ -14,6 +14,8 @@ namespace InsuranceClaim.Models
         public RiskDetailModel()
         {
             ManufacturerYear = DateTime.Now.ToShortDateString();
+            ArrearsAmt = 0;
+            PenaltiesAmt = 0;
         }
            
 
