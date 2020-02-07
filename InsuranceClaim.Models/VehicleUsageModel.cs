@@ -21,6 +21,9 @@ namespace InsuranceClaim.Models
         [Display(Name = "Min Comp Amount")]
         [Required(ErrorMessage = "Please Enter Min Comp Amount.")]
         public decimal? MinCompAmount { get; set; }
+        [Display(Name = "USD Minimum Benchmark")]
+        [Required(ErrorMessage = "Please Enter USD Minimum Benchmark.")]
+        public Single? USDMinBenchmark { get; set; }
         [Display(Name = "Third Party Rate")]
         [Required(ErrorMessage = "Please Enter Third Party Rate.")]
         public Single? ThirdPartyRate { get; set; }

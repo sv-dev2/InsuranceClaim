@@ -1270,6 +1270,7 @@ namespace InsuranceClaim.Controllers
         [HttpPost]
         public async Task<ActionResult> AddUserManagement(UserManagementViewModel model)
         {
+            var reDirectTo = "";
 
             bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
             if (userLoggedin)
@@ -1291,6 +1292,7 @@ namespace InsuranceClaim.Controllers
 
             if (model.Id == 0)
             {
+                reDirectTo = "UserManagementList";
 
                 try
                 {
@@ -1391,11 +1393,19 @@ namespace InsuranceClaim.Controllers
 
                 InsuranceContext.Customers.Update(ctems);
                 UserManager.Update(user);
+                if(model.role == "Customer" || model.role == "Web Customer") 
+                {
+                    reDirectTo = "CustomerManagementList";
+                }
+                else 
+                {
+                    reDirectTo = "CustomerManagementList";
+                }
                 //test vv
             }
 
 
-            return RedirectToAction("UserManagementList");
+            return RedirectToAction(reDirectTo);
         }
 
         [Authorize(Roles = "Administrator,Staff,Renewals,AgentStaff")]

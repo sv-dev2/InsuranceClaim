@@ -141,6 +141,9 @@ namespace Insurance.Domain
 
         public static DomesticPayments DomesticPayments { get { return new DomesticPayments(); } }
 
+        public static InflationFactors InflationFactors { get { return new InflationFactors(); } }
+
+
         // DomesticPayments
         // general purpose operations
 

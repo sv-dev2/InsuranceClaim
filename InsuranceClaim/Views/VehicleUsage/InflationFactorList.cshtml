@@ -1,0 +1,100 @@
+﻿@model List<Insurance.Domain.InflationFactor>
+@{
+    ViewBag.Title = "InflationFactorList";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+@using (Html.BeginForm("EditVehicleUsage", "VehicleUsage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="productsave-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                    <div class="head-title">
+                        <h2>Inflation Factor</h2>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 add-btn">
+                    <div class="text-right">
+                        @*<button type="button" class="btn btn-primary">Add</button>*@
+                        <form>
+                            <input class="btn btn-primary" type="button" value="Set Inflation Factor" onclick="window.location.href='@Url.Action("SaveInflationFactor", "VehicleUsage" )'" />
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 add-btn">
+                    <div class="text-right">
+                        @*<button type="button" class="btn btn-primary">Add</button>*@
+                        <form>
+                            <input class="btn btn-primary" type="button" value="Vehicle Usage" onclick="window.location.href='@Url.Action("VehicleUsageList", "VehicleUsage" )'" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="product-table-grid">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Inflation Factor</th>
+                            <th>Active</th>
+                            <th>Created On</th>
+                            <th>Created By</th>
+                            <th>Deactivated On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Insurance.Domain.InflationFactor item in Model)
+                        {
+
+
+                            <tr>
+
+                                <td>@item.InflationFact</td>
+                                <td>@item.IsActive</td>
+                                <td>@item.CreatedOn</td>
+                                <td>@item.CreatedByName</td>
+                                <td>@item.DeActivatedOn</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-------------- Modal -------------->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align: center;color: #00bcea;font-weight: bold;">Are you sure You want to do this?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="ConfirmDelete();">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<script>
+    let vehicleId;
+    function ShowPopup(Id) {
+        debugger;
+        $("#myModal").modal("show");
+        vehicleId = Id;
+    }
+        function ConfirmDelete() {
+            debugger;
+        var url = "@Url.Action("DeleteVehicleUsage", "VehicleUsage", new { Id=123456 })";
+        window.location.href = url.replace("123456", vehicleId);
+    }
+
+</script>

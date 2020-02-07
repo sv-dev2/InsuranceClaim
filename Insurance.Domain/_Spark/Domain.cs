@@ -848,6 +848,23 @@ namespace Insurance.Domain
         public string CoverType { get; set; }
 
     }
+
+    public partial class InflationFactor : Entity<InflationFactor>
+    {
+        public InflationFactor() { }
+        public InflationFactor(bool defaults) : base(defaults) { }
+        public int Id { get; set; }
+        public int? InflationFact { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public string CreatedByName { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public int? ModifiedBy { get; set; }
+        public bool? IsActive { get; set; }
+        public DateTime? ActivatedOn { get; set; }
+        public DateTime? DeActivatedOn { get; set; }
+
+    }
     public partial class VehicleUsage : Entity<VehicleUsage>
     {
         public VehicleUsage() { }
@@ -859,6 +876,7 @@ namespace Insurance.Domain
         public Single? ComprehensiveRate { get; set; }
         public decimal? MinCompAmount { get; set; }
         public Single? ThirdPartyRate { get; set; }
+        public decimal? USDMinBenchmark { get; set; }
         public decimal? MinThirdAmount { get; set; }
         public decimal? FTPAmount { get; set; }
         public decimal? AnnualTPAmount { get; set; }
@@ -867,9 +885,6 @@ namespace Insurance.Domain
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
         public int RiskCoverId { get; set; }
-        public decimal USDMinBenchmark { get; set; }
-
-        public bool IsActive { get; set; }
 
     }
     public partial class PaymentInformation : Entity<PaymentInformation>
