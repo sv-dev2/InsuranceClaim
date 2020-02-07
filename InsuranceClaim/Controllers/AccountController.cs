@@ -1391,7 +1391,7 @@ namespace InsuranceClaim.Controllers
 
                 InsuranceContext.Customers.Update(ctems);
                 UserManager.Update(user);
-
+                //test vv
             }
 
 
