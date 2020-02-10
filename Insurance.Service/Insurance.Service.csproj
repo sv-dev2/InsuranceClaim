@@ -159,6 +159,7 @@
     <Compile Include="QRCodeGenerator.cs" />
     <Compile Include="QuoteLogic.cs" />
     <Compile Include="RiskDetailService.cs" />
+    <Compile Include="Service\InflationFactorService.cs" />
     <Compile Include="smsService.cs" />
     <Compile Include="SummaryDetailService.cs" />
     <Compile Include="UserService.cs" />

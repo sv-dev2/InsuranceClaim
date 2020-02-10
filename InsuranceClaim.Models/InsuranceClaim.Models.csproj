@@ -132,6 +132,7 @@
     <Compile Include="GrossWrittenPremiumReportModels.cs" />
     <Compile Include="IceCashModel.cs" />
     <Compile Include="IdentityModels.cs" />
+    <Compile Include="InflationFactorModel.cs" />
     <Compile Include="InsuranceAndLicenceDeliveryReportModel.cs" />
     <Compile Include="InsurerModel.cs" />
     <Compile Include="LapsedPoliciesReportModels.cs" />

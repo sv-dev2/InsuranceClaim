@@ -147,6 +147,7 @@
     <Compile Include="Domain\EndorsementSummaryVehicleDetail.cs" />
     <Compile Include="Domain\EndorsementVehicleDetail.cs" />
     <Compile Include="Domain\Entity.partial.cs" />
+    <Compile Include="Domain\InflationFactor.cs" />
     <Compile Include="Domain\LicenceDiskDeliveryAddress.cs" />
     <Compile Include="Domain\LicenceTicket.cs" />
     <Compile Include="Domain\LicenseDelivery.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Domain\VehicleMake.cs" />
     <Compile Include="Domain\VehicleModel.cs" />
     <Compile Include="Domain\VehicleUsage.cs" />
+    <Compile Include="DTO\InflationVehicleDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AgeExcesses.cs" />
     <Compile Include="Repository\AgentCommissions.cs" />
@@ -222,6 +224,7 @@
     <Compile Include="Repository\EndorsementSummaryDetails.cs" />
     <Compile Include="Repository\EndorsementSummaryVehicleDetails.cs" />
     <Compile Include="Repository\EndorsementVehicleDetails.cs" />
+    <Compile Include="Repository\InflationFactors.cs" />
     <Compile Include="Repository\LicenceDiskDeliveryAddresses.cs" />
     <Compile Include="Repository\LicenceTickets.cs" />
     <Compile Include="Repository\LicenseDeliveries.cs" />

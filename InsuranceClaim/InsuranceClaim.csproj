@@ -1128,6 +1128,9 @@
     <Content Include="Views\Domestic\SummaryDetail.cshtml" />
     <Content Include="Views\CustomerRegistration\LicensePrint.cshtml" />
     <Content Include="Views\CustomerRegistration\CertificateSerialNumber.cshtml" />
+    <Content Include="Views\VehicleUsage\InflationFactorList.cshtml" />
+    <Content Include="Views\VehicleUsage\SaveInflationFactor.cshtml" />
+    <Content Include="Views\Report\ALMGWPReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />
