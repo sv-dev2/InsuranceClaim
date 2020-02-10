@@ -1715,7 +1715,7 @@ namespace InsuranceClaim.Controllers
                                 else
                                     item.IceCashRequest = "Insurance";
 
-                                if(item.RadioLicenseCost>0)  // for now 
+                                if (item.RadioLicenseCost > 0)  // for now 
                                 {
                                     item.IncludeRadioLicenseCost = true;
                                 }
@@ -3370,6 +3370,8 @@ namespace InsuranceClaim.Controllers
         public ActionResult LicensePrint(LicenseModel model)
         {
 
+            ModelState.Remove("SerialNumber");
+
             //string file1 = "/Documents/License/KJVV456456/License20200204153919.pdf";
             //ViewBag.file = ConfigurationManager.AppSettings["urlPath"] + file1;
             //TempData["filePath"] = ConfigurationManager.AppSettings["urlPath"] + file1;
@@ -3387,7 +3389,7 @@ namespace InsuranceClaim.Controllers
             }).FirstOrDefault();
 
 
-            if(vehicle==null)
+            if (vehicle == null)
             {
                 TempData["ErroMessage"] = "Pdf not found.";
                 return View(model);
@@ -3411,6 +3413,7 @@ namespace InsuranceClaim.Controllers
 
             if (res.Response != null && res.Response.LicenceCert != null)
             {
+
                 file = SavePdf(res.Response.LicenceCert, model.VRN);
             }
             else
@@ -3423,9 +3426,8 @@ namespace InsuranceClaim.Controllers
                 TempData["Message"] = "Sucesfully pdf has been downloaded.";
             }
 
-            //TPILICResult
-
             model.FilePath = ConfigurationManager.AppSettings["urlPath"] + file;
+            model.VehicleId = vehicle.Id;
 
             // return RedirectToAction("CertificateSerialNumber");
 
@@ -3433,17 +3435,47 @@ namespace InsuranceClaim.Controllers
         }
 
 
-        public ActionResult CertificateSerialNumber()
+        public ActionResult CertificateSerialNumber(int VehicleId)
         {
             LicenseModel model = new LicenseModel();
+            model.VehicleId = VehicleId;
+            return View(model);
+        }
 
+        [HttpPost]
+        public ActionResult CertificateSerialNumber(LicenseModel model)
+        {
 
+            ModelState.Remove("VRN");
 
-            if (TempData["filePath"] != null)
+            ICEcashService iceCash = new ICEcashService();
+            ICEcashTokenResponse tokenObject = iceCash.getToken();
+            //  SummaryDetailService.UpdateToken(tokenObject);
+            string PartnerToken = tokenObject.Response.PartnerToken;
+
+            var vehilceDetail = InsuranceContext.VehicleDetails.Single(model.VehicleId);
+
+            if (vehilceDetail != null)
             {
-
-                model.FilePath = (string)TempData["filePath"];
+                model.VRN = vehilceDetail.RegistrationNo;
+                model.LicenseId = vehilceDetail.LicenseId;
             }
+
+            var res = ICEcashService.LICCertConf(model, PartnerToken);
+
+            if (res.Response != null && (res.Response.Message.Contains("Partner Token has expired") || res.Response.Message.Contains("Invalid Partner Token")))
+            {
+                tokenObject = iceCash.getToken();
+                SummaryDetailService.UpdateToken(tokenObject);
+                res = ICEcashService.LICCertConf(model, tokenObject.Response.PartnerToken);
+            }
+
+            if(res.Response!=null && res.Response.Message.Contains("Confirmation Received"))
+                TempData["SuccMsg"] = res.Response.Message;
+            else
+                TempData["ErroMsg"] = "Error occured, please try agian.";
+            
+
             return View(model);
         }
 

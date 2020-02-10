@@ -4,17 +4,34 @@
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
 }
 
-<h2>CertificateSerialNumber</h2>
+>
 
 <div class="body-content-section">
     <div class="container">
         <div class="form-group-section">
 
+            @if (TempData["SuccMsg"] != null)
+            {
+                <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>@TempData["SuccMsg"]</strong> .
+                </div>
+            }
+
+
+            @if (TempData["ErroMsg"] != null)
+            {
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>@TempData["ErroMsg"]</strong> .
+                </div>
+            }
+
+
             <div class="form-title"><h2>CertificateSerialNumber</h2></div>
 
-          @using (Html.BeginForm("LicensePrint", "CustomerRegistration", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-          {
-
+            @using (Html.BeginForm("CertificateSerialNumber", "CustomerRegistration", new { @class = "form-horizontal", role = "form" }))
+            {
 
                 <div class="row">
                     <div class="col-sm-6 col-md-6 form-group-text">
@@ -22,7 +39,8 @@
                             @Html.LabelFor(x => x.SerialNumber, new { @class = "gender-label" })
                             @Html.TextBoxFor(x => x.SerialNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "SerialNumber" })
                             @Html.ValidationMessageFor(x => x.SerialNumber, "", new { @class = "text-danger" })
-                            <a href="@Model.FilePath"  target="_blank" id="lnkFile">pdf</a>
+
+                            @Html.HiddenFor(x => x.VehicleId)
                         </div>
                     </div>
                 </div>
@@ -36,10 +54,9 @@
                             </ul>
                         </div>
                     </div>
-
                 </div>
 
-          }
+            }
 
 
         </div>
@@ -51,18 +68,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        debugger;
-        alert('@Model.FilePath');
-        //$("#lnkFile").trigger("click");
-        //setTimeout(function () {
-        //    $("#lnkFile").trigger("click");
-        //}, 3000);
 
-       
-        window.open('@Model.FilePath', '_blank');
-
-
-        
     });
 
 </script>

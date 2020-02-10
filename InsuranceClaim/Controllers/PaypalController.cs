@@ -1225,10 +1225,12 @@ namespace InsuranceClaim.Controllers
 
             #endregion
 
-            if(path!="")
+            if(_pdfPath != "")
+            {
                 TempData["file"] = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
-            
-            
+                TempData["vehicleId"] = vehicle.Id;
+            }
+                     
             return RedirectToAction("ThankYou");
         }
 
@@ -1476,10 +1478,15 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult ThankYou()
         {
-            if(TempData["file"]!=null)
-                ViewBag.file = (string)TempData["file"];
-                       
-            return View();
+            LicenseModel model = new LicenseModel();
+            if (TempData["file"]!=null)
+            {
+                ViewBag.file = (string)TempData["file"];       
+                model.FilePath = (string)TempData["file"];
+                model.VehicleId = (int) TempData["vehicleId"];
+            }
+                                  
+            return View(model);
         }
 
     }

@@ -22,9 +22,10 @@ namespace InsuranceClaim.Models
         [Required]
         public string VRN { get; set; }
         public string CombinedID { get; set; }
-
         public string FilePath { get; set; }
-
+        [Required]
         public string SerialNumber { get; set; }
+        public int VehicleId { get; set; }
+        public string LicenseId { get; set; }
     }
 }

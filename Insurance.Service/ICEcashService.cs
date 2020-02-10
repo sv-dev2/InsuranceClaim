@@ -649,18 +649,6 @@ namespace Insurance.Service
             return json;
         }
 
-
-
-
-
-
-      
-
-
-
-
-
-
         public string RemoveSpecialChars(string str)
         {
             // Create  a string array and add the special characters you want to remove
@@ -770,7 +758,6 @@ namespace Insurance.Service
             return json;
         }
 
-
         public static ResultRootObject LICQuoteUpdate(Customer customer, VehicleDetail vehicleDetail, string PartnerToken, int? paymentMethod)
         {
             //string PSK = "127782435202916376850511";
@@ -863,7 +850,6 @@ namespace Insurance.Service
 
             return json;
         }
-
 
         public static ResultRootObject TPILICUpdate(Customer customer, VehicleDetail vehicleDetail, string PartnerToken, int? paymentMethod)
         {
@@ -1084,9 +1070,6 @@ namespace Insurance.Service
             return json;
         }
 
-
-
-
         public static ResultRootObject TPILICResult(VehicleDetail vehicleDetail, string PartnerToken)
         {
             //string PSK = "127782435202916376850511";
@@ -1154,10 +1137,6 @@ namespace Insurance.Service
 
             return json;
         }
-
-
-
-
 
         public static ResultRootObject LICQuote(string registrationNum, string paymentTerm, string PartnerToken)
         {
@@ -1333,8 +1312,73 @@ namespace Insurance.Service
 
         }
 
+        public static ResultRootObject LICCertConf(LicenseModel licenseModel, string PartnerToken)
+        {
+            //string PSK = "127782435202916376850511";
+            string _json = "";
 
+            List<VehicleLicConfObject> obj = new List<VehicleLicConfObject>();
+            var CustomerInfo = new CustomerModel();
 
+            obj.Add(new VehicleLicConfObject
+            {
+                VRN = licenseModel.VRN,
+                CertSerialNo = licenseModel.SerialNumber,
+                PrintResult = "1",
+                LicenceID = licenseModel.LicenseId
+            });
+
+            LICConfArguments objArg = new LICConfArguments();
+            objArg.PartnerReference = Guid.NewGuid().ToString();
+            objArg.Date = DateTime.Now.ToString("yyyyMMddhhmmss");
+            objArg.Version = "2.0";
+            objArg.PartnerToken = PartnerToken;
+            objArg.Request = new LICIConfFunctionObject { Function = "LICCertConf", Vehicles = obj };
+
+            _json = Newtonsoft.Json.JsonConvert.SerializeObject(objArg);
+
+            //string  = json.Reverse()
+            string reversejsonString = new string(_json.Reverse().ToArray());
+            string reversepartneridString = new string(PSK.Reverse().ToArray());
+
+            string concatinatedString = reversejsonString + reversepartneridString;
+
+            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(concatinatedString);
+
+            string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
+
+            string GetSHA512encrypted = SHA512(returnValue);
+
+            string MAC = "";
+
+            for (int i = 0; i < 16; i++)
+            {
+                MAC += GetSHA512encrypted.Substring((i * 8), 1);
+            }
+
+            MAC = MAC.ToUpper();
+
+            LICConfRequest objroot = new LICConfRequest();
+            objroot.Arguments = objArg;
+            objroot.MAC = MAC;
+            objroot.Mode = "SH";
+
+            var data = Newtonsoft.Json.JsonConvert.SerializeObject(objroot);
+
+            JObject jsonobject = JObject.Parse(data);
+
+            var client = new RestClient(LiveIceCashApi);
+            //var client = new RestClient(LiveIceCashApi);
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("content-type", "application/x-www-form-urlencoded");
+            request.AddParameter("application/x-www-form-urlencoded", jsonobject, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
+
+            SummaryDetailService.WriteLog(data, response.Content, "LICCertConf");
+            return json;
+        }
 
 
 
@@ -1364,13 +1408,6 @@ namespace Insurance.Service
 
         public string details { get; set; }
     }
-
-
-
-
-
-
-
 
     public class FunctionObject
     {
@@ -1845,6 +1882,16 @@ namespace Insurance.Service
     }
 
 
+    public class VehicleLicConfObject
+    {
+        public string LicenceID { get; set; }
+        public string CertSerialNo { get; set; }
+        public string VRN { get; set; }
+        public string PrintResult { get; set; }
+
+    }
+
+
 
     public class LICQuoteArguments
     {
@@ -1865,6 +1912,18 @@ namespace Insurance.Service
     }
 
 
+    public class LICConfArguments
+    {
+        public string PartnerReference { get; set; }
+        public string Date { get; set; }
+        public string Version { get; set; }
+        public string PartnerToken { get; set; }
+        public LICIConfFunctionObject Request { get; set; }
+
+
+
+    }
+
 
 
     public class LICQuoteFunctionObject
@@ -1877,6 +1936,13 @@ namespace Insurance.Service
     {
         public string Function { get; set; }
         public List<VehicleLicInsuraceObject> Vehicles { get; set; }
+    }
+
+
+    public class LICIConfFunctionObject
+    {
+        public string Function { get; set; }
+        public List<VehicleLicConfObject> Vehicles { get; set; }
     }
 
 
@@ -1894,6 +1960,15 @@ namespace Insurance.Service
         public string MAC { get; set; }
         public string Mode { get; set; }
     }
+
+    public class LICConfRequest
+    {
+        public LICConfArguments Arguments { get; set; }
+        public string MAC { get; set; }
+        public string Mode { get; set; }
+    }
+
+
 
     public class Licence
     {

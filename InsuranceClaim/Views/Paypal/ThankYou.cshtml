@@ -1,8 +1,8 @@
-﻿@model Insurance.Domain.PaymentInformation
+﻿@model InsuranceClaim.Models.LicenseModel
 @{
     ViewBag.Title = "Payment Confirmation";
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
-   
+
 }
 
 <div class="top-banner-section">
@@ -41,9 +41,9 @@
                         <h1 class="display-3">Thank You!</h1>
                         <p class="lead"><strong>Please check your email for further instructions.</strong></p>
                         <hr>
-                        @*<p><input type="checkbox" id="checkbox1" /> Want the licence disk to be delivered </p>*@
                         <p>
                             Having trouble? <a href="">Contact us</a>
+                           
                         </p>
                         <p class="lead">
                             <a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="saveAndRedirect()" role="button">Continue</a>
@@ -60,8 +60,17 @@
 <script>
 
     $(document).ready(function () {
-        if ('@ViewBag.file' != null && '@ViewBag.file' != '') {
-            window.open('@ViewBag.file', '_blank');
+
+      
+        if ('@Model.FilePath' != null && '@Model.FilePath' != '') {
+            window.open('@Model.FilePath', '_blank');
+
+            var url = '@System.Configuration.ConfigurationManager.AppSettings["urlPath"]/CustomerRegistration/CertificateSerialNumber?VehicleId=' + '@Model.VehicleId';
+            window.setTimeout(function () {
+                window.location.href = url;
+            }, 2000);
+
+
         }
     });
 

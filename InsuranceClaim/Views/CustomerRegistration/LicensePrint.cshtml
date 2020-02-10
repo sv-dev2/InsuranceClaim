@@ -39,7 +39,7 @@
                         @Html.TextBoxFor(x => x.VRN, new { @class = "form-control", @name = "CityName", @autocomplete = "off", @placeholder = "VRN" })
                         @Html.ValidationMessageFor(x => x.VRN, "", new { @class = "text-danger" })
 
-                        <a href="@Model.FilePath" id="btnPrint">pdf </a>
+                       @Html.HiddenFor(x=>x.VehicleId)
 
 
                     </div>
@@ -69,15 +69,14 @@
 
     $(document).ready(function () {
         if ('@Model.FilePath' != '') {
-            window.open('@Model.FilePath', '_blank');
+            window.open('@Model.FilePath', '_blank');    
+            
+            var url = '@System.Configuration.ConfigurationManager.AppSettings["urlPath"]/CustomerRegistration/CertificateSerialNumber?VehicleId=' + '@Model.VehicleId';
+            window.setTimeout(function () {
+                window.location.href = url;           
+            }, 2000);
         }
-
-        //alert("test");
-        //$("#btnPrint").trigger("click");
-
     });
-
-
 
 </script>
 

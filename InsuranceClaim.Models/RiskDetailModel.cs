@@ -14,8 +14,8 @@ namespace InsuranceClaim.Models
         public RiskDetailModel()
         {
             ManufacturerYear = DateTime.Now.ToShortDateString();
-            ArrearsAmt = 0;
-            PenaltiesAmt = 0;
+            //ArrearsAmt = 0;
+            //PenaltiesAmt = 0;
         }
            
 
@@ -107,8 +107,8 @@ namespace InsuranceClaim.Models
         public bool isWebUser { get; set; }
         public decimal SuggestedValue { get; set; }
         public decimal VehicleLicenceFee { get; set; }
-        public decimal ArrearsAmt { get; set; }
-        public decimal PenaltiesAmt { get; set; }
+        public string ArrearsAmt { get; set; }
+        public string PenaltiesAmt { get; set; }
 
         public int? SummaryId { get; set; }
 

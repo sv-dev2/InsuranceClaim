@@ -63,12 +63,8 @@
     <div class="form-section-top">
         <div class="container">
 
-
-
-
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
-
                     @using (Html.BeginForm("GenerateQuote", "CustomerRegistration"))
                     {
                         <div>
@@ -99,8 +95,8 @@
                             @Html.HiddenFor(m => m.LicExpiryDate)
                             @Html.HiddenFor(m => m.CombinedID)
                             
-
                         </div>
+
                         <div class="form-group-section">
                             <div class="form-title">
                                 <h4>Risk Details </h4>
@@ -167,8 +163,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
 
 
                                     <fieldset @(Model.isUpdate ? "" : "disabled")>
@@ -487,14 +481,12 @@
                                         </div>
 
 
-                                       
-
-
+                                      
                                         <div id="thridparty" class="row">                                        
                                             <div class="col-sm-3 col-md-3 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Licence Fee", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off"})
+                                                    @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @value="0"})
                                                 </div>
                                             </div>
 
@@ -1723,10 +1715,10 @@
                         // $(".loading-area").hide();
                         $("#InsuranceId").val("");
                         $("#LicenseId").val("");
-                        $("#ArrearsAmt").val("");
-                        $("#PenaltiesAmt").val("");
-                        $("#VehicleLicenceFee").val("");
-                        $("#RadioLicenseCost").val("");
+                        $("#ArrearsAmt").val("0");
+                        $("#PenaltiesAmt").val("0");
+                        $("#VehicleLicenceFee").val("0");
+                        $("#RadioLicenseCost").val("0");
                         $("#LicExpiryDate").val("");
                         $("#CombinedID").val("");
                         $("#isVehicleRegisteredonICEcash").val(0);
