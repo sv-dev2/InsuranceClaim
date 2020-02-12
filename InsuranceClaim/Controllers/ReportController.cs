@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using Insurance.Service;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace InsuranceClaim.Controllers
 {
@@ -829,63 +830,128 @@ namespace InsuranceClaim.Controllers
         public ActionResult ALMSearchGrossReports(GrossWrittenPremiumReportSearchModels _model)
         {
 
+
+
+            IEnumerable<Branch> objBranch = InsuranceContext.Branches.All();
+            List<BranchModel> obj = InsuranceContext.Query("select * from Branch where id != 6").Select(x => new BranchModel {
+                Id = x.Id,
+                BranchName = x.BranchName
+            }).ToList();
+
+
+            MultiSelectList selectListItems = new MultiSelectList(obj, "Id", "BranchName");
+
+            ViewBag.Branch = selectListItems;
+
             List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
             ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
 
+            var db = _model.BranchId;
+            /*            foreach (var item in db)
+                        {
+                            Debug.WriteLine(item);
+                        }
+                        Debug.WriteLine(db);*/
+            var query = "";
 
-            var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
-            query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
-            query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
-            query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
-            query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
-            query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
-            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
-            query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
-            query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
-            query += "join Branch on Customer.BranchId = Branch.Id";
-            query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
-            query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
-            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
-            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
-            query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
-            query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
-            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
-            query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
-            query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
-            query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Branch.BranchName != 'Gene Call Centre' and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101))  order by  VehicleDetail.Id desc ";
+            if (db == null)
+            {
+                query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+                query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+                query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+                query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+                query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+                query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+                query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+                query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+                query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+                query += "join Branch on Customer.BranchId = Branch.Id";
+                query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+                query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+                query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+                query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+                query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+                query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+                query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+                query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+                query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+                query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101))  order by  VehicleDetail.Id desc ";
 
+            }
+            else
+            {
+                query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+                query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+                query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+                query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+                query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+                query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+                query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+                query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+                query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+                query += "join Branch on Customer.BranchId = Branch.Id";
+                query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+                query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+                query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+                query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+                query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+                query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+                query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+                query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+                query += " left join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+                query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 ";
+                query += " and  Branch.Id in (";
+                var last = db.Last();
+                foreach (var item in db) 
+                {
+                    
+                    if (item.Equals(last))
+                    {
+                        // do something different with the last item
+                        query += "" + item + "";
+                    }
+                    else
+                    {
+                        // do something different with every item but the last
+                        query += "" + item + ",";
+                    }
+                }
+                query += " )";
+                query += " and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101))";
+                query += "  order by  VehicleDetail.Id desc ";
 
+            }
 
             ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
-                Select(x => new GrossWrittenPremiumReportModels()
-                {
+                    Select(x => new GrossWrittenPremiumReportModels()
+                    {
 
-                    Policy_Number = x.Policy_Number,
-                    BranchName = x.BranchName,
-                    PolicyCreatedBy = x.PolicyCreatedBy,
-                    Customer_Name = x.Customer_Name,
-                    Transaction_date = x.Transaction_date.ToShortDateString(),
-                    CoverNoteNum = x.CoverNoteNum,
-                    Payment_Mode = x.Payment_Mode,
-                    Payment_Term = x.Payment_Term,
-                    CoverType = x.CoverType,
-                    Currency = x.Currency,
-                    Premium_due = x.Premium_due,
-                    Stamp_duty = x.Stamp_duty,
-                    ZTSC_Levy = x.ZTSC_Levy,
-                    ALMId = x.ALMId,
-                    Comission_Amount = x.Comission_Amount,
-                    //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
-                    RadioLicenseCost = x.RadioLicenseCost,
-                    Zinara_License_Fee = x.Zinara_License_Fee,
-                    PolicyRenewalDate = x.PolicyRenewalDate,
-                    IsActive = x.IsActive,
-                    RenewPolicyNumber = x.RenewPolicyNumber,
-                    // BusinessSourceName = x.BusinessSourceName,
-                    //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
-                    SourceDetailName = x.SourceDetailName,
-                }).ToList();
+                        Policy_Number = x.Policy_Number,
+                        BranchName = x.BranchName,
+                        PolicyCreatedBy = x.PolicyCreatedBy,
+                        Customer_Name = x.Customer_Name,
+                        Transaction_date = x.Transaction_date.ToShortDateString(),
+                        CoverNoteNum = x.CoverNoteNum,
+                        Payment_Mode = x.Payment_Mode,
+                        Payment_Term = x.Payment_Term,
+                        CoverType = x.CoverType,
+                        Currency = x.Currency,
+                        Premium_due = x.Premium_due,
+                        Stamp_duty = x.Stamp_duty,
+                        ZTSC_Levy = x.ZTSC_Levy,
+                        ALMId = x.ALMId,
+                        Comission_Amount = x.Comission_Amount,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        RadioLicenseCost = x.RadioLicenseCost,
+                        Zinara_License_Fee = x.Zinara_License_Fee,
+                        PolicyRenewalDate = x.PolicyRenewalDate,
+                        IsActive = x.IsActive,
+                        RenewPolicyNumber = x.RenewPolicyNumber,
+                        // BusinessSourceName = x.BusinessSourceName,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        SourceDetailName = x.SourceDetailName,
+                    }).ToList();
 
 
             GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
@@ -906,6 +972,17 @@ namespace InsuranceClaim.Controllers
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
             GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
 
+            //IEnumerable<Branch> branches = InsuranceContext.Branches.All();
+
+            List<BranchModel> obj = InsuranceContext.Query("select * from Branch where id != 6").Select(x => new BranchModel
+            {
+                Id = x.Id,
+                BranchName = x.BranchName
+            }).ToList();
+
+            MultiSelectList selectListItems = new MultiSelectList(obj, "Id", "BranchName");
+
+            ViewBag.Branch = selectListItems;
 
             var branchList = InsuranceContext.Branches.All();
 
@@ -929,7 +1006,7 @@ namespace InsuranceClaim.Controllers
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
             query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
             query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
-            query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Branch.BranchName != 'Gene Call Centre' order by  VehicleDetail.Id desc ";
+            query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' order by  VehicleDetail.Id desc ";
 
 
 
