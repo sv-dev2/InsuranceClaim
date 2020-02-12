@@ -59,6 +59,8 @@ namespace InsuranceClaim.Models
     }
     public class GrossWrittenPremiumReportSearchModels
     {
+        
+        public List<int> BranchId { get; set; }
         public List<BranchModel> ListBranchModelData { get; set; }
         public List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReportdata { get; set; }
         
@@ -66,5 +68,6 @@ namespace InsuranceClaim.Models
         public string FormDate { get; set; }
         [Required(ErrorMessage = "Please Enter End Date.")]
         public string EndDate { get; set; }
+
     }
 }
