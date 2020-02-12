@@ -11,12 +11,12 @@
     var fname = "";
     var lname = "";
     var LoyalyPoints = 0.00m;
-    
+
     if (userLoggedin)
     {
         var customer = InsuranceContext.Customers.Single(where: $"userid='{userId}'");
         if (customer != null)
-        {       
+        {
             LoyalyPoints = Convert.ToDecimal(InsuranceContext.LoyaltyDetails.All(where: $"CustomerId={customer.Id}").Sum(x => x.PointsEarned));
             role = System.Web.HttpContext.Current.User.IsInRole("Administrator") ? "Administrator" : (System.Web.HttpContext.Current.User.IsInRole("Customer") ? "Customer" : "");
             fname = customer.FirstName;
@@ -45,7 +45,7 @@
     <script src="~/Scripts/jquery-1.10.2.js"></script>
 
     @*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
-   
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
@@ -59,7 +59,7 @@
 
     @*<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>*@
 
-  
+
     <script src="~/Scripts/bootstrap-datetimepicker_new.js"></script>
 
 
@@ -189,7 +189,7 @@
                                 @*<li><a href="/Individual/RegisterUser">Individual motor</a></li>
                                 <li><a href="/Domestic/RegisterUser">Domestic</a></li>*@
 
-                                @if (userLoggedin && (User.IsInRole("Staff")|| User.IsInRole("Renewals")))
+                                @if (userLoggedin && (User.IsInRole("Staff") || User.IsInRole("Renewals")))
                                 {
                                     <li><a href="/CustomerRegistration/Index">Issue Quotation</a></li>
                                 }
@@ -206,18 +206,19 @@
                                 <li><a href="/Home/About">About Us</a></li>
 
                                 @*<li><a href="/Paypal/IceCashPayment">IceCash</a></li>*@
-                         
+
                                 @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff"))
                                 {
                                     @*<li><a href="/Account/PolicyList">Policy Management</a></li>*@
                                     <li><a href="/Account/PolicyManagement">Policy Management</a></li>
-                                    <li><a href="/Account/UserManagementList">Users</a></li>
+                                    <li><a href="/Account/CustomerManagementList">Customers</a></li>
                                     <li><a href="/CustomerRegistration/LicensePrint">License</a></li>
                                 }
 
                                 @if (User.IsInRole("Agent"))
                                 {
-                                    <li><a href="/AgentStaff/Index">Agent Staff</a></li>                              
+                                    <li><a href="/AgentStaff/Index">Agent Staff</a></li>
+
                                 }
 
                                 @if (User.IsInRole("Claim"))
@@ -250,12 +251,12 @@
 
 
                                 @*@if (User.IsInRole("Finance"))
-                                {
+                                    {
 
-                                    <li><a  href="@Url.Action("ReconciliationReport", "Report")">Reconciliation</a></li> 
+                                        <li><a  href="@Url.Action("ReconciliationReport", "Report")">Reconciliation</a></li>
 
-                                    <li><a  href="@Url.Action("ReceiptModule", "CustomerRegistration")">Receipt</a></li>                             
-                                }*@
+                                        <li><a  href="@Url.Action("ReceiptModule", "CustomerRegistration")">Receipt</a></li>
+                                    }*@
 
 
                                 @if (User.IsInRole("Finance"))
@@ -263,10 +264,10 @@
                                     <li><a class="DashboardButton" href="@Url.Action("Dashboard","Account")">Dashboard</a></li>
                                 }
 
-                                    @if (User.IsInRole("AgentStaff"))
-                                    {
-                                        <li><a class="DashboardButton" href="@Url.Action("CustomerDetail","AgentMotor")">Create Policy</a></li>
-                                    }
+                                @if (User.IsInRole("AgentStaff"))
+                                {
+                                    <li><a class="DashboardButton" href="@Url.Action("CustomerDetail","AgentMotor")">Create Policy</a></li>
+                                }
 
 
                                 @if (User.IsInRole("SuperUser"))

@@ -208,6 +208,13 @@ namespace Insurance.Service
             InsuranceContext.PaymentInformations.Update(objSaveDetailListModel);
         }
 
+        public VehicleUsage GetVehicleUsageById(int Id)
+        {
+            var vehicleUsage = InsuranceContext.VehicleUsages.Single(Id);
+            return vehicleUsage;
+        }
+
+
 
 
     }

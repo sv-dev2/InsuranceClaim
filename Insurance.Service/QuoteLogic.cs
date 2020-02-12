@@ -57,8 +57,13 @@ namespace Insurance.Service
             if (coverType == eCoverType.Comprehensive)
             {
                 InsuranceRate = vehicleUsage.ComprehensiveRate;
-                // InsuranceMinAmount = vehicleUsage.MinCompAmount*2;
-                InsuranceMinAmount = vehicleUsage.MinCompAmount;
+
+                decimal InflationFactorAmt = 25;
+                decimal premiumRate = Convert.ToDecimal((vehicleUsage.ComprehensiveRate * 90) / 100);
+                var minAmount = ((vehicleUsage.USDMinBenchmark * InflationFactorAmt) * premiumRate)/100;
+
+                //InsuranceMinAmount = vehicleUsage.MinCompAmount;
+                InsuranceMinAmount = minAmount;
             }
             else if (coverType == eCoverType.ThirdParty)
             {

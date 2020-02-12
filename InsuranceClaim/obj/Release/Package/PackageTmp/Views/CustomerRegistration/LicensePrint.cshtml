@@ -39,6 +39,7 @@
                         @Html.TextBoxFor(x => x.VRN, new { @class = "form-control", @name = "CityName", @autocomplete = "off", @placeholder = "VRN" })
                         @Html.ValidationMessageFor(x => x.VRN, "", new { @class = "text-danger" })
 
+                       @Html.HiddenFor(x=>x.VehicleId)
 
 
                     </div>
@@ -50,7 +51,7 @@
                 <div class="col-sm-12 col-md-12 next-btn">
                     <div class="text-left">
                         <ul>
-                            <li class="pull-right"><button type="submit" class="btn">Download</button></li>
+                            <li class="pull-right"><button type="submit" class="btn">Print</button></li>
                         </ul>
                     </div>
                 </div>
@@ -68,12 +69,14 @@
 
     $(document).ready(function () {
         if ('@Model.FilePath' != '') {
-            window.open('@Model.FilePath', '_blank');
+            window.open('@Model.FilePath', '_blank');    
+            
+            var url = '@System.Configuration.ConfigurationManager.AppSettings["urlPath"]/CustomerRegistration/CertificateSerialNumber?VehicleId=' + '@Model.VehicleId';
+            window.setTimeout(function () {
+                window.location.href = url;           
+            }, 2000);
         }
-
     });
-
-
 
 </script>
 

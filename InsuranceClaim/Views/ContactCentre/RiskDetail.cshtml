@@ -94,7 +94,7 @@
                             @Html.HiddenFor(m => m.LicenseId)
                             @Html.HiddenFor(m => m.LicExpiryDate)
                             @Html.HiddenFor(m => m.CombinedID)
-                            
+
                         </div>
 
                         <div class="form-group-section">
@@ -184,7 +184,7 @@
 
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
-                                                <div id="thirdpartycheck" class="form-group" >
+                                                <div id="thirdpartycheck" class="form-group">
                                                     @Html.Label("Include VehicleLicence Fee", new { @class = "gender-label" })
                                                     @Html.CheckBoxFor(x => x.IncludeLicenseFee, new { @style = "width: 40px;height: 36px;", onclick = "ClearLicenseIfNotChek();" })
                                                 </div>
@@ -193,13 +193,13 @@
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div id="thirdpartycheck" class="form-group">
                                                     @Html.Label("Include Radio License Cost", new { @class = "gender-label" })
-                                                    @Html.CheckBoxFor(x => x.IncludeRadioLicenseCost, new { @style = "width: 40px;height: 36px;", onclick= "GetRadioLicenseCost();" })
+                                                    @Html.CheckBoxFor(x => x.IncludeRadioLicenseCost, new { @style = "width: 40px;height: 36px;", onclick = "GetRadioLicenseCost();" })
                                                 </div>
                                             </div>
                                         </div>
 
 
-                                        <div class="row">                                   
+                                        <div class="row">
                                             <div class="col-sm-12 col-md-12 form-group-select">
                                                 <div class="form-group">
                                                     @Html.Label("TaxClass", new { @class = "gender-label" })
@@ -211,7 +211,7 @@
 
 
                                         <div class="row">
-                                           
+
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Suggested Value", new { @class = "gender-label" })
@@ -222,7 +222,7 @@
                                             <div class="col-sm-6 col-md-6 form-group-text" id="divSumInsured">
                                                 <div class="form-group">
                                                     @Html.Label("Sum Insured", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(m => m.SumInsured, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Sum Insured", @maxlength = "11" })
+                                                    @Html.TextBoxFor(m => m.SumInsured, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Sum Insured", @maxlength = "11", @onblur = "ValidateSumInsured()" })
                                                     <span class="text-danger" id="validationSumIns">Please Enter Sum Insured</span>
                                                     @Html.ValidationMessageFor(m => m.SumInsured, "", new { @class = "text-danger" })
                                                     @*@Html.ValidationMessageFor(m => m.SumInsured, "", new { @class = "text-danger" })*@
@@ -481,12 +481,12 @@
                                         </div>
 
 
-                                      
-                                        <div id="thridparty" class="row">                                        
+
+                                        <div id="thridparty" class="row">
                                             <div class="col-sm-3 col-md-3 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Licence Fee", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @value="0"})
+                                                    @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @value = "0" })
                                                 </div>
                                             </div>
 
@@ -507,13 +507,13 @@
                                             <div class="col-sm-3 col-md-3 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Radio License Cost", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off",  @maxlength = "5" })
+                                                    @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off", @maxlength = "5" })
                                                     @Html.ValidationMessageFor(m => m.RadioLicenseCost, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
 
-                                        
+
                                     </fieldset>
                                     <hr class="higlighter" />
                                     <div class="row">
@@ -773,8 +773,8 @@
 
 
     function ClearLicenseIfNotChek()
-    {     
-        if (!$("#IncludeLicenseFee").is(":checked")) 
+    {
+        if (!$("#IncludeLicenseFee").is(":checked"))
         {
             $("#LicenseId").val("");
             $("#VehicleLicenceFee").val("");
@@ -783,9 +783,34 @@
         }
         else
         {
-          //  $("#VehicleLicenceFee").removeClass("inputDisabled");
-           // CalculatePremiumByCoverType();
+            //  $("#VehicleLicenceFee").removeClass("inputDisabled");
+            // CalculatePremiumByCoverType();
         }
+    }
+
+    function ValidateSumInsured()
+    {
+        debugger;
+
+        $(".loading-area").show();
+        $.ajax({
+            url: "@Url.Action("ValidateSumInsured", "CustomerRegistration")",
+            type: "POST",
+            data: { vehicleUsageId:  $("#VehicleUsage").val()},
+            dataType: "json",
+            success: function (result) {
+                debugger;
+
+                var sumInsuredAmount = $("#SumInsured").val();
+
+                if(sumInsuredAmount<result)
+                {
+                    toastr.error("Sum Insured amount should be greater or equal to " + result);
+                   
+                }
+                $(".loading-area").hide();
+            }
+        });
     }
 
 
@@ -1062,7 +1087,8 @@
 
         if('@Model.ErrorMessage' !="")
         {
-            toastr.warning('@Model.ErrorMessage');
+            toastr.error('@Model.ErrorMessage');
+            $("fieldset").removeAttr("disabled");
         }
 
 
@@ -1144,7 +1170,7 @@
 
             CalculatePremiumByCoverType();
 
-           // GetRadioLicenseCost();
+            // GetRadioLicenseCost();
 
         });
 
@@ -1201,9 +1227,6 @@
             else {
                 $("#validationSumIns").css("display", "none");
             }
-
-
-
         });
 
 
@@ -1214,11 +1237,6 @@
         else {
             $("#divSumInsured").show();
         }
-
-
-
-
-
     });
 
 
@@ -1253,7 +1271,7 @@
                 }
             }
 
-          //  GetRadioLicenseCost();
+            //  GetRadioLicenseCost();
 
 
             if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="" && $("#TaxClassId").val()!="") {
@@ -1265,7 +1283,6 @@
         $("#MakeId").change(function () {
             GetVehicleModels("");
         });
-
 
 
 

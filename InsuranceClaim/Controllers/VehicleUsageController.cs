@@ -50,7 +50,11 @@ namespace InsuranceClaim.Controllers
             {
                 var id = item.CreatedBy;
                 var customer = InsuranceContext.Customers.All(where: $"Id = '{id}'").FirstOrDefault();
-                item.CreatedByName = textInfo.ToTitleCase(customer.FirstName.ToLower()) + " " + textInfo.ToTitleCase(customer.LastName.ToLower());
+                if(customer!=null)
+                {
+                    item.CreatedByName = textInfo.ToTitleCase(customer.FirstName.ToLower()) + " " + textInfo.ToTitleCase(customer.LastName.ToLower());
+                }
+                
             }
             return View(InflationFactorList);
         }

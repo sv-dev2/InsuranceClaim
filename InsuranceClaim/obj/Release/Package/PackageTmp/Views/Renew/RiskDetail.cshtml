@@ -104,7 +104,7 @@
                             </div>
 
                             <div id="divVehicleList" style="display:block;">
-                                
+
                                 <hr class="higlighter" />
                             </div>
 
@@ -195,7 +195,7 @@
 
 
                                     <div class="row">
-                                       
+
                                         <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Suggested Value", new { @class = "gender-label" })
@@ -206,9 +206,9 @@
                                         <div class="col-sm-6 col-md-6 form-group-text" id="divSumInsured">
                                             <div class="form-group">
                                                 @Html.Label("Sum Insured", new { @class = "gender-label" })
-                                                @Html.TextBoxFor(m => m.SumInsured, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Sum Insured", @maxlength = "11" })
+                                                @Html.TextBoxFor(m => m.SumInsured, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Sum Insured", @maxlength = "11", @onblur = "ValidateSumInsured()" })
                                                 <span class="text-danger" id="validationSumIns">Please Enter Sum Insured</span>
-                                              
+
                                             </div>
                                         </div>
                                     </div>
@@ -338,7 +338,7 @@
                                                 @Html.Label("Excess Type", new { @class = "gender-label" })
                                                 @Html.DropDownListFor(x => x.ExcessType, ViewBag.eExcessTypeData as SelectList, new { @class = "form-control" })
 
-                                             
+
                                             </div>
                                         </div>
 
@@ -463,8 +463,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                  
+
+
                                     <div id="thridparty" class="row">
                                         <div class="col-sm-3 col-md-3 form-group-text">
                                             <div class="form-group">
@@ -480,8 +480,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-6 col-md-3 form-group-text" >
-                                            <div class="form-group" >
+                                        <div class="col-sm-6 col-md-3 form-group-text">
+                                            <div class="form-group">
                                                 @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
                                             </div>
@@ -805,6 +805,26 @@
         });
     }
 
+    function ValidateSumInsured()
+    {
+        $(".loading-area").show();
+        $.ajax({
+            url: "@Url.Action("ValidateSumInsured", "CustomerRegistration")",
+            type: "POST",
+            data: { vehicleUsageId:  $("#VehicleUsage").val()},
+            dataType: "json",
+            success: function (result) {
+                var sumInsuredAmount = $("#SumInsured").val();
+                if(sumInsuredAmount<result)
+                {
+                    toastr.error("Sum Insured amount should be greater or equal to " + result);
+                }
+                $(".loading-area").hide();
+            }
+        });
+    }
+
+
     function EditVehicleDetails(index) {
         debugger;
         var redirecturl = '@Url.Action("RiskDetail", "ContactCentre", new { id= 0 })';
@@ -861,12 +881,12 @@
         {
             $("#LicenseId").val("");
             $("#VehicleLicenceFee").val("");
-          //  $("#VehicleLicenceFee").addClass("inputDisabled");
+            //  $("#VehicleLicenceFee").addClass("inputDisabled");
             $("#LicExpiryDate").val("");
         }
         else
         {
-          //  $("#VehicleLicenceFee").removeClass("inputDisabled");
+            //  $("#VehicleLicenceFee").removeClass("inputDisabled");
             //CalculatePremiumByCoverType();
         }
     }
@@ -915,18 +935,18 @@
     }
 
 
-     function GetRadioLicenseCost(){
+    function GetRadioLicenseCost(){
         ValidateRadioLicense();
 
         if(!$("#IncludeRadioLicenseCost").is(':checked'))
         {
             $("#RadioLicenseCost").val("");
-           // $("#RadioLicenseCost").addClass("inputDisabled");
+            // $("#RadioLicenseCost").addClass("inputDisabled");
         }
         else
         {
             //$("#RadioLicenseCost").removeClass("inputDisabled");
-          //  CalculatePremiumByCoverType();
+            //  CalculatePremiumByCoverType();
         }
 
         @*var selectedTerm = $("#PaymentTermId option:selected").val();
@@ -1066,9 +1086,6 @@
 
 
 
-
-
-
         $("#datetimepicker2").datetimepicker({
             format: 'MM/D/YYYY',
             minDate: new Date()
@@ -1125,16 +1142,12 @@
 
         if('@Model.IsPolicyExpire'=='False')
         {
-             $("#CoverStartDate").val(today) // 05_sep_2019
+            $("#CoverStartDate").val(today) // 05_sep_2019
         }
         else
         {
 
-          //  $("#CoverStartDate").val(@Model.CoverEndDate.Value.ToShortDateString())
-
-
-
-
+            //  $("#CoverStartDate").val(@Model.CoverEndDate.Value.ToShortDateString())
 
         }
 
@@ -1203,7 +1216,7 @@
                     toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
                 }
             }
-          //  GetRadioLicenseCost();
+            //  GetRadioLicenseCost();
 
         });
 
@@ -1342,7 +1355,7 @@
                 CalculatePremiumByCoverType();
             }
 
-           // GetRadioLicenseCost();
+            // GetRadioLicenseCost();
 
             if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="") {
                 QuoteCalculation();
@@ -1503,29 +1516,27 @@
         $.ajax({
             url: "@Url.Action("GetVehicleTaxClass", "CustomerRegistration")",
             type: "POST",
-        data: { vehicleTypeId: productId},
-        dataType: "json",
-        success: function (result) {
-            debugger;
-            var $dropdown = $("#TaxClassId");
-            $dropdown.empty();
-            $dropdown.append($("<option />").val("").text("Select Tax Class"));
-            $.each(result, function () {
-                $dropdown.append($("<option />").val(this.TaxClassId).text(this.Description));
-            });
+            data: { vehicleTypeId: productId},
+            dataType: "json",
+            success: function (result) {
+                debugger;
+                var $dropdown = $("#TaxClassId");
+                $dropdown.empty();
+                $dropdown.append($("<option />").val("").text("Select Tax Class"));
+                $.each(result, function () {
+                    $dropdown.append($("<option />").val(this.TaxClassId).text(this.Description));
+                });
 
-            var taxClassId = @Model.TaxClassId;
-            if (taxClassId != "") {
-                $('#TaxClassId').val(taxClassId);
+                var taxClassId = @Model.TaxClassId;
+                if (taxClassId != "") {
+                    $('#TaxClassId').val(taxClassId);
+                }
             }
-        }
-    });
+        });
     }
 
 
     function checkVRNwithICEcash() {
-
-
 
         $(".loading-area").show();
         $.ajax({
@@ -1670,11 +1681,11 @@
                         $(".loading-area").hide();
                         $("#InsuranceId").val("");
 
-                        $("#ArrearsAmt").val(arrAmount);
-                        $("#PenaltiesAmt").val(penaltiesAmount);
+                        $("#ArrearsAmt").val('0');
+                        $("#PenaltiesAmt").val('0');
 
                         $("#LicenseId").val("");
-                        $("#VehicleLicenceFee").val("");
+                        $("#VehicleLicenceFee").val("0");
                         $("#LicExpiryDate").val("");
                         $("#CombinedID").val("");
 

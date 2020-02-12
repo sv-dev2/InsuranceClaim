@@ -944,7 +944,6 @@ namespace Insurance.Service
             return json;
         }
 
-
         public static int GetMonthKey(int monthId)
         {
             int licFreequency = 0;
@@ -1333,7 +1332,7 @@ namespace Insurance.Service
             objArg.Date = DateTime.Now.ToString("yyyyMMddhhmmss");
             objArg.Version = "2.0";
             objArg.PartnerToken = PartnerToken;
-            objArg.Request = new LICIConfFunctionObject { Function = "LICCertConf", Vehicles = obj };
+            objArg.Request = new LICIConfFunctionObject { Function = "LICCertConf", LicenceID= licenseModel.LicenseId, CertSerialNo=licenseModel.SerialNumber, PrintResult="1" };
 
             _json = Newtonsoft.Json.JsonConvert.SerializeObject(objArg);
 
@@ -1379,7 +1378,6 @@ namespace Insurance.Service
             SummaryDetailService.WriteLog(data, response.Content, "LICCertConf");
             return json;
         }
-
 
 
     }
@@ -1942,7 +1940,13 @@ namespace Insurance.Service
     public class LICIConfFunctionObject
     {
         public string Function { get; set; }
-        public List<VehicleLicConfObject> Vehicles { get; set; }
+        public string LicenceID { get; set; }
+
+        public string CertSerialNo { get; set; }
+        public string VRN { get; set; }
+
+        public string PrintResult { get; set; }
+        // public List<VehicleLicConfObject> Vehicles { get; set; }
     }
 
 

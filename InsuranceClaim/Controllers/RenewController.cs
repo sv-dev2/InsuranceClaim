@@ -380,22 +380,20 @@ namespace InsuranceClaim.Controllers
                 if (userLoggedin)
                 {
                     var email = LoggedUserEmail();
-
                     if (email == model.EmailAddress)
                     {
                         return Json(new { IsError = false, error = "Staff and customer email can not be same" }, JsonRequestBehavior.AllowGet);
                     }
 
                     //After test  Change the Role(web User)
-
                     Session["ReCustomerDataModal"] = model;
                     return Json(new { IsError = true, error = "" }, JsonRequestBehavior.AllowGet);
-
-
                 }
             }
             return Json(new { IsError = false, error = TempData["ErrorMessage"].ToString() }, JsonRequestBehavior.AllowGet);
         }
+
+
         public string LoggedUserEmail()
         {
             string email = "";
@@ -573,12 +571,10 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult RiskDetail(int? Id)
         {
-
             if (Session["RenewVehicleId"] == null)
             {
                 return RedirectToAction("Index");
             }
-
 
             var vehicleId = (Int32)Session["RenewVehicleId"];
             CustomerModel custdata = new CustomerModel();
@@ -861,7 +857,6 @@ namespace InsuranceClaim.Controllers
             {
                 model.AddThirdPartyAmount = 0.00m;
             }
-
 
             ModelState.Remove("SumInsured");
 

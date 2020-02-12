@@ -22,9 +22,6 @@ namespace InsuranceClaim.Controllers
         {
             // summaryDetailId: it's represent to Qutation edit
          
-
-
-
             if (Session["SummaryDetailId"] != null)
             {
                 SetValueIntoSession(Convert.ToInt32(Session["SummaryDetailId"]));

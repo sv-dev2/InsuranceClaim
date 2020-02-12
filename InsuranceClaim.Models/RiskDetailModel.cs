@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace InsuranceClaim.Models
 {
-    public class RiskDetailModel
+    public class RiskDetailModel 
     {  
 
         public RiskDetailModel()
@@ -52,7 +52,8 @@ namespace InsuranceClaim.Models
 
         public DateTime? CoverEndDate { get; set; }
 
-       [Range(3500, int.MaxValue, ErrorMessage = "Minimum sum nsured should be 3500.")]
+        // [Range(3500, int.MaxValue, ErrorMessage = "Minimum sum insured should be 3500.")]
+    
         public decimal? SumInsured { get; set; }
         [Required(ErrorMessage = "Please Enter Basic Premium")]
         public decimal? Premium { get; set; }
@@ -158,6 +159,9 @@ namespace InsuranceClaim.Models
         public string CombinedID { get; set; }
 
         public string IceCashRequest { get; set; }
+
+
+        
 
 
     }

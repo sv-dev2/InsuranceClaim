@@ -5,71 +5,71 @@
 }
 
 @*<style>
-    #dot {
-        padding: 5% 10%;
-    }
-</style>
-<div class="container" id="dot">
-    <div class="product-page-design">
-    <h2>Vehical Usage List</h2>
-    @using (Html.BeginForm("EditVehicleUsage", "VehicleUsage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-    {
-        <div class="form-group">
-            @Html.Label("Product Id", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.ValidationMessageFor(x => x.ProductId, "", new { @class = "text-danger" })
-                @Html.DropDownListFor(x => x.ProductId, new SelectList(ViewBag.Products, "Id", "ProductName"), new { @class = "form-control" })
+        #dot {
+            padding: 5% 10%;
+        }
+    </style>
+    <div class="container" id="dot">
+        <div class="product-page-design">
+        <h2>Vehical Usage List</h2>
+        @using (Html.BeginForm("EditVehicleUsage", "VehicleUsage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="form-group">
+                @Html.Label("Product Id", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.ValidationMessageFor(x => x.ProductId, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(x => x.ProductId, new SelectList(ViewBag.Products, "Id", "ProductName"), new { @class = "form-control" })
+                </div>
             </div>
+            <div class="form-group">
+                @Html.Label("VehUsage", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.VehUsage, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("ComprehensiveRate", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.ComprehensiveRate, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("MinCompAmount", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.MinCompAmount, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("ThirdPartyRate", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.ThirdPartyRate, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("MinThirdAmount", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.MinThirdAmount, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("FTPAmount", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.FTPAmount, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("AnnualTPAmount", new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.AnnualTPAmount, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-5"><input type="submit" name="Update" value="Update" class="btn btn-primary btn sm" /></div>
+                </div>
+                }
         </div>
-        <div class="form-group">
-            @Html.Label("VehUsage", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(m => m.VehUsage, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("ComprehensiveRate", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(m => m.ComprehensiveRate, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("MinCompAmount", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(m => m.MinCompAmount, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("ThirdPartyRate", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(m => m.ThirdPartyRate, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("MinThirdAmount", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(m => m.MinThirdAmount, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("FTPAmount", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(m => m.FTPAmount, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("AnnualTPAmount", new { @class = "col-md-3 control-label" })
-            <div class="col-md-5">
-                @Html.TextBoxFor(m => m.AnnualTPAmount, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-5"><input type="submit" name="Update" value="Update" class="btn btn-primary btn sm" /></div>
-            </div>
-            }
-    </div>
-        </div>*@
+            </div>*@
 
 
 
@@ -83,7 +83,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
                     <div class="form-group-section">
                         <div class="form-title">
-                            <h4>Add Vehicle Usage</h4>
+                            <h4>Edit Vehicle Usage</h4>
                         </div>
                         <div class="form-group-input">
                             @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
@@ -117,9 +117,9 @@
                                     </div>
                                     <div class="col-sm-6 col-md-6 form-group-text">
                                         <div class="form-group">
-                                            @Html.LabelFor(x => x.MinCompAmount, new { @class = "gender-label" })
-                                            @Html.TextBoxFor(x => x.MinCompAmount, new { @class = "form-control", @name = "MinCompAmount", @autocomplete = "off", @id = "MinCompAmount", @placeholder = "Enter Min Comp Amount" })
-                                            @Html.ValidationMessageFor(x => x.MinCompAmount, "", new { @class = "text-danger" })
+                                            @Html.LabelFor(x => x.USDMinBenchmark, new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.USDMinBenchmark, new { @class = "form-control", @name = "USDMinBenchmark", @autocomplete = "off", @id = "USDMinBenchmark", @placeholder = "Enter USD Benchmark" })
+                                            @Html.ValidationMessageFor(x => x.USDMinBenchmark, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>

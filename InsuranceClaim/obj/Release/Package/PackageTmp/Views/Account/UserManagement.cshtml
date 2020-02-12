@@ -186,8 +186,15 @@
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="text-left">
-                                                    <button type="button" class="btn" onclick="window.location.href='@Url.Action("UserManagementList","Account")'">Cancel</button>
+                                                    @if (Model.role == "Customer" || Model.role == "Web Customer")
+                                                    {
+                                                        <button type="button" class="btn" onclick="window.location.href='@Url.Action("CustomerManagementList","Account")'">Cancel</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="btn" onclick="window.location.href='@Url.Action("UserManagementList","Account")'">Cancel</button>
 
+                                                    }
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">

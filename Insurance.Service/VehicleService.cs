@@ -26,6 +26,8 @@ namespace Insurance.Service
 
         }
 
+       
+
         public Product GetVehicleTypeByProductId(int productId)
         {
             return InsuranceContext.Products.Single(productId);
@@ -109,8 +111,7 @@ namespace Insurance.Service
             return InsuranceContext.Domestic_RiskItems.Single(riskId);
         }
 
-        
-
+      
         public List<VehicleTaxClass> GetAllTaxClasses()
         {
             return InsuranceContext.VehicleTaxClasses.All().ToList();

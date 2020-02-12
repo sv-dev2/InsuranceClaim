@@ -31,6 +31,8 @@ namespace InsuranceClaim.Controllers
         private ApplicationUserManager _userManager;
         string AdminEmail = WebConfigurationManager.AppSettings["AdminEmail"];
         string ZimnatEmail = WebConfigurationManager.AppSettings["ZimnatEmail"];
+
+        decimal _InflationFactorAmt = 25;
         public CustomerRegistrationController()
         {
             // UserManager = userManager;
@@ -620,6 +622,22 @@ namespace InsuranceClaim.Controllers
                     return RedirectToAction("RiskDetail", new { id = 1 });
             }
 
+            int vehicleUsage = model.VehicleUsage == null ? 0 : model.VehicleUsage.Value;
+            decimal sumInsured = model.SumInsured == null ? 0 : model.SumInsured.Value;
+
+            var miniumSumInsured = GetMinimumSumInsured(vehicleUsage);
+
+
+            if ((model.CoverTypeId ==(int)eCoverType.Comprehensive) && (sumInsured < miniumSumInsured))
+            {
+                model.ErrorMessage = "Sum Insured amount should be greater or equal to " + miniumSumInsured;
+                TempData["ViewModel"] = model;
+
+                if (User.IsInRole("Staff"))
+                    return RedirectToAction("RiskDetail", "ContactCentre", new { id = 1 });
+                else
+                    return RedirectToAction("RiskDetail", new { id = 1 });
+            }
 
 
 
@@ -2608,10 +2626,7 @@ namespace InsuranceClaim.Controllers
             JsonResult json = new JsonResult();
             json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             json.Data = false;
-
-
             var list = (List<RiskDetailModel>)Session["VehicleDetails"];
-
             if (list != null && list.Count > 0)
             {
                 foreach (var item in list)
@@ -2620,14 +2635,8 @@ namespace InsuranceClaim.Controllers
                         json.Data = true;
                 }
             }
-
             return json;
         }
-
-
-
-
-
 
         //[HttpPost]
         //public JsonResult checkVRNwithICEcash(string regNo, string PaymentTerm)
@@ -2918,6 +2927,33 @@ namespace InsuranceClaim.Controllers
             return json;
         }
 
+
+        [HttpPost]
+        public JsonResult ValidateSumInsured(int vehicleUsageId)
+        {
+            decimal amount = 0;
+
+            amount= GetMinimumSumInsured(vehicleUsageId);
+
+            return Json(amount, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public decimal GetMinimumSumInsured(int vehicleUsageId)
+        {
+
+            decimal amount = 0;
+
+            RiskDetailService service = new RiskDetailService();
+            var vehicleUsage = service.GetVehicleUsageById(vehicleUsageId);
+
+            if (vehicleUsage != null)
+                amount = vehicleUsage.USDMinBenchmark == null ? 0 : vehicleUsage.USDMinBenchmark.Value * _InflationFactorAmt;
+
+            return amount;
+
+    
+        }
         public void SaveVehicalMakeAndModel(string make, string model)
         {
             var dbVehicalMake = InsuranceContext.VehicleMakes.Single(where: $"MakeDescription = '" + make + "'");
