@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
 }
 
->
 
 <div class="body-content-section">
     <div class="container">
@@ -39,7 +38,6 @@
                             @Html.LabelFor(x => x.SerialNumber, new { @class = "gender-label" })
                             @Html.TextBoxFor(x => x.SerialNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "SerialNumber" })
                             @Html.ValidationMessageFor(x => x.SerialNumber, "", new { @class = "text-danger" })
-
                             @Html.HiddenFor(x => x.VehicleId)
                         </div>
                     </div>
@@ -50,7 +48,7 @@
                     <div class="col-sm-12 col-md-12 next-btn">
                         <div class="text-left">
                             <ul>
-                                <li class="pull-right"><button type="submit" class="btn">Sumbit</button></li>
+                                <li class="pull-right"><button type="submit" class="btn">Submit</button></li>
                             </ul>
                         </div>
                     </div>
@@ -68,7 +66,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-
+        $("#SerialNumber").focus();
     });
 
 </script>

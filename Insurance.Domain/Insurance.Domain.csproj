@@ -197,6 +197,7 @@
     <Compile Include="Repository\BasicExcesses.cs" />
     <Compile Include="Repository\BirthdayMessages.cs" />
     <Compile Include="Repository\BusinessSources.cs" />
+    <Compile Include="Repository\CertSerialNoDetails.cs" />
     <Compile Include="Repository\Checklists.cs" />
     <Compile Include="Repository\Cities.cs" />
     <Compile Include="Repository\ClaimAdjustments.cs" />

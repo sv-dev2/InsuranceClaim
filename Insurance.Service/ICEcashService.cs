@@ -11,18 +11,19 @@ using InsuranceClaim.Models;
 using Newtonsoft.Json;
 using System.Web;
 using Insurance.Domain;
+using System.Management;
 
 namespace Insurance.Service
 {
     public class ICEcashService
     {
         // SendBox
-        public static string PSK = "127782435202916376850511";
-        public static string LiveIceCashApi = "http://api-test.icecash.com/request/20523588";
+        //public static string PSK = "127782435202916376850511";
+        //public static string LiveIceCashApi = "http://api-test.icecash.com/request/20523588";
 
         // Live
-        //public static string PSK = "565205790573235453203546";
-        //public static string LiveIceCashApi = "https://api.icecash.co.zw/request/20350763";
+        public static string PSK = "565205790573235453203546";
+        public static string LiveIceCashApi = "https://api.icecash.co.zw/request/20350763";
 
         private static string GetSHA512(string text)
         {
@@ -1332,7 +1333,7 @@ namespace Insurance.Service
             objArg.Date = DateTime.Now.ToString("yyyyMMddhhmmss");
             objArg.Version = "2.0";
             objArg.PartnerToken = PartnerToken;
-            objArg.Request = new LICIConfFunctionObject { Function = "LICCertConf", LicenceID= licenseModel.LicenseId, CertSerialNo=licenseModel.SerialNumber, PrintResult="1" };
+            objArg.Request = new LICIConfFunctionObject { Function = "LICCertConf", VRN=licenseModel.VRN, MachineName = GetMachineId(), LicenceID = licenseModel.LicenseId, CertSerialNo=licenseModel.SerialNumber, PrintResult="1" };
 
             _json = Newtonsoft.Json.JsonConvert.SerializeObject(objArg);
 
@@ -1378,6 +1379,16 @@ namespace Insurance.Service
             SummaryDetailService.WriteLog(data, response.Content, "LICCertConf");
             return json;
         }
+
+        public static string GetMachineId()
+        {
+            string cpuInfo = System.Net.Dns.GetHostEntry("").HostName;
+           
+            return Convert.ToString(cpuInfo);
+        }
+
+
+
 
 
     }
@@ -1944,6 +1955,7 @@ namespace Insurance.Service
 
         public string CertSerialNo { get; set; }
         public string VRN { get; set; }
+        public string MachineName { get; set; }
 
         public string PrintResult { get; set; }
         // public List<VehicleLicConfObject> Vehicles { get; set; }

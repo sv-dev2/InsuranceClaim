@@ -214,6 +214,12 @@ namespace Insurance.Service
             return vehicleUsage;
         }
 
+        public void SaveCertSerialNoDetails(CertSerialNoDetail model)
+        {
+            InsuranceContext.CertSerialNoDetails.Insert(model);
+        }
+
+
 
 
 
