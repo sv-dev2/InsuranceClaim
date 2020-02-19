@@ -6,6 +6,11 @@
 
     <div class="productsave-section GrossWrittenPremiumReport">
 
+        @*<script src="~/Scripts/jquery.table2excel.min.js"></script>*@
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.13/jspdf.plugin.autotable.js"></script>
+        @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>*@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.full.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" />
@@ -17,13 +22,18 @@
                         <h2>ALM Gross Written Premium Report</h2>
                     </div>
                 </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
+                @*<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
                     <div class="text-right">
+                    </div>
+                </div>*@
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
+                    <div class="text-right">
+                        <input class="btn btn-primary" type="button" value="Generate PDF" id="generatePDF" />
+
                         <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
                     </div>
                 </div>
             </div>
-
 
             @using (Html.BeginForm("ALMSearchGrossReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
@@ -60,33 +70,29 @@
                                     <div class="form-group">
                                         Select Branch
                                         @*<select class="input-group js-example-basic-multiple form-control" id="selectBranch" name="branches[]" multiple="multiple">
-            @foreach (var item in ViewBag.Branch)
-            {
-                <option value=@item.Id>@item.BranchName</option>
-            }
-        </select>*@
+                                            @foreach (var item in ViewBag.Branch)
+                                            {
+                                                <option value=@item.Id>@item.BranchName</option>
+                                            }
+                                        </select>*@
                                         @Html.DropDownList("BranchId", (MultiSelectList)ViewBag.Branch, new { @class = "js-example-basic-multiple form-control input-group", multiple = "multiple" })
-
                                         @*@Html.ListBoxFor(m => m.BranchId, new SelectList(ViewBag.Branch, "Value", "Text"), new { @class = "js-example-basic-multiple form-control input-group", @Id = "lstbranch" })*@
 
                                     </div>
-                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-5 form-group-btn">
+                                    <div class="form-group">
+                                        <ul class="list-inline">
+                                            <li><button type="submit" class="btn btn-success">Search</button></li>
+                                            <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                        </ul>
 
-
-                                    <div class="col-sm-6 col-md-5 form-group-btn">
-                                        <div class="form-group">
-                                            <ul class="list-inline">
-                                                <li><button type="submit" class="btn btn-success">Search</button></li>
-                                                <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
-                                            </ul>
-
-                                        </div>
                                     </div>
                                 </div>
-
-
                             </div>
+
                         </div>
+                    </div>
                 </div>
             }
 
@@ -95,7 +101,7 @@
                 <div class="table-responsive">
                     <table width="1785" class="table table-striped tablesorter" style="width:1785px" id="report2excel">
 
-                        <thead style='display:none;'>
+                        @*<thead style='display:none;'>
 
 
                             <tr>
@@ -134,34 +140,34 @@
                         </thead>
 
 
-                        <thead>
-                            <tr>
-                                <th style="width: 170px;">User/Call center agent</th>
-                                <th>Branch</th>
-                                <th style="width: 170px;">Customer Name</th>
-                                <th style="width: 180px;">Policy Number</th>
-                                <th>Cover Note</th>
-                                <th style="width:170px;">Policy Dates</th>
-                                <th style="width:170px;">Payment Detail</th>
-                                <th>Term Period</th>
-                                <th>Cover Type</th>
-                                <th>Currency</th>
+                        <thead>*@
+                        <tr>
+                            <th style="width: 170px;">User/Call center agent</th>
+                            <th style="width:170px;">Branch</th>
+                            <th style="width: 170px;">Customer Name</th>
+                            <th style="width: 180px;">Policy Number</th>
+                            <th>Cover Note</th>
+                            <th style="width:170px;">Policy Dates</th>
+                            <th style="width:170px;">Payment Detail</th>
+                            <th style="width:170px;">Term Period</th>
+                            <th>Cover Type</th>
+                            <th>Currency</th>
 
-                                <th style="width:170px;">Premium</th>
-
-                                <th width="170px;">Stamp Duty</th>
-                                <th>ZTSC Levy</th>
-                                <th>Commission Detail</th>
-                                <th>Radio Licence Cost</th>
-                                <th>Zinara License Fee</th>
-                                <th>Status</th>
-                                <th>Policy Status</th>
-                                @*<th>
-                                    Business Source
-                                </th>*@
-                            </tr>
+                            <th style="width:170px;">Total Premium</th>
+                            <th style="width:170px;">Net Premium</th>
+                            <th width="170px;">Stamp Duty</th>
+                            <th>ZTSC Levy</th>
+                            @*<th>Commission Detail</th>
+                            <th>Radio Licence Cost</th>
+                            <th>Zinara License Fee</th>*@
+                            <th>Status</th>
+                            <th>Policy Status</th>
+                            @*<th>
+                                Business Source
+                            </th>*@
+                        </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="reportpdf">
 
                             @{
                                 decimal sumInsuredTotal = 0;
@@ -303,14 +309,17 @@
                                     <td>
                                         @item.Premium_due
                                     </td>
+                                    <td>
+                                        @(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy))
+                                    </td>
 
                                     <td> @item.Stamp_duty</td>
                                     <td> @item.ZTSC_Levy</td>
-                                    <td>
+                                    @*<td>
                                         @item.Comission_Amount
                                     </td>
                                     <td>@item.RadioLicenseCost</td>
-                                    <td> @item.Zinara_License_Fee </td>
+                                    <td> @item.Zinara_License_Fee </td>*@
 
 
                                     @if (DateTime.Now > item.PolicyRenewalDate)
@@ -364,11 +373,11 @@
                                 </td>
                                 <td><strong>@stampdutyTotal</strong></td>
                                 <td><strong>@ztscLevyTotal</strong></td>
-                                <td>
+                                @*<td>
                                     <strong>@commissionAmountTotal</strong>
                                 </td>
                                 <td><strong>@radioLicenseCostTotal</strong></td>
-                                <td><strong> @ZinaraLicenseFee </strong> </td>
+                                <td><strong> @ZinaraLicenseFee </strong> </td>*@
                                 <td></td>
                                 <td></td>
                                 <td colspan="2"></td>
@@ -569,7 +578,23 @@
 
         });
 
+  function generate() {
+  var pdf = new jsPDF('l', 'pt', 'a4');
+  var res = pdf.autoTableHtmlToJson(document.getElementById("report2excel"), false);
+  pdf.autoTable(res.columns, res.data, {
+    startY: 60,
+    tableWidth: 'auto',
+    columnWidth: 'auto',
+    styles: {
+      overflow: 'linebreak'
+    }
+  });
 
+  pdf.save("ALMGWPReport.pdf");
+    }
 
-
+$('#generatePDF').click(function (e) {
+	e.preventDefault();   
+    generate();
+});
 </script>
