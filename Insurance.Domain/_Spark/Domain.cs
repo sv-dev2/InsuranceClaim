@@ -1724,11 +1724,24 @@ namespace Insurance.Domain
         public string RiskItem { get; set; }
         public decimal Rate { get; set; }
         public DateTime CreatedOn { get; set; }
+    }
 
+    //CertSerialNoDetail
+
+    public partial class CertSerialNoDetail : Entity<CertSerialNoDetail>
+    {
+        public CertSerialNoDetail() { }
+        public CertSerialNoDetail(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int PolicyId { get; set; }
+        public string VRN { get; set; }
+        public string CertSerialNo { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 
 
-  
 
     //   Domestic_RiskCover
 

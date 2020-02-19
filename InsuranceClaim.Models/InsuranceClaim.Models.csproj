@@ -101,6 +101,7 @@
     <Compile Include="BusinessSourceModel.cs" />
     <Compile Include="CardDetailModel.cs" />
     <Compile Include="CardType.cs" />
+    <Compile Include="CertSerialNoModel.cs" />
     <Compile Include="ChecklistModel.cs" />
     <Compile Include="ClaimAdjustmentModel.cs" />
     <Compile Include="ClaimDetailsProviderModel.cs" />

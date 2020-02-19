@@ -1131,6 +1131,7 @@
     <Content Include="Views\VehicleUsage\InflationFactorList.cshtml" />
     <Content Include="Views\VehicleUsage\SaveInflationFactor.cshtml" />
     <Content Include="Views\Report\ALMGWPReport.cshtml" />
+    <Content Include="Views\Report\CertSerialNoReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />

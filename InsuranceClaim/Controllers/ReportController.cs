@@ -3634,5 +3634,74 @@ namespace InsuranceClaim.Controllers
 
 
         }
+
+
+        public ActionResult CertSerialNoReport()
+        {
+            CertSerialNoReportModel model = new CertSerialNoReportModel();
+
+            string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
+            query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
+            query +=" join Customer on CertSerialNoDetail.CreatedBy = Customer.Id";
+               
+            var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
+            {
+                Id = c.Id,
+                VRN = c.VRN,
+                AgentName = c.AgentName,
+                PolicyNumber = c.PolicyNumber,
+                CertSerialNo = c.CertSerialNo,
+                CreatedOn = c.CreatedOn
+            }).ToList();
+
+            model.List = list;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CertSerialNoSearchReport(CertSerialNoReportModel model)
+        {
+
+
+            DateTime fromDate = DateTime.Now.AddDays(-1);
+            DateTime endDate = DateTime.Now;
+
+            if (!string.IsNullOrEmpty(model.FromDate) && !string.IsNullOrEmpty(model.EndDate))
+            {
+                fromDate = Convert.ToDateTime(model.FromDate);
+                endDate = Convert.ToDateTime(model.EndDate);
+
+                ViewBag.fromdate = fromDate.ToString("dd/MM/yyyy");
+                ViewBag.enddate = endDate.ToString("dd/MM/yyyy");
+            }
+
+
+
+           
+            string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
+            query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
+            query += " join Customer on CertSerialNoDetail.CreatedBy = Customer.Id where  CertSerialNoDetail.CreatedOn>= '" + fromDate + "' And CertSerialNoDetail.CreatedOn<='" + endDate + "'" + "order  by CertSerialNoDetail.Id desc";
+
+            var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
+            {
+                Id = c.Id,
+                VRN = c.VRN,
+                AgentName = c.AgentName,
+                PolicyNumber = c.PolicyNumber,
+                CertSerialNo = c.CertSerialNo,
+                CreatedOn = c.CreatedOn
+            }).ToList();
+
+            model.List = list;
+
+            return View("CertSerialNoReport", model);
+            // return View(model);
+        }
+
+
+
+
+
+
     }
 }

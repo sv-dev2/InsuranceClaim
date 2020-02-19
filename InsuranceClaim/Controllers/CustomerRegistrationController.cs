@@ -3482,13 +3482,13 @@ namespace InsuranceClaim.Controllers
         public ActionResult CertificateSerialNumber(LicenseModel model)
         {
 
-            ModelState.Remove("VRN");
-
+            ModelState.Remove("VRN");        
             ICEcashService iceCash = new ICEcashService();
             ICEcashTokenResponse tokenObject = iceCash.getToken();
+
+           
             //  SummaryDetailService.UpdateToken(tokenObject);
             string PartnerToken = tokenObject.Response.PartnerToken;
-
             var vehilceDetail = InsuranceContext.VehicleDetails.Single(model.VehicleId);
 
             if (vehilceDetail != null)
@@ -3507,12 +3507,50 @@ namespace InsuranceClaim.Controllers
             }
 
             if(res.Response!=null && res.Response.Message.Contains("Confirmation Received"))
+            {              
                 TempData["SuccMsg"] = res.Response.Message;
+                SaveCertificateSerialDetail(vehilceDetail, model);
+            }             
             else
                 TempData["ErroMsg"] = "Error occured, please try agian.";
             
 
             return View(model);
+        }
+
+        public bool SaveCertificateSerialDetail(VehicleDetail vehilceDetail, LicenseModel model)
+        {
+            RiskDetailService _riskDetailService = new RiskDetailService();
+
+            bool result = false;
+            try
+            {
+                int createdBy = 0;
+                bool _userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+                if (_userLoggedin)
+                {
+                    var _User = UserManager.FindById(User.Identity.GetUserId().ToString());
+                    createdBy = InsuranceContext.Customers.Single("UserId = '" + _User.Id + "'").Id;
+                }
+
+                CertSerialNoDetail serialNumber = new CertSerialNoDetail()
+                {
+                    PolicyId = vehilceDetail.PolicyId,
+                    VRN = vehilceDetail.RegistrationNo,
+                    CertSerialNo = model.SerialNumber,
+                    CreatedBy = createdBy,
+                    CreatedOn = DateTime.Now
+                };
+
+                _riskDetailService.SaveCertSerialNoDetails(serialNumber);
+                result = true;
+            }
+            catch(Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
         }
 
         private string SavePdf(string base64BinaryStr, string vrn)

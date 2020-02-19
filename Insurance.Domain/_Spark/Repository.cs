@@ -143,6 +143,8 @@ namespace Insurance.Domain
 
         public static InflationFactors InflationFactors { get { return new InflationFactors(); } }
 
+        public static CertSerialNoDetails CertSerialNoDetails { get { return new CertSerialNoDetails(); } }
+
 
         // DomesticPayments
         // general purpose operations
