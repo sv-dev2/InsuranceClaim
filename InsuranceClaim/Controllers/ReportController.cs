@@ -3575,8 +3575,6 @@ namespace InsuranceClaim.Controllers
                 query += " join VehicleMake on VehicleMake.MakeCode =VehicleDetail.MakeId  ";
                 query += " join VehicleModel on VehicleModel.ModelCode = VehicleDetail.ModelId Where ClaimNotification.CreatedOn>= '" + fromDate + "' And ClaimNotification.CreatedOn<='" + endDate + "'" + "order  by ClaimNotification.Id desc";
 
-
-
                 var Claimdetail = InsuranceContext.Query(query)
                            .Select(x => new ClaimReportModel
                            {
@@ -3597,32 +3595,20 @@ namespace InsuranceClaim.Controllers
                                VehicleDescription = x.VehicleDesc,
                                VRN = x.RegistrationNo,
                                EstimatedLoss = x.EstimatedValueOfLoss
-
                            }).Distinct().ToList();
 
 
                 var distinctClaimList = new List<ClaimReportModel>();
-
-
                 foreach (var item in Claimdetail)
                 {
-
                     if (distinctClaimList.FirstOrDefault(c => c.Id == item.Id) == null)
                     {
                         distinctClaimList.Add(item);
                     }
-
-
                 }
-
-
-
-
 
                 ListClaimReport = distinctClaimList;
                 model.ClaimReportModelData = ListClaimReport.OrderBy(x => x.DateOfNotification).ToList();
-
-
 
                 return View("ClaimsNotificationReport", model);
 
@@ -3631,8 +3617,6 @@ namespace InsuranceClaim.Controllers
             {
                 return View("ClaimsNotificationReport");
             }
-
-
         }
 
 
@@ -3646,12 +3630,12 @@ namespace InsuranceClaim.Controllers
                
             var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
             {
-                Id = c.Id,
+               
                 VRN = c.VRN,
                 AgentName = c.AgentName,
                 PolicyNumber = c.PolicyNumber,
                 CertSerialNo = c.CertSerialNo,
-                CreatedOn = c.CreatedOn
+                CreatedOn = c.CreatedOn==null? "" : Convert.ToString( c.CreatedOn)
             }).ToList();
 
             model.List = list;
@@ -3684,12 +3668,12 @@ namespace InsuranceClaim.Controllers
 
             var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
             {
-                Id = c.Id,
+                
                 VRN = c.VRN,
                 AgentName = c.AgentName,
                 PolicyNumber = c.PolicyNumber,
                 CertSerialNo = c.CertSerialNo,
-                CreatedOn = c.CreatedOn
+                CreatedOn = c.CreatedOn == null ? "" : Convert.ToString(c.CreatedOn)
             }).ToList();
 
             model.List = list;
