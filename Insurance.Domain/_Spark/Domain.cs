@@ -1469,6 +1469,9 @@ namespace Insurance.Domain
         public int? PrimaryVehicleId { get; set; }
         public int? EndorsementCustomerId { get; set; }
         public int? EndorsementPolicyId { get; set; }
+        public int TaxClassId { get; set; }
+        public string CombinedID { get; set; }
+
     }
 
 

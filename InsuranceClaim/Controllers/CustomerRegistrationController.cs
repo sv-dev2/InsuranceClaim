@@ -3129,6 +3129,8 @@ namespace InsuranceClaim.Controllers
                     {
                         tokenObject = ICEcashService.getToken();
                         SummaryDetailService.UpdateToken(tokenObject);
+
+                        patnerToken = tokenObject.Response.PartnerToken;
                         //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
                         //tokenObject = service.CheckSessionExpired();
                         if (VehilceLicense)

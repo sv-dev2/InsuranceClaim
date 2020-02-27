@@ -584,6 +584,9 @@ namespace InsuranceClaim.Controllers
                     vehicleInsert.RoadsideAssistancePercentage = vehicle.RoadsideAssistancePercentage == null ? 0 : vehicle.RoadsideAssistancePercentage;
                     vehicleInsert.MedicalExpensesPercentage = vehicle.MedicalExpensesPercentage == null ? 0 : vehicle.MedicalExpensesPercentage;
                     vehicleInsert.IsCompleted = false;
+                    vehicleInsert.TaxClassId = vehicle.TaxClassId;
+                    vehicleInsert.CombinedID = vehicle.CombinedID;
+
                     InsuranceContext.EndorsementVehicleDetails.Insert(vehicleInsert);
                     //var vehicleId = vehicleInsert;
                     //Session["vehicleId"] = vehicleInsert;
@@ -695,6 +698,7 @@ namespace InsuranceClaim.Controllers
                     _vehicleInsert.EndorsementCustomerId = item.EndorsementCustomerId;
                     _vehicleInsert.EndorsementPolicyId = item.EndorsementPolicyId;
                     _vehicleInsert.PrimaryVehicleId = item.PrimaryVehicleId;
+                    _vehicleInsert.TaxClassId = item.TaxClassId;
                     InsuranceContext.EndorsementVehicleDetails.Update(_vehicleInsert);
                     _listriskdetailmodel.Add(_vehicleInsert);
                     Session["EnViewlistVehicles"] = _listriskdetailmodel;
@@ -777,6 +781,8 @@ namespace InsuranceClaim.Controllers
             ViewBag.Products = InsuranceContext.Products.All().ToList();
 
             ViewBag.Currencies = InsuranceContext.Currencies.All();
+
+            ViewBag.TaxClass = InsuranceContext.VehicleTaxClasses.All().ToList();
 
 
             var ePaymentTermData = from ePaymentTerm e in Enum.GetValues(typeof(ePaymentTerm))
@@ -887,7 +893,9 @@ namespace InsuranceClaim.Controllers
                         viewModel.EndorsementPolicyId = data.EndorsementPolicyId;
                         viewModel.PrimaryVehicleId = data.PrimaryVehicleId;
                         viewModel.BalanceAmount = data.BalanceAmount;
-
+                        viewModel.TaxClassId = data.TaxClassId;
+                        viewModel.CombinedID = data.CombinedID;
+                    
                         viewModel.Id = data.Id;
                         var ser = new VehicleService();
                         var model = ser.GetModel(data.MakeId);
@@ -917,8 +925,6 @@ namespace InsuranceClaim.Controllers
 
                 SummaryDetailService summaryDetailService = new SummaryDetailService();
                 var currencyList = summaryDetailService.GetAllCurrency();
-
-
 
                 if (EndorsementsummaryDetailId != 0)
                 {
@@ -1172,6 +1178,7 @@ namespace InsuranceClaim.Controllers
                     obj.ZTSCLevy = envehicle.ZTSCLevy;
                     obj.RadioLicenseCost = envehicle.RadioLicenseCost;
                     obj.OptionalCovers = envehicle.OptionalCovers;
+                    obj.VehicleLicenceFee = envehicle.VehicleLicenceFee==null? 0 : envehicle.VehicleLicenceFee.Value;
                     obj.Excess = envehicle.Excess;
                     obj.CoverNoteNo = envehicle.CoverNoteNo;
                     obj.ExcessType = envehicle.ExcessType;
@@ -1228,10 +1235,8 @@ namespace InsuranceClaim.Controllers
                     obj.IsCompleted = envehicle.IsCompleted;
 
                     obj.Currency = detailService.GetCurrencyName(currencyList, envehicle.CurrencyId);
-
+                    obj.TaxClassId = envehicle.TaxClassId;
                      
-                  
-
                     //InsuranceContext.EndorsementVehicleDetails.Insert(vehicleInsert);
                     //var vehicleId = vehicleInsert;
                     //Session["vehicleId"] = vehicleInsert;
