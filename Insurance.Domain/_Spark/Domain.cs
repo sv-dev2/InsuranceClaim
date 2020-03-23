@@ -312,6 +312,8 @@ namespace Insurance.Domain
         public DateTime CreatedOn { get; set; }
 
         public string SignaturePath { get; set; }
+
+        public string RenewPolicyNumber { get; set; }
     }
     public partial class PaymentTerm : Entity<PaymentTerm>
     {
@@ -398,7 +400,7 @@ namespace Insurance.Domain
         public bool isQuotation { get; set; }
         public int AgentId { get; set; }
         public string ModuleName { get; set; }
-        public bool PaymentStatus { get; set; }
+        public bool PayLaterStatus { get; set; }
 
     }
 
@@ -876,7 +878,7 @@ namespace Insurance.Domain
         public Single? ComprehensiveRate { get; set; }
         public decimal? MinCompAmount { get; set; }
         public Single? ThirdPartyRate { get; set; }
-        public decimal? USDMinBenchmark { get; set; }
+        public decimal? USDBenchmark { get; set; }
         public decimal? MinThirdAmount { get; set; }
         public decimal? FTPAmount { get; set; }
         public decimal? AnnualTPAmount { get; set; }
@@ -1745,7 +1747,23 @@ namespace Insurance.Domain
     }
 
 
+    /// <summary>
+    /// 17/03/2020
+    /// </summary>
+    public partial class AspNetUsersDetail : Entity<AspNetUsersDetail>
+    {
+        public AspNetUsersDetail() { }
+        public AspNetUsersDetail(bool defaults) : base(defaults) { }
 
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public int? ModifiedBy { get; set; }
+        public bool PasswordExpire { get; set; }
+
+    }
     //   Domestic_RiskCover
 
 

@@ -121,6 +121,7 @@
     <Compile Include="Domain\AgeExcess.cs" />
     <Compile Include="Domain\AgentCommission.cs" />
     <Compile Include="Domain\AgentLogo.cs" />
+    <Compile Include="Domain\AspNetUsersDetail.cs" />
     <Compile Include="Domain\AspNetUsersUpdate.cs" />
     <Compile Include="Domain\BannerImage.cs" />
     <Compile Include="Domain\BasicExcess.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Repository\AgeExcesses.cs" />
     <Compile Include="Repository\AgentCommissions.cs" />
     <Compile Include="Repository\AgentLogos.cs" />
+    <Compile Include="Repository\AspNetUsersDetails.cs" />
     <Compile Include="Repository\AspNetUsersUpdates.cs" />
     <Compile Include="Repository\BannerImages.cs" />
     <Compile Include="Repository\BasicExcesses.cs" />

@@ -145,6 +145,8 @@ namespace Insurance.Domain
 
         public static CertSerialNoDetails CertSerialNoDetails { get { return new CertSerialNoDetails(); } }
 
+        //17/03/2020
+        public static AspNetUsersDetails AspNetUsersDetails { get { return new AspNetUsersDetails(); } }
 
         // DomesticPayments
         // general purpose operations

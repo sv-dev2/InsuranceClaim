@@ -106,21 +106,37 @@ namespace InsuranceClaim.Controllers
                     var _user = UserManager.FindByEmail(model.Email);
                     var role = UserManager.GetRoles(_user.Id.ToString()).FirstOrDefault();
                     Session["LoggedInUserRole"] = role;
-
+                    //--start
+                    int numberOfDays = CountDayPassword(_user);
+                    //--end
                     var customer = InsuranceContext.Customers.All(where: $"UserId ='{_user.Id.ToString()}'").OrderByDescending(c => c.Id).FirstOrDefault();
+                    if (customer.IsActive == false)
+                    {
+                        ModelState.AddModelError("", "Your account is inactive, please contact to administrator.");
+                        return View(model);
+                    }
+
+                    if(numberOfDays>30)
+                    {
+                        TempData["ChangePwdMsg"] = "Your password has expired. Please reset password.";
+                        return RedirectToAction("ChangePassword", "Account");
+                    }
+
+
                     Session["firstname"] = customer.FirstName;
                     Session["lastname"] = customer.LastName;
 
-
-                    if (role == "Administrator" || role == "SuperUser" || role == "Agent" || role == "AgentStaff" || role == "Reports" || role == "Finance")
+                    if (role == "Administrator" || role == "SuperUser" || role == "Agent" || role == "AgentStaff" || role == "Reports" || role == "Finance" || role == "Claim")
                     {
                         return RedirectToAction("Dashboard", "Account");
                     }
                     else
                     {
+                        //--start
+
+                        //end
                         return Redirect("/CustomerRegistration/index");
                     }
-
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -130,6 +146,61 @@ namespace InsuranceClaim.Controllers
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
             }
+        }
+
+        private void UpdatePasswordDetail(int numerOfDays, ApplicationUser _user)
+        {
+            if (numerOfDays > 30)
+            {
+                var updatedUserData = InsuranceContext.AspNetUsersDetails.Single(where: $"UserId = '" + _user.Id + "'");
+                updatedUserData.PasswordExpire = true;
+                var data = Mapper.Map<AspNetUsersDetail, AspNetUsersDetail>(updatedUserData);
+                InsuranceContext.AspNetUsersDetails.Update(data);
+                TempData["ChangePwdMsg"] = 1;
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            }
+            //var updatedUserData1 = InsuranceContext.AspNetUsersDetails.Single(where: $"UserId = '" + _user.Id + "'");
+            //            if (updatedUserData1 != null)
+            //            {
+            //    updatedUserData1.PasswordExpire = false;
+            //    var data1 = Mapper.Map<AspNetUsersDetail, AspNetUsersDetail>(updatedUserData1);
+            //    InsuranceContext.AspNetUsersDetails.Update(data1);
+            //}
+        }
+
+        public int CountDayPassword(ApplicationUser _user)
+        {
+            var getDaysCount = 0;
+            var currentDate = DateTime.Now;
+            var _userdetail = InsuranceContext.AspNetUsersDetails.All(where: $"UserId ='{_user.Id.ToString()}'").FirstOrDefault();
+            if (_userdetail != null)
+            {
+                if (_userdetail.ModifiedOn == null)
+                {
+                    getDaysCount = (currentDate - _userdetail.CreatedOn).Value.Days;
+                }
+                else
+                {
+                    getDaysCount = (currentDate - _userdetail.ModifiedOn).Value.Days;
+                }
+            }
+            else
+            {
+                SaveUserPasswordDetails(_user); // for existing customer
+            }
+           
+
+
+
+            return getDaysCount;
+        }
+
+
+        private void SaveUserPasswordDetails(ApplicationUser user)
+        {
+            var userdetail = new AspNetUsersDetail { UserId = user.Id, CreatedOn = DateTime.Now, PasswordExpire = false };
+            var data = Mapper.Map<AspNetUsersDetail, AspNetUsersDetail>(userdetail);
+            InsuranceContext.AspNetUsersDetails.Insert(data);
         }
 
         public ActionResult Logout()
@@ -310,7 +381,7 @@ namespace InsuranceClaim.Controllers
 
                     //string body = "Hello " + customer.FirstName + "\nWelcome to the GENE-INSURE family, we would like to simplify your life." + "\nYour policy number is : " + policy.PolicyNumber + "\nUsername is : " + user.Email + "\nYour Password : Geneinsure@123" + "\nPlease reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>" + "\nThank you once again.";
 
-
+                    UpdateExpirePassword(user);
                 }
 
                 // Don't reveal that the user does not exist or is not confirmed
@@ -325,6 +396,17 @@ namespace InsuranceClaim.Controllers
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
+        }
+
+        private void UpdateExpirePassword(ApplicationUser user)
+        {
+            var updatedUserData = InsuranceContext.AspNetUsersDetails.Single(where: $"UserId = '" + user.Id + "'");
+
+            if (updatedUserData != null)
+            {
+                updatedUserData.ModifiedOn = DateTime.Now;
+                InsuranceContext.AspNetUsersDetails.Update(updatedUserData);
+            }
         }
 
         //
@@ -1393,11 +1475,11 @@ namespace InsuranceClaim.Controllers
 
                 InsuranceContext.Customers.Update(ctems);
                 UserManager.Update(user);
-                if(model.role == "Customer" || model.role == "Web Customer") 
+                if (model.role == "Customer" || model.role == "Web Customer")
                 {
                     reDirectTo = "CustomerManagementList";
                 }
-                else 
+                else
                 {
                     reDirectTo = "CustomerManagementList";
                 }
@@ -1489,7 +1571,7 @@ namespace InsuranceClaim.Controllers
 
             List<CustomerModel> ListUserViewModel = new List<CustomerModel>();
             var name = "Customer";
-            var secondQuery = "select TOP 100 AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where AspNetRoles.Name !='" + name + "' and AspNetRoles.Name != 'Web Customer' order by Customer.Id desc";
+            var secondQuery = "select TOP 100 AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where AspNetRoles.Name !='" + name + "' and AspNetRoles.Name != 'Web Customer' and (Customer.IsActive is Null or Customer.IsActive=1)  order by Customer.Id desc";
 
             ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
             {
@@ -1544,7 +1626,7 @@ namespace InsuranceClaim.Controllers
                     var searchtext1 = Convert.ToString(custom[0]);
                     var searchtext2 = Convert.ToString(custom[1]);
 
-                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name = 'Web Customer' or AspNetRoles.Name = 'Customer')";
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name = 'Web Customer' or AspNetRoles.Name = 'Customer') and (Customer.IsActive is Null or Customer.IsActive=1) ";
 
                     ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
                     {
@@ -1622,7 +1704,7 @@ namespace InsuranceClaim.Controllers
                     var searchtext1 = Convert.ToString(custom[0]);
                     var searchtext2 = Convert.ToString(custom[1]);
 
-                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer')";
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer') and (Customer.IsActive is Null or Customer.IsActive=1) ";
 
                     ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
                     {
@@ -1908,7 +1990,7 @@ namespace InsuranceClaim.Controllers
             return View(policylist);
         }
 
-        [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff")]
+        [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff,Claim,Finance")]
         public ActionResult PolicyManagement()
         {
 
@@ -1948,13 +2030,14 @@ namespace InsuranceClaim.Controllers
                 isLapsed = x.isLapsed,
                 IsActive = x.IsActive,
                 VehicleDetailId = x.VehicleId,
-                RenewalDate = GetRenewalDate(x.RenewalDate==null? "" : Convert.ToDateTime(x.RenewalDate).ToShortDateString(), x.LicExpiryDate),
+                RenewalDate = GetRenewalDate(x.RenewalDate == null ? "" : Convert.ToDateTime(x.RenewalDate).ToShortDateString(), x.LicExpiryDate),
                 RenewPolicyNumber = x.RenewPolicyNumber,
                 BrokerCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 AutoFacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
                 FacultativeCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 FacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
-                FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount)
+                FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount),
+                PaymentStatus = x.PaymentMethod == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid",
             }).ToList();
 
             //FacultativeCommission
@@ -1971,7 +2054,7 @@ namespace InsuranceClaim.Controllers
 
         public string GetRenewalDate(string renewDate = "", string licExpDate = "")
         {
-         DateTime date = DateTime.Now;
+            DateTime date = DateTime.Now;
 
             if (!string.IsNullOrEmpty(licExpDate))
                 date = Convert.ToDateTime(licExpDate);
@@ -2285,7 +2368,7 @@ namespace InsuranceClaim.Controllers
         }
 
         // GET: Dashboard
-        [Authorize(Roles = "Administrator, AgentStaff, Agent, SuperUser,Reports,Finance")]
+        [Authorize(Roles = "Administrator, AgentStaff, Agent, SuperUser,Reports,Finance,Claim")]
         public ActionResult Dashboard()
         {
             return View();
@@ -2535,7 +2618,7 @@ namespace InsuranceClaim.Controllers
         //}
 
 
-        [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff")]
+        [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff,Finance,Claim")]
         public ActionResult SearchPolicy(string searchText)
         {
 
@@ -2583,7 +2666,8 @@ namespace InsuranceClaim.Controllers
                 AutoFacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
                 FacultativeCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 FacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
-                FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount)
+                FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount),
+                PaymentStatus = x.PaymentMethod == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid"
             }).ToList();
 
             //FacultativeCommission
@@ -2961,6 +3045,9 @@ namespace InsuranceClaim.Controllers
 
                 var SummaryVehicleDetails = SummaryVehicleDetailslist.FirstOrDefault(x => x.SummaryDetailId == item.Id);
 
+                if(SummaryVehicleDetails==null)
+                    continue;
+                
 
                 // var vehicle = InsuranceContext.VehicleDetails.Single(where: $" Id='{SummaryVehicleDetails[0].VehicleDetailsId}'");
                 var vehicle = vehiclelist.FirstOrDefault(y => y.Id == SummaryVehicleDetails.VehicleDetailsId);
@@ -3528,7 +3615,7 @@ namespace InsuranceClaim.Controllers
 
 
                 var customerDetails = InsuranceContext.Customers.Single(where: "id=" + CustomerId);
-                if (customerDetails != null && customerDetails.BranchId != 0)
+                if (customerDetails != null && customerDetails.ALMId != null)
                 {
                     baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
                 }
@@ -3559,22 +3646,37 @@ namespace InsuranceClaim.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
         public ActionResult ChangePassword()
         {
-            bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
-            var UserModel = new UserModel();
-            var user = UserManager.FindById(User.Identity.GetUserId().ToString());
 
-            UserModel.Email = user.Email;
-
-
+            var msg = TempData["ChangePwdMsg"];
 
             ViewBag.message = 0;
+            bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+            var UserModel = new UserModel();
+            if (userLoggedin != false)
+            {
+                var user = UserManager.FindById(User.Identity.GetUserId().ToString());
+                UserModel.Email = user.Email;
+
+                if (TempData["ChangePwdMsg"] != null)
+                {
+                    TempData["ErrorMsg"] = (string)TempData["ChangePwdMsg"];
+                }
+
+                return View(UserModel);
+            }
+            else
+            {
+
+                return View(UserModel);
+            }
 
 
-            return View(UserModel);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult ChangePassword(UserModel model)
         {
@@ -3590,8 +3692,39 @@ namespace InsuranceClaim.Controllers
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             var result = UserManager.ChangePassword(user.Id, model.CurrentPassword, model.NewPassword);
+
+            //update password --start
+            UpdateExpirePassword(user);
+
+
+
+
+            //var getDaysCount = 0;
+            //var currentDate = DateTime.Now;
+            //var _userdetail = InsuranceContext.AspNetUsersDetails.All(where: $"UserId ='{user.Id.ToString()}'").FirstOrDefault();
+            //if (_userdetail != null)
+            //{
+            //    if (_userdetail.ModifiedOn == null)
+            //    {
+            //        getDaysCount = (currentDate - _userdetail.CreatedOn).Value.Days;
+            //    }
+            //    else
+            //    {
+            //        getDaysCount = (currentDate - _userdetail.ModifiedOn).Value.Days;
+            //    }
+            //}
+            //if (getDaysCount < 30)
+            //{
+            //    var updatedUserData1 = InsuranceContext.AspNetUsersDetails.Single(where: $"UserId = '" + user.Id + "'");
+            //    updatedUserData1.PasswordExpire = false;
+            //    var data1 = Mapper.Map<AspNetUsersDetail, AspNetUsersDetail>(updatedUserData1);
+            //    InsuranceContext.AspNetUsersDetails.Update(data1);
+            //}
+            //--end
+
             if (result.Succeeded)
             {
+                TempData["SuccessMsg"] = "Password has been rest successfully.";
                 ViewBag.message = 1;
                 //return RedirectToAction("ChangePassword", "Account");
             }

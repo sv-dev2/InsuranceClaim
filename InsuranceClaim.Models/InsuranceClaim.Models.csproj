@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="AccountViewModels.cs" />
     <Compile Include="AgentCommissionModel.cs" />
+    <Compile Include="AspNetUsersDetailModel.cs" />
     <Compile Include="AspNetUsersModel.cs" />
     <Compile Include="AspNetUsersUpdateModel.cs" />
     <Compile Include="BasicCommissionReportModel.cs" />
