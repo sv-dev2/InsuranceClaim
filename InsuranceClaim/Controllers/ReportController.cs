@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Data;
 using System.IO;
 using System.ComponentModel;
+using System.Text;
 
 namespace InsuranceClaim.Controllers
 {
@@ -1069,7 +1070,7 @@ namespace InsuranceClaim.Controllers
 
             var branchList = InsuranceContext.Branches.All();
 
-            var query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            var query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  'Web client' else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
             query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
@@ -1216,7 +1217,7 @@ namespace InsuranceClaim.Controllers
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
 
 
-            var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  'Web client' else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
             query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
@@ -3801,7 +3802,11 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult CertSerialNoReport()
         {
+            //SendGWPExcelFile();
+
             CertSerialNoReportModel model = new CertSerialNoReportModel();
+
+
 
             string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
             query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
@@ -3934,7 +3939,7 @@ namespace InsuranceClaim.Controllers
 
             System.IO.File.Delete(path + "GwpReport.xlsx");
 
-            string customExcelSavingPath = path + "GwpReport.xlsx";
+            string customExcelSavingPath = path + "GwpReport.csv";
             GenerateExcel(dt, customExcelSavingPath);
         }
         public DataTable ConvertToDataTable<T>(IList<T> data)
@@ -3961,55 +3966,74 @@ namespace InsuranceClaim.Controllers
         public static void GenerateExcel(DataTable dataTable, string path)
         {
 
-            DataSet dataSet = new DataSet();
-            dataSet.Tables.Add(dataTable);
+            string destFilePath = "";
+            //path = @"C:\inetpub\GeneWebsite_latest\CsvFile\GwpReport.csv";
 
-            // create a excel app along side with workbook and worksheet and give a name to it  
-            Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-            Microsoft.Office.Interop.Excel.Workbook excelWorkBook = excelApp.Workbooks.Add();
-            Microsoft.Office.Interop.Excel._Worksheet xlWorksheet = excelWorkBook.Sheets[1];
-            Microsoft.Office.Interop.Excel.Range xlRange = xlWorksheet.UsedRange;
-            foreach (DataTable table in dataSet.Tables)
+
+            // Initilization  
+            bool isSuccess = false;
+            StreamWriter sw = null;
+
+            try
             {
-                //Add a new worksheet to workbook with the Datatable name  
-                Microsoft.Office.Interop.Excel.Worksheet excelWorkSheet = excelWorkBook.Sheets.Add();
-                excelWorkSheet.Name = table.TableName;
+                // Initialization.  
+                StringBuilder stringBuilder = new StringBuilder();
 
-                // add all the columns  
-                for (int i = 1; i < table.Columns.Count + 1; i++)
-                {
-                    excelWorkSheet.Cells[1, i] = table.Columns[i - 1].ColumnName;
-                }
+                // Saving Column header.  
+                stringBuilder.Append(string.Join(",", dataTable.Columns.Cast<DataColumn>().Select(column => column.ColumnName).ToList()) + "\n");
 
-                // add all the rows  
-                for (int j = 0; j < table.Rows.Count; j++)
-                {
-                    for (int k = 0; k < table.Columns.Count; k++)
-                    {
-                        excelWorkSheet.Cells[j + 2, k + 1] = table.Rows[j].ItemArray[k].ToString();
-                    }
-                }
+                // Saving rows.  
+                dataTable.AsEnumerable().ToList<DataRow>().ForEach(row => stringBuilder.Append(string.Join(",", row.ItemArray) + "\n"));
+
+                // Initialization.  
+                string fileContent = stringBuilder.ToString();
+                sw = new StreamWriter(new FileStream(destFilePath, FileMode.Create, FileAccess.Write));
+
+                // Saving.  
+                sw.Write(fileContent);
+
+                // Settings.  
+                isSuccess = true;
+
+               
+                List<string> _attachements = new List<string>();
+                //urlPath
+
+                string urlPath = System.Configuration.ConfigurationManager.AppSettings["urlPath"];
+
+                 path = urlPath + @"CsvFile/GwpReport.csv";
+
+                _attachements.Add(path);
+
+                //  string body = "Please check attached =" + DateTime.Now.ToShortDateString() + " GWP Report";
+
+
+                StringBuilder mailBody = new StringBuilder();
+                mailBody.AppendFormat("<h1>Please click below link to get gwp report.</h1>");
+                mailBody.AppendFormat("<p><a href='" + path + "'>GWPReport</a></p>");
+
+                Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
+                objEmailService.SendEmail("it@gene.co.zw", "", "", "GWPReport_" + DateTime.Now.ToShortDateString(), mailBody.ToString(), _attachements);
+
+
+
 
             }
-
-
-            // excelWorkBook.Save(); -> this is save to its default location  
-            excelWorkBook.SaveAs(path); // -> this will do the custom  
-            excelWorkBook.Close();
-            excelApp.Quit();
-
-            Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
-            List<string> _attachements = new List<string>();
-            _attachements.Add(path);
-
-            string body = "Please check attached =" + DateTime.Now.ToShortDateString() + " GWP Report";
-
-
-            objEmailService.SendEmail("chandan.kumar@kindlebit.com", "", "", "GWPReport_" + DateTime.Now.ToShortDateString(), "Please find the a", _attachements);
-
+            catch (Exception ex)
+            {
+                // Info.  
+                throw ex;
+            }
+            finally
+            {
+                // Closing.  
+                sw.Flush();
+                sw.Dispose();
+                sw.Close();
+            }
         }
 
-
+    
 
         #endregion
 
