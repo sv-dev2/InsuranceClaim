@@ -27,7 +27,8 @@ namespace InsuranceClaim.Controllers
         Insurance.Service.smsService objsmsService = new Insurance.Service.smsService();
 
         string _pdfPath = "";
-
+        string _pdfCode = "";
+        string _iceCashRef = "";
 
         public ApplicationUserManager UserManager
         {
@@ -45,7 +46,7 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult Index(int id)
         {
-            // ApproveVRNToIceCash(11283, 1);
+            // ApproveVRNToIceCash(6153099, 1);
             return View();
         }
 
@@ -81,7 +82,10 @@ namespace InsuranceClaim.Controllers
             var amounts = Math.Round(Convert.ToDecimal(amount), 0); // Output: 1;
             model.amount = amounts;
             model.client_reference = Guid.NewGuid();
-            model.IceCashRequestUrl = "http://test.api.ice.cash/payments/test_send_request";
+            // model.IceCashRequestUrl = "http://test.api.ice.cash/payments/test_send_request";
+            ViewBag.IceCashRequestUrl = "http://test.api.ice.cash/payments/request";
+            //  model.IceCashRequestUrl = "https://api.icecash.co.zw/payments/request";
+            //https://api.icecash.co.zw/payments/request
             model.success_url = iceCashPaymentUrl + "/Paypal/success_url";
             model.failed_url = iceCashPaymentUrl + "/Paypal/failed_url";
             model.results_url = iceCashPaymentUrl + "/Paypal/results_url";
@@ -733,16 +737,13 @@ namespace InsuranceClaim.Controllers
             string path = "";
             try
             {
-
                 var urlPath = System.Configuration.ConfigurationManager.AppSettings["urlPath"];
-
                 Insurance.Domain.QRCode Codes = new Insurance.Domain.QRCode();
 
                 //var Policy =Convert.ToString (TempData["Registrationno"]);
 
                 using (MemoryStream ms = new MemoryStream())
                 {
-
                     QRCodeGenerator qrGenerator = new QRCodeGenerator();
                     QRCodeData qrCodeData = qrGenerator.CreateQrCode(Policyno, QRCodeGenerator.ECCLevel.Q);
                     QRCoder.QRCode QrCode = new QRCoder.QRCode(qrCodeData);
@@ -813,6 +814,27 @@ namespace InsuranceClaim.Controllers
         {
             //var PaymentId = Session["PaymentId"];
             //var InvoiceId = Session["InvoiceId"];
+
+            if (Session["PollUrl"] != null)
+            {
+                string Integration_ID = System.Configuration.ConfigurationManager.AppSettings["PayNowIntegration_ID"];
+                string Integration_Key = System.Configuration.ConfigurationManager.AppSettings["PayNowIntegration_Key"];
+
+                var paynow = new Webdev.Payments.Paynow(Integration_ID, Integration_Key);
+                var status = paynow.PollTransaction((string)Session["PollUrl"]);
+
+                //var resPa=  status.GetData();
+
+                //  var data = resPa["status"];
+
+                if (!status.Paid())
+                {
+
+                    return RedirectToAction("failed_url");
+                }
+
+            }
+
             if (id == 0)
             {
                 id = Convert.ToInt32(TempData["SummaryId"]);
@@ -823,27 +845,22 @@ namespace InsuranceClaim.Controllers
             }
 
             SummaryDetailService detailService = new SummaryDetailService();
-
-
             var currencylist = detailService.GetAllCurrency();
             string currencyName = "$";
-
-
 
             string PaymentMethod = "";
             if (Paymentid == "1")
             {
                 PaymentMethod = "CASH";
             }
-            else if (Paymentid == "2")
-            {
-                PaymentMethod = "MasterCard";
-            }
+            //else if (Paymentid == "2")
+            //{
+            //    PaymentMethod = "MasterCard";
+            //}
             else if (Paymentid == "3")
             {
-                // PaymentMethod = "paynow";
-
-                PaymentMethod = "EcoCash";
+                PaymentMethod = "paynow";
+                // PaymentMethod = "EcoCash";
             }
             else if (Paymentid == "6")
             {
@@ -857,18 +874,19 @@ namespace InsuranceClaim.Controllers
             }
 
 
-            if (Paymentid == Convert.ToString((int)paymentMethod.ecocash))
-            {
-                var result = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid)); // for now comment
+            //if (Paymentid == Convert.ToString((int)paymentMethod.ecocash))
+            //{
+            //    var result = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid)); // for now comment
 
-                if (result != "Approved")
-                {
-                    return RedirectToAction("SummaryDetail", "CustomerRegistration", new { summaryDetailId = id, paymentError = result });
-                }
-            }
+            //    if (result != "Approved")
+            //    {
+            //        return RedirectToAction("SummaryDetail", "CustomerRegistration", new { summaryDetailId = id, paymentError = result });
+            //    }
+            //    else
+            //    {
 
-
-
+            //    }
+            //}
 
             var summaryDetail = InsuranceContext.SummaryDetails.Single(id);
 
@@ -908,6 +926,13 @@ namespace InsuranceClaim.Controllers
             objSaveDetailListModel.CreatedOn = DateTime.Now;
             //objSaveDetailListModel.InvoiceNumber = invoiceNumber;
             objSaveDetailListModel.InvoiceNumber = policy.PolicyNumber;
+
+            if (Session["PollUrl"] != null)
+                objSaveDetailListModel.PollURL = Convert.ToString(Session["PollUrl"]); // paynow payment details url
+
+            Session["PollUrl"] = null;
+
+
             List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
 
             //if (paymentInformations == null)
@@ -932,8 +957,6 @@ namespace InsuranceClaim.Controllers
                 InsuranceContext.PaymentInformations.Update(objSaveDetailListModel);
             }
 
-
-
             if (Paymentid != Convert.ToString((int)paymentMethod.ecocash))
             {
                 if (string.IsNullOrEmpty(Paymentid))
@@ -941,9 +964,6 @@ namespace InsuranceClaim.Controllers
 
                 string res = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid));
             }
-
-
-
 
             if (!userLoggedin)
             {
@@ -1055,6 +1075,27 @@ namespace InsuranceClaim.Controllers
 
             #endregion
 
+
+            #region Send License PDFVerficationcode SMS
+
+            if (_pdfPath != "" && _pdfCode != "")
+            {
+                string RecieptbodyPdf = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Your license pdf verifation code is: " + _pdfCode + "\n" + "\nThanks.";
+                var RecieptresultPdf = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, RecieptbodyPdf);
+                SmsLog objRecieptsmslogPdf = new SmsLog()
+                {
+                    Sendto = user.PhoneNumber,
+                    Body = RecieptbodyPdf,
+                    Response = RecieptresultPdf,
+                    CreatedBy = customer.Id,
+                    CreatedOn = DateTime.Now
+                };
+                InsuranceContext.SmsLogs.Insert(objRecieptsmslog);
+            }
+            #endregion
+
+
+
             foreach (var itemSummaryVehicleDetails in SummaryVehicleDetails)
             {
                 var itemVehicle = InsuranceContext.VehicleDetails.Single(itemSummaryVehicleDetails.VehicleDetailsId);
@@ -1092,8 +1133,6 @@ namespace InsuranceClaim.Controllers
             var ePaymentTermData = from ePaymentTerm e in Enum.GetValues(typeof(ePaymentTerm)) select new { ID = (int)e, Name = e.ToString() };
 
 
-
-
             foreach (var item in ListOfVehicles)
             {
                 Insurance.Service.VehicleService obj = new Insurance.Service.VehicleService();
@@ -1123,25 +1162,16 @@ namespace InsuranceClaim.Controllers
 
                 string policyPeriod = item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + item.CoverEndDate.Value.ToString("dd/MM/yyyy");
 
-                //   currencyDetails = currencylist.FirstOrDefault(c => c.Id == item.CurrencyId);
-
-
-
-
                 currencyName = detailService.GetCurrencyName(currencylist, item.CurrencyId);
-
 
                 //Summeryofcover += "<tr><td style='padding: 7px 10px; font - size:15px;'>" + vehicledescription + "</td><td style='padding: 7px 10px; font - size:15px;'>$" + item.SumInsured + "</td><td style='padding: 7px 10px; font - size:15px;'>" + (item.CoverTypeId == 1 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + "</td><td style='padding: 7px 10px; font - size:15px;'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</td><td style='padding: 7px 10px; font - size:15px;'>$0.00</td><td style='padding: 7px 10px; font - size:15px;'>$" + Convert.ToString(item.Excess) + "</td><td style='padding: 7px 10px; font - size:15px;'>$" + Convert.ToString(item.Premium) + "</td></tr>";
                 Summeryofcover += "<tr><td style='padding: 7px 10px; font - size:15px;'>" + item.RegistrationNo + " </td> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + vehicledescription + "</font></td> <td> " + item.CoverNote + " </td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + currencyName + item.SumInsured + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + policyPeriod + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + paymentTermsName + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + currencyName + Convert.ToString(item.Premium + item.Discount) + "</font></td></tr>";
-
-
             }
             //for (int i = 0; i < SummaryVehicleDetails.Count; i++)
             //{
             //    var _vehicle = InsuranceContext.VehicleDetails.Single(SummaryVehicleDetails[i].VehicleDetailsId);
 
             //}
-
 
             var paymentTerm = ePaymentTermData.FirstOrDefault(p => p.ID == vehicle.PaymentTermId);
             string SeheduleMotorPath = "/Views/Shared/EmaiTemplates/SeheduleMotor.cshtml";
@@ -1174,6 +1204,12 @@ namespace InsuranceClaim.Controllers
 
 
             #endregion
+
+            #region new policy
+            MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, policy.PolicyNumber, summaryDetail.TotalPremium, summaryDetail.PaymentTermId, PaymentMethod, ListOfVehicles);
+
+            #endregion
+
             List<string> __attachements = new List<string>();
             __attachements.Add(attacehmetnFile);
             //if (!userLoggedin)
@@ -1225,16 +1261,15 @@ namespace InsuranceClaim.Controllers
 
             #endregion
 
-            if(_pdfPath != "")
+            var IswebCustomer = User.IsInRole("Web Customer");
+
+            if (_pdfPath != "" && !IswebCustomer)
             {
                 TempData["file"] = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
                 TempData["vehicleId"] = vehicle.Id;
             }
-                     
             return RedirectToAction("ThankYou");
         }
-
-
 
         public string LoggedUserEmail()
         {
@@ -1265,15 +1300,12 @@ namespace InsuranceClaim.Controllers
 
                 if (summaryDetial != null)
                 {
-
                     foreach (var item in summaryDetial)
                     {
-
                         var vichelDetails = InsuranceContext.VehicleDetails.Single(item.VehicleDetailsId);
                         if (vichelDetails != null)
                         {
                             string InsuranceID = vichelDetails.InsuranceId;
-
                             // end is null
                             customerDetails = InsuranceContext.Customers.Single(vichelDetails.CustomerId);
 
@@ -1299,7 +1331,13 @@ namespace InsuranceClaim.Controllers
                                 tokenObject = iceCash.getToken();
                                 SummaryDetailService.UpdateToken(tokenObject);
                                 PartnerToken = tokenObject.Response.PartnerToken;
-                                ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                                quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                            
+                            }
+
+                            if (quoteresponse.Response != null && quoteresponse.Response.Result == 1)
+                            {
+                                _iceCashRef = quoteresponse.Response.ICEcashReference;
                             }
 
                             res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
@@ -1314,7 +1352,7 @@ namespace InsuranceClaim.Controllers
                             }
 
                             if (res.Response != null && res.Response.LicenceCert != null)
-                                _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.RegistrationNo);
+                                _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.Id.ToString());
 
                         }
 
@@ -1328,7 +1366,13 @@ namespace InsuranceClaim.Controllers
                                 tokenObject = iceCash.getToken();
                                 SummaryDetailService.UpdateToken(tokenObject);
                                 PartnerToken = tokenObject.Response.PartnerToken;
-                                ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                                quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
+                               
+                            }
+
+                            if (quoteresponse.Response != null && quoteresponse.Response.Result == 1)
+                            {
+                                _iceCashRef = quoteresponse.Response.ICEcashReference;
                             }
 
 
@@ -1367,10 +1411,20 @@ namespace InsuranceClaim.Controllers
                         if (res.Response != null && res.Response.Message.Contains("Policy Retrieved"))
                         {
                             //if (res.Response.Status == "Approved")
+                            // OTPConfirmationObject optMod = new OTPConfirmationObject();
+
+
+
 
                             result = res.Response.Status;
                             vichelDetails.InsuranceStatus = "Approved";
                             vichelDetails.CoverNote = res.Response.PolicyNo;
+
+                            if (res.Response.LicenceCert != null && res.Response.LicenceCert.Length > 1)
+                                _pdfCode = "PD" + vichelDetails.Id + "" + DateTime.Now.Month;
+
+
+                            vichelDetails.PdfCode = _pdfCode;
                             InsuranceContext.VehicleDetails.Update(vichelDetails);
 
                         }
@@ -1383,7 +1437,7 @@ namespace InsuranceClaim.Controllers
             }
             catch (Exception ex)
             {
-                // log.WriteLog("to approve");
+                //   log.WriteLog("to approve");
 
             }
 
@@ -1391,10 +1445,18 @@ namespace InsuranceClaim.Controllers
             #endregion
         }
 
+
+
         [HttpPost]
         public ActionResult SaveDetailList(PaymentInformationsModel model)
         {
 
+            return View();
+        }
+
+
+        public ActionResult Test1()
+        {
             return View();
         }
 
@@ -1476,16 +1538,68 @@ namespace InsuranceClaim.Controllers
             //return RedirectToAction("SaveDetailList", "Paypal", new { id = id });
         }
 
+        public ActionResult EcoCashPayment(int id, string invoiceNumber, int Paymentid)
+        {
+            EcoCashModel model = new EcoCashModel();
+            model.PaymentMethodId = Paymentid;
+            model.SummaryId = id;
+            model.InvoiceNumber = invoiceNumber;
+
+            ApproveVRNToIceCash(model.SummaryId, model.PaymentMethodId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EcoCashPayment(EcoCashModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                ICEcashService iceCash = new ICEcashService();
+                
+                
+
+                OTPConfirmationObject otpModel = new OTPConfirmationObject();
+                otpModel.OTP = model.OTP;
+                otpModel.ICEcashReference = _iceCashRef;
+
+                if(_iceCashRef=="")
+                {
+                    return RedirectToAction("failed_url", "Paypal");
+                }
+
+                var tokenObject = new ICEcashTokenResponse();
+                tokenObject = iceCash.getToken();
+                SummaryDetailService.UpdateToken(tokenObject);
+                string PartnerToken = tokenObject.Response.PartnerToken;
+
+
+                var res = ICEcashService.OTPConfirmation(otpModel, PartnerToken);
+
+                if (res.Response != null && res.Response.Result == 1)
+                {
+                    return RedirectToAction("SaveDetailList", "Paypal", new { id = model.SummaryId, invoiceNumer = res.Response.TransactionID, Paymentid = model.PaymentMethodId });
+                }
+                else
+                {
+                    return RedirectToAction("failed_url", "Paypal");
+                }
+            }
+
+            return View(model);
+        }
+
         public ActionResult ThankYou()
         {
             LicenseModel model = new LicenseModel();
-            if (TempData["file"]!=null)
+            if (TempData["file"] != null)
             {
-                ViewBag.file = (string)TempData["file"];       
+                ViewBag.file = (string)TempData["file"];
                 model.FilePath = (string)TempData["file"];
-                model.VehicleId = (int) TempData["vehicleId"];
+                model.VehicleId = (int)TempData["vehicleId"];
             }
-                                  
+
             return View(model);
         }
 

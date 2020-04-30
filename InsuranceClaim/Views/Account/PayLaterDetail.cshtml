@@ -1,0 +1,108 @@
+﻿@model InsuranceClaim.Models.PayLaterPolicyDetail
+@{
+    ViewBag.Title = "PayLaterDetail";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="login-block" style="max-width: 600px;">
+
+                @using (Html.BeginForm("PayLaterDetail", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>PayLater Detail.</h4>
+                    <hr />
+
+
+                    if (TempData["ErrorMsg"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMsg"].
+                        </div>
+                    }
+                    TempData["ErrorMsg"] = null;
+
+                    if (TempData["SuccessMsg"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible">
+                            <strong>Success!</strong> @TempData["SuccessMsg"].
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    }
+                    TempData["SuccessMsg"] = null;
+
+
+                    <div class="form-group">
+
+                        @Html.HiddenFor(m => m.SummaryDetailId)
+                        @Html.HiddenFor(m => m.PaymentInformationId)
+
+
+
+                        @Html.LabelFor(m => m.CustomerName, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(m => m.CustomerName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PolicyNumber, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.PolicyNumber, new { @class = "form-control", @autocomplete = "off" , @readonly = "readonly" })
+                            @Html.ValidationMessageFor(m => m.PolicyNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.RegistrationNo, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.RegistrationNo, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(m => m.RegistrationNo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        
+                        <label class = "col-md-12 control-label"> Vehicle </label>
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.Vehicle, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(m => m.Vehicle, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.TotalPremium, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.TotalPremium, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(m => m.TotalPremium, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.PaymentTypeId, new { @class = "col-md-12 control-label" })
+                        <div class="col-md-12">
+                            @Html.DropDownListFor(x => x.PaymentTypeId, new SelectList(ViewBag.PaymentMethods, "Id", "Name"), "Select Payment Type", new { @class = "form-control" })
+
+                           @Html.ValidationMessageFor(m => m.PaymentTypeId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="login-sbt-btn">
+                                <input type="submit" class="btn btn-default" value="Update" />
+                            </div>
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

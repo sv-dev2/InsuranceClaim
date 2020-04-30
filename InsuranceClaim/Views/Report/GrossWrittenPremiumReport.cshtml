@@ -20,7 +20,6 @@
             </div>
         </div>
         
-
         @using (Html.BeginForm("SearchGrossReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             <div class="container-main">
@@ -250,7 +249,17 @@
                             <tr>
                                 <td>  @item.PolicyCreatedBy
                                 </td>
-                                <td>@item.BranchName</td>
+                                <td>
+                                @if(item.PolicyCreatedBy!=null &&  item.PolicyCreatedBy.Contains("Web Client"))
+                                {
+                                    <span>Online</span>
+                                }
+                                else
+                                {
+                                    @item.BranchName
+                                }
+
+                               </td>
                                 <td>@item.Customer_Name</td>
                                 <td>
 

@@ -78,7 +78,6 @@
 
                     <div class="col-xs-2 bs-wizard-step disabled">
                         <!-- active -->
-
                         <div class="progress"><div class="progress-bar"></div></div>
                         <a href="#" class="bs-wizard-dot"></a>
                         <div class="text-center bs-wizard-stepnum">Payment Details</div>
@@ -96,16 +95,13 @@
                     <div class="form-group-section">
                         <div class="form-title">
                             <h4>SUMMARY DETAILS</h4>
-
                             <br />
-
                             @if (Model.Error != "")
                             {
                                 <label style="font-size:15px; font-weight:bold; color:red; ">@Model.Error</label>
                                 <br />
                             }
-                            
-
+                           
                             <span> Name: <b>@customerDetail.FirstName  @customerDetail.LastName </b>,  Email: <b>@customerDetail.EmailAddress </b>  </span>
                         </div>
 
@@ -152,6 +148,7 @@
 
                                                 </div>
                                             </div>
+
                                             <div class="col-sm-3 col-md-3 choose-plan-blocl" style="@(Convert.ToString(item.PaymentTermId) == "4" ? "display:block;" : "display:none;")">
                                                 <div class="choose-plan-box" planpurchase="4" style="cursor:pointer" onclick="SelectPlan(this);">
                                                     <h4>Termly</h4>
@@ -160,7 +157,6 @@
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{item.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 4 MONTHS</a>
                                                     </div>
-
                                                 </div>
                                             </div>
 
@@ -178,8 +174,6 @@
                                                     </div>
                                                 </div>
                                             }
-
-
                                         </div>
                                     }
                                 }
@@ -213,30 +207,22 @@
                         <div class="form-group-input">
                             @using (Html.BeginForm("SubmitPlan", "CustomerRegistration"))
                             {
-
                                 if (ViewBag.CurrentUserRole == "" || User.IsInRole("Web Customer"))
                                 {
                                     checkIsCustomer = true;
                                     ClassForHide = "HideSummary";
                                 }
 
-
                                 <div id="contact-form" class="contact-form ">
-
                                     <div class="@ClassForHide">
-
-
                                         @Html.HiddenFor(m => m.PaymentTermId)
                                         @Html.HiddenFor(m => m.Id)
                                         @Html.HiddenFor(m => m.InsuranceId)
                                         @Html.HiddenFor(m => m.Id)
-
-                                     
-
+                                                                           
                                         @if (isUserStaff)
                                         {
                                             <div class="row">
-
                                                 <div class="col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Amount Due", new { @class = "gender-label" })
@@ -384,10 +370,7 @@
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Discount", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(m => m.Discount, new { @class = "form-control", @autocomplete = "off", @placeholder = "Roadside Assistance Amount", @readonly = "readonly" })
-
-                                                   
-
+                                                    @Html.TextBoxFor(m => m.Discount, new { @class = "form-control", @autocomplete = "off", @placeholder = "Roadside Assistance Amount", @readonly = "readonly" })                                               
                                                 </div>
                                             </div>
                                         </div>
@@ -404,22 +387,24 @@
                                                 <div class="payment-card">
                                                     <ul class="list-inline">
 
+                                                      
                                                         @if (User.IsInRole("Staff")|| User.IsInRole("Renewals"))
                                                         {
                                                             <li id="payment_1" class="payment_type active" onclick="PaymentMethod(1)">Cash</li>
+                                                            // need to 1008 to 7
+                                                            <li id="payment_7" class="payment_type" onclick="PaymentMethod(7)">Pay Later</li>
                                                         }
 
+                                                        <li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img style="width:85px;" src="~/Images/Paynow-logo.png" /></li>
 
-                                                        
+                                                        <li id="payment_2" class="payment_type" onclick="PaymentMethod(2)"><img width="75px;" src="~/Images/ecocash.jpg" />   </li>
+
+
                                                         @*<li id="payment_2" class="payment_type" onclick="PaymentMethod(2)"><img src="~/Images/master-card.png" /></li>*@
-
                                                         @*<li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img  style="width:65px;" src="~/Images/eft_pay.png" /></li>*@
-
-                                                        @*<li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img style="width:65px;" src="~/Images/Paynow-logo.png" /></li>*@
-
-                                                        @*<li id="payment_6" class="payment_type" onclick="PaymentMethod(6)"><img width="75px;" src="~/Images/zimswitch.png" /> </li>
-
-                                                        <li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img width="75px;" src="~/Images/ecocash.jpg" />   </li>*@
+                                                        
+                                                        @*<li id="payment_6" class="payment_type" onclick="PaymentMethod(6)"><img width="75px;" src="~/Images/zimswitch.png" /> </li>*@
+                                                       
                                                   
                                                     </ul>
                                                 </div>
@@ -431,8 +416,6 @@
                                                 @Html.TextBoxFor(c => c.InvoiceNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Invoice number" })
                                             </div>
                                         </div>
-
-
                                     </div>
 
 
@@ -689,8 +672,6 @@
 <script type="text/javascript" src="http://test.api.ice.cash/assets/js/validator.js"></script>*@
 
 <script>
-
-
     function Preview()
     {
         $("#divPreview").show();
@@ -711,9 +692,10 @@
 
     function PaymentMethod(paymentMethod)
     {
-        debugger;
         $("li").removeClass("active");
         $("#payment_"+paymentMethod).addClass("active");
+
+        
         $("#PaymentMethodId").val(paymentMethod);
 
         if(paymentMethod=="1")
@@ -739,12 +721,8 @@
         {
             redirecturl = '@Url.Action("RiskDetail", "CustomerRegistration", new { id= 0 })';
         }
-
-
         redirecturl = redirecturl.replace("0", index);
         location.href = redirecturl;
-
-
     }
 
     function DeleteVehicleDetails(index) {

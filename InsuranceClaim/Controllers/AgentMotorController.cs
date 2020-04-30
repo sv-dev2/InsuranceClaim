@@ -83,7 +83,6 @@ namespace InsuranceClaim.Controllers
                 var customerModel = new CustomerModel();
                 var _User = UserManager.FindById(User.Identity.GetUserId().ToString());
 
-
                 var _customerData = InsuranceContext.Customers.All(where: $"UserId ='{User.Identity.GetUserId().ToString()}'").FirstOrDefault();
                 var customerData = (CustomerModel)Session["CustomerDataModal"];
 
@@ -140,8 +139,6 @@ namespace InsuranceClaim.Controllers
                 }
                 customerModel.Zipcode = "00263";
                 RemoveSession();
-
-
 
                 return View(customerModel);
             }
@@ -360,7 +357,6 @@ namespace InsuranceClaim.Controllers
             {
                 var model = service.GetModel(makers.FirstOrDefault().MakeCode);
                 ViewBag.Model = model;
-
             }
 
             viewModel.NoOfCarsCovered = 1;
@@ -368,7 +364,6 @@ namespace InsuranceClaim.Controllers
             {
                 var list = (List<RiskDetailModel>)Session["VehicleDetails"];
                 viewModel.NoOfCarsCovered = list.Count + 1;
-
             }
 
             if (id > 0)
@@ -450,8 +445,6 @@ namespace InsuranceClaim.Controllers
                     }
                 }
             }
-
-
             return View(viewModel);
         }
 
@@ -907,7 +900,8 @@ namespace InsuranceClaim.Controllers
             if (paymentError != "")
             {
                 model.Error = "Error occurd during ecocash payment.";
-                model.PaymentMethodId = (int)paymentMethod.ecocash;
+                // model.PaymentMethodId = (int)paymentMethod.ecocash;
+                model.PaymentMethodId = (int)paymentMethod.PayNow;
             }
 
 

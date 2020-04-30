@@ -130,31 +130,6 @@
                             <td>@item.PremiumDue</td>
                             <td>@item.PolicyStatus</td>
 
-                            @*<td>
-
-                                @if(item.EndorsementPolicyId!=null)
-                                {
-                                        <span>Endorsement</span>
-                                }
-                                else if (item.RenewPolicyNumber == null && item.IsActive)
-                                {
-                                  <span> New Business </span>
-                                }
-                                else if (item.IsActive == false && item.isLapsed)
-                                {
-                                    <span> Disabled </span>
-                                }
-
-                                else if (item!=null&&  item.RenewPolicyNumber!=null &&  Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
-                                {
-                                    <span>Renewals</span>
-                                }
-                                else
-                                {
-                                    <span>New Business</span>
-                                }
-
-                            </td>*@
                             <td>
                                 @if (item.IsEndorsed == true)
                                 {

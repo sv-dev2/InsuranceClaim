@@ -45,6 +45,8 @@ namespace InsuranceClaim.Models
         public bool? ThirdPartyInvolvement { get; set; }
         //public int CreatedBy { get; set; }
 
+       public string RenewPolicyNumber { get; set; }
+
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public bool? IsDeleted { get; set; }

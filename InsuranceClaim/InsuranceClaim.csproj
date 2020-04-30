@@ -277,6 +277,7 @@
     <Compile Include="Controllers\ServiceProviderController.cs" />
     <Compile Include="Controllers\ServiceProviderTypeController.cs" />
     <Compile Include="Controllers\SourceDetailController.cs" />
+    <Compile Include="Controllers\GwpController.cs" />
     <Compile Include="Controllers\VehicleMakeController.cs" />
     <Compile Include="Controllers\VehicleModelController.cs" />
     <Compile Include="Controllers\VehicleUsageController.cs" />
@@ -1165,12 +1166,14 @@
     <Content Include="Views\Paypal\test.cshtml" />
     <Content Include="Views\Paypal\Test1.cshtml" />
     <Content Include="Views\Shared\EmaiTemplates\NewPolicy.cshtml" />
+    <Content Include="Views\Paypal\EcoCashPayment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />
     <Folder Include="App_Data\" />
     <Folder Include="ClaimDocument\GMCC180000003-1\1003\" />
     <Folder Include="QRCode\" />
+    <Folder Include="Views\test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

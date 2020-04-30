@@ -109,7 +109,7 @@ namespace InsuranceClaim.Models
         public decimal SuggestedValue { get; set; }
         public decimal VehicleLicenceFee { get; set; }
         public string ArrearsAmt { get; set; }
-        public string PenaltiesAmt { get; set; }
+        public decimal PenaltiesAmt { get; set; }
 
         public int? SummaryId { get; set; }
 
@@ -160,13 +160,15 @@ namespace InsuranceClaim.Models
 
         public string IceCashRequest { get; set; }
 
-
+        public bool ALMLocator { get; set; }
         
 
 
     }
 
-
    
+
+    
+
 
 }

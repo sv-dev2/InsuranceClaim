@@ -219,10 +219,6 @@ namespace Insurance.Service
             InsuranceContext.CertSerialNoDetails.Insert(model);
         }
 
-
-
-
-
     }
 
 }

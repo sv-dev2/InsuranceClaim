@@ -8,16 +8,10 @@
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
 }
 
-
-
-
-
-
     @*<link rel="stylesheet" type="text/css" href="/css/payment_gateway.css" />*@
     <link rel="stylesheet" type="text/css" href="http://test.api.ice.cash/css/payment_gateway.css" />
     @*<script type="text/javascript" src="/js/../assets/js/jquery-3.2.1.min.js"></script>*@
     <script type="text/javascript" src="http://test.api.ice.cash/assets/js/jquery-3.2.1.min.js"></script>
-
 
     @*<script type="text/javascript" src="/js/../assets/js/jquery.blockUI.2.7.js"></script>*@
 
@@ -36,11 +30,26 @@
 
                         <div class="form-group-input">
                             @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
-                            <form method="post" id="checkout-form" action="@Model.IceCashRequestUrl" class="form-horizontal">
-                                <input id="hddebug" type="hidden" name="hddebug" value="0" />
-                                <input type="hidden" class="form-control" name="partner_id" value="@Model.partner_id" />
-                               
+                            <form method="post" id="checkout-form" action="@ViewBag.IceCashRequestUrl" class="form-horizontal">
+                                <input id="hddebug" type="text" style="display:none" name="hddebug" value="0" />
+                              
+                                <div class="row">
 
+                                    <div class="col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("ParterRef", new { @class = "gender-label" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8 form-group-text">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="partner_id" value="@Model.partner_id" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                               
                                 <div class="row">
                                     <div class="col-md-4 form-group-text">
                                         <div class="form-group">
@@ -49,7 +58,7 @@
                                     </div>
                                     <div class="col-md-8 form-group-text">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" name="amount" value="@Model.amount" />
+                                            <input type="text" class="form-control" name="amount" value="2" />
                                         </div>
                                     </div>
                                 </div>
@@ -57,15 +66,92 @@
 
 
 
-                                <input type="hidden" class="form-control" name="client_reference" value="@Model.client_reference" />
-                                <input type="hidden" class="form-control" name="success_url" value="@Model.success_url" />
-                                <input type="hidden" class="form-control" name="failed_url" value="@Model.failed_url">
-                                <input type="hidden"  name="results_url" value="@Model.results_url" />
-                                <input type="hidden" class="form-control" name="results_url" value="@Model.details" />
-                                <input type="hidden" class="form-control" name="encoded_html" value="@Model.check_hash" />
+                                <div class="row">
+                                    <div class="col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("client_reference", new { @class = "gender-label" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 form-group-text">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="client_reference" value="@Model.client_reference" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                              
+                                <div class="row">
+                                    <div class="col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("success_url", new { @class = "gender-label" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 form-group-text">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="success_url" value="@Model.success_url" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("failed_url", new { @class = "gender-label" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 form-group-text">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="failed_url" value="@Model.failed_url">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                             
+                                <div class="row">
+                                    <div class="col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("results_url", new { @class = "gender-label" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 form-group-text">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="results_url" value="@Model.results_url" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("details", new { @class = "gender-label" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 form-group-text">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="results_url" value="@Model.details" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    
+                                    <div class="col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("check_hash", new { @class = "gender-label" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8 form-group-text">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="encoded_html" value="@Model.check_hash" />
+                                        </div>
+                                    </div>
+
+                                </div>
 
                                 <br />
-
                                 <div class="row">
                                     <div class="col-md-12 next-btn">
                                         <div class="row">

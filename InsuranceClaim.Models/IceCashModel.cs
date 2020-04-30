@@ -14,7 +14,7 @@ namespace InsuranceClaim.Models
 
         public Guid client_reference { get; set; }
 
-        public string IceCashRequestUrl { get; set;  }
+       // public string IceCashRequestUrl { get; set;  }
 
         public string success_url { get; set; }
 

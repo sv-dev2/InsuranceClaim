@@ -112,9 +112,15 @@
                                                             @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-7">
-                                                        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "SetCustomerEmail();" }) No email address</label>
-                                                    </div>
+@if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff"))
+{
+    <div class="col-md-7">
+        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "SetCustomerEmail();" }) No email address</label>
+    </div>
+
+}
+                                                    
+
                                                     <div class="col-md-12">
                                                         @*@if (email != "")
                                                             {
@@ -268,6 +274,8 @@
         </div>
     </div>
 </div>
+
+
 @*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">*@

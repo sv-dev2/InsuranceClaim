@@ -15,12 +15,12 @@
                 </div>
             </div>
             @*<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 add-btn">
-                <div class="text-right">
-                    <form>
-                        <input class="btn btn-primary" type="button" value="Add" onclick="window.location.href='@Url.Action("Index", "CustomerRegistration")'" />
-                    </form>
-                </div>
-            </div*@
+                    <div class="text-right">
+                        <form>
+                            <input class="btn btn-primary" type="button" value="Add" onclick="window.location.href='@Url.Action("Index", "CustomerRegistration")'" />
+                        </form>
+                    </div>
+                </div*@
         </div>
 
 
@@ -80,6 +80,9 @@
                         Created On
                     </th>
                     <th>
+                        Status
+                    </th>
+                    <th>
                         Action(s)
                     </th>
                 </tr>
@@ -103,6 +106,9 @@
                                     <td>@item.TotalPremium</td>
                                     <td>@item.createdOn.ToString("dd-MMM-yyyy")</td>
                                     <td>
+                                         @item.PaymentStatus
+                                    </td>
+                                    <td>
                                         <div class="tbl-btn-list">
                                             <ul class="list-inline">
                                                 <li>@Html.ActionLink("View Policy", "RiskDetail", "Account", new { id = item.SummaryId }, new { @class = "btn-sm btn-primary" })</li>
@@ -117,7 +123,7 @@
                             policyNumber = item.PolicyNumber;
 
                             <tr>
-                                <td colspan="7" >
+                                <td colspan="8">
                                     <table class="policy-table-grid policyList" style="width:100%">
                                         <tr>
                                             <th>Registration No   </th>
@@ -130,7 +136,7 @@
                                             <th> Reinsurance Broker Commission  </th>
                                             <th> Facultative Commission </th>
                                             <th>Status </th>
-                                            <th colspan="3" >Actions(s) </th>
+                                            <th colspan="3">Actions(s) </th>
                                         </tr>
 
                                         <tr>
@@ -144,7 +150,19 @@
                                             <td>@item.FacPremium</td>
                                             <td>@item.BrokerCommission</td>
                                             <td>@item.FacultativeCommission</td>
-                                            @if (item.isLapsed && item.IsActive == false)
+
+                                            @if (User.IsInRole("Claim") || User.IsInRole("Finance"))
+                                            {
+                                                <td></td>
+                                                <td>
+                                                    <div class="tbl-btn-list">
+                                                        <ul class="list-inline">
+                                                            <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
+                                                        </ul>
+                                                    </div>
+                                                 </td>
+                                            }
+                                            else if (item.isLapsed && item.IsActive == false)
                                             {
                                                 <td>Renewed</td>
                                                 <td class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
@@ -216,7 +234,7 @@
                 </tbody>
             </table>
 
-            
+
 
         </div>
     </div>

@@ -12,6 +12,7 @@ namespace InsuranceClaim.Models
 
         public List<VehicleReinsuranceViewModel> Vehicles { get; set; }
         public string PolicyNumber { get; set; }
+        public int PolicyId { get; set; }
         public int CustomerId { get; set; }
         public int PaymentMethodId { get; set; }
         public decimal TotalSumInsured { get; set; }
@@ -69,6 +70,8 @@ namespace InsuranceClaim.Models
         public decimal FacPremium { get; set; }
         public decimal AutoFacReinsuranceAmount { get; set; }
         public decimal FacReinsuranceAmount { get; set; }
+
+        public string PaymentStatus { get; set; }
 
     }
 

@@ -1452,6 +1452,7 @@
         var taxClass =  $("#TaxClassId").val();
 
        
+        debugger;
 
         if (flag) {
             $(".loading-area").show();
@@ -1461,6 +1462,7 @@
                 data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#ProductId").val(), CoverStartDate: $("#CoverStartDate").val() , CoverEndDate : $("#CoverEndDate").val(), VehilceLicense: isLicense, taxClassId: taxClass, RadioLicense: isRadioLicense },
                 //data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#VehicleUsage").val() },
                 success: function (data) {
+
                     debugger;
                     if (data.result == 0) {
                         toastr.error(data.message);

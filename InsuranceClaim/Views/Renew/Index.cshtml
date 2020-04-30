@@ -119,9 +119,15 @@
                                                             @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-7">
-                                                        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "return false", @readonly = "readonly" }) No email address</label>
-                                                    </div>
+
+@if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff") || User.IsInRole("Administrator"))
+{
+    <div class="col-md-7">
+        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "return false", @readonly = "readonly" }) No email address</label>
+    </div>
+}
+
+                                                    
                                                     <div class="col-md-12">
                                                         @*@if (email != "")
                                                             {

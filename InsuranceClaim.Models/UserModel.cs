@@ -24,7 +24,8 @@ namespace InsuranceClaim.Models
         [Display(Name = "Confirm Password")]
         [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The NewPassword and ConfirmPassword Password do not Match.")]
         public string ConfirmPassword { get; set; }
-
-
+        public string ErrorMsg { get; set; }
+        
+           
     }
 }

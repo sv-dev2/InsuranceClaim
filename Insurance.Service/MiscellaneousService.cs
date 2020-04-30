@@ -173,7 +173,7 @@ namespace Insurance.Service
             return path;
         }
 
-        public static string LicensePdf(string body, string vrn)
+        public static string LicensePdf(string body, string vehicleId)
         {
             StringReader sr = new StringReader(body.ToString());
             string path = "";
@@ -184,26 +184,19 @@ namespace Insurance.Service
                 HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
                 string vehiclefolderpath = "";
 
-                vehiclefolderpath = HttpContext.Current.Server.MapPath("~/Documents/License/" + vrn + "/");
+                vehiclefolderpath = HttpContext.Current.Server.MapPath("~/Documents/License/");
                 if (!Directory.Exists(vehiclefolderpath))
                 {
                     Directory.CreateDirectory(vehiclefolderpath);
                 }
 
-
-                string file = Convert.ToString(DateTime.Now.ToString("yyyyMMddHHmmss"));
-
-                string filename =  "License" +""+ file ;
+                string filename = vehicleId;
 
                 byte[] bytes = Convert.FromBase64String(body);
 
                 System.IO.File.WriteAllBytes(vehiclefolderpath + filename + ".pdf", bytes);
                 // path = vehiclefolderpath + filename + ".pdf";
-
-                
-
-                path = "/Documents/License/" + vrn + "/" + filename + ".pdf";
-
+                path = "/Documents/License/" + filename + ".pdf";
 
             }
             catch (Exception ex)
@@ -375,7 +368,6 @@ namespace Insurance.Service
 
             objEmailService.SendEmail(email, "", "", "Loyalty Reward | Points Credited to your Wallet", body, attachements);
 
-
             return "";
         }
 
@@ -471,6 +463,52 @@ namespace Insurance.Service
             return "";
         }
 
+        public static void SendEmailNewPolicy(string customerName, string policyNumber, decimal? premium, int? paymentTermId, string paymentMethod, List<VehicleDetail> vehicle, string renew = "")
+        {
+            string paymentTerm = GetPaymentTerm(paymentTermId);
+            string subject = "";
+            if (renew != "")
+                subject = "Renew Policy-" + policyNumber;
+            else
+                subject = "New Policy-" + policyNumber;
+            // string paymentMethod = GetPaymentType(paymentMethodId);
+            string vrn = "";
+            if (vehicle != null)
+                vrn = vehicle[0].RegistrationNo;
+            if (vehicle.Count > 1)
+                vrn += "," + vehicle[0].RegistrationNo;
+
+            string QuotationEmailPath = "/Views/Shared/EmaiTemplates/NewPolicy.cshtml";
+            string MotorBody = System.IO.File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath(QuotationEmailPath));
+
+            var body = MotorBody.Replace("#CustomerName#", customerName).Replace("#PolicyNumber#", policyNumber)
+                .Replace("#Premium#", premium.ToString()).Replace("#PaymentTerm#", paymentTerm).Replace("#PaymentMethod#", paymentMethod).Replace("#vrn#", vrn);
+
+            //webclientsemail
+            var webclientsemail = System.Configuration.ConfigurationManager.AppSettings["webclientsemail"];
+            Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
+            objEmailService.SendEmail(webclientsemail, "", "", subject, body, new List<string>());
+
+        }
+
+        public static string GetPaymentTerm(int? paymentTermId)
+        {
+            var paymentTermVehicel = InsuranceContext.PaymentTerms.Single(paymentTermId);
+            string paymentTerm = "";
+
+            if (paymentTermVehicel != null)
+            {
+                if (paymentTermVehicel.Id == 1)
+                    paymentTerm = "Annual";
+                else if (paymentTermVehicel.Id == 4)
+                    paymentTerm = "Termly";
+                else
+                    paymentTerm = paymentTermVehicel.Name + " Months";
+            }
+
+
+            return paymentTerm;
+        }
 
     }
 }

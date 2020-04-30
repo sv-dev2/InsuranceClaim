@@ -8,11 +8,9 @@ namespace InsuranceClaim.Models
 {
     public enum eCoverType
     {
-
         Comprehensive = 4,
         ThirdParty = 1,
         FullThirdParty = 2
-
 
         //Comprehensive = 1,
         //ThirdParty = 2,
@@ -78,9 +76,17 @@ namespace InsuranceClaim.Models
 
     public enum paymentMethod
     {
-        ecocash = 3,
+        ecocash = 2,
         Zimswitch = 6,
-        Cash = 1
+        Cash = 1,
+         PayLater = 7,
+         PayNow = 3,
+        //PayLater = 1008
+    }
+
+    public enum currencyType
+    {
+        USD = 1
     }
 
 

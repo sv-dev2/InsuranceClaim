@@ -191,6 +191,16 @@
                                                 @Html.ValidationMessageFor(x => x.TaxClassId, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
+
+                                        <div class="col-sm-6 col-md-6 form-group-select">
+                                            <div class="form-group">
+                                                @Html.Label("Currency", new { @class = "gender-label" })
+                                                @Html.DropDownListFor(x => x.CurrencyId, new SelectList(ViewBag.Currencies, "Id", "Name"), new { @class = "form-control" })
+
+                                            </div>
+                                        </div>
+
+
                                     </div>
 
 
@@ -250,13 +260,7 @@
                                         </div>
 
 
-                                        <div class="col-sm-6 col-md-6 form-group-select">
-                                            <div class="form-group">
-                                                @Html.Label("Currency", new { @class = "gender-label" })
-                                                @Html.DropDownListFor(x => x.CurrencyId, new SelectList(ViewBag.Currencies, "Id", "Name"), new { @class = "form-control" })
-
-                                            </div>
-                                        </div>
+                                        
 
 
                                     </div>
@@ -490,7 +494,7 @@
                                         <div class="col-sm-6 col-md-3 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Radio License Cost", new { @class = "gender-label" })
-                                                @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Vehicle Radio Licence Cost", @maxlength = "5" })
+                                                @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Vehicle Radio Licence Cost" })
                                                 @Html.ValidationMessageFor(m => m.RadioLicenseCost, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -808,10 +812,13 @@
     function ValidateSumInsured()
     {
         $(".loading-area").show();
+
+        var currencyId= $("#CurrencyId").val();
+
         $.ajax({
             url: "@Url.Action("ValidateSumInsured", "CustomerRegistration")",
             type: "POST",
-            data: { vehicleUsageId:  $("#VehicleUsage").val()},
+            data: { vehicleUsageId:  $("#VehicleUsage").val(), currencyId:currencyId},
             dataType: "json",
             success: function (result) {
                 var sumInsuredAmount = $("#SumInsured").val();
@@ -1437,9 +1444,20 @@
         //});
 
         $("#Excess").blur(function () {
-
             QuoteCalculation();
         });
+
+        $("#CurrencyId").change(function () {
+            var coverType = $("#CoverTypeId").val();
+            var sumInsured = $("#SumInsured").val();
+            if(coverType==4 && sumInsured!="")
+            {
+                QuoteCalculation();
+            }      
+        });
+
+
+
         $("#ExcessType").change(function () {
 
             QuoteCalculation();
@@ -1620,6 +1638,7 @@
                 else{
                     QuoteCalculation();
                 }
+                $(".loading-area").hide();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 $(".loading-area").hide();
@@ -1690,6 +1709,7 @@
                         $("#CombinedID").val("");
 
                         $("#isVehicleRegisteredonICEcash").val(0);
+                        $(".loading-area").hide();
                     }
                     if (data.result == 1) {
 
@@ -2009,6 +2029,7 @@
         var IncludeRadioLicenseCost = $("#IncludeRadioLicenseCost").is(":checked");
         var policytermid = $("#PaymentTermId").val();
 
+        var currencyId= $("#CurrencyId").val();
 
         if (NumberofPersons == undefined || NumberofPersons == null || NumberofPersons == "") {
             NumberofPersons = 0;
@@ -2019,13 +2040,10 @@
         $.ajax({
             type: "POST",
             url: "@Url.Action("CalculatePremium", "CustomerRegistration")",
-            data: { vehicleUsageId: vehicleUsageId, sumInsured: sumInsured, coverType: coverType, excessType: excessType, excess: excess, AddThirdPartyAmount: AddThirdPartyAmount, NumberofPersons: NumberofPersons, Addthirdparty: Addthirdparty, PassengerAccidentCover: PassengerAccidentCover, ExcessBuyBack: ExcessBuyBack, RoadsideAssistance: RoadsideAssistance, MedicalExpenses: MedicalExpenses, RadioLicenseCost: RadioLicenseCost, IncludeRadioLicenseCost: IncludeRadioLicenseCost, policytermid: policytermid, isVehicleRegisteredonICEcash: $("#isVehicleRegisteredonICEcash").val() == "1", BasicPremium : $("#basicPremiumICEcash").val(),StampDuty : $("#stampDutyICEcash").val(), ZTSCLevy : $("#LevyICEcash").val(), ProductId: ProductId },
+            data: { vehicleUsageId: vehicleUsageId, sumInsured: sumInsured, coverType: coverType, excessType: excessType, excess: excess, AddThirdPartyAmount: AddThirdPartyAmount, NumberofPersons: NumberofPersons, Addthirdparty: Addthirdparty, PassengerAccidentCover: PassengerAccidentCover, ExcessBuyBack: ExcessBuyBack, RoadsideAssistance: RoadsideAssistance, MedicalExpenses: MedicalExpenses, RadioLicenseCost: RadioLicenseCost, IncludeRadioLicenseCost: IncludeRadioLicenseCost, policytermid: policytermid, isVehicleRegisteredonICEcash: $("#isVehicleRegisteredonICEcash").val() == "1", BasicPremium : $("#basicPremiumICEcash").val(),StampDuty : $("#stampDutyICEcash").val(), ZTSCLevy : $("#LevyICEcash").val(), ProductId: ProductId, currencyId:currencyId },
             success: function (data) {
                 debugger;
                 $("#Premium").val(parseFloat(data.Premium).toFixed(2));
-
-
-
 
                 $("#PremiumWithDiscount").val(parseFloat(data.Premium+data.Discount).toFixed(2));
 

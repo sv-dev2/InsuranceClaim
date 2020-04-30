@@ -32,7 +32,7 @@ namespace Insurance.Service
         public decimal QuaterlyRiskPremium { get; set; }
         public decimal Discount { get; set; }
 
-        public QuoteLogic CalculatePremium(int vehicleUsageId, decimal sumInsured, eCoverType coverType, eExcessType excessType, decimal excess, int PaymentTermid, decimal? AddThirdPartyAmount, int NumberofPersons, Boolean Addthirdparty, Boolean PassengerAccidentCover, Boolean ExcessBuyBack, Boolean RoadsideAssistance, Boolean MedicalExpenses, decimal? RadioLicenseCost, Boolean IncludeRadioLicenseCost, Boolean isVehicleRegisteredonICEcash, string BasicPremiumICEcash, string StampDutyICEcash, string ZTSCLevyICEcash, int ProductId = 0, string vehicleStartDate = "", string vehicleEndDate = "", string manufacturerYear = "", bool isAgentStaff = false, bool IsEndorsment = false)
+        public QuoteLogic CalculatePremium(int vehicleUsageId, decimal sumInsured, eCoverType coverType, eExcessType excessType, decimal excess, int PaymentTermid, decimal? AddThirdPartyAmount, int NumberofPersons, Boolean Addthirdparty, Boolean PassengerAccidentCover, Boolean ExcessBuyBack, Boolean RoadsideAssistance, Boolean MedicalExpenses, decimal? RadioLicenseCost, Boolean IncludeRadioLicenseCost, Boolean isVehicleRegisteredonICEcash, string BasicPremiumICEcash, string StampDutyICEcash, string ZTSCLevyICEcash, int ProductId = 0, string vehicleStartDate = "", string vehicleEndDate = "", string manufacturerYear = "", bool isAgentStaff = false, bool IsEndorsment = false, int currencyId=6)
         {
             var vehicleUsage = InsuranceContext.VehicleUsages.Single(vehicleUsageId);
             var Setting = InsuranceContext.Settings.All();
@@ -60,7 +60,7 @@ namespace Insurance.Service
 
                 decimal InflationFactorAmt = 25;
                 decimal premiumRate = Convert.ToDecimal((vehicleUsage.ComprehensiveRate * 90) / 100);
-                var minAmount = ((vehicleUsage.USDMinBenchmark * InflationFactorAmt) * premiumRate)/100;
+                var minAmount = ((vehicleUsage.USDBenchmark * InflationFactorAmt) * premiumRate)/100;
 
                 //InsuranceMinAmount = vehicleUsage.MinCompAmount;
                 InsuranceMinAmount = minAmount;
@@ -123,10 +123,9 @@ namespace Insurance.Service
             }
 
 
-            if (premium < InsuranceMinAmount && coverType == eCoverType.Comprehensive)
+            if (premium < InsuranceMinAmount && coverType == eCoverType.Comprehensive && currencyId!=1) // 1 represent to usd, in case of USD min and max should not allowed
             {
                 Status = false;
-                //premium = premium + InsuranceMinAmount.Value;
                 premium = InsuranceMinAmount.Value;
                 this.Message = "Insurance minimum amount $" + InsuranceMinAmount + " Charge is applicable.";
             }

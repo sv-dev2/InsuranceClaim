@@ -144,6 +144,8 @@
     <Compile Include="Logger.cs" />
     <Compile Include="LoyaltyPointsModel.cs" />
     <Compile Include="ManageViewModels.cs" />
+    <Compile Include="PayLaterPolicyModel.cs" />
+    <Compile Include="PayNowModel.cs" />
     <Compile Include="PaynowResponse.cs" />
     <Compile Include="PolicyDetailModel.cs" />
     <Compile Include="PolicyDocumentModels.cs" />

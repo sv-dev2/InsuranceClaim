@@ -65,9 +65,10 @@
                                                 </div>
                                                 @Html.ValidationMessageFor(x => x.CoverStartDate, "", new { @class = "text-danger" })
                                             </div>
-                                            @*@Html.TextBoxFor(x => x.CoverStartDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover Start Date", @Id = "CoverStartDate" })*@
+                                           
                                         </div>
                                     </div>
+
                                     <div class="col-sm-6 col-md-6 form-group-text">
                                         <div class="form-group">
                                             @Html.LabelFor(x => x.CoverEndDate, new { @class = "gender-label" })
@@ -79,10 +80,10 @@
                                                     </span>
                                                 </div>
                                                 @Html.ValidationMessageFor(x => x.CoverEndDate, "", new { @class = "text-danger" })
-                                            </div>
-                                            @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                            </div>                                        
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="row" id="dlVrnnumber">
                                     <div class="col-sm-6 col-md-6 form-group-text">
@@ -286,13 +287,18 @@
             debugger
             $.ajax({
                 url: "/Claimant/GetAutoSuggestions",
-                type: "POST",
+                type: "GET",
                 async: false,
                 dataType: "json",
                 success: function (data) {
+                    debugger;
+
                     for (var i = 0; i < data.length; i++) {
                         policyNumbersArray.push(data[i].PolicyNumber + "," + data[i].VRNNumber + "," + data[i].CustomerName);
                     }
+
+
+
                 }
             })
         };

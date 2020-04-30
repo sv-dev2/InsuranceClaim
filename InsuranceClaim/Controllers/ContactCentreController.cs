@@ -68,7 +68,7 @@ namespace InsuranceClaim.Controllers
             //ViewBag.Sources = InsuranceContext.BusinessSources.All();
             ViewBag.Currencies = InsuranceContext.Currencies.All(where: $"IsActive = 'True'");
             // viewModel.CurrencyId = 7; // default "RTGS$" selected // for test server
-            viewModel.CurrencyId = 6; // default "RTGS$" selected // for live server
+             viewModel.CurrencyId = 6; // default "RTGS$" selected // for live server
             ViewBag.Makers = makers;
 
             if (makers.Count > 0)

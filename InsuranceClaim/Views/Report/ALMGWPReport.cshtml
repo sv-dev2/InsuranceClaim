@@ -157,9 +157,9 @@
                             <th style="width:170px;">Net Premium</th>
                             <th width="170px;">Stamp Duty</th>
                             <th>ZTSC Levy</th>
-                            @*<th>Commission Detail</th>
+                            @*<th>Commission Detail</th>*@
                             <th>Radio Licence Cost</th>
-                            <th>Zinara License Fee</th>*@
+                            <th>Zinara License Fee</th>
                             <th>Status</th>
                             <th>Policy Status</th>
                             @*<th>
@@ -316,10 +316,10 @@
                                     <td> @item.Stamp_duty</td>
                                     <td> @item.ZTSC_Levy</td>
                                     @*<td>
-                                        @item.Comission_Amount
-                                    </td>
+                                    @item.Comission_Amount
+                                  </td>*@
                                     <td>@item.RadioLicenseCost</td>
-                                    <td> @item.Zinara_License_Fee </td>*@
+                                    <td> @item.Zinara_License_Fee </td>
 
 
                                     @if (DateTime.Now > item.PolicyRenewalDate)
@@ -380,7 +380,7 @@
                                 <td><strong> @ZinaraLicenseFee </strong> </td>*@
                                 <td></td>
                                 <td></td>
-                                <td colspan="2"></td>
+                                <td colspan="4"></td>
 
                             </tr>
                             @*<tr>
@@ -492,7 +492,7 @@
                                 <td colspan="3">TOTAL RTGS$</td>
                                 <td colspan="3">@(ustotal + Reustotal + rtgstotal + Rertgstotal)</td>
                                 <td colspan="3">@(uscount + Reuscount + rtgscount + Rertgscount)</td>
-                                <td colspan="2"></td>
+                                <td colspan="4"></td>
 
                             </tr>
                         </tfoot>

@@ -116,7 +116,7 @@ namespace InsuranceClaim.Controllers
                         return View(model);
                     }
 
-                    if(numberOfDays>30)
+                    if (numberOfDays > 30)
                     {
                         TempData["ChangePwdMsg"] = "Your password has expired. Please reset password.";
                         return RedirectToAction("ChangePassword", "Account");
@@ -188,7 +188,7 @@ namespace InsuranceClaim.Controllers
             {
                 SaveUserPasswordDetails(_user); // for existing customer
             }
-           
+
 
 
 
@@ -1993,17 +1993,17 @@ namespace InsuranceClaim.Controllers
         [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff,Claim,Finance")]
         public ActionResult PolicyManagement()
         {
-
-
-            string query = "select top 100 PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
+            string query = "select top 100 PolicyDetail.Id as PolicyId , PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
             query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
             query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.LicExpiryDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
-            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id join SummaryDetail on SummaryDetail.CustomerId = PolicyDetail.CustomerId ";
+            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id  join VehicleDetail on VehicleDetail.PolicyId= PolicyDetail.Id ";          
+            query += " join  SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.VehicleDetailsId ";
+            query += "  join SummaryDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId   ";
+            query += "  join PaymentInformation on PaymentInformation.SummaryDetailId = SummaryDetail.Id   ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
-            query += " join VehicleDetail on VehicleDetail.CustomerId = PolicyDetail.CustomerId ";
-            query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
-            query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
+            query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
+            query += " left join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId where SummaryDetail.isQuotation=0  ";
             query += " order by SummaryDetail.CreatedOn desc";
 
@@ -2014,6 +2014,7 @@ namespace InsuranceClaim.Controllers
 
             List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
             {
+                PolicyId= x.PolicyId,
                 PolicyNumber = x.PolicyNumber,
                 CustomerName = x.CustomerName,
                 CustomerId = x.CustomerId,
@@ -2028,7 +2029,7 @@ namespace InsuranceClaim.Controllers
                 Currency = x.currency,
                 VehicleSumInsured = x.SumInsured,
                 isLapsed = x.isLapsed,
-                IsActive = x.IsActive,
+                IsActive = x.IsActive==null? true: x.IsActive,
                 VehicleDetailId = x.VehicleId,
                 RenewalDate = GetRenewalDate(x.RenewalDate == null ? "" : Convert.ToDateTime(x.RenewalDate).ToShortDateString(), x.LicExpiryDate),
                 RenewPolicyNumber = x.RenewPolicyNumber,
@@ -2039,6 +2040,17 @@ namespace InsuranceClaim.Controllers
                 FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount),
                 PaymentStatus = x.PaymentMethod == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid",
             }).ToList();
+
+
+            //List<PolicyListViewModel> newList = new List<PolicyListViewModel>();
+            //foreach(var item in list)
+            //{
+            //    var detials = newList.FirstOrDefault(c => c.PolicyId==item.PolicyId);
+            //    if(detials==null)
+            //    {
+            //        newList.Add(item);
+            //    }
+            //}
 
             //FacultativeCommission
             return View(list);
@@ -2623,18 +2635,43 @@ namespace InsuranceClaim.Controllers
         {
 
 
-            string query = "select top 100 PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
+            //string query = "select top 100 PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
+            //query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
+            //query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
+            //query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.LicExpiryDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
+            //query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id join SummaryDetail on SummaryDetail.CustomerId = PolicyDetail.CustomerId ";
+            //query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            //query += " join VehicleDetail on VehicleDetail.CustomerId = PolicyDetail.CustomerId ";
+            //query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
+            //query += " left join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
+            //query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId ";
+            //query += "  where PolicyDetail.PolicyNumber like '%" + searchText + "%' or Customer.FirstName like '%" + searchText + "%' or VehicleDetail.RegistrationNo like'%" + searchText + "%' and SummaryDetail.isQuotation=0  ";
+            //query += " order by SummaryDetail.CreatedOn desc";
+
+
+
+            string query = "select top 100 PolicyDetail.Id as PolicyId , PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
             query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
             query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.LicExpiryDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
-            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id join SummaryDetail on SummaryDetail.CustomerId = PolicyDetail.CustomerId ";
+            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id  join VehicleDetail on VehicleDetail.PolicyId= PolicyDetail.Id ";
+            query += " join  SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.VehicleDetailsId ";
+            query += "  join SummaryDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId   ";
+            query += "  join PaymentInformation on PaymentInformation.SummaryDetailId = SummaryDetail.Id  ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
-            query += " join VehicleDetail on VehicleDetail.CustomerId = PolicyDetail.CustomerId ";
-            query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
-            query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
-            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId ";
+            query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
+            query += " left join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
+            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId   ";
             query += "  where PolicyDetail.PolicyNumber like '%" + searchText + "%' or Customer.FirstName like '%" + searchText + "%' or VehicleDetail.RegistrationNo like'%" + searchText + "%' and SummaryDetail.isQuotation=0  ";
             query += " order by SummaryDetail.CreatedOn desc";
+
+
+
+
+
+
+
+
 
             ListPolicy policylist = new ListPolicy();
             policylist.listpolicy = new List<PolicyListViewModel>();
@@ -2669,6 +2706,19 @@ namespace InsuranceClaim.Controllers
                 FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount),
                 PaymentStatus = x.PaymentMethod == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid"
             }).ToList();
+
+
+            //List<PolicyListViewModel> newList = new List<PolicyListViewModel>();
+            //foreach (var item in list)
+            //{
+            //    var detials = newList.FirstOrDefault(c => c.PolicyId == item.PolicyId);
+            //    if (detials == null)
+            //    {
+            //        newList.Add(item);
+            //    }
+            //}
+
+
 
             //FacultativeCommission
             return View("PolicyManagement", list);
@@ -3045,9 +3095,9 @@ namespace InsuranceClaim.Controllers
 
                 var SummaryVehicleDetails = SummaryVehicleDetailslist.FirstOrDefault(x => x.SummaryDetailId == item.Id);
 
-                if(SummaryVehicleDetails==null)
+                if (SummaryVehicleDetails == null)
                     continue;
-                
+
 
                 // var vehicle = InsuranceContext.VehicleDetails.Single(where: $" Id='{SummaryVehicleDetails[0].VehicleDetailsId}'");
                 var vehicle = vehiclelist.FirstOrDefault(y => y.Id == SummaryVehicleDetails.VehicleDetailsId);
@@ -5501,6 +5551,135 @@ namespace InsuranceClaim.Controllers
             return RedirectToAction("Banners");
         }
         #endregion
+
+
+        public ActionResult PayLaterPolicy()
+        {
+            PayLaterPolicyModel model = new PayLaterPolicyModel();
+
+            string query = " select PolicyDetail.PolicyNumber, PolicyDetail.Id as PolicyId, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
+            query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, ";
+            query += " VehicleModel.ModelDescription, SummaryDetail.TotalPremium, SummaryDetail.Id as SummaryDetailId, ";
+            query += " PaymentInformation.Id as PaymentInformationId,  case when ";
+            query += " PaymentMethod.Name <> 'PayLater' then 'Paid' else 'PayLater' end as PaymentStatus ";
+            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id ";
+            query += " join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id  left ";
+            query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode  left ";
+            query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
+            query += " join SummaryDetail on Customer.Id = SummaryDetail.CustomerId ";
+            query += " join PaymentInformation on SummaryDetail.Id = PaymentInformation.SummaryDetailId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id  where SummaryDetail.PaymentMethodId =" + (int)paymentMethod.PayLater;
+
+            var result = InsuranceContext.Query(query).Select(c => new PayLaterPolicyDetail()
+            {
+                PolicyId = c.PolicyId,
+                SummaryDetailId = c.SummaryDetailId,
+                PaymentInformationId = c.PaymentInformationId,
+                PolicyNumber = c.PolicyNumber,
+                CustomerName = c.CustomerName,
+                RegistrationNo = c.RegistrationNo,
+                MakeDescription = c.MakeDescription,
+                ModelDescription = c.ModelDescription,
+                TotalPremium = c.TotalPremium
+            }).ToList();
+
+            model.PayLaterPolicyDetails = result;
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public ActionResult PayLaterDetail(int SummaryDetailId, int PaymentDetailId)
+        {
+
+            PayLaterPolicyModel model = new PayLaterPolicyModel();
+
+            string query = " select PolicyDetail.PolicyNumber, PolicyDetail.Id as PolicyId, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
+            query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, ";
+            query += " VehicleModel.ModelDescription, SummaryDetail.TotalPremium, SummaryDetail.Id as SummaryDetailId, ";
+            query += " PaymentInformation.Id as PaymentInformationId,  case when ";
+            query += " PaymentMethod.Name <> 'PayLater' then 'Paid' else 'PayLater' end as PaymentStatus ";
+            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id ";
+            query += " join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id  left ";
+            query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode  left ";
+            query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
+            query += " join SummaryDetail on Customer.Id = SummaryDetail.CustomerId ";
+            query += " join PaymentInformation on SummaryDetail.Id = PaymentInformation.SummaryDetailId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id  where SummaryDetail.Id=" + SummaryDetailId + "and PaymentInformation.Id=" + PaymentDetailId + " and SummaryDetail.PaymentMethodId =" + (int)paymentMethod.PayLater;
+
+            var result = InsuranceContext.Query(query).Select(c => new PayLaterPolicyDetail()
+            {
+                PolicyId = c.PolicyId,
+                SummaryDetailId = c.SummaryDetailId,
+                PaymentInformationId = c.PaymentInformationId,
+                PolicyNumber = c.PolicyNumber,
+                CustomerName = c.CustomerName,
+                RegistrationNo = c.RegistrationNo,
+                MakeDescription = c.MakeDescription,
+                ModelDescription = c.ModelDescription,
+                Vehicle = c.MakeDescription+' '+ c.ModelDescription,
+                TotalPremium = c.TotalPremium
+            }).FirstOrDefault();
+
+            ViewBag.PaymentMethods = BindPaymentMethod();
+
+
+
+
+
+            return View(result);
+        }
+
+        [HttpPost]
+        public ActionResult PayLaterDetail(PayLaterPolicyDetail model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var summaryDetial = InsuranceContext.SummaryDetails.Single(model.SummaryDetailId);
+                    if (summaryDetial != null)
+                    {
+                        summaryDetial.PaymentMethodId = model.PaymentTypeId;
+                        InsuranceContext.SummaryDetails.Update(summaryDetial);
+
+                        var paymentMethodDetial = InsuranceContext.PaymentMethods.Single(model.PaymentTypeId);
+
+                        if (paymentMethodDetial != null)
+                        {
+                            var paymentInformationDetail = InsuranceContext.PaymentInformations.Single(model.PaymentInformationId);
+
+                            if (paymentInformationDetail != null)
+                            {
+                                paymentInformationDetail.PaymentId = paymentMethodDetial.Name;
+
+                                InsuranceContext.PaymentInformations.Update(paymentInformationDetail);
+                                TempData["SuccessMsg"] = "Sucessfully updated.";
+
+                                // PayLaterPolicy
+
+                                return RedirectToAction("PayLaterPolicy");
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMsg"] = "Error Occured. Please try again.";
+            }
+
+            ViewBag.PaymentMethods = BindPaymentMethod();
+
+            return View();
+        }
+
+        private List<PaymentMethod> BindPaymentMethod()
+        {
+            return InsuranceContext.PaymentMethods.All(where: "Id=1").ToList();
+        }
 
 
 

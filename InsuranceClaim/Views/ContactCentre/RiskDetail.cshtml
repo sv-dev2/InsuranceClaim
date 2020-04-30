@@ -6,6 +6,15 @@
     var customerDetail = (InsuranceClaim.Models.CustomerModel)Session["CustomerDataModal"];
 }
 
+<style>
+    /* Set the size of the div element that contains the map */
+    #map {
+        height: 400px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+</style>
+
+
 
 <div class="top-banner-section">
     <div class="container">
@@ -58,6 +67,8 @@
                 </div>
             </div>
         </div>
+    
+   
     </div>
 
     <div class="form-section-top">
@@ -200,11 +211,18 @@
 
 
                                         <div class="row">
-                                            <div class="col-sm-12 col-md-12 form-group-select">
+                                            <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div class="form-group">
                                                     @Html.Label("TaxClass", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(x => x.TaxClassId, new SelectList(ViewBag.TaxClass, "TaxClassId", "Description"), "Select Tax Class", new { @class = "form-control" })
                                                     @Html.ValidationMessageFor(x => x.TaxClassId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 form-group-select">
+                                                <div class="form-group">
+                                                    @Html.Label("Currency", new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(x => x.CurrencyId, new SelectList(ViewBag.Currencies, "Id", "Name"), new { @class = "form-control" })
                                                 </div>
                                             </div>
                                         </div>
@@ -265,12 +283,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-6 col-md-6 form-group-select">
-                                                <div class="form-group">
-                                                    @Html.Label("Currency", new { @class = "gender-label" })
-                                                    @Html.DropDownListFor(x => x.CurrencyId, new SelectList(ViewBag.Currencies, "Id", "Name"), new { @class = "form-control" })
-                                                </div>
-                                            </div>
+                                            
                                         </div>
 
                                         <hr class="higlighter" />
@@ -507,7 +520,7 @@
                                             <div class="col-sm-3 col-md-3 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Radio License Cost", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off", @maxlength = "5" })
+                                                    @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off" })
                                                     @Html.ValidationMessageFor(m => m.RadioLicenseCost, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -523,6 +536,16 @@
                                                 @Html.CheckBoxFor(x => x.IsLicenseDiskNeeded, new { @style = "width: 40px;height: 36px;" })
                                             </div>
                                         </div>
+
+
+                                        <div class="col-sm-6 col-md-6 form-group-select">
+                                            <div class="form-group">
+                                                @Html.Label("Want to Collect your Zinara Licence on ALM? (ALM locator) ", new { @class = "gender-label" })
+                                                @Html.CheckBoxFor(x => x.ALMLocator, new { @style = "width: 40px;height: 36px;", onclick = "ShowGoogleMap();" })
+                                            </div>
+                                        </div>
+
+
                                     </div>
 
                                     @if (Model.isUpdate)
@@ -590,7 +613,6 @@
 
                                                 @if (Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] && Session["VehicleDetails"] != null && ((List<InsuranceClaim.Models.RiskDetailModel>)Session["VehicleDetails"]).Count > 0)
                                                 {
-
                                                     <div class="col-sm-4 col-md-4">
                                                         <div class="text-right">
                                                             <button type="button" id="btnSkip" onclick="redirectToSummary();" class="btn" style="padding:20px 10px;width: 170px;">Skip</button>
@@ -682,6 +704,12 @@
                                                     </div>
                                                 </div>
 
+
+
+
+
+
+
                                             </form>
                                         </div>
                                         <div class="modal-footer">
@@ -692,19 +720,70 @@
 
                                 </div>
                             </div>
-                        </div>
+                       
 
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="modelGoogleMap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Google Map</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="map"></div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                           
+                        
+                        
+                         </div>
                     }
-
 
                 </div>
             </div>
+
+          
+
+
         </div>
-    </div>
+   
+    
+    
+
+
+    
+     </div>
 </div>
 
 
+
+
+
+
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8k7mxHV3-Md1VyrQluTgygCpkf2HrY7c&callback=initMap">
+</script>
+
+<script src="~/Scripts/googleMap.js"></script>
+
+
 <script>
+
     function gotoPeriviouse() {
         location.href = '@Url.Action("Index", "CustomerRegistration", new { id=-1 })';
     }
@@ -784,7 +863,11 @@
         else
         {
             //  $("#VehicleLicenceFee").removeClass("inputDisabled");
-            // CalculatePremiumByCoverType();
+            $(".loading-area").show();
+            setTimeout(function(){
+                $(".loading-area").hide();
+                CalculatePremiumByCoverType();
+            }, 1000);
         }
     }
 
@@ -792,11 +875,13 @@
     {
         debugger;
 
+        var currencyId= $("#CurrencyId").val();
+
         $(".loading-area").show();
         $.ajax({
             url: "@Url.Action("ValidateSumInsured", "CustomerRegistration")",
             type: "POST",
-            data: { vehicleUsageId:  $("#VehicleUsage").val()},
+            data: { vehicleUsageId:  $("#VehicleUsage").val(), currencyId: currencyId},
             dataType: "json",
             success: function (result) {
                 debugger;
@@ -1393,6 +1478,17 @@
 
             QuoteCalculation();
         });
+
+        $("#CurrencyId").change(function () {
+            var coverType = $("#CoverTypeId").val();
+            var sumInsured = $("#SumInsured").val();
+            if(coverType==4 && sumInsured!="")
+            {
+                QuoteCalculation();
+            }      
+        });
+
+
         $("#ExcessType").change(function () {
 
             QuoteCalculation();
@@ -1780,8 +1876,8 @@
                             $("#ArrearsAmt").val(arrAmount);
                             $("#PenaltiesAmt").val(penaltiesAmount);
 
-                            if(penaltiesAmount>0)
-                                toastr.error("You have outstanding penalties, please contact our Contact Centre for assistance on 086 77 22 33 44.");
+                            //if(penaltiesAmount>0)
+                            //    toastr.error("You have outstanding penalties, please contact our Contact Centre for assistance on 086 77 22 33 44.");
 
                             debugger;
                             if(isRadioLicense)
@@ -2102,6 +2198,11 @@
             return false;
         }
 
+        var currencyId= $("#CurrencyId").val();
+        if (currencyId < 1) {
+            return false;
+        }
+
         var excessType;
         if ($("#ExcessType").val() == "") {
             excessType = 1;
@@ -2131,6 +2232,8 @@
         var IncludeRadioLicenseCost = $("#IncludeRadioLicenseCost").is(":checked");
         var policytermid = $("#PaymentTermId").val();
 
+        
+
 
         if (NumberofPersons == undefined || NumberofPersons == null || NumberofPersons == "") {
             NumberofPersons = 0;
@@ -2145,7 +2248,7 @@
             type: "POST",
             async:false,
             url: "@Url.Action("CalculatePremium", "CustomerRegistration")",
-            data: { vehicleUsageId: vehicleUsageId, sumInsured: sumInsured, coverType: coverType, excessType: excessType, excess: excess, AddThirdPartyAmount: AddThirdPartyAmount, NumberofPersons: NumberofPersons, Addthirdparty: Addthirdparty, PassengerAccidentCover: PassengerAccidentCover, ExcessBuyBack: ExcessBuyBack, RoadsideAssistance: RoadsideAssistance, MedicalExpenses: MedicalExpenses, RadioLicenseCost: RadioLicenseCost, IncludeRadioLicenseCost: IncludeRadioLicenseCost, policytermid: policytermid, isVehicleRegisteredonICEcash: $("#isVehicleRegisteredonICEcash").val() == "1", BasicPremium : $("#basicPremiumICEcash").val(),StampDuty : $("#stampDutyICEcash").val(), ZTSCLevy : $("#LevyICEcash").val(), ProductId: ProductId },
+            data: { vehicleUsageId: vehicleUsageId, sumInsured: sumInsured, coverType: coverType, excessType: excessType, excess: excess, AddThirdPartyAmount: AddThirdPartyAmount, NumberofPersons: NumberofPersons, Addthirdparty: Addthirdparty, PassengerAccidentCover: PassengerAccidentCover, ExcessBuyBack: ExcessBuyBack, RoadsideAssistance: RoadsideAssistance, MedicalExpenses: MedicalExpenses, RadioLicenseCost: RadioLicenseCost, IncludeRadioLicenseCost: IncludeRadioLicenseCost, policytermid: policytermid, isVehicleRegisteredonICEcash: $("#isVehicleRegisteredonICEcash").val() == "1", BasicPremium : $("#basicPremiumICEcash").val(),StampDuty : $("#stampDutyICEcash").val(), ZTSCLevy : $("#LevyICEcash").val(), ProductId: ProductId, currencyId: currencyId },
             success: function (data) {
                 debugger;
                 $("#Premium").val(parseFloat(data.Premium).toFixed(2));

@@ -370,6 +370,26 @@ namespace Insurance.Service
                 CustomerInfo = (CustomerModel)HttpContext.Current.Session["ReCustomerDataModal"];// if renew
             }
 
+            if (CustomerInfo == null && HttpContext.Current.Session["EnCustomerDetail"] != null)
+            {
+                var EndorsementCustomer = (EndorsementCustomer)HttpContext.Current.Session["EnCustomerDetail"];// if renew
+
+                if (EndorsementCustomer != null)
+                {
+                    CustomerInfo = new CustomerModel
+                    {
+                        AddressLine1 = EndorsementCustomer.AddressLine1,
+                        AddressLine2 = EndorsementCustomer.AddressLine2,
+                        FirstName = EndorsementCustomer.FirstName,
+                        LastName = EndorsementCustomer.LastName,
+                        NationalIdentificationNumber = EndorsementCustomer.NationalIdentificationNumber,
+                        CountryCode = EndorsementCustomer.Countrycode,
+                        PhoneNumber = EndorsementCustomer.PhoneNumber
+                    };
+                }
+
+            }
+
             List<VehicleObject> obj = new List<VehicleObject>();
 
             // int paymentTermId = GetMonthKey(PaymentTermId);
@@ -1333,7 +1353,7 @@ namespace Insurance.Service
             objArg.Date = DateTime.Now.ToString("yyyyMMddhhmmss");
             objArg.Version = "2.0";
             objArg.PartnerToken = PartnerToken;
-            objArg.Request = new LICIConfFunctionObject { Function = "LICCertConf", VRN=licenseModel.VRN, MachineName = GetMachineId(), LicenceID = licenseModel.LicenseId, CertSerialNo=licenseModel.SerialNumber, PrintResult="1" };
+            objArg.Request = new LICIConfFunctionObject { Function = "LICCertConf", VRN = licenseModel.VRN, MachineName = GetMachineId(), LicenceID = licenseModel.LicenseId, CertSerialNo = licenseModel.SerialNumber, PrintResult = "1" };
 
             _json = Newtonsoft.Json.JsonConvert.SerializeObject(objArg);
 
@@ -1380,10 +1400,73 @@ namespace Insurance.Service
             return json;
         }
 
+        public static ResultRootObject OTPConfirmation(OTPConfirmationObject model, string PartnerToken)
+        {
+            //string PSK = "127782435202916376850511";
+            string _json = "";
+
+            
+
+            OTPConfirmationArguments objArg = new OTPConfirmationArguments();
+            objArg.PartnerReference = Guid.NewGuid().ToString();
+            objArg.Date = DateTime.Now.ToString("yyyyMMddhhmmss");
+            objArg.Version = "2.0";
+            objArg.PartnerToken = PartnerToken;
+            objArg.Request = new OTPConfFunctionObject { Function = "OTPConfirmation", PaymentMethod = "2", ICEcashReference=model.ICEcashReference, OTP = model.OTP };
+
+            _json = Newtonsoft.Json.JsonConvert.SerializeObject(objArg);
+
+            //string  = json.Reverse()
+            string reversejsonString = new string(_json.Reverse().ToArray());
+            string reversepartneridString = new string(PSK.Reverse().ToArray());
+
+            string concatinatedString = reversejsonString + reversepartneridString;
+
+            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(concatinatedString);
+
+            string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
+
+            string GetSHA512encrypted = SHA512(returnValue);
+
+            string MAC = "";
+
+            for (int i = 0; i < 16; i++)
+            {
+                MAC += GetSHA512encrypted.Substring((i * 8), 1);
+            }
+
+            MAC = MAC.ToUpper();
+
+            OTPConfRequest objroot = new OTPConfRequest();
+            objroot.Arguments = objArg;
+            objroot.MAC = MAC;
+            objroot.Mode = "SH";
+
+            var data = Newtonsoft.Json.JsonConvert.SerializeObject(objroot);
+
+            JObject jsonobject = JObject.Parse(data);
+
+            var client = new RestClient(LiveIceCashApi);
+            //var client = new RestClient(LiveIceCashApi);
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("content-type", "application/x-www-form-urlencoded");
+            request.AddParameter("application/x-www-form-urlencoded", jsonobject, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
+
+            SummaryDetailService.WriteLog(data, response.Content, "OTPConfirmation");
+            return json;
+        }
+
+
+
+
+
         public static string GetMachineId()
         {
             string cpuInfo = System.Net.Dns.GetHostEntry("").HostName;
-           
+
             return Convert.ToString(cpuInfo);
         }
 
@@ -1641,7 +1724,7 @@ namespace Insurance.Service
         public string LicenceID { get; set; }
         public string CombinedID { get; set; }
 
-       // public string LicenceCert { get; set; }
+        // public string LicenceCert { get; set; }
 
         public string LicExpiryDate { get; set; }
         public string TotalLicAmt { get; set; }
@@ -1663,6 +1746,10 @@ namespace Insurance.Service
 
         public string Status { get; set; }
         public string LicenceCert { get; set; }
+
+        public string ICEcashReference { get; set; }
+
+        public string TransactionID { get; set; }
         public List<ResultQuote> Quotes { get; set; }
     }
     public class ResultRootObject
@@ -1901,6 +1988,14 @@ namespace Insurance.Service
     }
 
 
+    public class OTPConfirmationObject
+    {
+        public string ICEcashReference { get; set; }
+        public string OTP { get; set; }
+
+
+    }
+
 
     public class LICQuoteArguments
     {
@@ -1928,9 +2023,17 @@ namespace Insurance.Service
         public string Version { get; set; }
         public string PartnerToken { get; set; }
         public LICIConfFunctionObject Request { get; set; }
+    }
 
 
 
+    public class OTPConfirmationArguments
+    {
+        public string PartnerReference { get; set; }
+        public string Date { get; set; }
+        public string Version { get; set; }
+        public string PartnerToken { get; set; }
+        public OTPConfFunctionObject Request { get; set; }
     }
 
 
@@ -1961,6 +2064,16 @@ namespace Insurance.Service
         // public List<VehicleLicConfObject> Vehicles { get; set; }
     }
 
+    public class OTPConfFunctionObject
+    {
+        public string Function { get; set; }
+        public string PaymentMethod { get; set; }
+        public string ICEcashReference { get; set; }
+        public string OTP { get; set; }
+    }
+
+    //OTPConfirmationArguments
+
 
     public class LICQuoteRequest
     {
@@ -1980,6 +2093,13 @@ namespace Insurance.Service
     public class LICConfRequest
     {
         public LICConfArguments Arguments { get; set; }
+        public string MAC { get; set; }
+        public string Mode { get; set; }
+    }
+
+    public class OTPConfRequest
+    {
+        public OTPConfirmationArguments Arguments { get; set; }
         public string MAC { get; set; }
         public string Mode { get; set; }
     }

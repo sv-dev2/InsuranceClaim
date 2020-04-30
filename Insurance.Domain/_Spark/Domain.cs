@@ -472,7 +472,7 @@ namespace Insurance.Domain
         public bool isLapsed { get; set; }
         public decimal? BalanceAmount { get; set; }
         public decimal? VehicleLicenceFee { get; set; }
-
+        public decimal? PenaltiesAmt { get; set; }
         public string InsuranceStatus { get; set; }
 
         //public int BusinessSourceId { get; set; }
@@ -504,8 +504,7 @@ namespace Insurance.Domain
 
         public bool IsIndividual { get; set; }
         public string CombinedID { get; set; }
-
-
+        public string PdfCode { get; set; }
     }
 
     public partial class VehicleMake : Entity<VehicleMake>
@@ -913,6 +912,7 @@ namespace Insurance.Domain
         public string TransactionId { get; set; }
         public string InvoiceNumber { get; set; }
 
+        public string PollURL { get; set; }
 
 
     }

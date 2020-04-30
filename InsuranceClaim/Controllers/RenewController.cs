@@ -21,6 +21,7 @@ using System.IO;
 using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Webdev.Payments;
 
 namespace InsuranceClaim.Controllers
 {
@@ -32,6 +33,9 @@ namespace InsuranceClaim.Controllers
         string AdminEmail = WebConfigurationManager.AppSettings["AdminEmail"];
         string ZimnatEmail = WebConfigurationManager.AppSettings["ZimnatEmail"];
         string _pdfPath = "";
+        string _pdfCode = "";
+
+        decimal _InflationFactorAmt = 25;
 
         int _currencId = 6; //RTGS$
         public RenewController()
@@ -622,8 +626,6 @@ namespace InsuranceClaim.Controllers
             }
             ViewBag.Sources = new SelectList(listdata, "Value", "Text");
 
-
-
             ViewBag.Currencies = InsuranceContext.Currencies.All(where: $"IsActive = 'True'");
 
             ViewBag.Makers = makers;
@@ -643,12 +645,9 @@ namespace InsuranceClaim.Controllers
             {
                 var model = service.GetModel(makers.FirstOrDefault().MakeCode);
                 ViewBag.Model = model;
-
             }
 
             viewModels.NoOfCarsCovered = 1;
-
-
 
             if (vehicleId > 0)
             {
@@ -677,6 +676,7 @@ namespace InsuranceClaim.Controllers
                     viewModels.Premium = RiskDetail.Premium;
                     viewModels.PremiumWithDiscount = RiskDetail.Premium + RiskDetail.Discount;
 
+                    viewModels.PenaltiesAmt = RiskDetail.PenaltiesAmt;
 
                     viewModels.RadioLicenseCost = (int)Math.Round(RiskDetail.RadioLicenseCost == null ? 0 : RiskDetail.RadioLicenseCost.Value, 0);
                     viewModels.Rate = RiskDetail.Rate;
@@ -860,6 +860,22 @@ namespace InsuranceClaim.Controllers
 
             ModelState.Remove("SumInsured");
 
+
+            int vehicleUsage = model.VehicleUsage == null ? 0 : model.VehicleUsage.Value;
+            decimal sumInsured = model.SumInsured == null ? 0 : model.SumInsured.Value;
+
+            var miniumSumInsured = GetMinimumSumInsured(vehicleUsage, model.CurrencyId);
+
+            if ((model.CoverTypeId == (int)eCoverType.Comprehensive) && (sumInsured < miniumSumInsured))
+            {
+                model.ErrorMessage = "Sum Insured amount should be greater or equal to " + miniumSumInsured;
+                TempData["ViewModel"] = model;
+
+                if (User.IsInRole("Staff"))                  
+                    return RedirectToAction("RiskDetail", new { id = 1 });
+            }
+
+
             DateTimeFormatInfo usDtfi = new CultureInfo("en-US", false).DateTimeFormat;
             var service = new RiskDetailService();
             var startDate = Request.Form["CoverStartDate"];
@@ -869,6 +885,8 @@ namespace InsuranceClaim.Controllers
                 ModelState.Remove("CoverStartDate");
                 model.CoverStartDate = Convert.ToDateTime(startDate, usDtfi);
             }
+
+
             if (!string.IsNullOrEmpty(endDate))
             {
                 ModelState.Remove("CoverEndDate");
@@ -894,6 +912,29 @@ namespace InsuranceClaim.Controllers
             }
             return RedirectToAction("SummaryDetail");
         }
+
+        public decimal GetMinimumSumInsured(int vehicleUsageId, int currencyId)
+        {
+            decimal amount = 0;
+            RiskDetailService service = new RiskDetailService();
+            var vehicleUsage = service.GetVehicleUsageById(vehicleUsageId);
+
+            if (currencyId == (int)currencyType.USD)
+            {
+                if (vehicleUsage != null)
+                    amount = vehicleUsage.USDBenchmark == null ? 2500 : Convert.ToDecimal(vehicleUsage.USDBenchmark);
+                else
+                    amount = 2500;
+            }
+            else
+            {
+
+                if (vehicleUsage != null)
+                    amount = vehicleUsage.USDBenchmark == null ? 0 : vehicleUsage.USDBenchmark.Value * _InflationFactorAmt;
+            }
+            return amount;
+        }
+
 
         public ActionResult SummaryDetail(int summaryDetailId = 0)
         {
@@ -921,14 +962,14 @@ namespace InsuranceClaim.Controllers
 
             model.PaymentMethodId = 1;
 
-            //if (User.IsInRole("Staff"))
-            //{
-            //    model.PaymentMethodId = 1;
-            //}
-            //else
-            //{
-            //    model.PaymentMethodId = 2;
-            //}
+            if (User.IsInRole("Staff") || User.IsInRole("Renewals"))
+            {
+                model.PaymentMethodId = 1;
+            }
+            else
+            {
+                model.PaymentMethodId = 3;
+            }
 
             model.PaymentTermId = 1;
             model.ReceiptNumber = "";
@@ -948,7 +989,7 @@ namespace InsuranceClaim.Controllers
             //    }
             //    model.Discount += item.Discount;
             //}
-            model.TotalPremium = vehicle.Premium + vehicle.ZTSCLevy + vehicle.StampDuty + vehicle.VehicleLicenceFee;
+            model.TotalPremium = vehicle.Premium + vehicle.ZTSCLevy + vehicle.StampDuty + vehicle.VehicleLicenceFee + vehicle.PenaltiesAmt;
             if (vehicle.IncludeRadioLicenseCost)
             {
                 model.TotalPremium = model.TotalPremium + vehicle.RadioLicenseCost;
@@ -1079,10 +1120,21 @@ namespace InsuranceClaim.Controllers
                                             return RedirectToAction("SaveDetailList", "Renew", new { id = model.CustomSumarryDetilId, invoiceNumber = model.InvoiceNumber });
                                         if (model.PaymentMethodId == 3)
                                         {
-                                            //return RedirectToAction("InitiatePaynowTransaction", "Paypal", new { id = model.CustomSumarryDetilId, TotalPremiumPaid = Convert.ToString(model.AmountPaid), PolicyNumber = policyNum, Email = customerEmail });
+                                            var payNow = PayNow(model.CustomSumarryDetilId, model.InvoiceNumber, model.PaymentMethodId.Value, Convert.ToDecimal(model.TotalPremium));
+                                            if (payNow.IsSuccessPayment)
+                                            {
+                                                Response.Redirect(payNow.ReturnUrl);
+                                                Session["PollUrl"] = payNow.PollUrl;
+                                                return RedirectToAction("SaveDetailList", "Renew", new { id = model.CustomSumarryDetilId, invoiceNumer = model.InvoiceNumber, Paymentid = model.PaymentMethodId.Value });
+                                            }
+                                            else
+                                            {
+                                                return RedirectToAction("failed_url", "Paypal");
+                                            }
 
-                                            TempData["PaymentMethodId"] = model.PaymentMethodId;
-                                            return RedirectToAction("makepayment", new { id = model.CustomSumarryDetilId, TotalPremiumPaid = Convert.ToString(model.AmountPaid) });
+                                            //TempData["PaymentMethodId"] = model.PaymentMethodId;
+                                            //return RedirectToAction("makepayment", new { id = model.CustomSumarryDetilId, TotalPremiumPaid = Convert.ToString(model.AmountPaid) });
+
                                         }
                                         else
                                             return RedirectToAction("PaymentDetail", new { id = model.CustomSumarryDetilId });
@@ -1789,9 +1841,21 @@ namespace InsuranceClaim.Controllers
                             return RedirectToAction("SaveDetailList", "Renew", new { id = summary.Id, invoiceNumer = model.InvoiceNumber });
                         if (model.PaymentMethodId == 3)
                         {
-                            //return RedirectToAction("InitiatePaynowTransaction", "Paypal", new { id = DbEntry.Id, TotalPremiumPaid = Convert.ToString(model.AmountPaid), PolicyNumber = policy.PolicyNumber, Email = customer.EmailAddress });
-                            TempData["PaymentMethodId"] = model.PaymentMethodId;
-                            return RedirectToAction("makepayment", new { id = summary.Id, TotalPremiumPaid = Convert.ToString(model.AmountPaid) });
+                            var payNow = PayNow(DbEntry.Id, model.InvoiceNumber, model.PaymentMethodId.Value, Convert.ToDecimal(model.TotalPremium));
+                            if (payNow.IsSuccessPayment)
+                            {
+                                Response.Redirect(payNow.ReturnUrl);
+                                Session["PollUrl"] = payNow.PollUrl;
+                                return RedirectToAction("SaveDetailList", "Renew", new { id = summary.Id, invoiceNumer = model.InvoiceNumber, Paymentid = model.PaymentMethodId.Value });
+                            }
+                            else
+                            {
+                                return RedirectToAction("failed_url", "Paypal");
+                            }
+
+                            //TempData["PaymentMethodId"] = model.PaymentMethodId;
+                            //return RedirectToAction("makepayment", new { id = summary.Id, TotalPremiumPaid = Convert.ToString(model.AmountPaid) });
+
                         }
                         else
                             return RedirectToAction("PaymentDetail", new { id = summary.Id });
@@ -1811,6 +1875,70 @@ namespace InsuranceClaim.Controllers
             {
                 return RedirectToAction("SummaryDetail");
             }
+        }
+
+
+        protected PayNowModel PayNow(int summaryId, string invoiceNumber, int paymentId, decimal totalPremium)
+        {
+            PayNowModel payNowModel = new PayNowModel();
+            Insurance.Service.EmailService log = new Insurance.Service.EmailService();
+            try
+            {
+
+                string Integration_ID = ConfigurationManager.AppSettings["PayNowIntegration_ID"];
+                string Integration_Key = ConfigurationManager.AppSettings["PayNowIntegration_Key"];
+                string urlPath = ConfigurationManager.AppSettings["urlPath"];
+
+                // log.WriteLog("PayNow Integration_ID:" + Integration_ID);
+
+                // log.WriteLog("PayNow Integration_Key:" + Integration_Key);
+
+                var paynow = new Paynow(Integration_ID, Integration_Key);
+                paynow.ReturnUrl = urlPath + "/Renew/SaveDetailList?id=" + summaryId + "&invoiceNumer=" + invoiceNumber + "&Paymentid=" + paymentId;
+
+               // log.WriteLog("PayNow execute:");
+
+                var uniqueTransaction = InsuranceContext.Query("select top  1 * from UniqeTransaction order by id desc").
+                Select(c => new UniqeTransaction()
+                {
+                    UniqueTransactionId = c.UniqueTransactionId
+                }).FirstOrDefault();
+
+                UniqeTransaction transaction = new UniqeTransaction { UniqueTransactionId = uniqueTransaction.UniqueTransactionId + 1, CreatedOn = DateTime.Now };
+                InsuranceContext.UniqeTransactions.Insert(transaction);
+
+                payNowModel.TransactionId = uniqueTransaction.UniqueTransactionId.ToString();
+
+
+                var payment = paynow.CreatePayment(payNowModel.TransactionId);
+                payment.Add("gene Insurance", totalPremium);
+                //payment.Add("Apples", Convert.ToDecimal(3.4));
+
+                paynow.Send(payment);
+
+                var response = paynow.Send(payment);
+
+                if (response.Success())
+                {
+                    payNowModel.IsSuccessPayment = true;
+                    // Get the url to redirect the user to so they can make payment
+                    // var link = response.RedirectLink();
+                    payNowModel.ReturnUrl = response.RedirectLink();
+
+                    // Get the poll url of the transaction
+                    // var pollUrl = response.PollUrl();
+                    payNowModel.PollUrl = response.PollUrl();
+
+                    //Response.Redirect(link);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                log.WriteLog("PayNow execute:" + ex.Message);
+            }
+
+            return payNowModel;
         }
 
 
@@ -2104,6 +2232,22 @@ namespace InsuranceClaim.Controllers
         }
         public async Task<ActionResult> SaveDetailList(Int32 id, string invoiceNumber = "", string paymentId = "")
         {
+
+            if (Session["PollUrl"] != null)
+            {
+                string Integration_ID = System.Configuration.ConfigurationManager.AppSettings["PayNowIntegration_ID"];
+                string Integration_Key = System.Configuration.ConfigurationManager.AppSettings["PayNowIntegration_Key"];
+
+                var paynow = new Webdev.Payments.Paynow(Integration_ID, Integration_Key);
+                var status = paynow.PollTransaction((string)Session["PollUrl"]);
+                if (!status.Paid())
+                {
+                    return RedirectToAction("failed_url");
+                }
+
+            }
+
+
             var vehicleId = (Int32)Session["RenewVehicleId"];
             var PaymentId = Session["PaymentId"];
             var InvoiceId = Session["InvoiceId"];
@@ -2155,6 +2299,11 @@ namespace InsuranceClaim.Controllers
                 objSaveDetailListModel.InvoiceId = InvoiceId == null ? "" : InvoiceId.ToString();
                 objSaveDetailListModel.InvoiceNumber = policy.PolicyNumber;
                 objSaveDetailListModel.CreatedOn = DateTime.Now;
+
+                if(Session["PollUrl"]!=null)
+                    objSaveDetailListModel.PollURL = Convert.ToString(Session["PollUrl"]);
+                
+                
 
                 bool _userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
                 if (_userLoggedin)
@@ -2228,7 +2377,9 @@ namespace InsuranceClaim.Controllers
             string EmailBody2 = System.IO.File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath(userRegisterationEmailPath));
 
             var Body2 = EmailBody2.Replace("#DATE#", DateTime.Now.ToShortDateString())
-                .Replace("#QRpath#", path).Replace("##path##", filepath).Replace("#FirstName#", customer.FirstName).Replace("#currencyName#", currencyName).Replace("#LastName#", customer.LastName).Replace("#AccountName#", customer.FirstName + ", " + customer.LastName).Replace("#Address1#", customer.AddressLine1).Replace("#Address2#", customer.AddressLine2).Replace("#Amount#", Convert.ToString(CalCulateVehicleTotalPremium(vehicle))).Replace("#PaymentDetails#", "New Premium").Replace("#ReceiptNumber#", policy.PolicyNumber).Replace("#PaymentType#", (summary.PaymentMethodId == 1 ? "Cash" : (summary.PaymentMethodId == 2 ? "PayPal" : "PayNow")));
+                .Replace("#QRpath#", path).Replace("##path##", filepath).Replace("#FirstName#", customer.FirstName).Replace("#currencyName#", currencyName).Replace("#LastName#", customer.LastName).Replace("#AccountName#", customer.FirstName + ", " + customer.LastName).Replace("#Address1#", customer.AddressLine1).
+                Replace("#Address2#", customer.AddressLine2).Replace("#Amount#", Convert.ToString(CalCulateVehicleTotalPremium(vehicle))).Replace("#PaymentDetails#", "New Premium").Replace("#ReceiptNumber#", policy.PolicyNumber).
+                Replace("#PaymentType#", (summary.PaymentMethodId == 1 ? "Cash" : (summary.PaymentMethodId == 2 ? "PayPal" : "PayNow")));
 
             var attachementPath = MiscellaneousService.EmailPdf(Body2, policy.CustomerId, policy.PolicyNumber, "Renew Invoice ");
 
@@ -2265,6 +2416,7 @@ namespace InsuranceClaim.Controllers
             InsuranceContext.SmsLogs.Insert(objRecieptsmslog);
 
             #endregion
+
 
             decimal totalpaymentdue = 0.00m;
 
@@ -2395,8 +2547,35 @@ namespace InsuranceClaim.Controllers
                 objEmailService.SendEmail(user.Email, "", "", "Renew " + policy.PolicyNumber + " :Renew-Schedule-motor", Bodyy, attachements);
 
 
+            #region Renew policy
+
+            var paymentType= summary.PaymentMethodId == 1 ? "Cash" : (summary.PaymentMethodId == 2 ? "PayPal" : "PayNow");
+            List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
+            ListOfVehicles.Add(vehicle);
+            MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, policy.PolicyNumber, summary.TotalPremium, summary.PaymentTermId, paymentType, ListOfVehicles, "renew");
+
+            #endregion
+
             //MiscellaneousService.ScheduleMotorPdf(Bodyy, policy.CustomerId, policy.PolicyNumber, "Renew-Schedule-motor");
 
+
+            #region Send License PDFVerficationcode SMS
+
+            if (_pdfPath != "" && _pdfCode != "")
+            {
+                string RecieptbodyPdf = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Your license pdf verifation code is: " + _pdfCode + "\n" + "\nThanks.";
+                var RecieptresultPdf = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, RecieptbodyPdf);
+                SmsLog objRecieptsmslogPdf = new SmsLog()
+                {
+                    Sendto = user.PhoneNumber,
+                    Body = RecieptbodyPdf,
+                    Response = RecieptresultPdf,
+                    CreatedBy = customer.Id,
+                    CreatedOn = DateTime.Now
+                };
+                InsuranceContext.SmsLogs.Insert(objRecieptsmslog);
+            }
+            #endregion
 
 
             //Session.Remove("policytermid");
@@ -2413,7 +2592,7 @@ namespace InsuranceClaim.Controllers
 
             ClearRenewSession();
 
-            if (path != "")
+            if (_pdfPath != "")
                ViewBag.file = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
 
             return View(objSaveDetailListModel);
@@ -2626,19 +2805,9 @@ namespace InsuranceClaim.Controllers
             //if you need to add more items in the list
             //Then you will need to create multiple item objects or use some loop to instantiate object
             var summaryDetail = (SummaryDetail)Session["RenewVehicleSummary"];
-            //var SummaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={model.SummaryDetailId}").ToList();
-            //var vehicle = InsuranceContext.VehicleDetails.Single(SummaryVehicleDetails[0].VehicleDetailsId);
-            //var policy = InsuranceContext.PolicyDetails.Single(vehicle.PolicyId);
+           
             var customer = InsuranceContext.Customers.Single(Vehicle.CustomerId);
-            //var summaryDetail = (SummaryDetailModel)Session["SummaryDetailed"];
-            //var vehicle = (RiskDetailModel)Session["VehicleDetail"];
-            //var policy = (PolicyDetail)Session["PolicyData"];
-            //var customer = (CustomerModel)Session["CustomerDataModal"];
-            //var product = InsuranceContext.Products.Single(Convert.ToInt32(policy.PolicyName));
-            //var currency = InsuranceContext.Currencies.Single(policy.CurrencyId);
-
-            //var paymentInformations = InsuranceContext.PaymentInformations.SingleCustome(model.SummaryDetailId);
-
+            
             double totalPremium = Convert.ToDouble(Vehicle.Premium + Vehicle.StampDuty + Vehicle.ZTSCLevy + (Convert.ToBoolean(Vehicle.IncludeRadioLicenseCost) ? Vehicle.RadioLicenseCost : 0.00m));
 
             //check if single decimal place
@@ -2764,7 +2933,7 @@ namespace InsuranceClaim.Controllers
             payr.payment_method = "credit_card";
             payr.payer_info = pi;
 
-            Payment pymnt = new Payment();
+            PayPal.Api.Payment pymnt = new PayPal.Api.Payment();
             pymnt.intent = "sale";
             pymnt.payer = payr;
             pymnt.transactions = transactions;
@@ -2782,7 +2951,7 @@ namespace InsuranceClaim.Controllers
 
                 // Create is a Payment class function which actually sends the payment details to the paypal API for the payment. The function is passed with the ApiContext which we received above.
 
-                Payment createdPayment = pymnt.Create(apiContext);
+                PayPal.Api.Payment createdPayment = pymnt.Create(apiContext);
                 //paymentInformations.PaymentTransctionId = createdPayment.id;
                 Session["RenewPaymentId"] = createdPayment.id;
 
@@ -3237,6 +3406,15 @@ namespace InsuranceClaim.Controllers
                     vichelDetails.CoverEndDate = DateTime.ParseExact(res.Response.EndDate, format, CultureInfo.InvariantCulture);
                     vichelDetails.RenewalDate = vichelDetails.CoverEndDate.Value.AddDays(1);
                     vichelDetails.CoverNote = res.Response.PolicyNo; // it's represent to Cover Note
+
+                    if(res.Response.LicenceCert!=null && res.Response.LicenceCert.Length>1)
+                    {
+                        _pdfCode = "PD" + vichelDetails.Id + "" + DateTime.Now.Month;
+                    }
+                    
+
+                    vichelDetails.PdfCode = _pdfCode;
+
                     InsuranceContext.VehicleDetails.Update(vichelDetails);
                 }
 

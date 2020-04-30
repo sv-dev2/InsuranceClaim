@@ -199,7 +199,6 @@
                                 }
 
 
-                                @*<li><a href="#">Renew Policy</a></li>*@
                                 <li><a href="#">Change Policy</a></li>
                                 <li><a href="#">Register Claim</a></li>
                                 <li><a href="#">Policy/Claim Detail</a></li>
@@ -213,6 +212,7 @@
                                     <li><a href="/Account/PolicyManagement">Policy Management</a></li>
                                     <li><a href="/Account/CustomerManagementList">Customers</a></li>
                                     <li><a href="/CustomerRegistration/LicensePrint">License</a></li>
+                                    @*<li><a href="/account/PayLaterPolicy">Pay Later</a></li>*@
                                 }
 
                                 @if (User.IsInRole("Agent"))
@@ -224,6 +224,8 @@
                                 @if (User.IsInRole("Claim"))
                                 {
                                     <li><a href="/Claimant/ClaimantList">Claim Management</a></li>
+                                    <li><a href="/Account/Dashboard">Dashboard</a></li>
+                                   
                                 }
 
 
@@ -341,7 +343,7 @@
                         <p><strong> Liquid:</strong> 0867 722 3344</p>
                         <p><strong>Netone:</strong>  0719 884 884
                         <p><strong>Telecel</strong>: 0732 884 884</p>
-                        <p><strong>Email</strong>: service@gene.co.zw</p>
+                        <p><strong>Email</strong>: info@gene.co.zw</p>
                     </div>
                 </div>
             </div>
