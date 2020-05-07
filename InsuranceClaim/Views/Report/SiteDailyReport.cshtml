@@ -1,0 +1,292 @@
+﻿@model InsuranceClaim.Models.SiteDailySearchModel
+@{
+    ViewBag.Title = "Gross Written Premium Report";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="productsave-section GrossWrittenPremiumReport">
+
+    <div class="container-fluid" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>Site Daily Report</h2>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
+                <div class="text-right">
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                </div>
+            </div>
+        </div>
+
+
+        @using (Html.BeginForm("SearchSiteDailyReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @Html.DropDownListFor(model => model.SelectedMonth, (IEnumerable<SelectListItem>)ViewBag.Months, "Month", new { @class = "form-control" })
+
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    @Html.DropDownListFor(model => model.SelectedYear, (IEnumerable<SelectListItem>)ViewBag.Years, "Year", new { @class = "form-control" })
+                                </div>
+                                </div>
+                                    <div class="col-sm-6 col-md-6 form-group-btn">
+                                        <div class="form-group">
+                                            <ul class="list-inline">
+                                                <li><button type="submit" class="btn btn-success">Search</button></li>
+                                                <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+            </div>
+        }
+
+
+        <div class="product-table-grid">
+            <div class="table-responsive">
+                <table class="table table-striped tablesorter" style="" id="report2excel">
+
+                    <thead style='display:none;'>
+
+
+                        <tr>
+                            <td>
+                                <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+
+                                <script>
+                                    var dt = new Date();
+                                    document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                                </script>
+                            </td>
+                            <td></td>
+                            <td>
+                                <h3><u>Daily Site Report</u></h3>
+                                <strong></strong>
+                                <strong></strong>
+
+                            </td>
+                            <td></td>
+                            @*<td><center></center></td>
+
+                            <td></td>
+                            <td></td>
+                            <td ></td>
+                            <td></td>*@
+                        </tr>
+
+                    </thead>
+                    <thead>
+
+
+                    <thead>
+                        <tr>
+                            <td rowspan="6"></td>
+                        </tr>
+                    </thead>
+
+
+                    <thead>
+                        <tr>
+                            <th style="width: 170px;">Branch</th>
+                            @for (int i = 1; i <= 31; i++)
+                            {
+                                <th>Day @i</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.SiteDailyList)
+                        {
+                            <tr>
+                                <td style="width: 170px;">
+                                    @item.BranchName
+                                </td>
+                                <td>
+                                    @item.one
+                                </td>
+                                <td>
+                                    @item.two
+                                </td>
+                                <td>
+                                    @item.three
+                                </td>
+                                <td>
+                                    @item.four
+                                </td>
+                                <td>
+                                    @item.five
+                                </td>
+                                <td>
+                                    @item.six
+                                </td>
+                                <td>
+                                    @item.seven
+                                </td>
+                                <td>
+                                    @item.eight
+                                </td>
+                                <td>
+                                    @item.nine
+                                </td>
+                                <td>
+                                    @item.ten
+                                </td>
+                                <td>
+                                    @item.eleven
+                                </td>
+                                <td>
+                                    @item.twelve
+                                </td>
+                                <td>
+                                    @item.thirteen
+                                </td>
+                                <td>
+                                    @item.fourteen
+                                </td>
+                                <td>
+                                    @item.fifteen
+                                </td>
+                                <td>
+                                    @item.sixteen
+                                </td>
+                                <td>
+                                    @item.seventeen
+                                </td>
+                                <td>
+                                    @item.eighteen
+                                </td>
+                                <td>
+                                    @item.nineteen
+                                </td>
+                                <td>
+                                    @item.twenty
+                                </td>
+                                <td>
+                                    @item.twentyone
+                                </td>
+                                <td>
+                                    @item.twentytwo
+                                </td>
+                                <td>
+                                    @item.twentythree
+                                </td>
+                                <td>
+                                    @item.twentyfour
+                                </td>
+                                <td>
+                                    @item.twentyfive
+                                </td>
+                                <td>
+                                    @item.twentysix
+                                </td>
+                                <td>
+                                    @item.twentyseven
+                                </td>
+                                <td>
+                                    @item.twentyeight
+                                </td>
+                                <td>
+                                    @item.twentynine
+                                </td>
+                                <td>
+                                    @item.thirty
+                                </td>
+                                <td>
+                                    @item.thirtyone
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+        $(document).ready(function () {
+
+            $(".tablesorter").tablesorter({
+
+                headers: {
+
+                    2: {
+                        sorter: false
+                    },
+                    4: {
+                        sorter: false
+                    },
+
+                    6: {
+                        sorter: false
+                    },
+                    9: {
+                        sorter: false
+                    },
+
+                }
+            });
+
+
+            $("#datetimenew").datetimepicker({
+                format: 'MM/D/YYYY'
+            });
+            $("#datetimenew12").datetimepicker({
+                format: 'MM/D/YYYY'
+
+            });
+        });
+
+
+        function removeSearchBox() {
+            window.location.href = "/Report/GrossWrittenPremiumReport";
+        }
+
+        $("#generateExcel").click(function () {
+            debugger;
+            $("#report2excel").table2excel({
+                // exclude CSS class
+                exclude: ".noExl",
+                name: "Worksheet Name",
+                filename: "DailySiteReport" //do not include extension
+
+            });
+        });
+
+        var doc = new jsPDF({ format: [600, 600] });
+        var specialElementHandlers = {
+            '#editor': function (element, renderer) {
+                return true;
+            }
+        };
+
+        $('#generatePdf').click(function () {
+
+            doc.fromHTML($('#content').html(), 15, 15, {
+                'width': 500,
+                'elementHandlers': specialElementHandlers
+            });
+            doc.save('GrossWrittenPremiumReport.pdf');
+
+        });
+
+
+
+
+</script>
