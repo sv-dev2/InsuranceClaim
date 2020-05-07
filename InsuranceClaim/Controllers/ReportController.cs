@@ -14,6 +14,8 @@ using System.Data;
 using System.IO;
 using System.ComponentModel;
 using System.Text;
+using System.Reflection;
+using System.Globalization;
 
 namespace InsuranceClaim.Controllers
 {
@@ -592,6 +594,252 @@ namespace InsuranceClaim.Controllers
 
         //    return View(Model);
         //}
+
+        [Authorize(Roles = "Administrator,Reports,Finance")]
+        public ActionResult SiteDailyReport()
+        {
+            List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
+            ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
+            _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
+            GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
+
+            List<BranchModel> obj = InsuranceContext.Query("select * from Branch where id != 6").Select(x => new BranchModel
+            {
+                Id = x.Id,
+                BranchName = x.BranchName
+            }).ToList();
+
+
+            var branchList = InsuranceContext.Branches.All();
+
+
+            var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+            query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+            query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+            query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+            query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+            query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+            query += "join Branch on Customer.BranchId = Branch.Id";
+            query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+            query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+            query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+            query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+            query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+            query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' order by  VehicleDetail.Id desc ";
+
+            try
+            {
+
+                ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
+                    Select(x => new GrossWrittenPremiumReportModels()
+                    {
+
+                        Policy_Number = x.Policy_Number,
+                        BranchName = x.BranchName,
+                        PolicyCreatedBy = x.PolicyCreatedBy,
+                        Customer_Name = x.Customer_Name,
+                        Transaction_date = x.Transaction_date.ToShortDateString(),
+                        CoverNoteNum = x.CoverNoteNum,
+                        Payment_Mode = x.Payment_Mode,
+                        Payment_Term = x.Payment_Term,
+                        CoverType = x.CoverType,
+                        Currency = x.Currency,
+                        Premium_due = x.Premium_due,
+                        Stamp_duty = x.Stamp_duty,
+                        ZTSC_Levy = x.ZTSC_Levy,
+                        ALMId = x.ALMId,
+                        Comission_Amount = x.Comission_Amount,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        RadioLicenseCost = x.RadioLicenseCost,
+                        Zinara_License_Fee = x.Zinara_License_Fee,
+                        PolicyRenewalDate = x.PolicyRenewalDate,
+                        IsActive = x.IsActive,
+                        RenewPolicyNumber = x.RenewPolicyNumber,
+                        // BusinessSourceName = x.BusinessSourceName,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        SourceDetailName = x.SourceDetailName,
+                    }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            List<SiteDailyModel> siteDaily = new List<SiteDailyModel>();
+            SiteDailySearchModel searchmodel = new SiteDailySearchModel();
+
+            obj.ForEach(x => {
+                var site = new SiteDailyModel();
+                var cou = ListGrossWrittenPremiumReport.FindAll(p => p.BranchName == x.BranchName).Count();
+                site.BranchName = x.BranchName;
+                var month = DateTime.Now.Month;
+                //var month = 2;
+                var year = DateTime.Now.Year;
+
+                var i = 0;
+                foreach (PropertyInfo prop in site.GetType().GetProperties())
+                {
+                    if (prop.Name != "BranchName")
+                    {
+                        i++;
+                        prop.SetValue(site, ListGrossWrittenPremiumReport.FindAll(p => p.BranchName == x.BranchName && p.Transaction_date.Equals(month + "/" + i + "/" + year)).Count());
+                    }
+                    Debug.WriteLine(i + " " + prop.Name + " " + prop.GetValue(site));
+                }
+                // Debug.WriteLine(month + " " + year + " " + site.BranchName + " " + site.fourteen + " " + site.fifteen + " " + site.sixteen + " " + site.seventeen);
+                siteDaily.Add(site);
+
+                     ViewBag.Months = new SelectList(Enumerable.Range(1, 12).Select(p =>
+                        new SelectListItem()
+                           {
+                               Text = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(p),
+                               Value = p.ToString()
+                           }), "Value", "Text");
+
+
+                ViewBag.Years = new SelectList(Enumerable.Range(DateTime.Today.Year - 19, 20).Select(y =>
+
+                   new SelectListItem()
+                   {
+                       Text = y.ToString(),
+                       Value = y.ToString()
+                   }), "Value", "Text").OrderByDescending(b => b.Text);
+
+            });
+            searchmodel.SiteDailyList = siteDaily;
+            return View(searchmodel);
+        }
+
+
+
+        [Authorize(Roles = "Administrator,Reports, Finance")]
+        public ActionResult SearchSiteDailyReport(SiteDailySearchModel siteDailySearch)
+        {
+            List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
+            ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
+            _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
+            GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
+
+            List<BranchModel> obj = InsuranceContext.Query("select * from Branch where id != 6").Select(x => new BranchModel
+            {
+                Id = x.Id,
+                BranchName = x.BranchName
+            }).ToList();
+
+
+            var branchList = InsuranceContext.Branches.All();
+
+
+            var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+            query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+            query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+            query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+            query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+            query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+            query += "join Branch on Customer.BranchId = Branch.Id";
+            query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+            query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+            query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+            query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+            query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+            query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' order by  VehicleDetail.Id desc ";
+
+            try
+            {
+
+                ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
+                    Select(x => new GrossWrittenPremiumReportModels()
+                    {
+
+                        Policy_Number = x.Policy_Number,
+                        BranchName = x.BranchName,
+                        PolicyCreatedBy = x.PolicyCreatedBy,
+                        Customer_Name = x.Customer_Name,
+                        Transaction_date = x.Transaction_date.ToShortDateString(),
+                        CoverNoteNum = x.CoverNoteNum,
+                        Payment_Mode = x.Payment_Mode,
+                        Payment_Term = x.Payment_Term,
+                        CoverType = x.CoverType,
+                        Currency = x.Currency,
+                        Premium_due = x.Premium_due,
+                        Stamp_duty = x.Stamp_duty,
+                        ZTSC_Levy = x.ZTSC_Levy,
+                        ALMId = x.ALMId,
+                        Comission_Amount = x.Comission_Amount,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        RadioLicenseCost = x.RadioLicenseCost,
+                        Zinara_License_Fee = x.Zinara_License_Fee,
+                        PolicyRenewalDate = x.PolicyRenewalDate,
+                        IsActive = x.IsActive,
+                        RenewPolicyNumber = x.RenewPolicyNumber,
+                        // BusinessSourceName = x.BusinessSourceName,
+                        //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                        SourceDetailName = x.SourceDetailName,
+                    }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            List<SiteDailyModel> siteDaily = new List<SiteDailyModel>();
+            SiteDailySearchModel searchmodel = new SiteDailySearchModel();
+
+            obj.ForEach(x => {
+                var site = new SiteDailyModel();
+                var cou = ListGrossWrittenPremiumReport.FindAll(p => p.BranchName == x.BranchName).Count();
+                site.BranchName = x.BranchName;
+                var month = siteDailySearch.SelectedMonth;
+                //var month = 2;
+                var year = siteDailySearch.SelectedYear;
+
+                var i = 0;
+                foreach (PropertyInfo prop in site.GetType().GetProperties())
+                {
+                    if (prop.Name != "BranchName")
+                    {
+                        i++;
+                        prop.SetValue(site, ListGrossWrittenPremiumReport.FindAll(p => p.BranchName == x.BranchName && p.Transaction_date.Equals(month + "/" + i + "/" + year)).Count());
+                    }
+                    Debug.WriteLine(i + " " + prop.Name + " " + prop.GetValue(site));
+                }
+                // Debug.WriteLine(month + " " + year + " " + site.BranchName + " " + site.fourteen + " " + site.fifteen + " " + site.sixteen + " " + site.seventeen);
+                siteDaily.Add(site);
+
+                ViewBag.Months = new SelectList(Enumerable.Range(1, 12).Select(p =>
+                    new SelectListItem()
+                                        {
+                                            Text = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(p),
+                                            Value = p.ToString()
+                                         }), "Value", "Text");
+
+                ViewBag.Years = new SelectList(Enumerable.Range(DateTime.Today.Year - 19, 20).Select(y =>
+
+                   new SelectListItem()
+                   {
+                       Text = y.ToString(),
+                       Value = y.ToString()
+                   }), "Value", "Text").OrderByDescending(b => b.Text);
+
+            });
+            searchmodel.SiteDailyList = siteDaily;
+            return View(searchmodel);
+        }
+
 
         public ActionResult SummaryProductivityReport() 
         {
