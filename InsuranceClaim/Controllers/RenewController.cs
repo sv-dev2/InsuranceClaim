@@ -1837,7 +1837,8 @@ namespace InsuranceClaim.Controllers
                         Session["RenewVehicleId"] = vehicle.Id;
                         // return RedirectToAction("InitiatePaynowTransaction", "Paypal", new { id = DbEntry.Id, TotalPremiumPaid = Convert.ToString(model.AmountPaid), PolicyNumber = policy.PolicyNumber, Email = customer.EmailAddress });
 
-                        if (model.PaymentMethodId == 1)
+                       
+                        if (model.PaymentMethodId == 1 || model.PaymentMethodId == (int)paymentMethod.PayLater)
                             return RedirectToAction("SaveDetailList", "Renew", new { id = summary.Id, invoiceNumer = model.InvoiceNumber });
                         if (model.PaymentMethodId == 3)
                         {
@@ -2420,8 +2421,11 @@ namespace InsuranceClaim.Controllers
 
             decimal totalpaymentdue = 0.00m;
 
-          
             RenewApproveVRNToIceCash(customer, vehicle); // need to uncomment
+
+
+
+
 
             string Summeryofcover = "";
            

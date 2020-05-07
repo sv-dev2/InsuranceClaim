@@ -959,10 +959,12 @@ namespace InsuranceClaim.Controllers
 
             if (Paymentid != Convert.ToString((int)paymentMethod.ecocash))
             {
-                if (string.IsNullOrEmpty(Paymentid))
-                    Paymentid = "1";
+                
+                    if (string.IsNullOrEmpty(Paymentid))
+                        Paymentid = "1";
 
-                string res = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid));
+                    string res = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid));
+                                
             }
 
             if (!userLoggedin)
@@ -1412,9 +1414,6 @@ namespace InsuranceClaim.Controllers
                         {
                             //if (res.Response.Status == "Approved")
                             // OTPConfirmationObject optMod = new OTPConfirmationObject();
-
-
-
 
                             result = res.Response.Status;
                             vichelDetails.InsuranceStatus = "Approved";

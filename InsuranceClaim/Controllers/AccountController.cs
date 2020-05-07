@@ -5558,20 +5558,22 @@ namespace InsuranceClaim.Controllers
             PayLaterPolicyModel model = new PayLaterPolicyModel();
 
             string query = " select PolicyDetail.PolicyNumber, PolicyDetail.Id as PolicyId, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
-            query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, ";
+            query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, VehicleDetail.Id as VehicleID, ";
             query += " VehicleModel.ModelDescription, SummaryDetail.TotalPremium, SummaryDetail.Id as SummaryDetailId, ";
             query += " PaymentInformation.Id as PaymentInformationId,  case when ";
             query += " PaymentMethod.Name <> 'PayLater' then 'Paid' else 'PayLater' end as PaymentStatus ";
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id ";
-            query += " join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id  left ";
-            query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode  left ";
+            query += " join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id   ";
+            query += " join SummaryVehicleDetail on VehicleDetail.Id= SummaryVehicleDetail.VehicleDetailsId  ";
+            query += " join SummaryDetail on SummaryVehicleDetail.SummaryDetailId = SummaryDetail.Id ";
+            query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode  left ";
             query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
-            query += " join SummaryDetail on Customer.Id = SummaryDetail.CustomerId ";
             query += " join PaymentInformation on SummaryDetail.Id = PaymentInformation.SummaryDetailId ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id  where SummaryDetail.PaymentMethodId =" + (int)paymentMethod.PayLater;
 
             var result = InsuranceContext.Query(query).Select(c => new PayLaterPolicyDetail()
             {
+                VehicleID = c.VehicleID,
                 PolicyId = c.PolicyId,
                 SummaryDetailId = c.SummaryDetailId,
                 PaymentInformationId = c.PaymentInformationId,
@@ -5581,7 +5583,7 @@ namespace InsuranceClaim.Controllers
                 MakeDescription = c.MakeDescription,
                 ModelDescription = c.ModelDescription,
                 TotalPremium = c.TotalPremium
-            }).ToList();
+            }).OrderByDescending(c => c.VehicleID).ToList();
 
             model.PayLaterPolicyDetails = result;
 
@@ -5596,20 +5598,22 @@ namespace InsuranceClaim.Controllers
             PayLaterPolicyModel model = new PayLaterPolicyModel();
 
             string query = " select PolicyDetail.PolicyNumber, PolicyDetail.Id as PolicyId, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
-            query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, ";
+            query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, VehicleDetail.Id as VehicleID, ";
             query += " VehicleModel.ModelDescription, SummaryDetail.TotalPremium, SummaryDetail.Id as SummaryDetailId, ";
             query += " PaymentInformation.Id as PaymentInformationId,  case when ";
             query += " PaymentMethod.Name <> 'PayLater' then 'Paid' else 'PayLater' end as PaymentStatus ";
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id ";
-            query += " join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id  left ";
-            query += " join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode  left ";
+            query += " join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id   ";
+            query += " join SummaryVehicleDetail on VehicleDetail.Id= SummaryVehicleDetail.VehicleDetailsId  ";
+            query += " join SummaryDetail on SummaryVehicleDetail.SummaryDetailId = SummaryDetail.Id  ";
+            query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode  left ";
             query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
-            query += " join SummaryDetail on Customer.Id = SummaryDetail.CustomerId ";
             query += " join PaymentInformation on SummaryDetail.Id = PaymentInformation.SummaryDetailId ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id  where SummaryDetail.Id=" + SummaryDetailId + "and PaymentInformation.Id=" + PaymentDetailId + " and SummaryDetail.PaymentMethodId =" + (int)paymentMethod.PayLater;
 
             var result = InsuranceContext.Query(query).Select(c => new PayLaterPolicyDetail()
             {
+                VehicleID =c.VehicleID,
                 PolicyId = c.PolicyId,
                 SummaryDetailId = c.SummaryDetailId,
                 PaymentInformationId = c.PaymentInformationId,
@@ -5658,6 +5662,8 @@ namespace InsuranceClaim.Controllers
                                 TempData["SuccessMsg"] = "Sucessfully updated.";
 
                                 // PayLaterPolicy
+
+                              
 
                                 return RedirectToAction("PayLaterPolicy");
 

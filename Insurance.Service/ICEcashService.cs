@@ -349,7 +349,9 @@ namespace Insurance.Service
             ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
             // SummaryDetailService.WriteIceCashLog(data, response.Content, "TPIQuote_Web", listofvehicles[0].RegistrationNo);
 
-            SummaryDetailService.WriteLog(data, response.Content, "TPIQuote");
+            string vrn = listofvehicles == null ? "" : listofvehicles[0].RegistrationNo;
+
+            SummaryDetailService.WriteLog(data, response.Content, "TPIQuote", vrn);
 
             return json;
         }
@@ -457,7 +459,7 @@ namespace Insurance.Service
 
             ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
 
-            SummaryDetailService.WriteLog(data, response.Content, "TPIQuote");
+            SummaryDetailService.WriteLog(data, response.Content, "TPIQuote", RegistrationNo);
 
 
 
@@ -774,7 +776,7 @@ namespace Insurance.Service
 
             ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
 
-            SummaryDetailService.WriteLog(data, response.Content, "TPIQuoteUpdate");
+            SummaryDetailService.WriteLog(data, response.Content, "TPIQuoteUpdate", vehicleDetail.RegistrationNo);
 
             return json;
         }
@@ -960,7 +962,7 @@ namespace Insurance.Service
 
             ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
 
-            SummaryDetailService.WriteLog(data, response.Content, "TPILICUpdate");
+            SummaryDetailService.WriteLog(data, response.Content, "TPILICUpdate", vehicleDetail.RegistrationNo);
 
             return json;
         }
@@ -1085,7 +1087,7 @@ namespace Insurance.Service
 
             Insurance.Service.EmailService log = new Insurance.Service.EmailService();
             // log.WriteLog("TPIPolicy :" + response.Content);
-            SummaryDetailService.WriteLog(data, response.Content, "TPIPolicy");
+            SummaryDetailService.WriteLog(data, response.Content, "TPIPolicy", vehicleDetail.RegistrationNo);
 
             return json;
         }
@@ -1153,7 +1155,7 @@ namespace Insurance.Service
 
             Insurance.Service.EmailService log = new Insurance.Service.EmailService();
             // log.WriteLog("TPIPolicy :" + response.Content);
-            SummaryDetailService.WriteLog(data, response.Content, "TPIPolicy");
+            SummaryDetailService.WriteLog(data, response.Content, "TPIPolicy", vehicleDetail.RegistrationNo);
 
             return json;
         }

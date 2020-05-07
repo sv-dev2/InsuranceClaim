@@ -1190,7 +1190,7 @@ namespace InsuranceClaim.Controllers
                 model.Discount = 0.00m;
                 foreach (var item in vehicle)
                 {
-                    decimal penalitesAmt =  Convert.ToDecimal(item.PenaltiesAmt);
+                    decimal penalitesAmt = Convert.ToDecimal(item.PenaltiesAmt);
 
                     model.TotalPremium += item.Premium + item.ZTSCLevy + item.StampDuty + item.VehicleLicenceFee + penalitesAmt;
                     if (item.IncludeRadioLicenseCost)
@@ -1426,7 +1426,7 @@ namespace InsuranceClaim.Controllers
                                     if (payNow.IsSuccessPayment)
                                     {
                                         Session["PollUrl"] = payNow.PollUrl;
-                                       
+
                                         return Redirect(payNow.ReturnUrl);
                                     }
                                     else
@@ -1667,14 +1667,14 @@ namespace InsuranceClaim.Controllers
                                         customerdata.CustomerId = customerdata.Id;
                                     }
 
-                                    if (!User.IsInRole("Staff") )
+                                    if (!User.IsInRole("Staff"))
                                     {
-                                        if(!User.IsInRole("Renewals"))
+                                        if (!User.IsInRole("Renewals"))
                                         {
                                             InsuranceContext.Customers.Update(customerdata); // 13_june_2019
-                                        }                                                                 
+                                        }
                                     }
-                                   
+
                                 }
                             }
                         }
@@ -2586,7 +2586,7 @@ namespace InsuranceClaim.Controllers
                             if (payNow.IsSuccessPayment)
                             {
                                 Session["PollUrl"] = payNow.PollUrl;
-                                return Redirect(payNow.ReturnUrl);                             
+                                return Redirect(payNow.ReturnUrl);
                             }
                             else
                             {
@@ -2596,9 +2596,9 @@ namespace InsuranceClaim.Controllers
                         else if (model.PaymentMethodId == (int)paymentMethod.ecocash)
                         {
                             //return RedirectToAction("InitiatePaynowTransaction", "Paypal", new { id = DbEntry.Id, TotalPremiumPaid = Convert.ToString(model.AmountPaid), PolicyNumber = policy.PolicyNumber, Email = customer.EmailAddress });
-                          
-                            
-                            return RedirectToAction("EcoCashPayment", "Paypal", new { id = DbEntry.Id, invoiceNumber = model.InvoiceNumber, Paymentid = model.PaymentMethodId.Value }  );
+
+
+                            return RedirectToAction("EcoCashPayment", "Paypal", new { id = DbEntry.Id, invoiceNumber = model.InvoiceNumber, Paymentid = model.PaymentMethodId.Value });
 
                             // return RedirectToAction("SaveDetailList", "Paypal", new { id = DbEntry.Id, invoiceNumer = model.InvoiceNumber, Paymentid = model.PaymentMethodId.Value });
 
@@ -2697,7 +2697,7 @@ namespace InsuranceClaim.Controllers
                 }
                 else
                 {
-                    payNowModel.ReturnUrl= System.Configuration.ConfigurationManager.AppSettings[urlPath] + "/Paypal/failed_url";
+                    payNowModel.ReturnUrl = System.Configuration.ConfigurationManager.AppSettings[urlPath] + "/Paypal/failed_url";
                 }
 
             }
@@ -3199,6 +3199,9 @@ namespace InsuranceClaim.Controllers
             Session.Remove("issummaryformvisited");
             Session.Remove("PaymentId");
             Session.Remove("InsuranceId");
+            Session["RequestNewQuote"] = "1";
+
+
         }
 
 
@@ -4113,6 +4116,24 @@ namespace InsuranceClaim.Controllers
             return Json(riskDetailModel, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        public JsonResult SetNewRequestSession()
+        {
+            Session["RequestNewQuote"] = "1";
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CheckNewRequestSession()
+        {
+            bool result = false;
+            if (Session["RequestNewQuote"] != null)
+            {
+                result = true;
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
         public JsonResult GetReNewLicenseAddress()

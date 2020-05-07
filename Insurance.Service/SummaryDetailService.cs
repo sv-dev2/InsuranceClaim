@@ -110,7 +110,7 @@ namespace Insurance.Service
 
         }
 
-        public static void WriteLog(string request, string response, string method)
+        public static void WriteLog(string request, string response, string method, string vrn="")
         {
             string message = string.Format(" Time: {0}", DateTime.Now);
             message += Environment.NewLine;
@@ -128,7 +128,7 @@ namespace Insurance.Service
             message += Environment.NewLine;
             message += Environment.NewLine;
             message += "-----------------------------------------------------------";
-            message += "-----------------------------------------------------------";
+            message += vrn;
 
 
 
