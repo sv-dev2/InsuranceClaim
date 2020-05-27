@@ -1155,7 +1155,7 @@ namespace Insurance.Service
 
             Insurance.Service.EmailService log = new Insurance.Service.EmailService();
             // log.WriteLog("TPIPolicy :" + response.Content);
-            SummaryDetailService.WriteLog(data, response.Content, "TPIPolicy", vehicleDetail.RegistrationNo);
+            SummaryDetailService.WriteLog(data, json.Response.Message, "TPIPolicy", vehicleDetail.RegistrationNo);
 
             return json;
         }

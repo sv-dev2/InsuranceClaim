@@ -25,55 +25,48 @@
 </div>
 
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-            <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
 
-                    @*<div class="col-xs-2 bs-wizard-step complete">
-                             complete
-                            <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="#" class="bs-wizard-dot"></a>
-                            <div class="text-center bs-wizard-stepnum">Product Details</div>
-                        </div>*@
-
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="form-section-top">
         <div class="container">
 
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+            <div class="row bs-wizard">
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                    <div class="Process-step-section process-block">
+                        <div class="col-sm-12 bs-wizard-step complete">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
+
+                      
+
+                        <div class="col-sm-12 bs-wizard-step active">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+
+                    </div>
+                
+                </div>
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
                     @using (Html.BeginForm("GenerateQuote", "CustomerRegistration"))
                     {
                         <div>
@@ -137,7 +130,7 @@
                             <div class="form-group-input">
                                 <div id="contact-form" class="contact-form">
                                     <div class="row">
-                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="col-sm-6 col-md-6 form-group-text" style="display:none">
                                             <div class="form-group">
                                                 @Html.Label("Vehicle Number", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(m => m.NoOfCarsCovered, new { @placeholder = "Vehicle Number", @autocomplete = "off", @class = "form-control", @maxlength = "2", @readonly = "readonly" })
@@ -145,7 +138,7 @@
                                                 @Html.ValidationMessageFor(m => m.NoOfCarsCovered, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
-                                        <div class="col-md-6 form-group-text">
+                                        <div class="col-md-12 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Registration No", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(m => m.RegistrationNo, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Registration Number" })
@@ -198,7 +191,9 @@
                                                 <div class="form-group">
                                                     @Html.Label("Vehicle Usage", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(x => x.VehicleUsage, new SelectList(ViewBag.VehicleUsage, "Id", "VehUsage"), "Select Vehicle Usage", new { @class = "form-control" })
-                                                </div>
+                                              
+                                                
+                                                  </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div class="form-group">
@@ -342,8 +337,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr class="higlighter" />
-                                        <div id="thridparty" class="row">
+                                        @*<hr class="higlighter" />*@
+                                        <div id="thridparty" class="row"style="display:none">
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div id="thirdpartycheck" class="form-group">
                                                     @Html.Label("Add Third Party Insurance", new { @class = "gender-label" })
@@ -789,7 +784,7 @@
                 type: "GET",
                 dataType: "json",
                 success: function (result) {
-                    debugger;
+                 
                     $("#inputaddress1").val(result.LicenseAddress1);
                     $("#inputaddress1").addClass("inputDisabled");
                     $("#inputaddress2").val(result.LicenseAddress2);
@@ -853,11 +848,9 @@
                 debugger;
 
                 var sumInsuredAmount = $("#SumInsured").val();
-
                 if(sumInsuredAmount<result)
                 {
                     toastr.error("Sum Insured amount should be greater or equal to " + result);
-
                 }
                 $(".loading-area").hide();
             }
@@ -995,7 +988,7 @@
             data: { ProductId: $("#ProductId").val() },
             dataType: "json",
             success: function (result) {
-                debugger;
+              
                 var $dropdown = $("#VehicleUsage");
                 $dropdown.empty();
                 $.each(result, function () {
@@ -1285,6 +1278,10 @@
         else {
             $("#divSumInsured").show();
         }
+
+
+
+        //RiskDetilsPage();
     });
 
 
@@ -1292,7 +1289,7 @@
 
 
     $(function () { // will trigger when the document is ready
-        debugger;
+       
         //$('#datetimepicker1,#datetimepicker2,#datetimepicker3,#datetimepicker4').datetimepicker({
         //    format: 'MM/D/YYYY',
 
@@ -1301,7 +1298,7 @@
 
         $("#ProductId").change(function () {
             $("fieldset").removeAttr("disabled");
-            debugger;
+       
             GetVehicleUsage();
 
             GetVehicleTaxClass($("#ProductId").val());
@@ -1352,7 +1349,7 @@
                     url: "@Url.Action("CheckDuplicateRegisterationNumberExist", "CustomerRegistration")",
                     data: { regNo: $("#RegistrationNo").val() },
                     success: function (data) {
-                        debugger;
+                       
                         if (data) {
                             toastr.warning("Vehicle with same Registeration Number already exist.");
                             $("#RegistrationNo").focus();
@@ -1387,7 +1384,7 @@
                     url: "@Url.Action("CheckIsVrnAlreadyExist", "CustomerRegistration")",
                     data: { vrn: $("#RegistrationNo").val() },
                     success: function (data) {
-                        debugger;
+                        
                         if (data=="True") {
                             toastr.warning("Vehicle Registration number already exist.");
                             $("#RegistrationNo").focus();
@@ -1569,7 +1566,7 @@
             data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val() },
             success: function (data) {
 
-                debugger;
+           
 
                 if (data.result == 0) {
                     toastr.error(data.message);
@@ -1659,6 +1656,7 @@
         if($("#TaxClassId").val()!="")
         {
             $(".loading-area").show();
+
             setTimeout(function(){
                 $(".loading-area").hide();
                 CalculatePremiumByCoverType();
@@ -1771,7 +1769,7 @@
         var taxClass =  $("#TaxClassId").val();
 
         $(".loading-area").show();
-        debugger;
+  
         //if (flag) {
             //$(".loading-area").show();
             $.ajax({
@@ -1802,7 +1800,7 @@
 
                         // for displaying selected make and model
 
-                        debugger;
+                      
 
                         var vehicle = {};
                         vehicle = data.Data.Response.Quotes[0].Vehicle;
@@ -1902,10 +1900,6 @@
                     }
                 } //EINDE error
             }); //EINDE ajax
-
-
-  
-
     }
 
 
@@ -1953,7 +1947,7 @@
             data: { makeCode: $("#MakeId").val() },
             dataType: "json",
             success: function (result) {
-                debugger;
+                
                 var $dropdown = $("#ModelId");
                 $dropdown.empty();
                 $.each(result, function () {
@@ -2310,5 +2304,13 @@
             $("#NumberofPersons").val("0");
         }
     })
+
+
+    function GoToSummaryDetail(json)
+    {
+        $(".loading-area").show();
+        window.location.href = '/CustomerRegistration/SummaryDetail';
+    }
+
 
 </script>

@@ -1,14 +1,308 @@
-﻿
+﻿@model InsuranceClaim.Models.SearchVRNModel
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
     bool userLoggedin = ((System.Web.HttpContext.Current.User != null) && (System.Web.HttpContext.Current.User.Identity.IsAuthenticated));
+}
+<style>
 
+.home-slider-sectopn .carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #57c5d4;
+    padding-bottom: 80px;
+}
+.ktqDAv {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-right: 0px;
+    flex: 0 1 auto;
+}
+.hqBAQN {
+    box-sizing: border-box;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-clip: content-box;
+    flex: 1 0 auto;
+}
+.btFbEQ {
+    position: relative;
+}
+.gKVjGm {
+    margin-bottom: 48px;
+}
+.eANdEQ {
+    position: relative;
+    width: 100%;
+}
+.hsRkzc {
+    color: rgb(64, 64, 64);
+    text-overflow: ellipsis;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    border-image: initial;
+    outline: none;
+    overflow: hidden;
+}
+.BLCxL {
+    display: none;
+    z-index: 2;
+    white-space: nowrap;
+    color: rgb(127, 127, 127);
+    max-width: 410px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0px;
+    overflow: hidden;
+    animation: 3s steps(45) 0s 1 normal none running typing;
+}
+.dIAcwh {
+    position: absolute;
+    max-width: 0px;
+    color: rgb(64, 64, 64);
+    top: 0px;
+    transition: right 0.2s ease 0s;
+    border-width: initial;
+    border-style: none;
+    border-color: initial;
+    border-image: initial;
+    background: transparent;
+}
+.insurance-bx-content h3 {
+    font-size: 40px;
+    margin: 0 0 5px;
+    color: #222;
+    font-weight: 600;
+    font-family: AkzidenzGroteskBE, sans-serif;
+    font-weight: 700;
+    font-size: 52px;
+    line-height: 52px;
+    letter-spacing: -1.3px;
+    text-align: left;
+    color: rgb(255, 255, 255);
+}
+.insurance-bx-content {
+    padding: 60px 15px 60px 50px;
+    max-width: 715px;
+    margin: 0 0 0 auto;
 }
 
-<div class="coll-back">
+ .searchbar {
+    margin-bottom: auto;
+    margin-top: 30px;
+    height: 60px;
+    background-color: #fff;
+    border-radius: 100px;
+    padding: 10px;
+}
+  .search_input{
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 0;
+    caret-color:transparent;
+    line-height: 40px;
+    transition: width 0.4s linear;
+    }
+
+  
+  .searchbar:hover > .search_input{
+    padding: 0 10px;
+    width: 450px;
+    caret-color:#57c5d4;
+    transition: width 0.4s linear;
+    }
+
+ 
+   .searchbar:hover > .search_icon{
+    background: white;
+    color: #23527c;
+   text-decoration: none;   }
+
+       
+.search_icon {
+    height: 40px;
+    width: 40px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: white;
+    text-decoration: none;
+    background: #9db753;
+    text-decoration: none;
+}
+.search_icon a:focus, .search_icon a:hover {
+    color: #23527c !important;
+    text-decoration: none;
+}
+div#login-row {
+    margin: 30px -15px 20px -15px;
+}
+div#login-row .form-group .btn-info {
+    color: #fff;
+    background-color: #16909d;
+    border-color: #16909d;
+}
+div#login-row .form-group input{height:40px;}
+.home-slider-sectopn .carousel-inner{
+    position: relative;
+}
+.home-slider-sectopn .carousel-inner video {
+    position: absolute;
+    top: 0;
+width:100%;
+}
+
+.banner-form {
+    text-align: left;
+    margin-top:65px;
+    padding-left: 70px;
+    margin-bottom:50px;
+}
+
+.banner-form form {
+	background-color:#fff;
+	position:relative;
+	border-radius: 30px;
+	max-width: 730px;
+	display: inline-block;
+}
+
+.banner-form input,
+.banner-form .dropdown {
+	background-position: 20px center;
+	background-repeat: no-repeat;
+	font-size: 16px;
+}
+
+.banner-form .dropdown li a {
+	line-height: 20px;
+}
+
+.banner-form .dropdown {
+    width: 250px;
+    line-height: 45px;
+    padding: 0 15px 0 40px;
+    text-align: left;
+    background-image: url(../images/others/location-bg.png);
+    background-position: 10px center;
+}
+
+.banner-form .dropdown-menu {
+	min-width: 100%;
+	left: 0px !important;
+}
+
+.banner-form .dropdown-menu a {
+	font-size: 16px;
+}
+
+.banner-form .dropdown a {
+	display: block;
+}
+
+.banner-form .dropdown a i {
+	float: right;
+	margin-top: 15px;
+}
+
+.banner-form .dropdown a {
+    font-size: 16px;
+    margin: 0;
+    color: #000;
+    border: none;
+    border-radius: 5px 0 0 5px;
+	text-transform: capitalize;
+padding: 8px 0px;
+}
+
+.banner-form input {
+	width: 290px;
+	padding:0 45px;
+	color: #11414e;
+	border: none;
+	border-right: 1px solid #cdcdcd;
+	border-radius: 30px 0 0 30px;
+	background-image: url(../images/others/search-bg.png);
+}
+
+.banner-form input:focus {
+	border-right-color: #cdcdcd;
+}
+
+.banner-form input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #11414e;
+}
+.banner-form input::-moz-placeholder { /* Firefox 19+ */
+  color: #11414e;
+}
+.banner-form input:-ms-input-placeholder { /* IE 10+ */
+  color: #11414e;
+}
+.banner-form input:-moz-placeholder { /* Firefox 18- */
+  color: #11414e;
+}
+
+.banner-form .dropdown a {
+	color: #11414e;
+}
+
+.banner-form .form-control, 
+.banner-form button.btn-primary, 
+.banner-form .dropdown {	
+	float: left;
+	height:60px;
+	margin-bottom: 0;
+	background-color: #fff;
+}
+
+.banner-form a.btn-primary {
+    font-size: 14px;
+    height: 60px;
+    color: #fff;
+    width: 146px;
+    margin-right: -1px;
+    padding: 0;
+    line-height: 60px;
+    background-color: #16909d;
+    border: 1px solid #16909d;
+    border-radius: 0 30px 30px 0;
+    text-transform: uppercase;
+    /* padding: 2px 20px; */
+}
+
+.banner-form button.btn-primary:before {
+	display: none;
+}
+
+.dropdown a:hover {
+	color: #008def;
+}
+input.dropdown.tr-change-dropdown:focus {
+    outline: none;
+}
+
+
+    /* Set the size of the div element that contains the map */
+    #map {
+        height: 400px; /* The height is 400 pixels */
+        width: 100%; /* The width is the width of the web page */
+    }
+
+</style>
+
+@*<div class="coll-back">
     <a href=""><img src="~/Images/call-me-back.png"></a>
-</div>
+</div>*@
 <div class="home-slider-sectopn">
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
@@ -20,35 +314,41 @@
 
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
+<video loop="" autoplay="" src="https://s3-us-west-2.amazonaws.com/hippo-static/videos/full loop.mp4" muted="" class="style__Video-sc-32t66v-0 jbJiFb"></video>
 		<div class="row">
                             <div class="col-sm-5">
-							   <div class="insurance-bx-content">
-							       <h3>Get the best</h3>
-								   <h3><strong>Car Insurance quotes</strong></h3>
-								   <h3>for you. </h3>
-								   <ul class="list-inline">
-								      <li><a href="/CustomerRegistration/Index">Get a quote </a></li>
-								   </ul>
-							   </div>
-                            </div>
-                            <div class="col-sm-7 genebanner-img-20">
-                                <img class="img-responsive" src="~/Images/genebanner-1.jpg" />
-                            </div>
-                            </div>
+							   <div class="insurance-bx-content">							    
+								   <h3>Get the Best Car Insurance</br>quotes for you</h3>
+								 
+        </div>
+</div>
+
+            <div class="col-md-7">
+                <div class="banner-form">
+                   
+@using (Html.BeginForm("SearchVrn", "InsuranceHome", FormMethod.Post))
+{
+   
+    @Html.TextBoxFor(m => m.RegistrationNum, new { @class = "form-control", @autocomplete = "off", @placeholder = "Registration Number" })
+    @Html.TextBoxFor(m => m.NationalId, new { @class = "dropdown tr-change-dropdown", @autocomplete = "off", @placeholder = "National Id" })
+
+
+    <input type="submit" class="btn btn-primary" value="Request Quote" />
+}
+
+                        
+                   
+                </div>
+            </div>
+
+          
+
 		@*<div>
                 <div class="item active">
                     <img src="~/Images/genebanner-1.jpg" />
                 </div>
             </div>*@
-            
-
            
-
-
-
-            
-           
-
 
         </div>
        <!--  <div class="click-here bottom-here">
@@ -57,19 +357,62 @@
     </div>
 </div>
 
-
-
 <div class="policy-option-section">
     <div class="container">
-
         <div class="insurance-text text-center">
-            <h4>OUR INSURANCE PRODUCTS</h4>
-            <p>Enjoy world-class service and true value for money.</p>
-
-        
+            <h4>Want to Compare Car Insurance Quotes?</h4>
+            <p>Use any off these 3 easy methods to get a car Insurance quote.</p>
         </div>
 
-        <div class="policy-option">
+        <div class="insurance-details-bx">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 text-center col-mb-25px">                                   
+                        <div class="compare-bx-content">                                                   
+                            <div >
+                                <a href="javascript:void(0);" onclick="ShowGoogleMap();">  <img src="~/Images/Google_map.png" style="width:130px" /> </a>
+</div>
+                            <div >
+                                <p>Transact on your  Automated Licencing Machine and get your Zinara & Radio License</p>
+                            </div>         
+                        </div>
+                </div>
+                
+                <div class="col-xs-12 col-sm-4 text-center col-mb-25px">
+                    <div class="compare-bx-content">
+                        @*<h4>Call us now</h4>
+                        <p class="margin-bottom-0">and get your obligation free</p>
+                        <p>Car Insurance quote.</p>*@
+
+                        <div>
+                             <img src="~/Images/callus.jpeg" style="width:70px" />                          
+                        </div>
+
+                      <div style="margin-top:19px;">
+                          <a href="" class="ph-no">0732 884 884</a>  
+                      </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-4 text-center col-mb-25px">
+                    <div class="compare-bx-content">
+                        @*<h4>Get a quote online</h4>
+                        <p>Car Insurance quote.</p>*@
+                        <div>
+                              <img src="~/Images/car-insurance.png" style="width:70px" />
+                            <br />
+                        </div>
+
+                        <div style="margin-top:5px">
+                            <button type="button" onclick="GetQuote();" class="btn btn-success">Get a quote <i class="fa fa-arrow-right"></i></button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*<div class="policy-option">
             <ul>
 
                 @if (userLoggedin && User.IsInRole("Staff"))
@@ -83,7 +426,7 @@
                 <li><a href=""><img src="~/Images/customer-icon.png"><p>Customer Relationship System</p></a></li>
                 <li><a href="~/MobileApp/geneinsure_v_1.8.apk"><img src="~/Images/MobileAppIcon.png" style="height:130px" /><p>Download Mobile App Here</p></a></li>
             </ul>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -98,12 +441,8 @@
         </div>
     </div>*@
 
-
 @*<div class="container">
-
         <div class="main-content-b">
-
-
             <h1>Our Offerings​</h1>
 
             <h3>Comprehensive Damage Cover</h3>
@@ -117,7 +456,6 @@
             </p>
 
             <h3>Add-On cov​ers</h3>
-
             <p>
                 When it comes to car insurance, additional coverage is always better. You can enhance your vehicle insurance coverage protection further with our wide-range of add-on covers such as Nil Depreciation, Consumables, Engine Cover & Key Protect Cover.
             </p>
@@ -154,6 +492,67 @@
             </div>
         </div>
     </div>*@
+
+
+
+
+    </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Request for call back</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <p>Your request has been sent successfully.</p>
+                <p>Will get call back very soon.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modelGoogleMap" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Google Map</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="map"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8k7mxHV3-Md1VyrQluTgygCpkf2HrY7c&callback=initMap">
+</script>
+
+<script src="~/Scripts/googleMap.js"></script>
+
+<script type="text/javascript">
+
+    function GetQuote() {
+        $(".loading-area").show();
+        window.location.href = '/CustomerRegistration/Index';
+    }
+</script>
 
 
 

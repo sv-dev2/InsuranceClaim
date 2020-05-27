@@ -26,15 +26,15 @@ namespace InsuranceClaim.Models
         [Required(ErrorMessage = "Please Enter First Name.")]
         [MaxLength(30, ErrorMessage = "First name must be less than 30 characters long.")]
         public string FirstName { get; set; }
-        [Display(Name = "Last Name")]
+        [Display(Name = "Surname")]
         [Required(ErrorMessage = "Please Enter Last Name.")]
         [MaxLength(30, ErrorMessage = "Last name must be less than 30 characters long.")]
         public string LastName { get; set; }
-        [Display(Name = "Address1")]
+        [Display(Name = "Address")]
         [Required(ErrorMessage = "Please Enter Address 1.")]
         [MaxLength(100, ErrorMessage = "Address 1 must be less than 100  characters long.")]
         public string AddressLine1 { get; set; }
-        [Display(Name = "Address2")]
+        [Display(Name = "Surburb")]
         [Required(ErrorMessage = "Please Enter Address 2.")]
         [MaxLength(100, ErrorMessage = "Address 2 must be less than 100  characters long.")]
         public string AddressLine2 { get; set; }

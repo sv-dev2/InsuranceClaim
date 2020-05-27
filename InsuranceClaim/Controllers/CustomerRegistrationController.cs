@@ -144,6 +144,11 @@ namespace InsuranceClaim.Controllers
                 RemoveSession();
 
 
+                if (Session["HomeNationalId"] != null)
+                {
+                    customerModel.NationalIdentificationNumber = (string)Session["HomeNationalId"];
+                    Session["HomeNationalId"] = null;
+                }
 
                 return View(customerModel);
             }
@@ -171,6 +176,15 @@ namespace InsuranceClaim.Controllers
                     customerModel.CountryCode = customerData.CountryCode;
                     customerModel.IsCustomEmail = customerData.IsCustomEmail;
                 }
+
+                if (Session["HomeNationalId"] != null)
+                {
+                    customerModel.NationalIdentificationNumber = (string)Session["HomeNationalId"];
+                    Session["HomeNationalId"] = null;
+                }
+
+
+
                 return View(customerModel);
             }
 
@@ -421,6 +435,12 @@ namespace InsuranceClaim.Controllers
             //ViewBag.Sources = InsuranceContext.BusinessSources.All();
 
 
+            
+               
+
+          
+
+
             var data1 = (from p in InsuranceContext.BusinessSources.All().ToList()
                          join f in InsuranceContext.SourceDetails.All().ToList()
                          on p.Id equals f.BusinessId
@@ -582,6 +602,9 @@ namespace InsuranceClaim.Controllers
             return View(viewModel);
         }
 
+        
+
+
         public void SetValueIntoSession(int summaryId)
         {
             Session["ICEcashToken"] = null;
@@ -622,9 +645,17 @@ namespace InsuranceClaim.Controllers
                 TempData["ViewModel"] = model;
 
                 if (User.IsInRole("Staff"))
+                {
                     return RedirectToAction("RiskDetail", "ContactCentre", new { id = 1 });
+                    //return Json("/ContactCentre/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                }
+
                 else
+                {
                     return RedirectToAction("RiskDetail", new { id = 1 });
+                   // return Json("/CustomerRegistration/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                }
+                    
             }
 
             int vehicleUsage = model.VehicleUsage == null ? 0 : model.VehicleUsage.Value;
@@ -638,9 +669,16 @@ namespace InsuranceClaim.Controllers
                 TempData["ViewModel"] = model;
 
                 if (User.IsInRole("Staff"))
+                {
                     return RedirectToAction("RiskDetail", "ContactCentre", new { id = 1 });
+                  //  return Json("/ContactCentre/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                }                
                 else
-                    return RedirectToAction("RiskDetail", new { id = 1 });
+                {
+                      return RedirectToAction("RiskDetail", new { id = 1 });
+                    //return Json("/CustomerRegistration/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                }
+                 
             }
 
             if (model.NumberofPersons == null)
@@ -711,19 +749,21 @@ namespace InsuranceClaim.Controllers
 
                     if (btnAddVehicle == "")
                     {
-                        return RedirectToAction("SummaryDetail");
+                         return RedirectToAction("SummaryDetail");
+                       // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
                         // while click on updat button or submit buttton without add more.
                         if (User.IsInRole("Staff"))
                         {
-                            return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
+                             return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
+                           // return Json("/ContactCentre/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
                             return RedirectToAction("RiskDetail", new { id = 0 });
-
+                           // return Json("/CustomerRegistration/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -733,16 +773,16 @@ namespace InsuranceClaim.Controllers
                 catch (Exception ex)
                 {
                     //  WriteLog(ex.Message);
-
                     if (User.IsInRole("Staff"))
                     {
                         return RedirectToAction("RiskDetail", "ContactCentre");
+                       // return Json("/ContactCentre/RiskDetail", JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
-                        return RedirectToAction("RiskDetail");
+                         return RedirectToAction("RiskDetail");
+                       // return Json("/CustomerRegistration/RiskDetail", JsonRequestBehavior.AllowGet);
                     }
-
                 }
 
             }
@@ -794,12 +834,13 @@ namespace InsuranceClaim.Controllers
 
                         if (User.IsInRole("Staff"))
                         {
-                            return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
+                             return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
+                           // return Json("/ContactCentre/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
                             return RedirectToAction("RiskDetail", new { id = 0 });
-
+                            //return Json("/CustomerRegistration/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -850,13 +891,15 @@ namespace InsuranceClaim.Controllers
                         }
 
                         return RedirectToAction("SummaryDetail");
+                       // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
                     }
 
                 }
                 catch (Exception ex)
                 {
                     //  WriteLog(ex.Message);
-                    return RedirectToAction("SummaryDetail");
+                      return RedirectToAction("SummaryDetail");
+                   // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
                 }
             }
         }
@@ -1726,10 +1769,13 @@ namespace InsuranceClaim.Controllers
                                 policy.CreatedOn = DateTime.Now;
                                 InsuranceContext.PolicyDetails.Insert(policy);
 
+
+
                                 Session["PolicyData"] = policy;
                             }
                             else
                             {
+
                                 PolicyDetail policydata = InsuranceContext.PolicyDetails.All(policy.Id.ToString()).FirstOrDefault();
                                 policydata.BusinessSourceId = policy.BusinessSourceId;
                                 policydata.CurrencyId = policy.CurrencyId;
@@ -3348,6 +3394,10 @@ namespace InsuranceClaim.Controllers
             }
             return json;
         }
+
+
+
+
         public JsonResult GetVehicleModel(string makeCode)
         {
             var service = new VehicleService();
@@ -4223,9 +4273,12 @@ namespace InsuranceClaim.Controllers
             insure.Status = "Cancelled";
             InsuranceContext.PolicyDetails.Update(insure);
             return Json(Policy, JsonRequestBehavior.AllowGet);
-
-
         }
+
+        
+
+
+
     }
 }
 

@@ -33,16 +33,16 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>GeneInsure</title>
-   
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/style.css" rel="stylesheet" />
     <link href="~/Content/font-awesome.css" rel="stylesheet" />
     <link href="~/Content/toastr.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-    
-    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" />
-     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+  <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" />
 
     <script src="~/Scripts/jquery-1.10.2.js"></script>
 
@@ -95,20 +95,6 @@
     </div>
 
     <div class="top-header-section">
-        <div class="gray-top-header">
-            <div class="row-box">
-                <div class="col-md-4 top-header-white">
-
-                </div>
-                <div class="col-md-8 top-header-right text-right">
-                    <div class="">
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
         <div class="logo-section-details">
             <div class="container">
                 <div class="row">
@@ -116,64 +102,27 @@
                         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 logo-blocks">
                             <div class="logo-img">
                                 <a href="~/InsuranceHome/Index/Index"><img src="~/Images/geneinsure-logo1.png" class="img-responsive"></a>
-
-
-                            </div>
+							</div>
                         </div>
+
+
                         <div class="col-md-9 col-sm-9 col-xs-12 col-lg-9">
-                            <div class="skype-details">
-                                <ul class="list-inline">
-                                    <li><a href="tel:+2638677223344"><img src="~/Images/call-icon.png" />  08677 223 344 </a></li>
-                                    <li><a href=""><img src="~/Images/whatsapp-icon.png" />  0719 884 884 ,  0732 884 884</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        @*<div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 renew-blocks">
-                                <div class="text-right">
-                                    <div class="renew-btn">
-                                        <a href="tel:+2638677223344" >Contact Us On : <strong>+263 8677 223 344 </strong><br /></a>
-
-                                        @if (userLoggedin)
-                                        {
-                                            <a class="wallet-btn" href="javascript:void(0);">Wallet : $ @LoyalyPoints  </a>
-                                        }
-                                    </div>
-                                    <div class="skype-details">
-                                        <ul>
-                                            <li>Whatsapp : <span>+263 719 884 884</span> <span>+263 732 884 884</span></li>
-                                        </ul>
-                                    </div>
-                                    <div class="login-btn" style="@(userLoggedin ? "display:none;" : "display:inline-block;")">
-                                        <ul class="list-inline">
-                                            <li><a href="/Account/Login">Login</a></li>
-                                            <li><a href="">Register</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="login-btn" style="@(userLoggedin ? "display:block;" : "display:none;")">
-                                        <ul class="list-inline">
-                                            <li>@(userLoggedin ? "Welcome " + fname + " " + lname : "Welcome Guest")</li>
-
-                                            @if (userLoggedin)
-                                            {
-                                                <li><a href="/Account/Logout">Logout</a></li>
-                                            }
-
-                                            <li><a href="/Account/MyPolicies">My Policies</a></li>
-                                            <li><a href="/Account/QuotationList">My Quotation</a></li>
-                                        </ul>
-                                    </div>
-
-                                </div>
-                            </div>*@
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="menu-navigation">
+						
+						<div class="compare-bx-input">
+						  <ul class="list-inline text-right">
+						  
+						     <li><input type="text" class="form-control" id="txtUserName" placeholder="Name"></li>
+							 <li><input type="text" class="form-control" id="txtUserPhone" placeholder="Phone number"></li>
+							 <li><button class="btn btn-success" onclick="CallBackoUser();" type="button"><i class="fa fa-phone"></i> Call me back</button></li>
+							 <!-- <li class="pull-right"><a class="text-left" href=""><img width="30" src="~/Images/whatsapp-icon.png" />0719 884 884<br>0732 884 884</a></li> -->
+						  </ul>
+					   </div>
+						
+                          
+							        <div class="menu-navigation">
             <nav class="navbar navbar-default">
-                <div class="container">
-                    <div class="row">
+                <div class="">
+                    <div class="">
                         <!-- Brand and toggle get grouped for better mobile display -->
                         <div class="navbar-header">
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -317,10 +266,68 @@
                 </div>
             </nav>
         </div>
+                        </div>
+                        
+
+                            @*<div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 renew-blocks">
+                <div class="text-right">
+                    <div class="renew-btn">
+                        <a href="tel:+2638677223344" >Contact Us On : <strong>+263 8677 223 344 </strong><br /></a>
+
+                        @if (userLoggedin)
+                        {
+                            <a class="wallet-btn" href="javascript:void(0);">Wallet : $ @LoyalyPoints  </a>
+                        }
+                    </div>
+                    <div class="skype-details">
+                        <ul>
+                            <li>Whatsapp : <span>+263 719 884 884</span> <span>+263 732 884 884</span></li>
+                        </ul>
+                    </div>
+                    <div class="login-btn" style="@(userLoggedin ? "display:none;" : "display:inline-block;")">
+                        <ul class="list-inline">
+                            <li><a href="/Account/Login">Login</a></li>
+                            <li><a href="">Register</a></li>
+                        </ul>
+                    </div>
+                    <div class="login-btn" style="@(userLoggedin ? "display:block;" : "display:none;")">
+                        <ul class="list-inline">
+                            <li>@(userLoggedin ? "Welcome " + fname + " " + lname : "Welcome Guest")</li>
+
+                            @if (userLoggedin)
+                            {
+                                <li><a href="/Account/Logout">Logout</a></li>
+                            }
+
+                            <li><a href="/Account/MyPolicies">My Policies</a></li>
+                            <li><a href="/Account/QuotationList">My Quotation</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>*@
+
+
+
+
+
+
+                        </div>
+                </div>
+            </div>
+        </div>
+
+
 
     </div>
     <div>
         @RenderBody()
+
+        
+
+
+
+
     </div>
     <div class="footer-section">
         <div class="click-here">
@@ -378,6 +385,10 @@
                 <h4>Online Chat <span class="online-dot"></span></h4>
             </div>
         </div>*@
+
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/Sidebar.js"></script>
+
     <script>
         $(document).ready(function () { // will trigger when the document is ready
 
@@ -398,6 +409,7 @@
 
 
             //GetNewReqPopup();
+            SetActiveSidebar();
         });
 
 
@@ -436,6 +448,89 @@
 
 
     </script>
+<style>.menu-navigation .navbar.navbar-default {
+    background: #fff;
+    margin: 0;
+    border: none;
+    border-top: 0px solid #e0e0e0;
+    border-radius: 0;
+    min-height: inherit;
+    padding: 10px 0 0;
+}
+.menu-navigation .navbar-nav li a {
+    padding: 0px 10px;
+    color: #000;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-right: 2px solid #fff;     font-weight: 600;
+}
+.menu-navigation {
+    margin-top: 11px;
+    text-align: right;
+    float: right;
+}
+.menu-navigation .navbar-nav.login-btn li a {
+    border: none;
+    background: none !important;
+    color: #000;
+    background-color: transparent !important;
+    padding: 7px 15px !important;
+    /* display: inline-block; */
+    text-decoration: none;
+    border-radius: 4px;
+}
+.gray-top-header {
+    background: #fff;
+    padding: 0px 0;
+    display: inline-block;
+    width: 100%;
+}
+.logo-section-details {
+    background: #fff;
+    padding: 10px 0px 0px 0px;
+}
+.skype-details {
+    margin: 0px 0 0px;
+    text-align: right;
+}
+.top-header-section {
+    font-family: 'Poppins', sans-serif;
+}
+.menu-navigation .navbar-collapse {
+   padding-right: 0px; 
+}
+.menu-navigation .navbar-nav li a:hover {
+    color: #57c5d4;
+}
+.menu-navigation .navbar-nav.login-btn li a:hover {
+      color: #57c5d4;
+}
+ul.navbar-nav.navbar-right.login-btn.dropdown-top li {
+    padding-left: 10px;
+}
+ul.navbar-nav.navbar-right.login-btn.dropdown-top {
+    margin-top: 10px;
+}
+.menu-navigation .navbar-nav li a {
+    padding: 0px 5px;
+    color: #000;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-right: 2px solid #fff;
+}
+.top-header-section {
+    font-family: 'Poppins', sans-serif;
+    border-bottom: #57c5d4 10px solid;
+}
+.menu-navigation {
+    margin-top: 11px;
+    text-align: right;
+    float: right;
+    margin-bottom: 15px;
+}
+</style>
 
 </body>
 

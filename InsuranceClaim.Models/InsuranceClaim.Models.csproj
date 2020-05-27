@@ -171,6 +171,7 @@
     <Compile Include="ServiceProviderModel.cs" />
     <Compile Include="ServiceProviderTypeModel.cs" />
     <Compile Include="SettingModel.cs" />
+    <Compile Include="SiteDailyModel.cs" />
     <Compile Include="SmsLogModel.cs" />
     <Compile Include="SourceDetailModel.cs" />
     <Compile Include="StampDutyReportModels.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="VehicleRiskAboutExpireModels.cs" />
     <Compile Include="VehicleTaxClassModel.cs" />
     <Compile Include="VehicleUsageModel.cs" />
+    <Compile Include="WebCustomerModel.cs" />
     <Compile Include="ZTSCLevyReportModels.cs" />
   </ItemGroup>
   <ItemGroup>

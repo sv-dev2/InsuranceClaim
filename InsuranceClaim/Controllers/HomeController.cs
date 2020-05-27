@@ -18,6 +18,7 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult Index()
         {
+
             return View();
         }
 
@@ -56,12 +57,6 @@ namespace InsuranceClaim.Controllers
 
           
         }
-
-
-
-
-
-
 
 
 

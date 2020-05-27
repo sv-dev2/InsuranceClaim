@@ -51,6 +51,8 @@ namespace InsuranceClaim.Models
 
         public string SourceDetailName { get; set; }
 
+        public int SummaryDetailId { get; set; }
+
 
     }
     public class ListGrossWrittenPremiumReportModels

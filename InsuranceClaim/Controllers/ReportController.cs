@@ -1317,6 +1317,7 @@ namespace InsuranceClaim.Controllers
             GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
 
             var branchList = InsuranceContext.Branches.All();
+            var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
             var query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
@@ -1325,12 +1326,12 @@ namespace InsuranceClaim.Controllers
             query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
             query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
             query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
-            query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " VehicleDetail.BusinessSourceDetailId,SummaryDetail.id as SummaryDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
             query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
             query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
             query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
-            query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
+           // query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
             query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
@@ -1366,9 +1367,10 @@ namespace InsuranceClaim.Controllers
                     PolicyRenewalDate = x.PolicyRenewalDate,
                     IsActive = x.IsActive,
                     RenewPolicyNumber = x.RenewPolicyNumber,
-                   // BusinessSourceName = x.BusinessSourceName,
+                    BusinessSourceName = x.BusinessSourceName,
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     SourceDetailName = x.SourceDetailName,
+                    SummaryDetailId = x.SummaryDetailId
                 }).ToList();
 
 
@@ -1376,9 +1378,11 @@ namespace InsuranceClaim.Controllers
 
             foreach (var item in ListGrossWrittenPremiumReport)
             {
+                var paymentDetail = paymentInformationsList.Where(c => c.SummaryDetailId == item.SummaryDetailId);
+                if (paymentDetail == null)
+                    continue;
+
                 GrossWrittenPremiumReportModels model = new GrossWrittenPremiumReportModels();
-
-
                 model.Policy_Number = item.Policy_Number;
                 model.BranchName = item.BranchName;
                 model.PolicyCreatedBy = item.PolicyCreatedBy;
@@ -1394,7 +1398,7 @@ namespace InsuranceClaim.Controllers
                 model.IsActive = item.IsActive;
                 model.PolicyRenewalDate = item.PolicyRenewalDate;
                 model.SourceDetailName = item.SourceDetailName;
-                // BusinessSourceName = x.BusinessSourceName,
+                model.BusinessSourceName = item.BusinessSourceName;
                 //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
 
                 var index = list.FindIndex(c => c.Policy_Number == item.Policy_Number);
@@ -1464,7 +1468,7 @@ namespace InsuranceClaim.Controllers
             List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
             ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
-
+            var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
             var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
@@ -1473,12 +1477,12 @@ namespace InsuranceClaim.Controllers
             query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
             query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
             query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
-            query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " VehicleDetail.BusinessSourceDetailId, SummaryDetail.id as SummaryDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
             query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
             query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
             query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
-            query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
+           //query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
             query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
@@ -1488,7 +1492,7 @@ namespace InsuranceClaim.Controllers
             query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0 and SummaryDetail.PaymentMethodId <>" + (int)paymentMethod.PayLater + " and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101))  order by  VehicleDetail.Id desc ";
 
 
-
+          
             ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
                 Select(x => new GrossWrittenPremiumReportModels()
                 {
@@ -1514,9 +1518,10 @@ namespace InsuranceClaim.Controllers
                     PolicyRenewalDate = x.PolicyRenewalDate,
                     IsActive = x.IsActive,
                     RenewPolicyNumber = x.RenewPolicyNumber,
-                   // BusinessSourceName = x.BusinessSourceName,
+                    BusinessSourceName = x.BusinessSourceName,
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     SourceDetailName = x.SourceDetailName,
+                    SummaryDetailId = x.SummaryDetailId
                 }).ToList();
 
 
@@ -1524,8 +1529,12 @@ namespace InsuranceClaim.Controllers
 
             foreach (var item in ListGrossWrittenPremiumReport)
             {
-                GrossWrittenPremiumReportModels model = new GrossWrittenPremiumReportModels();
+                var paymentDetail = paymentInformationsList.Where(c => c.SummaryDetailId == item.SummaryDetailId);
+                if(paymentDetail==null)
+                    continue;
+                
 
+                GrossWrittenPremiumReportModels model = new GrossWrittenPremiumReportModels();
 
                 model.Policy_Number = item.Policy_Number;
                 model.BranchName = item.BranchName;
@@ -1542,7 +1551,7 @@ namespace InsuranceClaim.Controllers
                 model.IsActive = item.IsActive;
                 model.PolicyRenewalDate = item.PolicyRenewalDate;
                 model.SourceDetailName = item.SourceDetailName;
-                // BusinessSourceName = x.BusinessSourceName,
+                model.BusinessSourceName = item.BusinessSourceName;
                 //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
 
                 var index = list.FindIndex(c => c.Policy_Number == item.Policy_Number);
@@ -1805,7 +1814,7 @@ namespace InsuranceClaim.Controllers
             query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
             query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
-            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";      
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
             query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";

@@ -180,5 +180,15 @@ namespace InsuranceClaim.Controllers
                 return View();
             }
         }
+
+        private void test()
+        {
+            // ddkdkkdkkdk dfkdskfsk kfdskfksj fdsfksk sfsdkfksdkf
+            //  fdkfsdkf ksdfksdfj sdfkj dsk dfdsfkk dkfsdkfjds af sdkfjsdkf sdafksdjfsd f
+
+
+        }
+
+
     }
 }

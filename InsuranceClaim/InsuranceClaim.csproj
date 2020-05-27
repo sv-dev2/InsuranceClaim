@@ -281,6 +281,7 @@
     <Compile Include="Controllers\VehicleMakeController.cs" />
     <Compile Include="Controllers\VehicleModelController.cs" />
     <Compile Include="Controllers\VehicleUsageController.cs" />
+    <Compile Include="Controllers\WebCustomerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -906,6 +907,7 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.creditCardValidator.js" />
     <Content Include="Scripts\jquery.table2excel.min.js" />
     <Content Include="Scripts\jquery.tablesorter.js" />
@@ -922,7 +924,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\select2.js" />
+    <Content Include="Scripts\Sidebar.js" />
     <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\WebCustomer.js" />
     <Content Include="Signature\Signature.jpg.jpg" />
     <Content Include="testChat.html" />
     <Content Include="Views\Account\EndorsementDetials.cshtml" />
@@ -1167,6 +1171,8 @@
     <Content Include="Views\Paypal\Test1.cshtml" />
     <Content Include="Views\Shared\EmaiTemplates\NewPolicy.cshtml" />
     <Content Include="Views\Paypal\EcoCashPayment.cshtml" />
+    <Content Include="Views\Shared\EmaiTemplates\UserCallBack.cshtml" />
+    <Content Include="Views\WebCustomer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />

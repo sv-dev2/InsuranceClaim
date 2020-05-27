@@ -1,0 +1,384 @@
+﻿@model InsuranceClaim.Models.WebCustomerModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<!-- <h2>Index</h2> -->
+
+<div class="top-banner-section">
+    <div class="container">
+        <div class="car-insurance-content">
+            <h2>Get Car Insurance In Less<br>Than 5 Minutes<h2>
+        </div>
+    </div>
+</div>
+
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row-bs-wizard">
+
+                @using (Html.BeginForm("GenerateQuote", "CustomerRegistration"))
+                {
+                    <div class="form-group-section">
+
+                        <div class="form-group-input">
+                            <div id="contact-form" class="contact-form">
+
+                                <div id="errorDiv" class="alert alert-danger" role="alert" style="display:none; ">
+                                    <span id="errorMsg"></span>
+                                </div>
+
+                                <div id="riskdetial">
+                                    <div class="form-top-head">
+                                        <h4>Vehicle Details </h4>
+                                    </div>
+
+                                    <div class="form-top-head-in">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                            </div>
+                                            <div class="col-xs-12 col-md-6">
+                                                <div class="form-group">
+                                                    @Html.HiddenFor(m => m.RiskDetail.RegistrationNo)
+                                                    @Html.HiddenFor(m => m.Customer.NationalIdentificationNumber)
+
+                                                    @Html.Hidden("isVehicleRegisteredonICEcash")
+                                                    @Html.Hidden("basicPremiumICEcash")
+                                                    @Html.Hidden("stampDutyICEcash")
+                                                    @Html.Hidden("LevyICEcash")
+                                                  
+                                                    @Html.HiddenFor(m => m.RiskDetail.InsuranceId)
+                                                    @Html.HiddenFor(m => m.RiskDetail.LicenseId)
+                                                    @Html.HiddenFor(m => m.RiskDetail.LicExpiryDate)
+                                                    @Html.HiddenFor(m => m.RiskDetail.CombinedID)
+
+                                                    @Html.HiddenFor(m => m.RiskDetail.VehicleYear)
+                                                    @Html.HiddenFor(m => m.RiskDetail.ArrearsAmt)
+                                                   
+                                                   
+                                                   
+                                                    <div class="form-group-lbls">
+                                                        @Html.Label("Select your cover type", new { @class = "gender-label" })
+                                                    </div>
+                                                    <div class="form-radio-lbls radio-txt-shadow">
+                                                        <label>@Html.RadioButtonFor(m => m.RiskDetail.CoverTypeName, "Third Party", new { onclick = "ShowHideSumInsured()" }) Third Party</label>
+                                                        <label>@Html.RadioButtonFor(m => m.RiskDetail.CoverTypeName, "Comprehensive", new { onclick = "ShowHideSumInsured()" }) Comprehensive</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 form-group-select">
+                                                <div class="form-group">                                                   
+                                                    @Html.Label("Product", new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(x => x.RiskDetail.ProductId, new SelectList(ViewBag.Products, "Id", "ProductName"), "Select Product Type", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(x => x.RiskDetail.ProductId, "", new { @class = "text-danger" })
+                                                 </div>
+                                            </div>
+
+                                            @*<div class="col-xs-12 col-md-6 form-group-select">
+                                                <div class="form-group">
+                                                    @Html.Label("Vehicle Usage", new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(x => x.RiskDetail.VehicleUsage, new SelectList(ViewBag.VehicleUsage, "Id", "VehUsage"), "Select Vehicle Usage", new { @class = "form-control" })
+                                                 </div>
+                                            </div>*@
+
+
+                                            <div class="col-xs-6 col-md-6 form-group-select">
+                                                <div class="form-group">                                                 
+                                                    @Html.Label("Payment Term", new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(m => m.RiskDetail.PaymentTermId, new SelectList(ViewBag.PaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+                                                 </div>
+                                            </div>
+
+                                            <div class="col-xs-6 col-md-6 form-group-text" id="divSumInsured" style="display:none;">
+                                                <div class="form-group">
+                                                    @Html.Label("SumInsured", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.SumInsured, new { @class = "form-control", @autocomplete = "off", @placeholder = "SumInsured" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-md-12">
+                                                <div class="form-group-lbls font-size-15">
+                                                    @Html.Label("Do you want Zinara License", new { @class = "gender-label" })
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-checkbox-lbls" style="margin-bottom: 10px;">
+                                                            <label id="thirdpartycheck">@Html.CheckBoxFor(x => x.RiskDetail.IncludeRadioLicenseCost, new { onclick = "GetRadioLicenseCost();" }) Radio License</label>
+                                                        </div>
+                                                        <div class="form-group form-group-select">
+                                                            @Html.Label("Radio License Payment", new { @class = "gender-label" })
+                                                            @Html.DropDownListFor(x => x.RiskDetail.RadioLicensePaymentTermId, new SelectList(ViewBag.PaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-checkbox-lbls" style="margin-bottom: 10px;">
+                                                            <label id="thirdpartycheck">
+                                                                @Html.CheckBoxFor(x => x.RiskDetail.IncludeLicenseFee, new { onclick = "ClearLicenseIfNotChek();" }) Zinara Vehicle License
+                                                            </label>
+                                                        </div>
+                                                      
+                                                          <div class="form-group form-group-select">
+                                                            @Html.Label("Zinara License Payment Term", new { @class = "gender-label" })
+                                                            @Html.DropDownListFor(x => x.RiskDetail.ZinaraLicensePaymentTermId, new SelectList(ViewBag.PaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+                                                        </div>
+                                                    
+                                                    </div>
+                                                </div>                                              
+                                            </div>
+                                        </div>
+
+                                        <div class="next-btn">
+                                            <ul class="list-inline">
+                                                <li class="text-left"><button type="button" name="buttonUpdate" value="Update" class="btn btn-default">Back</button></li>
+                                                <li class="pull-right"><button type="button" onclick="DisplayPresoanlDetails();" class="btn">Next</button></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div id="presonal_detail" style="display:none">
+                                    <div class="form-top-head">
+                                        <h4>Customer Detials</h4>
+                                    </div>
+
+                                    <div class="form-top-head-in">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.Label("Name", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.Customer.FirstName, new { @class = "form-control", @autocomplete = "off", @placeholder = "FirstName" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.Label("SurName", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.Customer.LastName, new { @class = "form-control", @autocomplete = "off", @placeholder = "SurName" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.Label("Email", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.Customer.EmailAddress, new { @class = "form-control", @autocomplete = "off", @placeholder = "Email" })
+                                               
+                                                
+                                                 </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.Label("DOB", new { @class = "gender-label" })
+                                                    @*@Html.TextBoxFor(m => m.Customer.DateOfBirth, new { @class = "form-control", @autocomplete = "off", @placeholder = "DateOfBirth" })*@
+
+
+                                                    <div class='input-group' id='datetimepicker1'>
+                                                        @Html.TextBoxFor(x => x.Customer.DateOfBirth, new { @class = "form-control", @autocomplete = "off", @placeholder = "DOB" })
+
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+
+
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.Label("Phone", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.Customer.PhoneNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "PhoneNumber" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(x => x.Customer.Gender, new { @class = "gender-label" })
+                                                    <div class="form-group-label" style="height: 50px; padding: 6px 0 0;">
+                                                        <label>@Html.RadioButtonFor(model => model.Customer.Gender, "Male", true)<span class="outside"><span class="inside"></span></span><strong>Male</strong></label>
+                                                        <label>@Html.RadioButtonFor(model => model.Customer.Gender, "Female", true)<span class="outside"><span class="inside"></span></span><strong>Female</strong></label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(x => x.Customer.Gender, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(x => x.Customer.AddressLine1, new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(x => x.Customer.AddressLine1, new { @class = "form-control", @name = "AddressLine1", @autocomplete = "off", @id = "AddressLine1", @placeholder = "Address" })
+                                                    @Html.ValidationMessageFor(x => x.Customer.AddressLine1, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(x => x.Customer.AddressLine2, new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(x => x.Customer.AddressLine2, new { @class = "form-control", @name = "AddressLine2", @autocomplete = "off", @id = "AddressLine2", @placeholder = "Surburb" })
+                                                    @Html.ValidationMessageFor(x => x.Customer.AddressLine2, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="next-btn">
+                                            <ul class="list-inline">
+                                                <li class="text-left"><button type="button" class="btn btn-default" onclick="BackToRiskDetail();" value="Update" class="btn">Back</button></li>
+                                                <li class="pull-right"><button type="button" onclick="DisplayVehicleDetial();" class="btn">Next</button></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div id="vehicledetials" style="display:none">
+
+                                    <div class="form-top-head">
+                                        <h4>Risk Detail</h4>
+                                    </div>
+
+                                    <div class="form-top-head-in">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group form-group-select">
+                                                    @Html.Label("Make", new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(x => x.RiskDetail.MakeId, new SelectList(ViewBag.Makers, "MakeCode", "MakeDescription"), "Select Vehicle Make", new { @class = "form-control" })                                              
+                                                    @Html.ValidationMessageFor(x => x.RiskDetail.MakeId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group form-group-select">
+                                                    @Html.Label("Model", new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(x => x.RiskDetail.ModelId, new SelectList(ViewBag.Model, "ModelCode", "ModelDescription"), "Select Vehicle Model", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(x => x.RiskDetail.ModelId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6 form-group-select">
+                                                <div class="form-group">
+                                                    @Html.Label("TaxClass", new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(x => x.RiskDetail.TaxClassId, new SelectList(ViewBag.TaxClass, "TaxClassId", "Description"), "Select Tax Class", new { @class = "form-control" })
+
+                                                    @Html.ValidationMessageFor(x => x.RiskDetail.TaxClassId, "", new { @class = "text-danger" })
+
+                                                    @Html.HiddenFor(x => x.RiskDetail.ErrorMessage)
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="next-btn">
+                                            <ul class="list-inline">
+                                                <li class="text-left"><button type="button" class="btn btn-default" onclick="BackToCustomerDetail();" value="Update" class="btn">Back</button></li>
+                                                <li class="pull-right"><button type="button" onclick="DisplaySummaryDetail();" class="btn">Next</button></li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                                <div id="Summary_detail" style="display:none">
+                                    <div class="form-top-head">
+                                        <h4>Payment Details</h4>
+                                    </div>
+
+                                    <div class="form-top-head-in">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-6 form-group-text">
+                                                <div class="insur-bx-labl">
+                                                    <label>Insurance Premium</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Basic Premium", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.Premium, new { @class = "form-control", @autocomplete = "off", @placeholder = "Basic Premium", @readonly = "readonly" })
+                                                    @Html.HiddenFor(m => m.RiskDetail.PremiumWithDiscount, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Total Stamp Duty", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.StampDuty, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Discount", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.Discount, new { @class = "form-control", @autocomplete = "off", @placeholder = "Discount", @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(m => m.RiskDetail.Discount, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-md-6 form-group-text">
+                                                <div class="insur-bx-labl">
+                                                    <label>Insurance Premium</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Zinara Amount", new { @class = "gender-label" })
+                                                    @Html.HiddenFor(m => m.RiskDetail.VehicleLicenceFee, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.VehicleLicenceFee, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Penalites", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.PenaltiesAmt, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+                                                <div class="form-group">
+                                                    @Html.Label("Radio License", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.RadioLicenseCost, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                    @Html.ValidationMessageFor(m => m.RiskDetail.RadioLicenseCost, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.Label("Total Amount", new { @class = "gender-label" })
+                                               
+                                                    @Html.TextBoxFor(m => m.SummaryDetail.TotalPremium, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-md-6 form-group-text">
+                                                <div class="form-group">
+                                                    @Html.Label("Payment Type", new { @class = "gender-label" })
+                                                    <ul class="list-inline payent-card-bx">
+                                                        <li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img style="width:85px;" src="~/Images/Paynow-logo.png" /></li>
+                                                        <li id="payment_2" class="payment_type" onclick="PaymentMethod(2)"><img width="75px;" src="~/Images/ecocash.jpg" />   </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <div class="next-btn">
+                                            <ul class="list-inline">
+                                                <li class="text-left"><button type="button" class="btn btn-default" onclick="BackToVehicleDetail();" value="Update" class="btn">Back</button></li>
+                                                <li class="pull-right"><button type="button" class="btn">Next</button></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/WebCustomer.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () { // will trigger when the document is ready
+        $('#datetimepicker1').datetimepicker({
+            format: 'MM/D/YYYY',
+            maxDate: new Date()
+        });
+    });
+</script>
+
+

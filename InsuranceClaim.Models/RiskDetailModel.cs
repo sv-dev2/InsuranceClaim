@@ -161,8 +161,11 @@ namespace InsuranceClaim.Models
         public string IceCashRequest { get; set; }
 
         public bool ALMLocator { get; set; }
-        
 
+        public int RadioLicensePaymentTermId { get; set; }
+
+      
+        public int ZinaraLicensePaymentTermId { get; set; }
 
     }
 

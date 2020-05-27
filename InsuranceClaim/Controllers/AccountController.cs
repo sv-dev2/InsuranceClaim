@@ -133,7 +133,6 @@ namespace InsuranceClaim.Controllers
                     else
                     {
                         //--start
-
                         //end
                         return Redirect("/CustomerRegistration/index");
                     }
@@ -188,9 +187,6 @@ namespace InsuranceClaim.Controllers
             {
                 SaveUserPasswordDetails(_user); // for existing customer
             }
-
-
-
 
             return getDaysCount;
         }
@@ -2000,7 +1996,7 @@ namespace InsuranceClaim.Controllers
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id  join VehicleDetail on VehicleDetail.PolicyId= PolicyDetail.Id ";          
             query += " join  SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.VehicleDetailsId ";
             query += "  join SummaryDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId   ";
-            query += "  join PaymentInformation on PaymentInformation.SummaryDetailId = SummaryDetail.Id   ";
+           // query += "  join PaymentInformation on PaymentInformation.SummaryDetailId = SummaryDetail.Id   ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
             query += " left join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
@@ -2010,6 +2006,8 @@ namespace InsuranceClaim.Controllers
             ListPolicy policylist = new ListPolicy();
             policylist.listpolicy = new List<PolicyListViewModel>();
             PolicyListViewModel policylistviewmodel = new PolicyListViewModel();
+
+            var paymentInformationList = InsuranceContext.PaymentInformations.All();
 
 
             List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
@@ -2022,7 +2020,7 @@ namespace InsuranceClaim.Controllers
                 TotalSumInsured = x.TotalSumInsured,
                 TotalPremium = x.TotalPremium,
                 createdOn = x.CreatedOn,
-                SummaryId = x.Id,
+                SummaryId = x.Id,  
                 RegisterationNumber = x.RegistrationNo,
                 Make = x.Make,
                 Model = x.Model,
@@ -2042,18 +2040,19 @@ namespace InsuranceClaim.Controllers
             }).ToList();
 
 
-            //List<PolicyListViewModel> newList = new List<PolicyListViewModel>();
-            //foreach(var item in list)
-            //{
-            //    var detials = newList.FirstOrDefault(c => c.PolicyId==item.PolicyId);
-            //    if(detials==null)
-            //    {
-            //        newList.Add(item);
-            //    }
-            //}
+            List<PolicyListViewModel> newList = new List<PolicyListViewModel>();
+            foreach (var item in list)
+            {
+                var paymentDetail = paymentInformationList.Where(c => c.SummaryDetailId == item.SummaryId);
+                if (paymentDetail == null)
+                    continue;
+
+                  newList.Add(item);
+                
+            }
 
             //FacultativeCommission
-            return View(list);
+            return View(newList);
         }
 
 
@@ -2648,6 +2647,7 @@ namespace InsuranceClaim.Controllers
             //query += "  where PolicyDetail.PolicyNumber like '%" + searchText + "%' or Customer.FirstName like '%" + searchText + "%' or VehicleDetail.RegistrationNo like'%" + searchText + "%' and SummaryDetail.isQuotation=0  ";
             //query += " order by SummaryDetail.CreatedOn desc";
 
+            var paymentInformationList = InsuranceContext.PaymentInformations.All();
 
 
             string query = "select top 100 PolicyDetail.Id as PolicyId , PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
@@ -2657,7 +2657,7 @@ namespace InsuranceClaim.Controllers
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id  join VehicleDetail on VehicleDetail.PolicyId= PolicyDetail.Id ";
             query += " join  SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.VehicleDetailsId ";
             query += "  join SummaryDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId   ";
-            query += "  join PaymentInformation on PaymentInformation.SummaryDetailId = SummaryDetail.Id  ";
+          //  query += "  join PaymentInformation on PaymentInformation.SummaryDetailId = SummaryDetail.Id  ";
             query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
             query += " left join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
@@ -2708,20 +2708,20 @@ namespace InsuranceClaim.Controllers
             }).ToList();
 
 
-            //List<PolicyListViewModel> newList = new List<PolicyListViewModel>();
-            //foreach (var item in list)
-            //{
-            //    var detials = newList.FirstOrDefault(c => c.PolicyId == item.PolicyId);
-            //    if (detials == null)
-            //    {
-            //        newList.Add(item);
-            //    }
-            //}
+            List<PolicyListViewModel> newList = new List<PolicyListViewModel>();
+            foreach (var item in list)
+            {
+                var paymentDetail = paymentInformationList.Where(c => c.SummaryDetailId == item.SummaryId);
+                if (paymentDetail == null)
+                    continue;
+                newList.Add(item);
+                
+            }
 
 
 
             //FacultativeCommission
-            return View("PolicyManagement", list);
+            return View("PolicyManagement", newList);
         }
 
         // Setting Methods
@@ -3661,15 +3661,13 @@ namespace InsuranceClaim.Controllers
                 }
 
                 string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
-      Request.ApplicationPath.TrimEnd('/') + "/";
-
+                Request.ApplicationPath.TrimEnd('/') + "/";
 
                 var customerDetails = InsuranceContext.Customers.Single(where: "id=" + CustomerId);
                 if (customerDetails != null && customerDetails.ALMId != null)
                 {
                     baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
                 }
-
 
                 string path = "/Documents/" + CustomerId + "/" + PolicyNumber + "/";
                 string filePath = Server.MapPath(path);
@@ -3685,7 +3683,6 @@ namespace InsuranceClaim.Controllers
                     obj.FilePath = documentPath;
                     list.Add(obj);
                 }
-
             }
             catch (Exception ex)
             {

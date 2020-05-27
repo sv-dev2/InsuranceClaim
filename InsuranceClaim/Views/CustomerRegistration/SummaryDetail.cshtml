@@ -45,53 +45,56 @@
 
 
 <div class="body-content-section">
-    <div class="Process-step-section">
+    @*<div class="Process-step-section">
         <div class="container">
             <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
-
-                    @*<div class="col-xs-2 bs-wizard-step complete">
-                             complete
-                            <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="#" class="bs-wizard-dot"></a>
-                            <div class="text-center bs-wizard-stepnum">Product Details</div>
-                        </div>*@
-
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
+               
             </div>
         </div>
-    </div>
+    </div>*@
 
     <div class="form-section-top">
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+            <div class="row bs-wizard">
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                    <div class="Process-step-section process-block">
+                        <div class="col-xs-2 bs-wizard-step complete">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
+
+                        @*<div class="col-xs-2 bs-wizard-step complete">
+                 complete
+                <div class="progress"><div class="progress-bar"></div></div>
+                <a href="#" class="bs-wizard-dot"></a>
+                <div class="text-center bs-wizard-stepnum">Product Details</div>
+            </div>*@
+
+                        <div class="col-sm-12 bs-wizard-step complete">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step active">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
                     <div class="form-group-section">
                         <div class="form-title">
                             <h4>SUMMARY DETAILS</h4>
@@ -392,7 +395,7 @@
                                                         {
                                                             <li id="payment_1" class="payment_type active" onclick="PaymentMethod(1)">Cash</li>
                                                             // need to 1008 to 7
-                                                            <li id="payment_1008" class="payment_type" onclick="PaymentMethod(1008)">Pay Later</li>
+                                                            <li id="payment_7" class="payment_type" onclick="PaymentMethod(7)">Pay Later</li>
                                                         }
 
                                                         <li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img style="width:85px;" src="~/Images/Paynow-logo.png" /></li>
@@ -872,13 +875,10 @@
 
         if ($("#sucessmsg").val()!="") {
             alert($("#sucessmsg").val());
-            debugger;
-
             if('@userLoggedin'=='False')
             {
                 location.href = '@Url.Action("Index", "InsuranceHome")';
             }
-
             location.href = '@Url.Action("QuotationList", "Account")';
         }
 
@@ -901,6 +901,8 @@
         {
             $("#PaymentMethodId").val('@Model.PaymentMethodId');
         }
+
+       // SummaryDetailsPage();
 
     });
 </script>
