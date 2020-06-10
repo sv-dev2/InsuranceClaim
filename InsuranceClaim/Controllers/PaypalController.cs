@@ -29,6 +29,7 @@ namespace InsuranceClaim.Controllers
         string _pdfPath = "";
         string _pdfCode = "";
         string _iceCashRef = "";
+        string _webCustomerRoleId = "fe19c887-f8a9-4353-939f-65e19afe0c4w";
 
         public ApplicationUserManager UserManager
         {
@@ -107,13 +108,71 @@ namespace InsuranceClaim.Controllers
             return RedirectToAction("ThankYou");
         }
 
-        public ActionResult failed_url()
+        public ActionResult failed_url(SummaryDetailModel model)
         {
-            return View();
+            if (Session["PayNowSummmaryId"] != null)
+            {
+                model.Id = (int)Session["PayNowSummmaryId"];
+            }
+            return View(model);
         }
+
+
+        public ActionResult Panow(int Id = 0)
+        {
+            string invoiceNumber = "";
+
+            var summaryDetail = InsuranceContext.SummaryDetails.Single(Id);
+
+            if (summaryDetail != null)
+            {
+
+                var query = "select top 1 PolicyDetail.PolicyNumber as InvoiceNumber from SummaryDetail ";
+                query += " join SummaryVehicleDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId ";
+                query += " join VehicleDetail on VehicleDetail.Id = SummaryVehicleDetail.VehicleDetailsId ";
+                query += " join PolicyDetail on PolicyDetail.Id = VehicleDetail.PolicyId where SummaryDetail.Id=" + Id;
+
+                var detail = InsuranceContext.Query(query).Select(x => new PolicyDetail()
+                {
+                    PolicyNumber = x.InvoiceNumber,
+
+                }).FirstOrDefault();
+
+                if(detail!=null)
+                    invoiceNumber = detail.PolicyNumber;
+                
+                if(Session["PollUrl"]!=null) // it represent
+                {
+                    CustomerRegistrationController customer = new CustomerRegistrationController();
+                    var payNow = customer.PayNow(summaryDetail.Id, invoiceNumber, Convert.ToInt32(summaryDetail.PaymentMethodId), Convert.ToDecimal(summaryDetail.TotalPremium));
+
+                    if (payNow.IsSuccessPayment)
+                    {
+                        Session["PayNowSummmaryId"] = Id;
+                        Session["PollUrl"] = payNow.PollUrl;
+                        return Redirect(payNow.ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("failed_url", "Paypal");
+                    }
+                }
+                
+                
+
+
+
+            }
+
+            return RedirectToAction("failed_url");
+        }
+
+
+
 
         public ActionResult results_url()
         {
+
             return View();
         }
 
@@ -829,7 +888,6 @@ namespace InsuranceClaim.Controllers
 
                 if (!status.Paid())
                 {
-
                     return RedirectToAction("failed_url");
                 }
 
@@ -959,12 +1017,12 @@ namespace InsuranceClaim.Controllers
 
             if (Paymentid != Convert.ToString((int)paymentMethod.ecocash))
             {
-                
-                    if (string.IsNullOrEmpty(Paymentid))
-                        Paymentid = "1";
 
-                    string res = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid));
-                                
+                if (string.IsNullOrEmpty(Paymentid))
+                    Paymentid = "1";
+
+                string res = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid));
+
             }
 
             if (!userLoggedin)
@@ -987,6 +1045,8 @@ namespace InsuranceClaim.Controllers
                 {
                     objEmailService.SendEmail(user.Email, "", "", "Account Creation", Body, _attachements);
                 }
+
+
 
                 string body = "Hello " + customer.FirstName + "\nWelcome to the GENE-INSURE." + " Policy number is : " + policy.PolicyNumber + "\nUsername is : " + user.Email + "\nYour Password : Geneinsure@123" + "\nPlease reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>" + "\nThank you.";
                 var result = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, body);
@@ -1208,7 +1268,15 @@ namespace InsuranceClaim.Controllers
             #endregion
 
             #region new policy
-            MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, policy.PolicyNumber, summaryDetail.TotalPremium, summaryDetail.PaymentTermId, PaymentMethod, ListOfVehicles);
+
+            // user
+
+            var role = user.Roles.FirstOrDefault();
+            if(role.RoleId== _webCustomerRoleId)
+            {
+                MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, customer.AddressLine1, customer.AddressLine2, policy.PolicyNumber, summaryDetail.TotalPremium, summaryDetail.PaymentTermId, PaymentMethod, ListOfVehicles);
+            }
+
 
             #endregion
 
@@ -1311,7 +1379,6 @@ namespace InsuranceClaim.Controllers
                             // end is null
                             customerDetails = InsuranceContext.Customers.Single(vichelDetails.CustomerId);
 
-
                             var policyDetils = InsuranceContext.PolicyDetails.Single(vichelDetails.PolicyId);
 
                             if (policyDetils != null)
@@ -1334,7 +1401,7 @@ namespace InsuranceClaim.Controllers
                                 SummaryDetailService.UpdateToken(tokenObject);
                                 PartnerToken = tokenObject.Response.PartnerToken;
                                 quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
-                            
+
                             }
 
                             if (quoteresponse.Response != null && quoteresponse.Response.Result == 1)
@@ -1356,8 +1423,13 @@ namespace InsuranceClaim.Controllers
                             if (res.Response != null && res.Response.LicenceCert != null)
                                 _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.Id.ToString());
 
+                            string format = "yyyyMMdd";
+                            if (res.Response.Quotes[0] != null && res.Response.Quotes[0].LicExpiryDate!=null)
+                            {
+                                DateTime LicExpiryDate = DateTime.ParseExact(res.Response.Quotes[0].LicExpiryDate, format, CultureInfo.InvariantCulture);
+                                vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                            }
                         }
-
 
                         else if (vichelDetails != null && vichelDetails.InsuranceId != null)
                         {
@@ -1369,13 +1441,15 @@ namespace InsuranceClaim.Controllers
                                 SummaryDetailService.UpdateToken(tokenObject);
                                 PartnerToken = tokenObject.Response.PartnerToken;
                                 quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, paymentMethod);
-                               
+
                             }
 
                             if (quoteresponse.Response != null && quoteresponse.Response.Result == 1)
                             {
                                 _iceCashRef = quoteresponse.Response.ICEcashReference;
                             }
+
+
 
 
                             //if (vichelDetails != null && vichelDetails.LicenseId != null && vichelDetails.VehicleLicenceFee > 0)
@@ -1418,6 +1492,9 @@ namespace InsuranceClaim.Controllers
                             result = res.Response.Status;
                             vichelDetails.InsuranceStatus = "Approved";
                             vichelDetails.CoverNote = res.Response.PolicyNo;
+                           
+                                
+                           
 
                             if (res.Response.LicenceCert != null && res.Response.LicenceCert.Length > 1)
                                 _pdfCode = "PD" + vichelDetails.Id + "" + DateTime.Now.Month;
@@ -1556,14 +1633,13 @@ namespace InsuranceClaim.Controllers
             if (ModelState.IsValid)
             {
                 ICEcashService iceCash = new ICEcashService();
-                
-                
+
 
                 OTPConfirmationObject otpModel = new OTPConfirmationObject();
                 otpModel.OTP = model.OTP;
                 otpModel.ICEcashReference = _iceCashRef;
 
-                if(_iceCashRef=="")
+                if (_iceCashRef == "")
                 {
                     return RedirectToAction("failed_url", "Paypal");
                 }

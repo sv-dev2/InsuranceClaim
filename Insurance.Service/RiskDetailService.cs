@@ -29,9 +29,9 @@ namespace Insurance.Service
                     else
                         db.CoverEndDate = model.CoverStartDate.Value.AddMonths(model.PaymentTermId);
 
-                    db.RenewalDate = model.CoverEndDate.Value.AddDays(1);
+                    db.RenewalDate = db.CoverEndDate.Value.AddDays(1);
                     db.TransactionDate = DateTime.Now;
-                    db.PolicyExpireDate = model.CoverEndDate;
+                    db.PolicyExpireDate = db.CoverEndDate;
                 }
                 InsuranceContext.VehicleDetails.Insert(db);
                 return db.Id;

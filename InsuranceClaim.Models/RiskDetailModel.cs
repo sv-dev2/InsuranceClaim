@@ -70,6 +70,10 @@ namespace InsuranceClaim.Models
         public decimal Excess { get; set; }
         public string CoverNoteNo { get; set; }
         public bool IsLicenseDiskNeeded { get; set; }
+
+        public bool IsLicenseSelfcollect { get; set; }
+
+        public bool IsLicenseCollectOnAlm { get; set; }
         public Boolean Addthirdparty { get; set; }
         public decimal? AddThirdPartyAmount { get; set; }
 
@@ -166,6 +170,9 @@ namespace InsuranceClaim.Models
 
       
         public int ZinaraLicensePaymentTermId { get; set; }
+
+       
+
 
     }
 

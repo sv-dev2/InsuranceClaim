@@ -1400,12 +1400,12 @@ namespace InsuranceClaim.Controllers
                         string format = "yyyyMMdd";
                         if (vehicle != null)
                         {
-                            vehicle.CurrencyId = _currencId; //RTGS$ only 
+                           // vehicle.CurrencyId = _currencId; //RTGS$ only  02 june 2020
 
                             if (!string.IsNullOrEmpty(vehicle.LicExpiryDate))
                             {
-                                var LicExpiryDate = DateTime.ParseExact(vehicle.LicExpiryDate, format, CultureInfo.InvariantCulture);
-                                vehicle.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                                //var LicExpiryDate = DateTime.ParseExact(vehicle.LicExpiryDate, format, CultureInfo.InvariantCulture);
+                                vehicle.LicExpiryDate = null;
                                 if (vehicle.VehicleLicenceFee > 0)
                                     vehicle.IceCashRequest = "InsuranceAndLicense";
                             }
@@ -2459,7 +2459,6 @@ namespace InsuranceClaim.Controllers
 
 
                 string policyPeriod = vehicle.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + vehicle.CoverEndDate.Value.ToString("dd/MM/yyyy");
-
                 currencyName = detailService.GetCurrencyName(currencylist, vehicle.CurrencyId);
 
                 Summeryofcover += "<tr><td>" + vehicle.RegistrationNo + "</td> <td>" + vehicledescription + "</td> <td> " + vehicle.CoverNote + " </td>  <td>" + currencyName + vehicle.SumInsured + "</td><td>" + coverType + "</td><td>" + InsuranceContext.VehicleUsages.All(Convert.ToString(vehicle.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</td><td>" + policyPeriod + "</td><td>" + paymentMonths + " </td><td>" + currencyName + Convert.ToString(_Premium) + "</td></tr>";
@@ -2556,7 +2555,7 @@ namespace InsuranceClaim.Controllers
             var paymentType= summary.PaymentMethodId == 1 ? "Cash" : (summary.PaymentMethodId == 2 ? "PayPal" : "PayNow");
             List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
             ListOfVehicles.Add(vehicle);
-            MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, policy.PolicyNumber, summary.TotalPremium, summary.PaymentTermId, paymentType, ListOfVehicles, "renew");
+            MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, customer.AddressLine1, customer.AddressLine2, policy.PolicyNumber, summary.TotalPremium, summary.PaymentTermId, paymentType, ListOfVehicles, "renew");
 
             #endregion
 
@@ -3372,11 +3371,21 @@ namespace InsuranceClaim.Controllers
                         // tokenObject = service.CheckSessionExpired();
                         PartnerToken = tokenObject.Response.PartnerToken;
                         res = ICEcashService.TPILICResult(vichelDetails, PartnerToken);
-
-                        if (res.Response != null && res.Response.LicenceCert != null)
-                            _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.RegistrationNo);
-
+                 
                     }
+
+                    if (res.Response != null && res.Response.LicenceCert != null)
+                        _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.RegistrationNo);
+
+                    string format = "yyyyMMdd";
+                    if (res.Response.Quotes[0] != null && res.Response.Quotes[0].LicExpiryDate!=null)
+                    {
+                        DateTime LicExpiryDate = DateTime.ParseExact(res.Response.Quotes[0].LicExpiryDate, format, CultureInfo.InvariantCulture);
+                        vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                    }
+
+
+
                 }
                 else if (!string.IsNullOrEmpty(vichelDetails.InsuranceId))
                 {
@@ -3411,7 +3420,14 @@ namespace InsuranceClaim.Controllers
                     vichelDetails.RenewalDate = vichelDetails.CoverEndDate.Value.AddDays(1);
                     vichelDetails.CoverNote = res.Response.PolicyNo; // it's represent to Cover Note
 
-                    if(res.Response.LicenceCert!=null && res.Response.LicenceCert.Length>1)
+                   
+                    if (res.Response.Quotes[0] != null)
+                    {
+                        DateTime LicExpiryDate = DateTime.ParseExact(res.Response.Quotes[0].LicExpiryDate, format, CultureInfo.InvariantCulture);
+                        vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                    }
+
+                    if (res.Response.LicenceCert!=null && res.Response.LicenceCert.Length>1)
                     {
                         _pdfCode = "PD" + vichelDetails.Id + "" + DateTime.Now.Month;
                     }

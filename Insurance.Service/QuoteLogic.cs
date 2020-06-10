@@ -559,35 +559,40 @@ namespace Insurance.Service
             }
             else
             {
+                
+
                 //  double maxZTSC = 10.80 ; // default ProductId=1;
                 double maxZTSC = 10.80 * (5*2); // default ProductId=1;
-                                            // ztsc new calucation will be also aply for comprehensive
+                            // ztsc new calucation will be also aply for comprehensive
 
                 if (ProductId == 3 || ProductId == 11) // Commercial Commuter Omnibus and Commercial Vehicle
                 {
                     //  maxZTSC = 22.00;             
                     maxZTSC = 22.00 * (5*2);
-
                 }
+
+                if (currencyId == 1) // for usd
+                {
+                    maxZTSC = 10.80;
+                }
+
+
+
 
                 switch (PaymentTermid)
                 {
                     case 1:
-
                         if (Convert.ToDouble(this.ZtscLevy) > maxZTSC)
                         {
                             this.ZtscLevy = Math.Round(Convert.ToDecimal(maxZTSC), 2);
                         }
                         break;
-
-
                     case 3:
                         maxZTSC = maxZTSC * 4 / 12;
                         if (Convert.ToDouble(this.ZtscLevy) > maxZTSC)
                         {
                             this.ZtscLevy = Math.Round(Convert.ToDecimal(maxZTSC), 2);
                         }
-
                         break;
                     case 4:
                         maxZTSC = maxZTSC / 3;
@@ -674,6 +679,9 @@ namespace Insurance.Service
 
             return this;
         }
+
+
+       
 
 
         public QuoteLogic CalculateDomesticPremium(decimal InsuranceRate, decimal coverAmount, int PaymentTermid)

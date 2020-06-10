@@ -19,7 +19,7 @@
         <div class="container">
             <div class="row-bs-wizard">
 
-                @using (Html.BeginForm("GenerateQuote", "CustomerRegistration"))
+                @using (Html.BeginForm("SubmitPlan", "WebCustomer", FormMethod.Post, new { id = "signupform" }))
                 {
                     <div class="form-group-section">
 
@@ -53,6 +53,7 @@
                                                     @Html.HiddenFor(m => m.RiskDetail.LicenseId)
                                                     @Html.HiddenFor(m => m.RiskDetail.LicExpiryDate)
                                                     @Html.HiddenFor(m => m.RiskDetail.CombinedID)
+                                                    @Html.HiddenFor(m => m.RiskDetail.CoverTypeId)
 
                                                     @Html.HiddenFor(m => m.RiskDetail.VehicleYear)
                                                     @Html.HiddenFor(m => m.RiskDetail.ArrearsAmt)
@@ -71,22 +72,22 @@
                                             <div class="col-xs-12 col-md-6 form-group-select">
                                                 <div class="form-group">                                                   
                                                     @Html.Label("Product", new { @class = "gender-label" })
-                                                    @Html.DropDownListFor(x => x.RiskDetail.ProductId, new SelectList(ViewBag.Products, "Id", "ProductName"), "Select Product Type", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(x => x.RiskDetail.ProductId, new SelectList(ViewBag.Products, "Id", "ProductName"), "Select Product Type", new { @class = "form-control", onchange = "GetVehicleUsage();" })
                                                     @Html.ValidationMessageFor(x => x.RiskDetail.ProductId, "", new { @class = "text-danger" })
                                                  </div>
                                             </div>
 
-                                            @*<div class="col-xs-12 col-md-6 form-group-select">
+                                            <div class="col-xs-12 col-md-6 form-group-select" >
                                                 <div class="form-group">
                                                     @Html.Label("Vehicle Usage", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(x => x.RiskDetail.VehicleUsage, new SelectList(ViewBag.VehicleUsage, "Id", "VehUsage"), "Select Vehicle Usage", new { @class = "form-control" })
                                                  </div>
-                                            </div>*@
+                                            </div>
 
 
                                             <div class="col-xs-6 col-md-6 form-group-select">
                                                 <div class="form-group">                                                 
-                                                    @Html.Label("Payment Term", new { @class = "gender-label" })
+                                                    @Html.Label("Insurance Payment Term", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(m => m.RiskDetail.PaymentTermId, new SelectList(ViewBag.PaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
                                                  </div>
                                             </div>
@@ -111,12 +112,13 @@
                                                         <div class="form-group form-group-select">
                                                             @Html.Label("Radio License Payment", new { @class = "gender-label" })
                                                             @Html.DropDownListFor(x => x.RiskDetail.RadioLicensePaymentTermId, new SelectList(ViewBag.PaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
-                                                        </div>
+                                                       
+                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-checkbox-lbls" style="margin-bottom: 10px;">
                                                             <label id="thirdpartycheck">
-                                                                @Html.CheckBoxFor(x => x.RiskDetail.IncludeLicenseFee, new { onclick = "ClearLicenseIfNotChek();" }) Zinara Vehicle License
+                                                                @Html.CheckBoxFor(x => x.RiskDetail.IncludeLicenseFee, new {  }) Zinara Vehicle License
                                                             </label>
                                                         </div>
                                                       
@@ -155,8 +157,8 @@
                                             </div>
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
-                                                    @Html.Label("SurName", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(m => m.Customer.LastName, new { @class = "form-control", @autocomplete = "off", @placeholder = "SurName" })
+                                                    @Html.Label("Surname", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.Customer.LastName, new { @class = "form-control", @autocomplete = "off", @placeholder = "Surname" })
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6 form-group-text">
@@ -181,9 +183,6 @@
                                                         </span>
                                                     </div>
 
-
-
-
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6 form-group-text">
@@ -204,6 +203,14 @@
                                             </div>
 
                                             <div class="col-sm-6 col-md-6 form-group-text">
+                                                <div class="form-group form-group-select">
+                                                    @Html.LabelFor(x => x.Customer.City, new { @class = "gender-label" })
+                                                    @Html.DropDownListFor(x => x.Customer.City, new SelectList(ViewBag.Cities, "CityName", "CityName"), "----Select City----", new { @class = "form-control " })
+                                                    @Html.ValidationMessageFor(x => x.Customer.City, "", new { @class = "text-danger valMessage" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
                                                     @Html.LabelFor(x => x.Customer.AddressLine1, new { @class = "gender-label" })
                                                     @Html.TextBoxFor(x => x.Customer.AddressLine1, new { @class = "form-control", @name = "AddressLine1", @autocomplete = "off", @id = "AddressLine1", @placeholder = "Address" })
@@ -217,6 +224,8 @@
                                                     @Html.ValidationMessageFor(x => x.Customer.AddressLine2, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
+
+                                           
 
                                         </div>
 
@@ -257,9 +266,7 @@
                                                 <div class="form-group">
                                                     @Html.Label("TaxClass", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(x => x.RiskDetail.TaxClassId, new SelectList(ViewBag.TaxClass, "TaxClassId", "Description"), "Select Tax Class", new { @class = "form-control" })
-
                                                     @Html.ValidationMessageFor(x => x.RiskDetail.TaxClassId, "", new { @class = "text-danger" })
-
                                                     @Html.HiddenFor(x => x.RiskDetail.ErrorMessage)
 
                                                 </div>
@@ -298,16 +305,25 @@
                                                     @Html.Label("Total Stamp Duty", new { @class = "gender-label" })
                                                     @Html.TextBoxFor(m => m.RiskDetail.StampDuty, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
                                                 </div>
+
+                                                <div class="form-group">
+                                                    @Html.Label("Total ZTSCLevy", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.RiskDetail.ZTSCLevy, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+
                                                 <div class="form-group">
                                                     @Html.Label("Discount", new { @class = "gender-label" })
                                                     @Html.TextBoxFor(m => m.RiskDetail.Discount, new { @class = "form-control", @autocomplete = "off", @placeholder = "Discount", @readonly = "readonly" })
                                                     @Html.ValidationMessageFor(m => m.RiskDetail.Discount, "", new { @class = "text-danger" })
                                                 </div>
+
+                                                
+
                                             </div>
 
                                             <div class="col-xs-12 col-md-6 form-group-text">
                                                 <div class="insur-bx-labl">
-                                                    <label>Insurance Premium</label>
+                                                    <label>License Amount</label>
                                                 </div>
                                                 <div class="form-group">
                                                     @Html.Label("Zinara Amount", new { @class = "gender-label" })
@@ -323,37 +339,68 @@
                                                     @Html.TextBoxFor(m => m.RiskDetail.RadioLicenseCost, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
                                                     @Html.ValidationMessageFor(m => m.RiskDetail.RadioLicenseCost, "", new { @class = "text-danger" })
                                                 </div>
-                                            </div>
+											</div>
 
-                                            <div class="col-xs-12 col-md-6 form-group-text">
-                                                <div class="form-group">
-                                                    @Html.Label("Total Amount", new { @class = "gender-label" })
-                                               
-                                                    @Html.TextBoxFor(m => m.SummaryDetail.TotalPremium, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
-                                                </div>
-                                            </div>
+                                            
 
-                                            <div class="col-xs-12 col-md-6 form-group-text">
-                                                <div class="form-group">
+
+                                            <div class="form-group-checkbx-b">
+                                                <div class="col-xs-12 col-md-4 col-lg-4">
+												   <div class="form-group">
+												      @Html.Label("Want the licence disk to be delivered?", new { @class = "gender-label" })
+                                                      @Html.CheckBoxFor(x => x.RiskDetail.IsLicenseDiskNeeded, new { @style = "width:20px;height: 20px;" })               
+												   </div>
+												</div>
+												<div class="col-xs-12 col-md-4 col-lg-4">
+												   <div class="form-group">
+												      @Html.Label("Client self collect ", new { @class = "gender-label" })
+                                                      @Html.CheckBoxFor(x => x.RiskDetail.IsLicenseSelfcollect, new { @style = "width:20px;height: 20px;" })               
+												   </div>
+												</div>
+												<div class="col-xs-12 col-md-4 col-lg-4">
+												   <div class="form-group">
+												      @Html.Label("Do you want to collect on Alm", new { @class = "gender-label" })
+                                                      @Html.CheckBoxFor(x => x.RiskDetail.IsLicenseCollectOnAlm, new { @style = "width:20px;height: 20px;" })               
+												   </div>
+												</div>
+                                            </div>
+											
+											<div class="col-xs-12 col-md-4">
+											  <div class="form-group">
                                                     @Html.Label("Payment Type", new { @class = "gender-label" })
                                                     <ul class="list-inline payent-card-bx">
-                                                        <li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img style="width:85px;" src="~/Images/Paynow-logo.png" /></li>
-                                                        <li id="payment_2" class="payment_type" onclick="PaymentMethod(2)"><img width="75px;" src="~/Images/ecocash.jpg" />   </li>
+                                                        <li id="payment_3" class="payment_type active" payment="PayNow" onclick="PaymentMethod(3)"><img style="width:85px;" src="~/Images/Paynow-logo.png" /></li>
+                                                        @*<li id="payment_2" class="payment_type" payment="EcoCash" onclick="PaymentMethod(2)"> <img width="75px;" src="~/Images/ecocash.jpg" />   </li>*@
+
                                                     </ul>
                                                 </div>
-                                            </div>
+											</div>
+											
+											<div class="col-xs-12 col-md-8 form-group-text">
+											   <div class="form-group font-18">
+                                                    @Html.Label("Total Amount", new { @class = "gender-label" })
+                                                    @Html.TextBoxFor(m => m.SummaryDetail.TotalPremium, new { @class = "form-control", @autocomplete = "off", @readonly = "readonly" })
+                                                    @Html.HiddenFor(m => m.SummaryDetail.PaymentMethodId)
+                                                </div>
+											</div>
+
+
+
 
                                         </div>
-
-
 
                                         <div class="next-btn">
                                             <ul class="list-inline">
                                                 <li class="text-left"><button type="button" class="btn btn-default" onclick="BackToVehicleDetail();" value="Update" class="btn">Back</button></li>
-                                                <li class="pull-right"><button type="button" class="btn">Next</button></li>
+                                                <li class="pull-right"><button type="button"  id="btnSignup" class="btn">Next</button></li>
                                             </ul>
                                         </div>
+
+
                                     </div>
+
+
+
                                 </div>
 
 
@@ -378,7 +425,58 @@
             format: 'MM/D/YYYY',
             maxDate: new Date()
         });
+
+        $("#SummaryDetail_PaymentMethodId").val(3);
+
+        $(function () {
+            $("#btnSignup").click(function (e) {
+
+                debugger;
+
+                var paymentMethod = $("#SummaryDetail_PaymentMethodId").val();
+                var paymentMethodName = "PayNow";
+                if (paymentMethod==2)
+                {
+                    paymentMethodName = "EcoCash";
+                }
+
+                var isConfirm = confirm("Do you want make payment from " + paymentMethodName + " ?");
+
+                if (isConfirm) {
+                    $(".loading-area").show();
+                    $("#signupform").submit();
+                } else {
+                    
+                }
+            });
+        });
+
     });
+
+   
+    function PaymentMethod(paymentMethod) {      
+        $("#SummaryDetail_PaymentMethodId").val(paymentMethod)
+        
+        $("li").removeClass("active");
+        $("#payment_" + paymentMethod).addClass("active");    
+    }
+
+    function GetVehicleUsage() {
+        $.ajax({
+            url: "/CustomerRegistration/GetVehicleUsage",
+            type: "POST",
+            data: { ProductId: $("#RiskDetail_ProductId").val() },
+            dataType: "json",
+            success: function (result) {
+                var $dropdown = $("#RiskDetail_VehicleUsage");
+                $dropdown.empty();
+                $.each(result, function () {
+                    $dropdown.append($("<option />").val(this.Id).text(this.VehUsage));
+                });
+            }
+        });
+    }
+
 </script>
 
 

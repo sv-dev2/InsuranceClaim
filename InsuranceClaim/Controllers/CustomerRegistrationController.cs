@@ -32,7 +32,6 @@ namespace InsuranceClaim.Controllers
         private ApplicationUserManager _userManager;
         string AdminEmail = WebConfigurationManager.AppSettings["AdminEmail"];
         string ZimnatEmail = WebConfigurationManager.AppSettings["ZimnatEmail"];
-
         decimal _InflationFactorAmt = 25;
 
         public CustomerRegistrationController()
@@ -462,7 +461,7 @@ namespace InsuranceClaim.Controllers
 
 
 
-            ViewBag.Currencies = InsuranceContext.Currencies.All(where: $"IsActive = 'True'  and Id<>1 ");
+            ViewBag.Currencies = InsuranceContext.Currencies.All(where: $"IsActive = 'True'");
             // viewModel.CurrencyId = 7; // default "RTGS$" selected
 
             viewModel.CurrencyId = 6; // default "RTGS$" selected
@@ -1248,29 +1247,6 @@ namespace InsuranceClaim.Controllers
 
                     if (currency != null)
                         item.CurrencyName = currency.Name;
-
-
-                    //if (DiscountSettings.ValueType == Convert.ToInt32(eSettingValueType.percentage))
-                    //{
-                    //    var amountToCalculateDiscount = 0.00m;
-                    //    switch (item.PaymentTermId)
-                    //    {
-                    //        case 1:
-                    //            amountToCalculateDiscount = Convert.ToDecimal(item.AnnualRiskPremium);
-                    //            break;
-                    //        case 3:
-                    //            amountToCalculateDiscount = Convert.ToDecimal(item.QuaterlyRiskPremium);
-                    //            break;
-                    //        case 4:
-                    //            amountToCalculateDiscount = Convert.ToDecimal(item.TermlyRiskPremium);
-                    //            break;
-                    //    }
-                    //    model.Discount += ((Convert.ToDecimal(DiscountSettings.value) * amountToCalculateDiscount) / 100);
-                    //}
-                    //if (DiscountSettings.ValueType == Convert.ToInt32(eSettingValueType.amount))
-                    //{
-                    //    model.Discount += Convert.ToDecimal(DiscountSettings.value);
-                    //}
                 }
                 model.TotalRadioLicenseCost = Math.Round(Convert.ToDecimal(model.TotalRadioLicenseCost), 2);
                 model.Discount = Math.Round(Convert.ToDecimal(model.Discount), 2);
@@ -1468,8 +1444,8 @@ namespace InsuranceClaim.Controllers
 
                                     if (payNow.IsSuccessPayment)
                                     {
+                                        Session["PayNowSummmaryId"] = model.CustomSumarryDetilId;
                                         Session["PollUrl"] = payNow.PollUrl;
-
                                         return Redirect(payNow.ReturnUrl);
                                     }
                                     else
@@ -1809,8 +1785,8 @@ namespace InsuranceClaim.Controllers
                             {
                                 if (!string.IsNullOrEmpty(item.LicExpiryDate))
                                 {
-                                    var LicExpiryDate = DateTime.ParseExact(item.LicExpiryDate, format, CultureInfo.InvariantCulture);
-                                    item.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                                    //var LicExpiryDate = DateTime.ParseExact(item.LicExpiryDate, format, CultureInfo.InvariantCulture);
+                                    item.LicExpiryDate = null;
                                     if (item.VehicleLicenceFee > 0)
                                         item.IceCashRequest = "InsuranceAndLicense";
                                 }
@@ -2186,7 +2162,7 @@ namespace InsuranceClaim.Controllers
                                 }
                             }
 
-                            if (summary.Id == null || summary.Id == 0)
+                            if (summary.Id == 0)
                             {
                                 //DbEntry.PaymentTermId = Convert.ToInt32(Session["policytermid"]);
                                 //DbEntry.VehicleDetailId = vehicle[0].Id;
@@ -2631,6 +2607,7 @@ namespace InsuranceClaim.Controllers
                             var payNow = PayNow(DbEntry.Id, model.InvoiceNumber, model.PaymentMethodId.Value, Convert.ToDecimal(model.TotalPremium));
                             if (payNow.IsSuccessPayment)
                             {
+                                Session["PayNowSummmaryId"] = DbEntry.Id;
                                 Session["PollUrl"] = payNow.PollUrl;
                                 return Redirect(payNow.ReturnUrl);
                             }
@@ -2686,15 +2663,12 @@ namespace InsuranceClaim.Controllers
             }
         }
 
-        protected PayNowModel PayNow(int summaryId, string invoiceNumber, int paymentId, decimal totalPremium)
+        public PayNowModel PayNow(int summaryId, string invoiceNumber, int paymentId, decimal totalPremium)
         {
             PayNowModel payNowModel = new PayNowModel();
             Insurance.Service.EmailService log = new Insurance.Service.EmailService();
             try
             {
-
-
-
                 string Integration_ID = ConfigurationManager.AppSettings["PayNowIntegration_ID"];
                 string Integration_Key = ConfigurationManager.AppSettings["PayNowIntegration_Key"];
                 string urlPath = ConfigurationManager.AppSettings["urlPath"];
@@ -3359,13 +3333,9 @@ namespace InsuranceClaim.Controllers
                             quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
                         else
                             quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
-
                     }
 
-
-
                     response.result = quoteresponse.Response.Result;
-
 
                     if (response.result == 0)
                     {

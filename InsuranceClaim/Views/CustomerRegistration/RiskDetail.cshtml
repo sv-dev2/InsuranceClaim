@@ -14,8 +14,6 @@
     }
 </style>
 
-
-
 <div class="top-banner-section">
     <div class="container">
         <div class="car-insurance-content">
@@ -25,7 +23,6 @@
 </div>
 
 <div class="body-content-section">
-
 
     <div class="form-section-top">
         <div class="container">
@@ -1445,10 +1442,10 @@
         $("#CurrencyId").change(function () {
             var coverType = $("#CoverTypeId").val();
             var sumInsured = $("#SumInsured").val();
-            if(coverType==4 && sumInsured!="")
-            {
+            //if(coverType==4 && sumInsured!="")
+            //{
                 QuoteCalculation();
-            }      
+            //}      
         });
 
         $("#ExcessType").change(function () {
@@ -1850,7 +1847,6 @@
                             if(isRadioLicense)
                             {
                                 $("#RadioLicenseCost").val(parseFloat(data.Data.Response.Quotes[0].Licence.TotalRadioTVAmt).toFixed(2));
-
                             }
 
 

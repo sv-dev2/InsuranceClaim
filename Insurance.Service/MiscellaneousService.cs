@@ -463,7 +463,7 @@ namespace Insurance.Service
             return "";
         }
 
-        public static void SendEmailNewPolicy(string customerName, string policyNumber, decimal? premium, int? paymentTermId, string paymentMethod, List<VehicleDetail> vehicle, string renew = "")
+        public static void SendEmailNewPolicy(string customerName, string address1, string address2, string policyNumber, decimal? premium, int? paymentTermId, string paymentMethod, List<VehicleDetail> vehicle, string renew = "")
         {
             string paymentTerm = GetPaymentTerm(paymentTermId);
             string subject = "";
@@ -482,6 +482,8 @@ namespace Insurance.Service
             string MotorBody = System.IO.File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath(QuotationEmailPath));
 
             var body = MotorBody.Replace("#CustomerName#", customerName).Replace("#PolicyNumber#", policyNumber)
+                .Replace("#Address1#", address1)
+                .Replace("#Address2#", address2)
                 .Replace("#Premium#", premium.ToString()).Replace("#PaymentTerm#", paymentTerm).Replace("#PaymentMethod#", paymentMethod).Replace("#vrn#", vrn);
 
             //webclientsemail

@@ -672,6 +672,175 @@ namespace Insurance.Service
             return json;
         }
 
+
+
+
+        public ResultRootObject TPILICQuoteWebUser(string PartnerToken, string RegistrationNo, string suminsured, string make, string model, int PaymentTermId, int VehicleYear, int CoverTypeId, int VehicleType, string PartnerReference, DateTime CoverStartDate, DateTime CoverEndDate, string taxClassId, bool VehilceLicense, bool RadioLicense, string radioPaymentTerm, string zinaraPaymentTerm)
+        {
+            //string PSK = "127782435202916376850511";
+            string _json = "";
+            make = RemoveSpecialChars(make);
+            model = RemoveSpecialChars(model);
+
+            var CustomerInfo = (CustomerModel)HttpContext.Current.Session["CustomerDataModal"];
+            if (CustomerInfo == null)
+            {
+                CustomerInfo = (CustomerModel)HttpContext.Current.Session["ReCustomerDataModal"];// if renew
+            }
+
+            List<VehicleCombObject> obj = new List<VehicleCombObject>();
+
+            if(string.IsNullOrEmpty(zinaraPaymentTerm))
+                zinaraPaymentTerm = "0";
+
+            if (string.IsNullOrEmpty(radioPaymentTerm))
+                radioPaymentTerm = "0";
+
+
+            int LicFrequencyTerm = GetMonthKey(Convert.ToInt32(zinaraPaymentTerm));
+            string RadioTVUsage = "1"; // for private car
+            int RadioTVFreeQuency = 0;
+
+            if (VehicleType == 0)
+                RadioTVUsage = "1";
+            else if (VehicleType == 3 || VehicleType == 11) // fr 
+                RadioTVUsage = "2";
+
+            string clientIdType = "1";
+            if (CustomerInfo.IsCorporate)
+                clientIdType = "2";
+
+            if (!RadioLicense)
+            {
+                RadioTVUsage = null;
+                RadioTVFreeQuency = 0;
+            }
+            else
+                RadioTVFreeQuency = GetMonthKey( Convert.ToInt32(radioPaymentTerm));
+
+
+            obj.Add(new VehicleCombObject
+            {
+                VRN = RegistrationNo,
+                DurationMonths = (PaymentTermId == 1 ? 12 : PaymentTermId).ToString(),
+                InsuranceType = CoverTypeId.ToString(),
+                VehicleType = VehicleType.ToString(),
+                Address1 = UserService.ReplaceSpecialChracter(CustomerInfo.AddressLine1),
+                Address2 = UserService.ReplaceSpecialChracter(CustomerInfo.AddressLine2),
+                FirstName = CustomerInfo.FirstName,
+                LastName = CustomerInfo.LastName,
+                IDNumber = UserService.ReplaceSpecialChracter(CustomerInfo.NationalIdentificationNumber),
+                MSISDN = UserService.ReplaceSpecialChracter(CustomerInfo.CountryCode + CustomerInfo.PhoneNumber),
+                LicFrequency = LicFrequencyTerm.ToString(),
+                RadioTVUsage = RadioTVUsage,
+                RadioTVFrequency = RadioTVFreeQuency.ToString(),
+                SuburbID = "1",
+                ClientIDType = clientIdType,
+                TaxClass = taxClassId
+            });
+
+            CombArguments objArg = new CombArguments();
+            objArg.PartnerReference = Guid.NewGuid().ToString(); ;
+            objArg.Date = DateTime.Now.ToString("yyyyMMddhhmmss");
+            objArg.Version = "2.0";
+            objArg.PartnerToken = PartnerToken;
+            objArg.Request = new CombineFunctionObject { Function = "TPILICQuote", Vehicles = obj };
+
+            _json = Newtonsoft.Json.JsonConvert.SerializeObject(objArg);
+
+            //string  = json.Reverse()
+            string reversejsonString = new string(_json.Reverse().ToArray());
+            string reversepartneridString = new string(PSK.Reverse().ToArray());
+
+            string concatinatedString = reversejsonString + reversepartneridString;
+
+            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(concatinatedString);
+
+            string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
+
+            string GetSHA512encrypted = SHA512(returnValue);
+
+            string MAC = "";
+
+            for (int i = 0; i < 16; i++)
+            {
+                MAC += GetSHA512encrypted.Substring((i * 8), 1);
+            }
+
+            MAC = MAC.ToUpper();
+
+            CombineQuoteRequest objroot = new CombineQuoteRequest();
+            objroot.Arguments = objArg;
+            objroot.MAC = MAC;
+            objroot.Mode = "SH";
+
+            var data = Newtonsoft.Json.JsonConvert.SerializeObject(objroot);
+
+            JObject jsonobject = JObject.Parse(data);
+
+            var client = new RestClient(LiveIceCashApi);
+            //   var client = new RestClient(LiveIceCashApi);
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("content-type", "application/x-www-form-urlencoded");
+            request.AddParameter("application/x-www-form-urlencoded", jsonobject, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+
+            ResultRootObject json = JsonConvert.DeserializeObject<ResultRootObject>(response.Content);
+
+            SummaryDetailService.WriteLog(data, response.Content, "TPIQuote");
+
+
+
+            if (json.Response.Quotes != null && json.Response.Quotes.Count > 0)
+            {
+                if (json.Response.Quotes[0].Policy != null)
+                {
+                    var Setting = InsuranceContext.Settings.All();
+                    var DiscountOnRenewalSettings = Setting.Where(x => x.keyname == "Discount On Renewal").FirstOrDefault();
+                    var premium = Convert.ToDecimal(json.Response.Quotes[0].Policy.CoverAmount);
+                    switch (PaymentTermId)
+                    {
+                        case 1:
+                            var AnnualRiskPremium = premium;
+                            if (DiscountOnRenewalSettings.ValueType == Convert.ToInt32(eSettingValueType.percentage))
+                            {
+                                json.LoyaltyDiscount = ((AnnualRiskPremium * Convert.ToDecimal(DiscountOnRenewalSettings.value)) / 100);
+                            }
+                            if (DiscountOnRenewalSettings.ValueType == Convert.ToInt32(eSettingValueType.amount))
+                            {
+                                json.LoyaltyDiscount = Convert.ToDecimal(DiscountOnRenewalSettings.value);
+                            }
+                            break;
+                        case 3:
+                            var QuaterlyRiskPremium = premium;
+                            if (DiscountOnRenewalSettings.ValueType == Convert.ToInt32(eSettingValueType.percentage))
+                            {
+                                json.LoyaltyDiscount = ((QuaterlyRiskPremium * Convert.ToDecimal(DiscountOnRenewalSettings.value)) / 100);
+                            }
+                            if (DiscountOnRenewalSettings.ValueType == Convert.ToInt32(eSettingValueType.amount))
+                            {
+                                json.LoyaltyDiscount = Convert.ToDecimal(DiscountOnRenewalSettings.value);
+                            }
+                            break;
+                        case 4:
+                            var TermlyRiskPremium = premium;
+                            if (DiscountOnRenewalSettings.ValueType == Convert.ToInt32(eSettingValueType.percentage))
+                            {
+                                json.LoyaltyDiscount = ((TermlyRiskPremium * Convert.ToDecimal(DiscountOnRenewalSettings.value)) / 100);
+                            }
+                            if (DiscountOnRenewalSettings.ValueType == Convert.ToInt32(eSettingValueType.amount))
+                            {
+                                json.LoyaltyDiscount = Convert.ToDecimal(DiscountOnRenewalSettings.value);
+                            }
+                            break;
+                    }
+                }
+            }
+            return json;
+        }
+
+
         public string RemoveSpecialChars(string str)
         {
             // Create  a string array and add the special characters you want to remove

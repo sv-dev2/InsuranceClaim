@@ -18,10 +18,7 @@ namespace InsuranceClaim.Models
     public class SearchVRNModel
     {
         public string RegistrationNum { get; set; }
-
         public string NationalId { get; set; }
-
-
     }
 
 }

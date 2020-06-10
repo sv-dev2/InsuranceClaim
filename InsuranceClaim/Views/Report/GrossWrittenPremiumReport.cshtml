@@ -176,7 +176,8 @@
                             //15 may D
                             if (item.RenewPolicyNumber == null)
                             {
-                                if (item.Currency == "US$ FCA")
+                                //US$ FCA
+                                if (item.Currency == "USD")
                                 {
                                     ustotal += item.Premium_due;
                                     uscount = uscount + 1;
@@ -190,7 +191,8 @@
 
                             else if (Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
                             {
-                                if (item.Currency == "US$ FCA")
+                                //US$ FCA
+                                if (item.Currency == "USD")
                                 {
                                     Reustotal += item.Premium_due;
                                     Reuscount = Reuscount + 1;
@@ -393,7 +395,7 @@
                             <td colspan="8"><strong>New Business:</strong></td>
                            
                            
-                            <td colspan="3">US$ FCA</td>
+                            <td colspan="3">USD</td>
                             <td colspan="3">@ustotal</td>
                             <td colspan="3">@uscount</td>
                             <td colspan="2"></td>
@@ -417,7 +419,7 @@
                         <tr>
                             <td colspan="8"><strong>Renewals</strong></td>
                           
-                            <td colspan="3">US$ FCA</td>
+                            <td colspan="3">USD</td>
                             <td colspan="3">@Reustotal</td>
                             <td colspan="3">@Reuscount</td>
                             <td colspan="2"></td>
@@ -445,7 +447,7 @@
                             <td colspan="8"><strong>Grand Total</strong></td>
                           
                            
-                            <td colspan="3"> US$ FCA</td>
+                            <td colspan="3"> USD</td>
                             <td colspan="3">@(ustotal + Reustotal)</td>
                             <td colspan="3"> @(uscount + Reuscount) </td>
                             <td colspan="2"></td>

@@ -79,6 +79,7 @@ namespace InsuranceClaim.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+          
             Session.Abandon();
             Session.Clear();
             ViewBag.ReturnUrl = returnUrl;
@@ -1989,6 +1990,8 @@ namespace InsuranceClaim.Controllers
         [Authorize(Roles = "Staff,Administrator,Renewals, Agent, AgentStaff,Claim,Finance")]
         public ActionResult PolicyManagement()
         {
+            ClearViewSession();
+
             string query = "select top 100 PolicyDetail.Id as PolicyId , PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
             query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
@@ -2017,15 +2020,15 @@ namespace InsuranceClaim.Controllers
                 CustomerName = x.CustomerName,
                 CustomerId = x.CustomerId,
                 PaymentMethod = x.PaymentMethod,
-                TotalSumInsured = x.TotalSumInsured,
-                TotalPremium = x.TotalPremium,
+                TotalSumInsured = x.TotalSumInsured==null? 0 : x.TotalSumInsured,
+                TotalPremium = x.TotalPremium ==null? 0 : x.TotalPremium,
                 createdOn = x.CreatedOn,
                 SummaryId = x.Id,  
                 RegisterationNumber = x.RegistrationNo,
                 Make = x.Make,
                 Model = x.Model,
                 Currency = x.currency,
-                VehicleSumInsured = x.SumInsured,
+                VehicleSumInsured = x.SumInsured==null? 0: x.SumInsured,
                 isLapsed = x.isLapsed,
                 IsActive = x.IsActive==null? true: x.IsActive,
                 VehicleDetailId = x.VehicleId,
@@ -2055,6 +2058,11 @@ namespace InsuranceClaim.Controllers
             return View(newList);
         }
 
+
+        private void ClearViewSession()
+        {
+            Session["SummaryDetailIdView"] = null;
+        }
 
         //public string GetRenewalDate(string renewDate)
         //{
@@ -3923,6 +3931,12 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult RiskDetail(int? id = 1)
         {
+
+            if (id > 1)
+                Session["SummaryDetailIdView"] = id;
+            
+
+
             if (TempData["RedirectedFrom"] != null && Convert.ToString(TempData["RedirectedFrom"]) == "MyPolicy")
             {
                 ViewBag.RedirectedFrom = "MyPolicy";

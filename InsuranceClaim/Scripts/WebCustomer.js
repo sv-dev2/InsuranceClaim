@@ -1,5 +1,17 @@
 ﻿function DisplayPresoanlDetails() {
     if (ValidateVehicle()) {
+
+        var CoverType = $("input[name='RiskDetail.CoverTypeName']:checked").val();
+        if (CoverType == "Comprehensive")
+        {
+            $("#RiskDetail_CoverTypeId").val(4);
+        }
+
+        if (CoverType == "Third Party") {
+            $("#RiskDetail_CoverTypeId").val(1);
+        }
+        
+        
         $("#riskdetial").hide();
         $("#presonal_detail").show();
     }
@@ -15,8 +27,7 @@ function DisplayVehicleDetial() {
             $(".loading-area").hide();
             CalculatePremiumByCoverType();
         }, 1000);
-
-       
+  
     }
 }
 
@@ -56,6 +67,14 @@ function ValidateVehicle() {
     var paymentTermId = $("#RiskDetail_PaymentTermId").val();
     var CoverType = $("input[name='RiskDetail.CoverTypeName']:checked").val();
     var ProductId = $("#RiskDetail_ProductId").val();
+    var isZinaraLicense = $('input[name="RiskDetail.IncludeLicenseFee"]:checked').val();
+    var isRadioLicense = $('input[name="RiskDetail.IncludeRadioLicenseCost"]:checked').val();
+
+    var zinaraPaymentTermId = $("#RiskDetail_ZinaraLicensePaymentTermId").val();
+    var radioPaymentTermId = $("#RiskDetail_RadioLicensePaymentTermId").val();
+
+    var vehicleUsage = $("#RiskDetail_VehicleUsage").val();
+
 
     if ($("input[name='RiskDetail.CoverTypeName']:checked").length == 0) {
         $("#errorDiv").show();
@@ -89,7 +108,30 @@ function ValidateVehicle() {
         $("#errorDiv").show();
         $("#errorMsg").text("Please select payment term.");
         result = false;
-    }
+   }
+   else if (isZinaraLicense)
+   {
+       if (zinaraPaymentTermId=="")
+       {
+           $("#errorDiv").show();
+           $("#errorMsg").text("Please select Zinara License payment term.");
+           result = false;
+       }
+   }
+   else if (isRadioLicense) {
+       if (radioPaymentTermId == "") {
+           $("#errorDiv").show();
+           $("#errorMsg").text("Please select Radio License payment term.");
+           result = false;
+       }
+   }
+   else if (vehicleUsage=="")
+   {
+       $("#errorDiv").show();
+       $("#errorMsg").text("Please select VehicleUsage.");
+       result = false;
+   }
+
     else {
         $("#errorDiv").hide();
         $("#errorMsg").text("");
@@ -109,6 +151,8 @@ function ValidateCustomer() {
     var Customer_PhoneNumber = $("#Customer_PhoneNumber").val();
     var Customer_DateOfBirth = $("#Customer_DateOfBirth").val();
     var AddressLine1 = $("#AddressLine1").val();
+
+    var City = $("#Customer_City").val();
 
     if (Customer_FirstName == "") {
         $("#errorDiv").show();
@@ -161,6 +205,14 @@ function ValidateCustomer() {
         result = false;
     }
 
+    else if (City=="")
+    {
+        $("#errorDiv").show();
+        $("#AddressLine1").focus();
+        $("#errorMsg").text("Please select city.");
+        result = false;
+    }
+
     else {
         $("#errorDiv").hide();
         $("#errorMsg").text("");
@@ -183,21 +235,13 @@ function IsEmail(email) {
 function CalculatePremiumByCoverType() {
     if ($("#RiskDetail_PaymentTermId").val() != ""  && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val() != "") {
         var coverytype = $('#CoverTypeId option:selected').val();
-
-
-
         generateQuotewithICEcash();
-
-
-
     }
 }
 
 
 function generateQuotewithICEcash() {
-
     debugger;
-
     var CoverType = $("input[name='RiskDetail.CoverTypeName']:checked").val();
     var coverTypeId = 1;
 
@@ -235,6 +279,13 @@ function generateQuotewithICEcash() {
     var isLicense = $("#RiskDetail_IncludeLicenseFee").is(':checked');
     var isRadioLicense = $("#RiskDetail_IncludeRadioLicenseCost").is(':checked');
 
+    var radioLicensePaymentTerm = $("#RiskDetail_RadioLicensePaymentTermId").val();
+    var zinaraLicensePaymentTerm = $("#RiskDetail_ZinaraLicensePaymentTermId").val();
+
+  
+
+    var vehilceUsage = $("#RiskDetail_VehicleUsage").val();
+
     //var isLicense = false;
     //var isRadioLicense = false;
 
@@ -249,7 +300,7 @@ function generateQuotewithICEcash() {
         cache: false,
         type: "POST",
         url: "/WebCustomer/getPolicyDetailsFromICEcash",
-        data: { regNo: $("#RiskDetail_RegistrationNo").val(), PaymentTerm: $("#RiskDetail_PaymentTermId").val(), suminsured: $("#RiskDetail_SumInsured").val(), CoverTypeId: coverTypeId, VehicleType: $("#RiskDetail_ProductId").val(), VehilceLicense: isLicense, RadioLicense: isRadioLicense, firstName: Customer_FirstName, lastName: Customer_LastName, email: Customer_EmailAddress, address: AddressLine1, phone: Customer_PhoneNumber, nationalId: NationalId },
+        data: { regNo: $("#RiskDetail_RegistrationNo").val(), PaymentTerm: $("#RiskDetail_PaymentTermId").val(), suminsured: $("#RiskDetail_SumInsured").val(), CoverTypeId: coverTypeId, VehicleType: $("#RiskDetail_ProductId").val(), VehilceLicense: isLicense, RadioLicense: isRadioLicense, firstName: Customer_FirstName, lastName: Customer_LastName, email: Customer_EmailAddress, address: AddressLine1, phone: Customer_PhoneNumber, nationalId: NationalId, radioLicensePaymentTerm: radioLicensePaymentTerm, zinaraLicensePaymentTerm: zinaraLicensePaymentTerm, vehilceUsage: vehilceUsage },
     success: function (data) {
         debugger;
         if (data.result == 0) {
@@ -445,7 +496,8 @@ function callQuoteCalculation(sumInsured) {
         NumberofPersons = 0;
     }
 
-    var ProductId =$("#RiskDetail_ProductId").val();
+    var ProductId = $("#RiskDetail_ProductId").val();
+    var vehicleUsage = $("#RiskDetail_VehicleUsage").val();
 
     $(".loading-area").show();
 
@@ -453,7 +505,7 @@ function callQuoteCalculation(sumInsured) {
         type: "POST",
         async:false,
         url: "/CustomerRegistration/CalculatePremium",
-        data: { vehicleUsageId: 1, sumInsured: sumInsured, coverType: coverTypeId, excessType: excessType, excess: excess, AddThirdPartyAmount: AddThirdPartyAmount, NumberofPersons: NumberofPersons, Addthirdparty: Addthirdparty, PassengerAccidentCover: PassengerAccidentCover, ExcessBuyBack: ExcessBuyBack, RoadsideAssistance: RoadsideAssistance, MedicalExpenses: MedicalExpenses, RadioLicenseCost: RadioLicenseCost, IncludeRadioLicenseCost: IncludeRadioLicenseCost, policytermid: policytermid, isVehicleRegisteredonICEcash: $("#isVehicleRegisteredonICEcash").val() == "1", BasicPremium: $("#basicPremiumICEcash").val(), StampDuty: $("#stampDutyICEcash").val(), ZTSCLevy: $("#LevyICEcash").val(), ProductId: ProductId, currencyId: currencyId },
+        data: { vehicleUsageId: vehicleUsage, sumInsured: sumInsured, coverType: coverTypeId, excessType: excessType, excess: excess, AddThirdPartyAmount: AddThirdPartyAmount, NumberofPersons: NumberofPersons, Addthirdparty: Addthirdparty, PassengerAccidentCover: PassengerAccidentCover, ExcessBuyBack: ExcessBuyBack, RoadsideAssistance: RoadsideAssistance, MedicalExpenses: MedicalExpenses, RadioLicenseCost: RadioLicenseCost, IncludeRadioLicenseCost: IncludeRadioLicenseCost, policytermid: policytermid, isVehicleRegisteredonICEcash: $("#isVehicleRegisteredonICEcash").val() == "1", BasicPremium: $("#basicPremiumICEcash").val(), StampDuty: $("#stampDutyICEcash").val(), ZTSCLevy: $("#LevyICEcash").val(), ProductId: ProductId, currencyId: currencyId },
     success: function (data) {
         debugger;
         $("#RiskDetail_Premium").val(parseFloat(data.Premium).toFixed(2));
@@ -484,12 +536,18 @@ function callQuoteCalculation(sumInsured) {
             radioLicenseCost = 0;
         
         var penaltiesAmt = $("#RiskDetail_PenaltiesAmt").val();
+
+        vehicleLicensefee = parseFloat(vehicleLicensefee).toFixed(2)
+        radioLicenseCost = parseFloat(radioLicenseCost).toFixed(2)
+        penaltiesAmt = parseFloat(penaltiesAmt).toFixed(2)
         
         var InsurncePremium = parseFloat(vehicleLicensefee + radioLicenseCost + penaltiesAmt).toFixed(2)
 
-        var totalPremium = parseFloat(data.Premium + data.StamDuty + data.ZtscLevy + InsurncePremium).toFixed(2);
+        var totalPremium = parseFloat(data.Premium + data.StamDuty + data.ZtscLevy).toFixed(2);
 
-        $("#SummaryDetail_TotalPremium").val(totalPremium);
+        totalPremium = parseFloat(totalPremium) + parseFloat(InsurncePremium);
+
+        $("#SummaryDetail_TotalPremium").val(totalPremium.toFixed(2));
         
 
         //$("#NumberofPersons").val(data.NumberofPersons);
@@ -583,5 +641,9 @@ function GetVehicleModels(ModelName)
     }
 });
 }
+
+
+
+
 
 

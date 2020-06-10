@@ -24,54 +24,51 @@
 </div>
 
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-            <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
-
-                    @*<div class="col-xs-2 bs-wizard-step disabled">
-                             complete
-                            <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="#" class="bs-wizard-dot"></a>
-                            <div class="text-center bs-wizard-stepnum">Product Details</div>
-                        </div>*@
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+   
 
     <div class="form-section-top">
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+
+
+            <div class="row bs-wizard">
+
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+
+                    <div class="Process-step-section process-block">
+                        <div class="col-xs-2 bs-wizard-step active">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
+
+
+
+                        <div class="col-xs-2 bs-wizard-step disabled">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-xs-2 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-xs-2 bs-wizard-step disabled">
+                            <!-- active -->
+
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
                     <div class="form-group-section">
                         <div class="form-title">
                             <h4>Client Details</h4>
@@ -108,59 +105,59 @@
                                         </div>
                                     </div>
                                 </div>
-                                    <div class="row">
-                                        <div class="col-sm-6 col-md-6 form-group-text">
-                                            <div class="row">
-                                                @*<div class="row @disableClass">*@
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="row">
+                                            @*<div class="row @disableClass">*@
 
-                                                <div class="form-group">
-                                                    <div class="col-md-5">
-                                                        <div class="checkbox-label">
-                                                            @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
-                                                        </div>
+                                            <div class="form-group">
+                                                <div class="col-md-5">
+                                                    <div class="checkbox-label">
+                                                        @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
                                                     </div>
+                                                </div>
 
-@if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff") || User.IsInRole("Administrator"))
+                                                @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff") || User.IsInRole("Administrator"))
 {
-    <div class="col-md-7">
-        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "return false", @readonly = "readonly" }) No email address</label>
-    </div>
+                                                    <div class="col-md-7">
+                                                        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "return false", @readonly = "readonly" }) No email address</label>
+                                                    </div>
 }
 
-                                                    
-                                                    <div class="col-md-12">
-                                                        @*@if (email != "")
-                                                            {
-                                                                @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control non-editable", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" });
-                                                            }
-                                                            else
-                                                            {
-                                                                @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" });
-                                                            }*@
 
-                                                        @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address", @readonly = "readonly" })
+                                                <div class="col-md-12">
+                                                    @*@if (email != "")
+                                                {
+                                                    @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control non-editable", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" });
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" });
+                                                }*@
 
-
-                                                        @Html.ValidationMessageFor(x => x.EmailAddress, "", new { @class = "text-danger" })
+                                                    @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address", @readonly = "readonly" })
 
 
-                                                    </div>
+                                                    @Html.ValidationMessageFor(x => x.EmailAddress, "", new { @class = "text-danger" })
+
+
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-md-6 form-group-text">
-                                            <div class="form-group">
-                                                @Html.LabelFor(x => x.PhoneNumber, new { @class = "gender-label" })
-                                                @*@Html.TextBoxFor(x => x.CountryCode, new { @class = "form-control countrycode", @name = "CountryCode", @autocomplete = "off", @id = "CountryCode", @placeholder = "Code", @maxlength = "4" })*@
-                                                @Html.DropDownListFor(x => x.CountryCode, new SelectList(ViewBag.Countries, "code", "DisplayName", "+263"), new { @class = "form-control countrycode" })
-                                                @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phonenumber", @name = "PhoneNumber", @autocomplete = "off", @id = "PhoneNumber", @placeholder = "Phone Number", @maxlength = "9", onkeypress = "return isNumber(event)" })
-                                                @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
-                                                @*@Html.ValidationMessageFor(x => x.CountryCode, "", new { @class = "text-danger" })*@
-                                            </div>
-                                        </div>
-
-
                                     </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.PhoneNumber, new { @class = "gender-label" })
+                                            @*@Html.TextBoxFor(x => x.CountryCode, new { @class = "form-control countrycode", @name = "CountryCode", @autocomplete = "off", @id = "CountryCode", @placeholder = "Code", @maxlength = "4" })*@
+                                            @Html.DropDownListFor(x => x.CountryCode, new SelectList(ViewBag.Countries, "code", "DisplayName", "+263"), new { @class = "form-control countrycode" })
+                                            @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phonenumber", @name = "PhoneNumber", @autocomplete = "off", @id = "PhoneNumber", @placeholder = "Phone Number", @maxlength = "9", onkeypress = "return isNumber(event)" })
+                                            @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
+                                            @*@Html.ValidationMessageFor(x => x.CountryCode, "", new { @class = "text-danger" })*@
+                                        </div>
+                                    </div>
+
+
+                                </div>
                                     <div class="row">
                                         <div class="col-md-6 form-group-text">
                                             <div class="form-group">
@@ -206,19 +203,19 @@
                                         </div>
                                     </div>
                                     @*<div class="row">
-                                            <div class="col-sm-6 col-md-6 form-group-text">
-                                                <div class="form-group">
-                                                    @Html.TextBoxFor(x => x.City, new { @class = "form-control", @name = "State", @autocomplete = "off", @placeholder = "Enter City Name" })
-                                                    @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-6 form-group-text">
-                                                <div class="form-group">
-                                                    @Html.TextBoxFor(x => x.State, new { @class = "form-control", @name = "State", @autocomplete = "off", @placeholder = "Enter State Name" })
-                                                    @Html.ValidationMessageFor(x => x.State, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-                                        </div>*@
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(x => x.City, new { @class = "form-control", @name = "State", @autocomplete = "off", @placeholder = "Enter City Name" })
+                                            @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(x => x.State, new { @class = "form-control", @name = "State", @autocomplete = "off", @placeholder = "Enter State Name" })
+                                            @Html.ValidationMessageFor(x => x.State, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>*@
 
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 form-group-select">
@@ -244,17 +241,17 @@
                                                 @Html.ValidationMessageFor(x => x.Zipcode, "", new { @class = "text-danger" })
                                             </div>
                                             @*<div class="col-sm-6 col-md-6 form-group-text">
-                                                    <div class="form-group">
-                                                        @Html.TextBoxFor(x => x.Country, new { @class = "form-control", @name = "Country", @autocomplete = "off", @id = "Country", @placeholder = "Country" })
-                                                        @Html.ValidationMessageFor(x => x.Country, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
+                                            <div class="form-group">
+                                                @Html.TextBoxFor(x => x.Country, new { @class = "form-control", @name = "Country", @autocomplete = "off", @id = "Country", @placeholder = "Country" })
+                                                @Html.ValidationMessageFor(x => x.Country, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
 
-                                                <div class="col-sm-6 col-md-6 form-group-text">
-                                                    <div class="form-group">
-                                                        @Html.TextBoxFor(x => x.Zipcode, new { @class = "form-control", @name = "Zipcode", @autocomplete = "off", @id = "Zipcode", @placeholder = "Zip Code" })
-                                                        @Html.ValidationMessageFor(x => x.Zipcode, "", new { @class = "text-danger" })
-                                                    </div>*@
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.TextBoxFor(x => x.Zipcode, new { @class = "form-control", @name = "Zipcode", @autocomplete = "off", @id = "Zipcode", @placeholder = "Zip Code" })
+                                                @Html.ValidationMessageFor(x => x.Zipcode, "", new { @class = "text-danger" })
+                                            </div>*@
                                         </div>
                                     </div>
 
@@ -263,8 +260,8 @@
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 @*<div class="text-right">
-                                                        <button type="submit" name="buttonUpdate" value="Update" class="btn">Update</button>
-                                                    </div>*@
+                                                <button type="submit" name="buttonUpdate" value="Update" class="btn">Update</button>
+                                            </div>*@
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="text-right">
@@ -277,6 +274,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

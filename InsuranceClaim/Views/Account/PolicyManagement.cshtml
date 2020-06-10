@@ -390,15 +390,16 @@
 
     function disableVehicle(VehicleId) {
 
-        $.ajax({
+        $(".loading-area").show();
 
+        $.ajax({
             url: '/Account/DisablePolicy',
             type: "GET",
             data: { VehicleId: VehicleId },
             success: function (result) {
                 if (result) {
                     toastr.success("Vehicle De-Activated Successfully !!");
-                    location.href = location.href;
+                    location.reload();
                 }
                 else {
                     toastr.error("Unable To De-Activate, Please Try Again !!");
