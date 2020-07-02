@@ -96,6 +96,7 @@
     <Compile Include="AspNetUsersDetailModel.cs" />
     <Compile Include="AspNetUsersModel.cs" />
     <Compile Include="AspNetUsersUpdateModel.cs" />
+    <Compile Include="AttachmentModel.cs" />
     <Compile Include="BasicCommissionReportModel.cs" />
     <Compile Include="BirthdayMessageModel.cs" />
     <Compile Include="BranchModel.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="EndorsementSummaryDetailModel.cs" />
     <Compile Include="EndorsementSummaryVehicleDetailModel.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Extension.cs" />
     <Compile Include="GrossWrittenPremiumReportModels.cs" />
     <Compile Include="IceCashModel.cs" />
     <Compile Include="IdentityModels.cs" />
@@ -187,6 +189,8 @@
     <Compile Include="VehicleTaxClassModel.cs" />
     <Compile Include="VehicleUsageModel.cs" />
     <Compile Include="WebCustomerModel.cs" />
+    <Compile Include="WeeklyGWPModel.cs" />
+    <Compile Include="ZinaraReportModel.cs" />
     <Compile Include="ZTSCLevyReportModels.cs" />
   </ItemGroup>
   <ItemGroup>

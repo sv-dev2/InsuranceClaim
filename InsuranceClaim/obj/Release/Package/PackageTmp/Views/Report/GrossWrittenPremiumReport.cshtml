@@ -20,7 +20,6 @@
             </div>
         </div>
         
-
         @using (Html.BeginForm("SearchGrossReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             <div class="container-main">
@@ -70,7 +69,7 @@
 
         <div class="product-table-grid">
             <div class="table-responsive">
-                <table width="1785" class="table table-striped tablesorter" style="width:1785px" id="report2excel">
+                <table  class="table table-striped tablesorter"  id="report2excel">
 
                     <thead style='display:none;'>
 
@@ -106,7 +105,7 @@
 
                     <thead>
                         <tr>
-                            <td rowspan="6"></td>
+                            <td rowspan="7"></td>
                         </tr>
                     </thead>
 
@@ -119,23 +118,23 @@
                             <th style="width: 180px;">Policy Number</th>
                             <th>Cover Note</th>
                             <th style="width:170px;">Policy Dates</th>
-                            <th style="width:170px;">Payment Detail</th>
+                            <th>Payment Detail</th>
                             <th>Term Period</th>
                             <th>Cover Type</th>
                             <th>Currency</th>
 
-                            <th style="width:170px;">Premium</th>
+                            <th>Premium</th>
 
-                            <th width="170px;">Stamp Duty</th>
+                            <th>Stamp Duty</th>
                             <th>ZTSC Levy</th>
                             <th>Commission Detail</th>
                             <th>Radio Licence Cost</th>
                             <th>Zinara License Fee</th>
                             <th>Status</th>
                             <th>Policy Status</th>
-                            @*<th>
+                            <th>
                                 Business Source
-                            </th>*@
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,7 +176,8 @@
                             //15 may D
                             if (item.RenewPolicyNumber == null)
                             {
-                                if (item.Currency == "US$ FCA")
+                                //US$ FCA
+                                if (item.Currency == "USD")
                                 {
                                     ustotal += item.Premium_due;
                                     uscount = uscount + 1;
@@ -191,7 +191,8 @@
 
                             else if (Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
                             {
-                                if (item.Currency == "US$ FCA")
+                                //US$ FCA
+                                if (item.Currency == "USD")
                                 {
                                     Reustotal += item.Premium_due;
                                     Reuscount = Reuscount + 1;
@@ -250,7 +251,17 @@
                             <tr>
                                 <td>  @item.PolicyCreatedBy
                                 </td>
-                                <td>@item.BranchName</td>
+                                <td>
+                                @if(item.PolicyCreatedBy!=null &&  item.PolicyCreatedBy.Contains("Web Client"))
+                                {
+                                    <span>Online</span>
+                                }
+                                else
+                                {
+                                    @item.BranchName
+                                }
+
+                               </td>
                                 <td>@item.Customer_Name</td>
                                 <td>
 
@@ -316,11 +327,11 @@
                                     <td>New Business</td>
                                 }
 
-                                @*
-                                <td>@item.BusinessSourceName <span>-</span>   @item.SourceDetailName</td>
-                                *@
+                                
+                                <td>@item.BusinessSourceName <span>-</span>   </td>
+                                
 
-
+                                @*@item.SourceDetailName*@
                             </tr>
                         }
                     </tbody>
@@ -384,7 +395,7 @@
                             <td colspan="8"><strong>New Business:</strong></td>
                            
                            
-                            <td colspan="3">US$ FCA</td>
+                            <td colspan="3">USD</td>
                             <td colspan="3">@ustotal</td>
                             <td colspan="3">@uscount</td>
                             <td colspan="2"></td>
@@ -408,7 +419,7 @@
                         <tr>
                             <td colspan="8"><strong>Renewals</strong></td>
                           
-                            <td colspan="3">US$ FCA</td>
+                            <td colspan="3">USD</td>
                             <td colspan="3">@Reustotal</td>
                             <td colspan="3">@Reuscount</td>
                             <td colspan="2"></td>
@@ -436,7 +447,7 @@
                             <td colspan="8"><strong>Grand Total</strong></td>
                           
                            
-                            <td colspan="3"> US$ FCA</td>
+                            <td colspan="3"> USD</td>
                             <td colspan="3">@(ustotal + Reustotal)</td>
                             <td colspan="3"> @(uscount + Reuscount) </td>
                             <td colspan="2"></td>

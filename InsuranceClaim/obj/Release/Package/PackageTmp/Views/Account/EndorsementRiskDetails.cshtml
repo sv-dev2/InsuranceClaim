@@ -992,14 +992,18 @@
                     setPolicyEndDate(11);
                     break;
             }
+            debugger;
 
             if ($("fieldset").attr("disabled") != "disabled") {
-                if ($("#isVehicleRegisteredonICEcash").val() == 1) {
-                    generateQuotewithICEcash();
-                }
-                else{
-                    QuoteCalculation();
-                }
+                //if ($("#isVehicleRegisteredonICEcash").val() == 1) {
+                //    generateQuotewithICEcash();
+                //}
+                //else{
+                //    QuoteCalculation();
+                //}
+
+                generateQuotewithICEcash();
+
             }
             else
             {
@@ -1323,12 +1327,15 @@
                 }
 
 
-                if ($("#isVehicleRegisteredonICEcash").val() == 1) {
-                    generateQuotewithICEcash();
-                }
-                else{
-                    QuoteCalculation();
-                }
+                //if ($("#isVehicleRegisteredonICEcash").val() == 1) {
+                //    generateQuotewithICEcash();
+                //}
+                //else{
+                //    QuoteCalculation();
+                //}
+
+                generateQuotewithICEcash();
+
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 $(".loading-area").hide();
@@ -1342,6 +1349,7 @@
     }
 
     function generateQuotewithICEcash() {
+
         var flag = true;
         if ($("#CoverTypeId").val() == "4") {
             if($("#SumInsured").val() == "" || $("#SumInsured").val() == "0.00")
@@ -1403,9 +1411,14 @@
 
                         $("#stampDutyICEcash").val(parseFloat(StampDuty).toFixed(2))
                         $("#LevyICEcash").val(parseFloat(GovernmentLevy).toFixed(2))
-                        QuoteCalculation()
-                        $(".loading-area").hide();
+                        
+                        
                     }
+                    QuoteCalculation();
+                    $(".loading-area").hide();
+
+
+
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     $(".loading-area").hide();
@@ -1708,12 +1721,16 @@
             $("#thridparty").show();
         }
 
-        if ($("#isVehicleRegisteredonICEcash").val() == "1") {
-            generateQuotewithICEcash();
-        }
-        else{
-            QuoteCalculation();
-        }
+        generateQuotewithICEcash();
+
+        //if ($("#isVehicleRegisteredonICEcash").val() == "1") {
+        //    generateQuotewithICEcash();
+        //}
+        //else{
+        //    QuoteCalculation();
+        //}
+
+
     });
 
 

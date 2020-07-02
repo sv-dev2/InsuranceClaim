@@ -384,7 +384,6 @@ F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web.WebPages.Deployment.dll
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web.WebPages.dll
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web.WebPages.Razor.dll
-F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\Newtonsoft.Json.dll
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\Insurance.Domain.pdb
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\EntityFramework.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\EntityFramework.SqlServer.xml
@@ -400,6 +399,6 @@ F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web.WebPages.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web.WebPages.Deployment.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\bin\Debug\System.Web.WebPages.Razor.xml
-F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\obj\Debug\InsuranceClaim.Models.csprojResolveAssemblyReference.cache
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\obj\Debug\InsuranceClaim.Models.dll
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\obj\Debug\InsuranceClaim.Models.pdb
+F:\ANKIT DHIMAN\InsuranceClaim_31_jan\InsuranceClaim.Models\obj\Debug\InsuranceClaim.Models.csprojResolveAssemblyReference.cache

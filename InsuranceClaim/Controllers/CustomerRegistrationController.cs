@@ -916,7 +916,7 @@ namespace InsuranceClaim.Controllers
             if (list.Count > 0 && vrn != "TBA")
                 result = true;
 
-            result = false; // to do
+            //result = false; // to do
             return result;
         }
 
@@ -2464,7 +2464,7 @@ namespace InsuranceClaim.Controllers
                                 CurrencyName = servicedetail.GetCurrencyName(currencylist, vehicledetail.CurrencyId);
                                 string policyPeriod = item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + item.CoverEndDate.Value.ToString("dd/MM/yyyy");
 
-                                Summeryofcover += "<tr> <td style='padding: 7px 10px; font - size:15px;'>" + item.RegistrationNo + " </td> <td style='padding: 7px 10px; font - size:15px;'>" + vehicledescription + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + item.SumInsured + "</td><td style='padding: 7px 10px; font - size:15px;'>" + converType + "</td><td style='padding: 7px 10px; font - size:15px;'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</td> <td style='padding: 7px 10px; font - size:15px;'>" + policyPeriod + "</td><td style='padding: 7px 10px; font - size:15px;'>" + paymentTermsNmae + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + Convert.ToString(item.Premium) + "</td></tr>";
+                                Summeryofcover += "<tr> <td style='padding: 7px 10px; font - size:15px;'>" + item.RegistrationNo + " </td> <td style='padding: 7px 10px; font - size:15px;'>" + vehicledescription + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + item.SumInsured + "</td><td style='padding: 7px 10px; font - size:15px;'>" + converType + "</td><td style='padding: 7px 10px; font - size:15px;'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</td> <td style='padding: 7px 10px; font - size:15px;'>" + policyPeriod + "</td><td style='padding: 7px 10px; font - size:15px;'>" + paymentTermsNmae + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + Convert.ToString(item.Premium+item.Discount) + "</td></tr>";
 
 
                             }
@@ -2509,11 +2509,12 @@ namespace InsuranceClaim.Controllers
                                 Replace("##Summeryofcover##", Summeryofcover).Replace("##PaymentTerm##", (vehicleQuotation.PaymentTermId == 1 ? paymentTerm.Name + "(1 Year)" : paymentTerm.Name + " Months")).
                                 Replace("##TotalPremiumDue##", Convert.ToString(summaryDetail.TotalPremium)).Replace("##StampDuty##", Convert.ToString(summaryDetail.TotalStampDuty)).
                                 Replace("##MotorLevy##", Convert.ToString(summaryDetail.TotalZTSCLevies)).
-                                Replace("##PremiumDue##", Convert.ToString(summaryDetail.TotalPremium - summaryDetail.TotalStampDuty - summaryDetail.TotalZTSCLevies - summaryDetail.TotalRadioLicenseCost + ListOfVehicles.Sum(x => x.Discount) - ListOfVehicles.Sum(x => x.VehicleLicenceFee))).
+                                Replace("##PremiumDue##", Convert.ToString(ListOfVehicles.Sum(x => x.Premium) + ListOfVehicles.Sum(x => x.Discount))).
                                 Replace("##PostalAddress##", customerQuotation.Zipcode).Replace("##ExcessBuyBackAmount##", Convert.ToString(ExcessBuyBackAmount)).
                                 Replace("##MedicalExpenses##", Convert.ToString(MedicalExpensesAmount)).Replace("##PassengerAccidentCover##", Convert.ToString(PassengerAccidentCoverAmount)).
                                 Replace("##RoadsideAssistance##", Convert.ToString(RoadsideAssistanceAmount)).Replace("##RadioLicence##", Convert.ToString(summaryDetail.TotalRadioLicenseCost)).
                                 Replace("##Discount##", Convert.ToString(ListOfVehicles.Sum(x => x.Discount)))
+                                 .Replace("##PenaltiesAmt##", Convert.ToString(ListOfVehicles.Sum(x => x.PenaltiesAmt)))
                                 .Replace("##ExcessAmount##", Convert.ToString(ExcessAmount))
                                 .Replace("##CurrencyNames##", CurrencyName).
                                 Replace("##SummaryDetailsPath##", Convert.ToString(rootPath)).Replace("##insurance_period##", vehicleQuotation.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + vehicleQuotation.CoverEndDate.Value.ToString("dd/MM/yyyy")).
@@ -3313,8 +3314,10 @@ namespace InsuranceClaim.Controllers
 
 
 
-                    if (VehilceLicense)
+                    if (VehilceLicense && RadioLicense)
                         quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
+                    else if(VehilceLicense)
+                        quoteresponse = ICEcashService.TPILICQuoteZinaraOnly(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
                     else
                         quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
 
@@ -3673,6 +3676,7 @@ namespace InsuranceClaim.Controllers
         {
             LicenseModel model = new LicenseModel();
             model.VehicleId = VehicleId;
+
             return View(model);
         }
 

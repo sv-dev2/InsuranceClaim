@@ -13,49 +13,48 @@
     </div>
 </div>
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-            <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
-
-
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="form-section-top">
         <div class="container">
 
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+            <div class="row bs-wizard">
+
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                    <div class="Process-step-section process-block">
+                        <div class="col-xs-2 bs-wizard-step complete">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
+
+
+                        <div class="col-xs-2 bs-wizard-step active">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-xs-2 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-xs-2 bs-wizard-step disabled">
+                            <!-- active -->
+
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+
+                    </div>
+                 </div>
+
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
 
                     @using (Html.BeginForm("SaveEndorsementRiskDetails", "Endorsement"))
                     {
@@ -63,7 +62,7 @@
                             @Html.HiddenFor(m => m.PolicyId)
                             @Html.HiddenFor(m => m.Id)
                             @Html.HiddenFor(m => m.EndorsementVehicleId)
-                            
+
                             @Html.HiddenFor(m => m.VehicleId)
                             @Html.HiddenFor(m => m.isUpdate)
                             @Html.HiddenFor(m => m.vehicleindex)
@@ -90,7 +89,7 @@
                             @Html.HiddenFor(x => x.CreatedOn)
                             @Html.HiddenFor(x => x.CreatedBy)
                             @Html.HiddenFor(x => x.BalanceAmount)
-                            @Html.HiddenFor(m => m.InsuranceId) 
+                            @Html.HiddenFor(m => m.InsuranceId)
                             @Html.HiddenFor(m => m.CombinedID)
 
                         </div>
@@ -354,10 +353,10 @@
                                                     @Html.DropDownListFor(x => x.ExcessType, ViewBag.eExcessTypeData as SelectList, new { @class = "form-control" })
 
                                                     @*@Html.Label("Excess Type", new { @class = "gender-label" })
-                                                        <select name="ExcessType" class="form-control" id="ExcessType">
-                                                            <option value="1">Percentage</option>
-                                                            <option value="2">Fixed Amount</option>
-                                                        </select>*@
+                                            <select name="ExcessType" class="form-control" id="ExcessType">
+                                                <option value="1">Percentage</option>
+                                                <option value="2">Fixed Amount</option>
+                                            </select>*@
                                                 </div>
                                             </div>
 
@@ -442,17 +441,17 @@
                                             </div>
                                         </div>
 
-                                     
+
 
 
                                         @*<div class="row">
-                                            <div class="col-sm-6 col-md-6 form-group-text">
-                                                <div class="form-group">
-                                                    @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
-                                                    @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
-                                                </div>
-                                            </div>
-                                        </div>*@
+                                    <div class="col-sm-6 col-md-6 form-group-text">
+                                        <div class="form-group">
+                                            @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
+                                        </div>
+                                    </div>
+                                </div>*@
                                         <div>
                                             <hr class="higlighter" />
                                             <div class="row">
@@ -498,7 +497,7 @@
 
 
                                             <div id="thridparty" class="row">
-                                                                                          
+
                                                 <div class="col-sm-6 col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
@@ -548,32 +547,32 @@
                                     </div>
                                     @*<hr />*@
                                     @*@if (true)
-                                    {
-                                        /**/
-                                    }
-                                    else
-                                    {
-                                        <hr class="higlighter" />
-                                    }*@
+                            {
+                                /**/
+                            }
+                            else
+                            {
+                                <hr class="higlighter" />
+                            }*@
                                     @*<div class="row">
-                                            <div class="next-btn">
-                                                <div class="col-sm-6 col-md-6">
-                                                    <div class="form-group">
-                                                        @Html.Label("Add More Vehicles ?", new { @class = "gender-label" })
+                                <div class="next-btn">
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("Add More Vehicles ?", new { @class = "gender-label" })
 
 
 
-                                                        @Html.CheckBoxFor(m => m.chkAddVehicles, new { @class = "", @style = "width: 40px;height: 36px;" })
+                                            @Html.CheckBoxFor(m => m.chkAddVehicles, new { @class = "", @style = "width: 40px;height: 36px;" })
 
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6 col-md-6">
-                                                    <div class="form-group text-right">
-                                                        <button type="submit" id="btnAddVehicle" name="btnAddVehicle" value="addvehical" class="btn btnDisabled @(Model.isUpdate ? "btnDisabled" : "")" style="width: 270px;    margin-top: 8px;">Submit & Add More Vehicle</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>*@
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group text-right">
+                                            <button type="submit" id="btnAddVehicle" name="btnAddVehicle" value="addvehical" class="btn btnDisabled @(Model.isUpdate ? "btnDisabled" : "")" style="width: 270px;    margin-top: 8px;">Submit & Add More Vehicle</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
 
                                     @*<hr />*@
                                     <div class="row">
@@ -590,20 +589,20 @@
                                                 </div>
 
                                                 @*<div class=@(Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] ? "col-sm-4 col-md-4" : "col-sm-6 col-md-6")>
-                                                        <div class="text-right">
-                                                            <button type="submit" id="btnGenerateQuote" class="btn @(Model.isUpdate ? "btnDisabled" : "")" style="padding:20px 10px;width: auto;">Submit & Generate Quote</button>
-                                                        </div>
-                                                    </div>
+                                            <div class="text-right">
+                                                <button type="submit" id="btnGenerateQuote" class="btn @(Model.isUpdate ? "btnDisabled" : "")" style="padding:20px 10px;width: auto;">Submit & Generate Quote</button>
+                                            </div>
+                                        </div>
 
-                                                    @if (Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] && Session["VehicleDetails"] != null && ((List<InsuranceClaim.Models.RiskDetailModel>)Session["VehicleDetails"]).Count > 0)
-                                                    {
+                                        @if (Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] && Session["VehicleDetails"] != null && ((List<InsuranceClaim.Models.RiskDetailModel>)Session["VehicleDetails"]).Count > 0)
+                                        {
 
-                                                        <div class="col-sm-4 col-md-4">
-                                                            <div class="text-right">
-                                                                <button type="button" id="btnSkip" onclick="redirectToSummary();" class="btn" style="padding:20px 10px;width: 170px;">Skip</button>
-                                                            </div>
-                                                        </div>
-                                                    }*@
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="text-right">
+                                                    <button type="button" id="btnSkip" onclick="redirectToSummary();" class="btn" style="padding:20px 10px;width: 170px;">Skip</button>
+                                                </div>
+                                            </div>
+                                        }*@
 
                                             </div>
                                         </div>
@@ -704,7 +703,8 @@
                     }
 
                 </div>
-            </div>
+             
+                </div>          
         </div>
     </div>
 </div>

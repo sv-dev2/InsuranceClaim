@@ -1,0 +1,204 @@
+﻿@model InsuranceClaim.Models.PayLaterPolicyModel
+
+@{
+    ViewBag.Title = "PayLaterPolicy";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+
+<div class="productsave-section">
+
+    <div class="container" id="content">
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 products-top">
+                <div class="head-title">
+                    <h2>PayLater Policy</h2>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 products-top">
+                <div class="text-right">
+                    <input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm("PayLaterPolicy", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    <div class='input-group' id='datetimenew'>
+                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                        @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-3 form-group-text">
+                                <div class="form-group">
+                                    <div class='input-group' id='datetimenew12'>
+                                        @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                        @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="product-table-grid table-striped-area">
+            <table class="table table-striped tablesorter" id="reportexcelsheet">
+                <thead style='display:none;'>
+
+
+                    <tr>
+                        <td>
+                            <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+
+                            <script>
+                                var dt = new Date();
+                                document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                            </script>
+                        </td>
+                        <td></td>
+                        <td>
+                            <h3><u>@ViewBag.Title</u></h3>
+                            <strong></strong>
+                            <strong></strong>
+
+                        </td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
+
+                        <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
+                        <td></td>
+                        <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
+                        <td><label for="EndDate">@ViewBag.enddate</label></td>
+                    </tr>
+
+                </thead>
+
+                <thead>
+
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>PolicyNumber</th>
+                        <th>VRN</th>
+                        <th>Vehicle</th>
+                        <th>TotalPremium</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var item in Model.PayLaterPolicyDetails)
+                          {
+                        <tr>
+                            <td>@item.CustomerName</td>
+                            <td>@item.PolicyNumber</td>
+                            <td>@item.RegistrationNo</td>
+                            <td>@item.MakeDescription @item.ModelDescription</td>
+                            <td>@item.TotalPremium</td>
+                            <td> Pay Later</td>
+                            <td>
+                                @Html.ActionLink("Pay Now", "PayLaterDetail", new { SummaryDetailId = item.SummaryDetailId, PaymentDetailId = item.PaymentInformationId })
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+
+
+        $("#datetimenew").datetimepicker({
+            format: 'MM/D/YYYY'
+        });
+        $("#datetimenew12").datetimepicker({
+            format: 'MM/D/YYYY'
+
+        });
+
+    });
+
+
+    function removeSearchBox() {
+        window.location.href = "/Report/ProductivityReport";
+    }
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#reportexcelsheet").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "ProductivityReport" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    $('#generatePdf').click(function () {
+        debugger;
+        doc.fromHTML($('#content').html(), 80, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('ProductivityReport.pdf');
+
+    });
+
+
+
+    //$("#generateExcel").click(function () {
+    //    debugger;
+    //    $("#reportexcelsheet").table2excel({
+    //        // exclude CSS class
+    //        exclude: ".noExl",
+    //        name: "Worksheet Name",
+    //        filename: "ProductivityReport" //do not include extension
+
+    //    });
+
+    //});
+
+</script>

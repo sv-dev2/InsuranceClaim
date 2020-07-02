@@ -62,9 +62,10 @@ function GoToRiskDetail(json) {
 }
 
 function GoToSummaryDetail(json) {
-    if (json == true) {
-        window.location.href = '/CustomerRegistration/SummaryDetail';
-    }
+
+   
+        window.location.href = json;
+    
    
 }
 
@@ -103,6 +104,9 @@ function GoToRenewTo(json) {
         }
     }
 }
+
+
+
 
 
 

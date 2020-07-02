@@ -207,10 +207,8 @@
                                                 <div class="form-group">
                                                     @Html.Label("TaxClass", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(x => x.TaxClassId, new SelectList(ViewBag.TaxClass, "TaxClassId", "Description"), "Select Tax Class", new { @class = "form-control" })
-                                                    @Html.ValidationMessageFor(x => x.TaxClassId, "", new { @class = "text-danger" })
-                                               
-                                                    @Html.HiddenFor(x => x.ErrorMessage)
-                                                
+                                                    @Html.ValidationMessageFor(x => x.TaxClassId, "", new { @class = "text-danger" })                                          
+                                                    @Html.HiddenFor(x => x.ErrorMessage)                                               
                                                  </div>
                                             </div>
 

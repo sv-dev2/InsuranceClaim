@@ -1063,7 +1063,16 @@
         else
         {
             //$("#RadioLicenseCost").removeClass("inputDisabled");
-            //CalculatePremiumByCoverType();
+           
+
+            $(".loading-area").show();
+            setTimeout(function(){
+                $(".loading-area").hide();
+                CalculatePremiumByCoverType();
+            }, 1000);
+
+
+
         }
 
         @*var selectedTerm = $("#PaymentTermId option:selected").val();

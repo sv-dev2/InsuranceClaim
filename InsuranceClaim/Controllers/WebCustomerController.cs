@@ -315,9 +315,12 @@ namespace InsuranceClaim.Controllers
                         item.IceCashRequest = "Insurance";
 
                     if (item.RadioLicenseCost > 0)  // for now 
-                    {
                         item.IncludeRadioLicenseCost = true;
-                    }
+
+                    if(!string.IsNullOrEmpty(item.LicenseDeliveryWay))
+                        item.IsLicenseDiskNeeded = true;
+                    
+                    
 
                     var _item = item;
 

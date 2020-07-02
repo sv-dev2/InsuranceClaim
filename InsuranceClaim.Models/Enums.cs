@@ -86,7 +86,8 @@ namespace InsuranceClaim.Models
 
     public enum currencyType
     {
-        USD = 1
+        USD = 1,
+        RTGS=6
     }
 
 

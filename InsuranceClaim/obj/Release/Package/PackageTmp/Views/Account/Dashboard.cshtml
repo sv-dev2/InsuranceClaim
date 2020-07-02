@@ -14,11 +14,7 @@
 </div>
 
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-
-        </div>
-    </div>
+    
 
 
     <div class="form-section-top">
@@ -64,6 +60,73 @@
                                         </div>
                                     </a>
                                 </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    @if (User.IsInRole("Claim"))
+                    {
+                        <div class="dashboard-section">
+                            <div class="form-title">
+                                <h4>Claim Dashboard</h4>
+                            </div>
+                            <div class="admin-box">
+                                <div class="row">
+
+
+                                    <a href="@Url.Action("ClaimantList", "Claimant")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Claims Management</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="@Url.Action("ClaimsNotificationReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Claims Notification</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+
+
+                                    <a href="@Url.Action("ClaimsPaymentReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Claims Payment</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+
+                                    <a href="@Url.Action("ClaimsRegistrationReport", "Report")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Claims Registration</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <a href="@Url.Action("PolicyManagement", "Account")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Policy Management</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+
+
+
+
                             </div>
                         </div>
                     }
@@ -127,13 +190,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="@Url.Action("ReceiptModule", "CustomerRegistration")">
-                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
-                                            <div class="color-box">
-                                                <h4>Receipt</h4>
-                                            </div>
-                                        </div>
-                                    </a>
+                                   
                                 </div>
 
                                 <div class="row">
@@ -152,7 +209,46 @@
                                             </div>
                                         </div>
                                     </a>
+
+                                    <a href="@Url.Action("ReceiptModule", "CustomerRegistration")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Receipt Module</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+
+                                    <a href="@Url.Action("PolicyManagement", "Account")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Policy Management</h4>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
+
+
+
+                                <div class="row">
+                                    <a href="@Url.Action("PayLaterPolicy", "Account")">
+                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                            <div class="color-box">
+                                                <h4>Paylater Policy</h4>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                   
+
+                                  
+
+
+                                </div>
+                                
+
+
+
                             </div>
                         </div>
                     }
@@ -197,15 +293,15 @@
                                             <div class="color-box">
                                                 <h4>Claims Notification</h4>
                                             </div>
-                                        </div>
+                                            <a href="@Url.Action("ClaimsPaymentReport", "Report")">
+                                                <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                                    <div class="color-box">
+                                                        <h4>Claims Payment</h4>
+                                                    </div>
+                                                </div>
+                                            </a>           </div>
                                     </a>
-                                    <a href="@Url.Action("ClaimsPaymentReport", "Report")">
-                                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
-                                            <div class="color-box">
-                                                <h4>Claims Payment</h4>
-                                            </div>
-                                        </div>
-                                    </a>
+                                   
                                 </div>
 
                                 <div class="row">
@@ -220,10 +316,6 @@
                             </div>
                         </div>
                     }
-
-
-                  
-
 
 
 
@@ -338,13 +430,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="@Url.Action("ListPolicyRenewReminderSetting", "Account")">
-                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
-                                        <div class="color-box">
-                                            <h4>Policy Renew Reminder Setting </h4>
-                                        </div>
-                                    </div>
-                                </a>
+                                
                             </div>
                             <div class="row">
                                 <a href="@Url.Action("VehicleMakeList", "VehicleMake")">
@@ -362,13 +448,15 @@
                                     </div>
                                 </a>
 
-                                <a href="@Url.Action("Index", "City")">
+                                <a href="@Url.Action("ListPolicyRenewReminderSetting", "Account")">
                                     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
                                         <div class="color-box">
-                                            <h4>City</h4>
+                                            <h4>Policy Renew Reminder Setting </h4>
                                         </div>
                                     </div>
                                 </a>
+
+
                                 <a href="@Url.Action("ClaimantList", "Claimant")">
                                     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
                                         <div class="color-box">
@@ -459,6 +547,14 @@
                                     </div>
                                 </a>
 
+                                <a href="@Url.Action("Index", "City")">
+                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                        <div class="color-box">
+                                            <h4>City</h4>
+                                        </div>
+                                    </div>
+                                </a>
+
                                 <a href="@Url.Action("Banners", "Account")">
                                     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
                                         <div class="color-box">
@@ -466,11 +562,6 @@
                                         </div>
                                     </div>
                                 </a>
-
-
-                               
-
-
 
 
                                 @*<a href="@Url.Action("EndorsementDetail", "Endorsement")">
@@ -698,6 +789,22 @@
                                         </div>
                                     </div>
                                 </a>
+
+                                <a href="@Url.Action("CertSerialNoReport", "Report")">
+                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                        <div class="color-box">
+                                            <h4>CertSerialNoReport</h4>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="@Url.Action("SiteDailyReport", "Report")">
+                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">
+                                        <div class="color-box">
+                                            <h4>Site Daily Report</h4>
+                                        </div>
+                                    </div>
+                                </a>
+                                
 
                                 @*<a href="@Url.Action("rolemanagementlist","Account")">
             <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 width-auto hvr-grow-shadow">

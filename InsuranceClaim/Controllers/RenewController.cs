@@ -2532,6 +2532,7 @@ namespace InsuranceClaim.Controllers
                 .Replace("##MedicalExpenses##", Convert.ToString(vehicle.MedicalExpensesAmount)).
                 Replace("##PassengerAccidentCover##", Convert.ToString(vehicle.PassengerAccidentCoverAmount))
                 .Replace("##VehicleLicenceFee##", Convert.ToString(vehicle.VehicleLicenceFee))
+                .Replace("##PenaltiesAmt##", Convert.ToString(vehicle.PenaltiesAmt))
                 .Replace("##QRpath##", path)
                 .Replace("##RoadsideAssistance##", Convert.ToString(vehicle.RoadsideAssistanceAmount));
 
@@ -2595,8 +2596,17 @@ namespace InsuranceClaim.Controllers
 
             ClearRenewSession();
 
-            if (_pdfPath != "")
-               ViewBag.file = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
+            var IswebCustomer = User.IsInRole("Web Customer");
+            if (_pdfPath != "" && !IswebCustomer)
+                ViewBag.file = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
+
+
+            var IsStaff = User.IsInRole("Staff");
+            if (IsStaff && _pdfPath != "")
+            {
+                return RedirectToAction("CertificateSerialNumber", "CustomerRegistration", new { VehicleId = vehicle.Id });
+            }
+
 
             return View(objSaveDetailListModel);
         }
@@ -3378,9 +3388,9 @@ namespace InsuranceClaim.Controllers
                         _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.RegistrationNo);
 
                     string format = "yyyyMMdd";
-                    if (res.Response.Quotes[0] != null && res.Response.Quotes[0].LicExpiryDate!=null)
+                    if (res.Response != null && res.Response.LicExpiryDate!=null)
                     {
-                        DateTime LicExpiryDate = DateTime.ParseExact(res.Response.Quotes[0].LicExpiryDate, format, CultureInfo.InvariantCulture);
+                        DateTime LicExpiryDate = DateTime.ParseExact(res.Response.LicExpiryDate, format, CultureInfo.InvariantCulture);
                         vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
                     }
 
@@ -3421,10 +3431,19 @@ namespace InsuranceClaim.Controllers
                     vichelDetails.CoverNote = res.Response.PolicyNo; // it's represent to Cover Note
 
                    
-                    if (res.Response.Quotes[0] != null)
+                    if (res.Response.Quotes != null && res.Response.Quotes[0].LicExpiryDate!=null)
                     {
-                        DateTime LicExpiryDate = DateTime.ParseExact(res.Response.Quotes[0].LicExpiryDate, format, CultureInfo.InvariantCulture);
-                        vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                        try
+                        {
+                            DateTime LicExpiryDate = DateTime.ParseExact(res.Response.Quotes[0].LicExpiryDate, format, CultureInfo.InvariantCulture);
+                            vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+
+                        
                     }
 
                     if (res.Response.LicenceCert!=null && res.Response.LicenceCert.Length>1)
@@ -3687,7 +3706,7 @@ namespace InsuranceClaim.Controllers
                 viewModel.QuaterlyRiskPremium = Math.Round(Convert.ToDecimal(vehicledetailss.QuaterlyRiskPremium), 2);
                 viewModel.Discount = Math.Round(Convert.ToDecimal(vehicledetailss.Discount), 2);
                 viewModel.VehicleLicenceFee = Convert.ToDecimal(vehicledetailss.VehicleLicenceFee);
-
+                viewModel.PenaltiesAmt = Convert.ToDecimal(vehicledetailss.PenaltiesAmt);
                 //  viewModel.isUpdate = true; // commented on 31 oct
                 viewModel.isUpdate = false;                         // viewModel.isUpdate = false; 
                 viewModel.vehicleindex = Convert.ToInt32(vehicledetailss.Id);
@@ -3725,8 +3744,8 @@ namespace InsuranceClaim.Controllers
                 Resummry.PaymentTermId = summarydetails.PaymentTermId;
                 Resummry.ReceiptNumber = summarydetails.ReceiptNumber;
 
-                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2)); ;
-                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
+                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.PenaltiesAmt+ dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2)); ;
+                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy +dbVehicalDetials.PenaltiesAmt + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
 
 
 
@@ -3755,8 +3774,8 @@ namespace InsuranceClaim.Controllers
                 Resummry.PaymentTermId = summarydetails.PaymentTermId;
                 Resummry.ReceiptNumber = summarydetails.ReceiptNumber;
 
-                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
-                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
+                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee + dbVehicalDetials.PenaltiesAmt + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
+                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee +dbVehicalDetials.PenaltiesAmt + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
 
                 Resummry.TotalStampDuty = VehicleRdetails.StampDuty;
                 Resummry.TotalSumInsured = VehicleRdetails.SumInsured;

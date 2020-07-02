@@ -171,7 +171,10 @@ namespace InsuranceClaim.Models
       
         public int ZinaraLicensePaymentTermId { get; set; }
 
-       
+        public string LicenseDeliveryWay { get; set; }
+
+
+
 
 
     }

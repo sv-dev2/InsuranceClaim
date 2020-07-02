@@ -18,18 +18,18 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult Index()
         {
-
+           
             return View();
         }
 
-        public ActionResult About(string res="")
+        public ActionResult About(string res = "")
         {
-            if(res!="")
+            if (res != "")
             {
-                
+
                 GetGWPData(res);
             }
-           
+
             ViewBag.Message = "Your application description page.";
             return View();
         }
@@ -43,7 +43,6 @@ namespace InsuranceClaim.Controllers
 
         public void GetGWPData(string res)
         {
-           
             DataTable table = new DataTable();
             string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Insurance"].ToString();
             SqlConnection connection = new SqlConnection(connectionString);
@@ -52,13 +51,10 @@ namespace InsuranceClaim.Controllers
             cmd.CommandType = CommandType.Text;
             cmd.ExecuteNonQuery();
             connection.Close();
-
-            //Library.WriteErrorLog("row count: " + table.Rows.Count);
-
-          
+            //Library.WriteErrorLog("row count: " + table.Rows.Count);    
         }
 
-
+      
 
 
     }

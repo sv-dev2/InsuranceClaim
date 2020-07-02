@@ -534,7 +534,6 @@ F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\itextsharp.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\Microsoft.Extensions.Logging.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
-F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\Newtonsoft.Json.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\System.Web.Mvc.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\PayPal.xml
@@ -546,6 +545,7 @@ F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\System.Web.Raz
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\System.Web.WebPages.Razor.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\System.Web.WebPages.xml
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\System.Web.WebPages.Deployment.xml
-F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\obj\Debug\Insurance.Service.csprojResolveAssemblyReference.cache
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\obj\Debug\Insurance.Service.dll
 F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\obj\Debug\Insurance.Service.pdb
+F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\bin\Debug\Newtonsoft.Json.xml
+F:\ANKIT DHIMAN\InsuranceClaim_31_jan\Insurance.Service\obj\Debug\Insurance.Service.csprojResolveAssemblyReference.cache

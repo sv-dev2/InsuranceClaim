@@ -23,54 +23,58 @@
 </div>
 
 <div class="body-content-section">
-    <div class="Process-step-section">
+    @*<div class="Process-step-section">
         <div class="container">
             <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
-
-                    @*<div class="col-xs-2 bs-wizard-step disabled">
-                             complete
-                            <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="#" class="bs-wizard-dot"></a>
-                            <div class="text-center bs-wizard-stepnum">Product Details</div>
-                        </div>*@
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
+     
             </div>
         </div>
-    </div>
+    </div>*@
 
     <div class="form-section-top">
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+            <div class="row bs-wizard">
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                    <div class="Process-step-section  process-block">
+                        <div class="col-sm-12 bs-wizard-step active">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
+
+                        @*<div class="col-xs-2 bs-wizard-step disabled">
+                     complete
+                    <div class="progress"><div class="progress-bar"></div></div>
+                    <a href="#" class="bs-wizard-dot"></a>
+                    <div class="text-center bs-wizard-stepnum">Product Details</div>
+                </div>*@
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
                     <div class="form-group-section">
                         <div class="form-title">
                             <h4>Client Details</h4>
@@ -78,8 +82,7 @@
 
                        
                         <div class="form-group-input">
-                            @*@using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))*@
-                            @using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", null, new AjaxOptions() { OnSuccess = "GoToProductDetail" }, null))
+                            @using (Ajax.BeginForm("SaveCustomerData", "CustomerRegistration", new AjaxOptions { UpdateTargetId = "CustomerResult", OnSuccess = "GoToProductDetail" }))
                             {
                                 <input type="hidden" id="clinetId" name="clinetId" />
                                 @Html.HiddenFor(x => x.Id)
@@ -96,7 +99,7 @@
                                         <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.LabelFor(x => x.LastName, new { @class = "gender-label" })
-                                                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", @name = "LastName", @autocomplete = "off", @id = "LastName", @placeholder = "Last Name" })
+                                                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", @name = "LastName", @autocomplete = "off", @id = "LastName", @placeholder = "Surname" })
                                                 @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -112,9 +115,15 @@
                                                             @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-7">
-                                                        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "SetCustomerEmail();" }) No email address</label>
-                                                    </div>
+@if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff"))
+{
+    <div class="col-md-7">
+        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "SetCustomerEmail();" }) No email address</label>
+    </div>
+
+}
+                                                    
+
                                                     <div class="col-md-12">
                                                         @*@if (email != "")
                                                             {
@@ -187,7 +196,7 @@
                                         <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.LabelFor(x => x.AddressLine2, new { @class = "gender-label" })
-                                                @Html.TextBoxFor(x => x.AddressLine2, new { @class = "form-control", @name = "AddressLine2", @autocomplete = "off", @id = "AddressLine2", @placeholder = "Address Line 2" })
+                                                @Html.TextBoxFor(x => x.AddressLine2, new { @class = "form-control", @name = "AddressLine2", @autocomplete = "off", @id = "AddressLine2", @placeholder = "Surburb" })
                                                 @Html.ValidationMessageFor(x => x.AddressLine2, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -223,25 +232,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="display:none">
                                         <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.LabelFor(x => x.Zipcode, new { @class = "gender-label" })
                                                 @Html.TextBoxFor(x => x.Zipcode, new { @class = "form-control", @name = "Zipcode", @autocomplete = "off", @id = "Zipcode", @placeholder = "Zip Code", @maxlength = "10" })
                                                 @Html.ValidationMessageFor(x => x.Zipcode, "", new { @class = "text-danger" })
-                                            </div>
-                                            @*<div class="col-sm-6 col-md-6 form-group-text">
-                                                    <div class="form-group">
-                                                        @Html.TextBoxFor(x => x.Country, new { @class = "form-control", @name = "Country", @autocomplete = "off", @id = "Country", @placeholder = "Country" })
-                                                        @Html.ValidationMessageFor(x => x.Country, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-sm-6 col-md-6 form-group-text">
-                                                    <div class="form-group">
-                                                        @Html.TextBoxFor(x => x.Zipcode, new { @class = "form-control", @name = "Zipcode", @autocomplete = "off", @id = "Zipcode", @placeholder = "Zip Code" })
-                                                        @Html.ValidationMessageFor(x => x.Zipcode, "", new { @class = "text-danger" })
-                                                    </div>*@
+                                            </div>                                            
                                         </div>
                                     </div>
 
@@ -268,6 +265,8 @@
         </div>
     </div>
 </div>
+
+
 @*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">*@
@@ -289,7 +288,7 @@
 
 
     function removeValidation(e) {
-        debugger
+
         if (e.value != "") {
             $(".valMessage").text('');
         } else {
@@ -298,7 +297,7 @@
         }
     }
     function isNumber(evt) {
-        debugger;
+      
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -318,15 +317,18 @@
             format: 'MM/D/YYYY',
             maxDate: new Date()
         });
-        debugger
+      
         var errorMessage = $('#ErrorMessage').val();
         if (errorMessage != null && errorMessage != '') {
             toastr.error(errorMessage)
         }
+
+       // CustomerPage();
+
     });
 
     $(document).ready(function () { // will trigger when the document is ready
-        debugger;
+      
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1; //January is 0!
@@ -352,7 +354,7 @@
 
     function GetVehicleMake() {
 
-        debugger;
+       
 
         $.ajax({
             type: "POST",

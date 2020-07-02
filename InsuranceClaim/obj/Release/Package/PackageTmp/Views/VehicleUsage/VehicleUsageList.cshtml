@@ -15,6 +15,7 @@
                         <h2>Vehicle Usages</h2>
                     </div>
                 </div>
+                <br />
                 <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 add-btn">
                     <div class="text-right">
                         @*<button type="button" class="btn btn-primary">Add</button>*@
@@ -56,13 +57,13 @@
                         }
                         @foreach (var item in Model.VehicleUsages)
                         {
-                            decimal MinSUmInsured = Convert.ToDecimal(item.USDMinBenchmark * inflationFactor);
+                            decimal MinSUmInsured = Convert.ToDecimal(item.USDBenchmark * inflationFactor);
                             decimal PremiumRate = Math.Round(Convert.ToDecimal(item.ComprehensiveRate * 0.9), 2);
                             var MinCompAmount = Math.Round((MinSUmInsured) * Convert.ToDecimal(PremiumRate / 100), 2);
 
                             <tr>
                                 <td>@item.VehUsage</td>
-                                <td>$@item.USDMinBenchmark</td>
+                                <td>$@item.USDBenchmark</td>
                                 <td>@inflationFactor</td>
                                 <td>@item.ComprehensiveRate%</td>
                                 <td>@(PremiumRate)%</td>

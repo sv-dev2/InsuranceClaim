@@ -43,13 +43,17 @@
                     </div>
                 </div>
 
-
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 next-btn">
-                        <div class="text-left">
-                            <ul>
-                                <li class="pull-right"><button type="submit" class="btn">Submit</button></li>
-                            </ul>
+                <div class="col-md-12 next-btn">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="text-left">
+                                <button type="button" class="btn" onclick="window.location.href='@Url.Action("ThankYou","Paypal")'">Cancel</button>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="text-right">
+                                <button type="submit" class="btn">Submit</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -44,7 +44,7 @@
                                                 <div class="choose-plan-box active" planpurchase="1" style="cursor:pointer" onclick="SelectPlan(this);">
                                                     <h4>Annual</h4>
                                                     <div class="plan-white-box">
-                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy +  vehicleList.VehicleLicenceFee + vehicleList.PenaltiesAmt  + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 12 MONTHS</a>
                                                     </div>
@@ -54,7 +54,7 @@
                                                 <div class="choose-plan-box" planpurchase="2" style="cursor:pointer" onclick="SelectPlan(this);">
                                                     <h4>Monthly</h4>
                                                     <div class="plan-white-box">
-                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + vehicleList.PenaltiesAmt + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 1 MONTHS</a>
                                                     </div>
@@ -66,7 +66,7 @@
                                                     <h4>Quarterly</h4>
                                                     <div class="plan-white-box">
                                                         @*<h3>$ @Math.Round(Convert.ToDouble(Model.TotalPremium)/4,2)</h3>*@
-                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + vehicleList.PenaltiesAmt + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 3 MONTHS</a>
                                                     </div>
@@ -77,7 +77,7 @@
                                                 <div class="choose-plan-box" planpurchase="4" style="cursor:pointer" onclick="SelectPlan(this);">
                                                     <h4>Termly</h4>
                                                     <div class="plan-white-box">
-                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + vehicleList.PenaltiesAmt + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 4 MONTHS</a>
                                                     </div>
@@ -91,7 +91,7 @@
                                                     <div class="choose-plan-box" planpurchase="4" style="cursor:pointer" onclick="SelectPlan(this);">
                                                         <h4>Termly</h4>
                                                         <div class="plan-white-box">
-                                                            <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                            <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + vehicleList.PenaltiesAmt + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                             <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                             <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR @vehicleList.PaymentTermId MONTHS</a>
                                                         </div>
@@ -165,6 +165,24 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.Label("Total Stamp Duty", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(m => m.TotalStampDuty, new { @class = "form-control", @autocomplete = "off", @placeholder = "Total Stamp Duty", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.Label("Total ZTSC Levies", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(m => m.TotalZTSCLevies, new { @class = "form-control", @autocomplete = "off", @placeholder = "Total ZTSC Levies", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
 
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 form-group-text">

@@ -1252,7 +1252,8 @@ namespace InsuranceClaim.Controllers
                 .Replace("##PaymentTerm##", (vehicle.PaymentTermId == 1 ? paymentTerm.Name + "(1 Year)" : paymentTerm.Name + "(" + vehicle.PaymentTermId.ToString() + "Months)"))
                 .Replace("##TotalPremiumDue##", Convert.ToString(summaryDetail.TotalPremium)).Replace("##StampDuty##", Convert.ToString(summaryDetail.TotalStampDuty))
                 .Replace("##MotorLevy##", Convert.ToString(summaryDetail.TotalZTSCLevies))
-                .Replace("##PremiumDue##", Convert.ToString(summaryDetail.TotalPremium - summaryDetail.TotalStampDuty - summaryDetail.TotalZTSCLevies - summaryDetail.TotalRadioLicenseCost - ListOfVehicles.Sum(x => x.VehicleLicenceFee) + ListOfVehicles.Sum(x => x.Discount)))
+                .Replace("##PremiumDue##", Convert.ToString(ListOfVehicles.Sum(x => x.Premium) + ListOfVehicles.Sum(x => x.Discount)))
+                .Replace("##PenaltiesAmt##", Convert.ToString(ListOfVehicles.Sum(x => x.PenaltiesAmt)))
                 .Replace("##PostalAddress##", customer.Zipcode).Replace("##ExcessBuyBackAmount##", Convert.ToString(ExcessBuyBackAmount)).Replace("##MedicalExpenses##", Convert.ToString(MedicalExpensesAmount))
                 .Replace("##PassengerAccidentCover##", Convert.ToString(PassengerAccidentCoverAmount)).Replace("##RoadsideAssistance##", Convert.ToString(RoadsideAssistanceAmount))
                 .Replace("##RadioLicence##", Convert.ToString(summaryDetail.TotalRadioLicenseCost)).Replace("##Discount##", Convert.ToString(ListOfVehicles.Sum(x => x.Discount)))
@@ -1338,8 +1339,25 @@ namespace InsuranceClaim.Controllers
                 TempData["file"] = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
                 TempData["vehicleId"] = vehicle.Id;
             }
+
+            //var IsStaff = User.IsInRole("Staff");
+            //if(IsStaff && _pdfPath!="")
+            //{
+            //    return RedirectToAction("CertificateSerialNumber", "CustomerRegistration", new { VehicleId = vehicle.Id });
+            //}
+
+            
+
+
             return RedirectToAction("ThankYou");
         }
+
+
+       
+
+      
+
+
 
         public string LoggedUserEmail()
         {
@@ -1424,10 +1442,17 @@ namespace InsuranceClaim.Controllers
                                 _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.Id.ToString());
 
                             string format = "yyyyMMdd";
-                            if (res.Response.Quotes[0] != null && res.Response.Quotes[0].LicExpiryDate!=null)
+                            if (res.Response != null && res.Response.LicExpiryDate!=null)
                             {
-                                DateTime LicExpiryDate = DateTime.ParseExact(res.Response.Quotes[0].LicExpiryDate, format, CultureInfo.InvariantCulture);
-                                vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                                try
+                                {
+                                    DateTime LicExpiryDate = DateTime.ParseExact(res.Response.LicExpiryDate, format, CultureInfo.InvariantCulture);
+                                    vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
+                                }
+                                catch(Exception ex)
+                                {
+
+                                }                       
                             }
                         }
 
@@ -1667,6 +1692,9 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult ThankYou()
         {
+           
+
+
             LicenseModel model = new LicenseModel();
             if (TempData["file"] != null)
             {
@@ -1677,6 +1705,11 @@ namespace InsuranceClaim.Controllers
 
             return View(model);
         }
+
+
+
+
+
 
     }
 

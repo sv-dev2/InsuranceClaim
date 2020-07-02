@@ -4367,13 +4367,38 @@ namespace InsuranceClaim.Controllers
                     continue;
 
                 newList.Add(item);
-
             }
 
             //FacultativeCommission
             return View(newList);
 
         }
+
+        public ActionResult DailyReport()
+        {
+            SendZinaraDailyReport();
+            SendFWPSummaryReport();
+            return View();
+        }
+
+
+        public void SendZinaraDailyReport()
+        {
+            WeeklyGWPService service = new WeeklyGWPService();
+            service.SendWeeklyGwpFile();
+        }
+
+        public void SendFWPSummaryReport()
+        {
+            WeeklyGWPService service = new WeeklyGWPService();
+            service.SendWeeklyReport();
+        }
+
+
+        
+
+
+
 
 
 

@@ -56,15 +56,25 @@ namespace Insurance.Service
 
             if (coverType == eCoverType.Comprehensive)
             {
+                //17 jun 2020  
+                decimal? minAmount = 0;
                 InsuranceRate = vehicleUsage.ComprehensiveRate;
 
-                decimal InflationFactorAmt = 25;
-                decimal premiumRate = Convert.ToDecimal((vehicleUsage.ComprehensiveRate * 90) / 100);
-                var minAmount = ((vehicleUsage.USDBenchmark * InflationFactorAmt) * premiumRate)/100;
-
-                //InsuranceMinAmount = vehicleUsage.MinCompAmount;
-                InsuranceMinAmount = minAmount;
+                
+                    //decimal InflationFactorAmt = 25;
+                    //decimal premiumRate = Convert.ToDecimal((vehicleUsage.ComprehensiveRate * 90) / 100);
+                    //minAmount = ((vehicleUsage.USDBenchmark * InflationFactorAmt) * premiumRate) / 100;
+                    ////InsuranceMinAmount = vehicleUsage.MinCompAmount;
+                    //InsuranceMinAmount = minAmount;
+                
+                
+                    InsuranceRate = vehicleUsage.ComprehensiveRate;
+                    InsuranceMinAmount = vehicleUsage.MinCompAmount;
+                                    
             }
+
+           
+
             else if (coverType == eCoverType.ThirdParty)
             {
                 InsuranceRate = vehicleUsage.AnnualTPAmount == null ? 0 : (float)vehicleUsage.AnnualTPAmount;
@@ -123,7 +133,8 @@ namespace Insurance.Service
             }
 
 
-            if (premium < InsuranceMinAmount && coverType == eCoverType.Comprehensive && currencyId!=1) // 1 represent to usd, in case of USD min and max should not allowed
+            // if (premium < InsuranceMinAmount && coverType == eCoverType.Comprehensive && currencyId!=1) // 1 represent to usd, in case of USD min and max should not allowed
+            if (premium < InsuranceMinAmount && coverType == eCoverType.Comprehensive)
             {
                 Status = false;
                 premium = InsuranceMinAmount.Value;
@@ -457,6 +468,11 @@ namespace Insurance.Service
             if (!isVehicleRegisteredonICEcash && coverType != eCoverType.Comprehensive)
             {
                 this.Discount = this.Discount * (5*2);
+            }
+
+            if(currencyId==(int)currencyType.USD) // 17th jun 2020
+            {
+                this.Discount = 0;
             }
 
             // totalPremium = premium - this.Discount;

@@ -34,4 +34,9 @@ namespace InsuranceClaim.Models
         public string OTP { get; set; }
     }
 
+    
+
+
+
+
 }

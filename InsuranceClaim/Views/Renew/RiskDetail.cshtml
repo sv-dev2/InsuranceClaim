@@ -130,7 +130,7 @@
                                         <div class="col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Registration No", new { @class = "gender-label" })
-                                                @Html.TextBoxFor(m => m.RegistrationNo, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Registration Number" })
+                                                @Html.TextBoxFor(m => m.RegistrationNo, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Registration Number", @readonly = "readonly" })
                                                 @Html.ValidationMessageFor(m => m.RegistrationNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -902,7 +902,16 @@
         else
         {
             //  $("#VehicleLicenceFee").removeClass("inputDisabled");
-            //CalculatePremiumByCoverType();
+            
+
+            $(".loading-area").show();
+            setTimeout(function(){
+                $(".loading-area").hide();
+                CalculatePremiumByCoverType();
+            }, 1000);
+
+
+
         }
     }
 
@@ -961,7 +970,17 @@
         else
         {
             //$("#RadioLicenseCost").removeClass("inputDisabled");
-            //  CalculatePremiumByCoverType();
+            
+
+            $(".loading-area").show();
+            setTimeout(function(){
+                $(".loading-area").hide();
+                CalculatePremiumByCoverType();
+            }, 1000);
+
+
+
+
         }
 
         @*var selectedTerm = $("#PaymentTermId option:selected").val();
