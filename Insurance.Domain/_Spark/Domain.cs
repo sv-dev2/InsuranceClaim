@@ -495,8 +495,8 @@ namespace Insurance.Domain
 
         public string IceCashRequest { get; set; }
 
-        public int ZinaraPaymentTermId { get; set; }
-        public int ZinaraRadioPaymentTermId { get; set; }
+        public int ZinaraLicensePaymentTermId { get; set; }
+        public int RadioLicensePaymentTermId { get; set; }
 
         public string LicExpiryDate { get; set; }
 
@@ -505,6 +505,12 @@ namespace Insurance.Domain
         public bool IsIndividual { get; set; }
         public string CombinedID { get; set; }
         public string PdfCode { get; set; }
+
+        public string LicenseDeliveryWay { get; set; }
+
+        public decimal LicTransactionAmt { get; set; }
+
+        public decimal ArrearsAmt { get; set; }
     }
 
     public partial class VehicleMake : Entity<VehicleMake>
