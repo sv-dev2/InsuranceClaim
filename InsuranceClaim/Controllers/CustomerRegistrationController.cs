@@ -1234,7 +1234,7 @@ namespace InsuranceClaim.Controllers
                 {
                     decimal penalitesAmt = Convert.ToDecimal(item.PenaltiesAmt);
 
-                    model.TotalPremium += item.Premium + item.ZTSCLevy + item.StampDuty + item.VehicleLicenceFee + penalitesAmt;
+                    model.TotalPremium += item.Premium + item.ZTSCLevy + item.StampDuty + item.VehicleLicenceFee ;
                     if (item.IncludeRadioLicenseCost)
                     {
                         model.TotalPremium += item.RadioLicenseCost;

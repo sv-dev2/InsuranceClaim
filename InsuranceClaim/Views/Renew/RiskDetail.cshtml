@@ -62,17 +62,10 @@
                             <a href="#" class="bs-wizard-dot"></a>
                             <div class="text-center bs-wizard-stepnum">Payment Details</div>
                         </div>
-
                     </div>
-
-
                 </div>
 
-
-
-
                 <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
-
                     @using (Html.BeginForm("GenerateQuote", "Renew"))
                     {
                         <div>
@@ -204,11 +197,8 @@
                                             <div class="form-group">
                                                 @Html.Label("Currency", new { @class = "gender-label" })
                                                 @Html.DropDownListFor(x => x.CurrencyId, new SelectList(ViewBag.Currencies, "Id", "Name"), new { @class = "form-control" })
-
                                             </div>
                                         </div>
-
-
                                     </div>
 
 
@@ -349,7 +339,6 @@
                                             <div class="form-group">
                                                 @Html.Label("Excess Type", new { @class = "gender-label" })
                                                 @Html.DropDownListFor(x => x.ExcessType, ViewBag.eExcessTypeData as SelectList, new { @class = "form-control" })
-
 
                                             </div>
                                         </div>
@@ -1760,11 +1749,9 @@
                             if(isRadioLicense)
                                 $("#RadioLicenseCost").val(parseFloat(data.Data.Response.Quotes[0].Licence.TotalRadioTVAmt).toFixed(2));
 
-
-
                             $("#ArrearsAmt").val(arrAmount);
                             $("#PenaltiesAmt").val(penaltiesAmount);
-                            $("#VehicleLicenceFee").val(parseFloat(arrAmount+ penaltiesAmount).toFixed(2)  );
+                            $("#VehicleLicenceFee").val(parseFloat(arrAmount).toFixed(2)  );
                             $("#LicExpiryDate").val(data.Data.Response.Quotes[0].Licence.LicExpiryDate);
                             $("#CombinedID").val(data.Data.Response.Quotes[0].CombinedID);
                         }

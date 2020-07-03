@@ -989,7 +989,7 @@ namespace InsuranceClaim.Controllers
             //    }
             //    model.Discount += item.Discount;
             //}
-            model.TotalPremium = vehicle.Premium + vehicle.ZTSCLevy + vehicle.StampDuty + vehicle.VehicleLicenceFee + vehicle.PenaltiesAmt;
+            model.TotalPremium = vehicle.Premium + vehicle.ZTSCLevy + vehicle.StampDuty + vehicle.VehicleLicenceFee ;
             if (vehicle.IncludeRadioLicenseCost)
             {
                 model.TotalPremium = model.TotalPremium + vehicle.RadioLicenseCost;
@@ -1502,6 +1502,10 @@ namespace InsuranceClaim.Controllers
 
                                 _item.Id = service.AddVehicleInformation(_item);
                                 var vehicles = (RiskDetailModel)Session["RenewVehicleDetails"];
+
+
+
+                               
                                 // vehicles[Convert.ToInt32(_item.NoOfCarsCovered) - 1] = _item;
                                 vehicles = _item;
                                 Session["RenewVehicleDetails"] = vehicles;
@@ -3744,8 +3748,8 @@ namespace InsuranceClaim.Controllers
                 Resummry.PaymentTermId = summarydetails.PaymentTermId;
                 Resummry.ReceiptNumber = summarydetails.ReceiptNumber;
 
-                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.PenaltiesAmt+ dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2)); ;
-                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy +dbVehicalDetials.PenaltiesAmt + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
+                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2)); ;
+                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy  + dbVehicalDetials.VehicleLicenceFee + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
 
 
 
@@ -3774,8 +3778,8 @@ namespace InsuranceClaim.Controllers
                 Resummry.PaymentTermId = summarydetails.PaymentTermId;
                 Resummry.ReceiptNumber = summarydetails.ReceiptNumber;
 
-                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee + dbVehicalDetials.PenaltiesAmt + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
-                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee +dbVehicalDetials.PenaltiesAmt + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
+                Resummry.TotalPremium = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee  + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
+                Resummry.AmountPaid = Convert.ToDecimal(Math.Round(Convert.ToDouble(dbVehicalDetials.Premium + dbVehicalDetials.StampDuty + dbVehicalDetials.ZTSCLevy + dbVehicalDetials.VehicleLicenceFee  + (Convert.ToBoolean(dbVehicalDetials.IncludeRadioLicenseCost) ? dbVehicalDetials.RadioLicenseCost : 0.00m)), 2));
 
                 Resummry.TotalStampDuty = VehicleRdetails.StampDuty;
                 Resummry.TotalSumInsured = VehicleRdetails.SumInsured;
