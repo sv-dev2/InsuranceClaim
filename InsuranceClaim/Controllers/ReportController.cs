@@ -4068,13 +4068,12 @@ namespace InsuranceClaim.Controllers
         }
 
 
+
+        [Authorize(Roles = "Administrator,Reports,Finance")]
         public ActionResult CertSerialNoReport()
         {
             //SendGWPExcelFile();
-
             CertSerialNoReportModel model = new CertSerialNoReportModel();
-
-
 
             string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
             query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
@@ -4095,6 +4094,7 @@ namespace InsuranceClaim.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator,Reports,Finance")]
         public ActionResult CertSerialNoSearchReport(CertSerialNoReportModel model)
         {
 

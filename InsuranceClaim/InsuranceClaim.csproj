@@ -275,6 +275,7 @@
     <Compile Include="Controllers\IndividualController.cs" />
     <Compile Include="Controllers\InsuranceHomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MobileApiController.cs" />
     <Compile Include="Controllers\PayNowController.cs" />
     <Compile Include="Controllers\PaypalController.cs" />
     <Compile Include="Controllers\PolicyInsurerController.cs" />
@@ -1188,6 +1189,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="ClaimDocument\GMCC180000003-1\1003\" />
     <Folder Include="QRCode\" />
+    <Folder Include="Views\MobileApi\" />
     <Folder Include="Views\test\" />
   </ItemGroup>
   <ItemGroup>

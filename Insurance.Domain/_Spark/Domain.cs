@@ -1748,6 +1748,11 @@ namespace Insurance.Domain
         public int PolicyId { get; set; }
         public string VRN { get; set; }
         public string CertSerialNo { get; set; }
+        public string PolicyType { get; set; }
+        public int EndorsmentPolicyId { get; set; }
+
+        public int EndorsmentVehicleId { get; set; }
+
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
     }

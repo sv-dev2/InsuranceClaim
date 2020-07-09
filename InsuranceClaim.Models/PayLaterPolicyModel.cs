@@ -26,6 +26,8 @@ namespace InsuranceClaim.Models
 
         public int VehicleID { get; set; }
 
+        public string ErrorMsg { get; set; }
+
 
     }
 

@@ -691,9 +691,129 @@ namespace Insurance.Service
             if (IsEndorsment && coverType == eCoverType.Comprehensive)
                 this.Premium = CalculatPremiumAccourdingDay(premium, PaymentTermid, vehicleEndDate);
 
-
-
+            if (coverType == eCoverType.Comprehensive && currencyId==(int)currencyType.USD)
+            {
+                RiskDetailModel modelUsd = new RiskDetailModel();
+                modelUsd= GetCalculationDetailForUsd(PaymentTermid, this.Premium);
+                if(modelUsd.Premium!=null && modelUsd.Premium!=0)
+                {
+                    this.Premium = Convert.ToDecimal(modelUsd.Premium);
+                    this.StamDuty = Convert.ToDecimal(modelUsd.StampDuty);
+                    this.ZtscLevy = Convert.ToDecimal(modelUsd.ZTSCLevy);
+                }
+            }
+            
             return this;
+        }
+
+
+        public RiskDetailModel GetCalculationDetailForUsd(int paymentTermId, decimal calculatedPremium)
+        {
+
+            RiskDetailModel model = new RiskDetailModel();
+
+            decimal premium = 300;
+            decimal StamDuty = 18;
+            decimal ZtscLevy = 12;
+
+
+            switch (paymentTermId)
+            {
+                case 1:
+
+                    if(calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = StamDuty;
+                        model.ZTSCLevy = ZtscLevy;
+                    }
+                    
+                    break;
+                case 3:
+                    premium = (premium/ 12) *3;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 3 ;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 3 ;
+                    }
+
+                    break;
+                case 4:
+                    premium = (premium / 12) * 4;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 4;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 4;
+                    }
+                    break;
+                case 5:
+                    premium = (premium / 12) * 5;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 5;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 5;
+                    }
+                    break;
+                case 6:
+                    premium = (premium / 12) * 6;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 6;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 6;
+                    }
+                    break;
+                case 7:
+                    premium = (premium / 12) * 7;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 7;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 7;
+                    }
+                    break;
+                case 8:
+                    premium = (premium / 12) * 8;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 8;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 8;
+                    }
+                    break;
+                case 9:
+                    premium = (premium / 12) * 9;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 9;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 9;
+                    }
+                    break;
+                case 10:
+                    premium = (premium / 12) * 10;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 10;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 10;
+                    }
+                    break;
+                case 11:
+                    premium = (premium / 12) * 11;
+                    if (calculatedPremium < premium)
+                    {
+                        model.Premium = premium;
+                        model.StampDuty = (StamDuty / 12) * 11;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 11;
+                    }
+                    break;
+            }
+
+            return model;
         }
 
 
