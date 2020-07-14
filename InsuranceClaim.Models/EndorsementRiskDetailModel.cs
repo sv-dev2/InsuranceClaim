@@ -131,5 +131,8 @@ namespace InsuranceClaim.Models
 
         public string CombinedID { get; set; }
 
+        [Display(Name="Serial Number")]
+        public string CertSerialNo { get; set; }
+
     }
 }

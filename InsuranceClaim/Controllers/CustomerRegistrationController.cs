@@ -3740,6 +3740,8 @@ namespace InsuranceClaim.Controllers
                     PolicyId = vehilceDetail.PolicyId,
                     VRN = vehilceDetail.RegistrationNo,
                     CertSerialNo = model.SerialNumber,
+                    PolicyType= Enum.GetName(typeof(PolicyType), PolicyType.New),
+                    VehicleId= vehilceDetail.Id,
                     CreatedBy = createdBy,
                     CreatedOn = DateTime.Now
                 };

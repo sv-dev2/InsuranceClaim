@@ -1017,7 +1017,6 @@ namespace InsuranceClaim.Controllers
 
             if (Paymentid != Convert.ToString((int)paymentMethod.ecocash))
             {
-
                 if (string.IsNullOrEmpty(Paymentid))
                     Paymentid = "1";
 

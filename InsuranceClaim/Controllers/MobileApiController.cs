@@ -13,6 +13,7 @@ namespace InsuranceClaim.Controllers
         // GET: MobileApi
         public ActionResult Index()
         {
+
             return View();
         }
 

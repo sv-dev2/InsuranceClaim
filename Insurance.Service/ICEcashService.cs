@@ -18,12 +18,12 @@ namespace Insurance.Service
     public class ICEcashService
     {
         // SendBox
-        public static string PSK = "127782435202916376850511";
-        public static string LiveIceCashApi = "http://api-test.icecash.com/request/20523588";
+        //public static string PSK = "127782435202916376850511";
+        //public static string LiveIceCashApi = "http://api-test.icecash.com/request/20523588";
 
         // Live
-        //public static string PSK = "565205790573235453203546";
-        //public static string LiveIceCashApi = "https://api.icecash.co.zw/request/20350763";
+        public static string PSK = "565205790573235453203546";
+        public static string LiveIceCashApi = "https://api.icecash.co.zw/request/20350763";
 
         private static string GetSHA512(string text)
         {

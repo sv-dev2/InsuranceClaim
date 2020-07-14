@@ -1060,7 +1060,9 @@ namespace InsuranceClaim.Controllers
             EnderSomentVehical.Excess = vehicleUpdate.Excess;
             EnderSomentVehical.CoverNoteNo = vehicleUpdate.CoverNoteNo;
             EnderSomentVehical.ExcessType = vehicleUpdate.ExcessType;
-            EnderSomentVehical.CreatedOn = vehicleUpdate.CreatedOn;
+
+            EnderSomentVehical.CreatedOn = DateTime.Now;
+            //EnderSomentVehical.CreatedOn = vehicleUpdate.CreatedOn;
             //EnderSomentVehical.CreatedBy = vehicleUpdate.CreatedBy;
             EnderSomentVehical.ModifiedOn = DateTime.Now;
             EnderSomentVehical.ModifiedBy = vehicleUpdate.ModifiedBy;
@@ -1105,15 +1107,46 @@ namespace InsuranceClaim.Controllers
             EnderSomentVehical.VehicleLicenceFee = vehicleUpdate.VehicleLicenceFee;
             EnderSomentVehical.BusinessSourceId = vehicleUpdate.BusinessSourceId;
             EnderSomentVehical.IsCompleted = true;
-            EnderSomentVehical.CreatedOn = model.CreatedOn;
-            EnderSomentVehical.CreatedBy = model.CreatedBy;
+           // EnderSomentVehical.CreatedOn = model.CreatedOn;
+           // EnderSomentVehical.CreatedBy = model.CreatedBy;
             EnderSomentVehical.VehicleLicenceFee = model.VehicleLicenceFee;
 
 
             InsuranceContext.EndorsementVehicleDetails.Update(EnderSomentVehical);
+
+            if(!string.IsNullOrEmpty(model.CertSerialNo))
+            {
+                SetCertificateDetailsInSession(EnderSomentVehical, model);
+            }
+
+
             Session.Remove("EnViewlistVehicles");
             return RedirectToAction("EndorsementSummaryDetail", "Endorsement");
 
+        }
+
+
+        public void SetCertificateDetailsInSession(EndorsementVehicleDetail EnderSomentVehical, EndorsementRiskDetailModel model)
+        {
+           
+
+
+           
+            CertSerialNoDetail serialNumber = new CertSerialNoDetail()
+            {
+                PolicyId = EnderSomentVehical.PolicyId,
+                VRN = EnderSomentVehical.RegistrationNo,
+                CertSerialNo = model.CertSerialNo,
+                PolicyType = Enum.GetName(typeof(PolicyType), PolicyType.Endorsement),
+                EndorsmentVehicleId = EnderSomentVehical.Id,
+                CreatedBy = Convert.ToInt32(EnderSomentVehical.CreatedBy),
+                CreatedOn = DateTime.Now
+            };
+
+            Session["CertSerialNumDetail"] = serialNumber;
+
+
+           // _riskDetailService.SaveCertSerialNoDetails(serialNumber);
         }
 
 
@@ -1998,9 +2031,24 @@ namespace InsuranceClaim.Controllers
             #endregion
 
 
+            SaveCertSerialNoDetails();
+
+
             return RedirectToAction("MyPolicies", "Account");
             //return RedirectToAction("EndorsementThankYou");
         }
+
+        private void SaveCertSerialNoDetails()
+        {
+            if(Session["CertSerialNumDetail"]!=null)
+            {
+                var serialNumberDetail = (CertSerialNoDetail)Session["CertSerialNumDetail"];
+                RiskDetailService _riskDetailService = new RiskDetailService();
+                _riskDetailService.SaveCertSerialNoDetails(serialNumberDetail);
+            }     
+        }
+
+
         public string LoggedUserEmail()
         {
             string email = "";

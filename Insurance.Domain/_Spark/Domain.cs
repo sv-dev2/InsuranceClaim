@@ -511,6 +511,8 @@ namespace Insurance.Domain
         public decimal LicTransactionAmt { get; set; }
 
         public decimal ArrearsAmt { get; set; }
+
+        public decimal AdministrationAmt { get; set; }
     }
 
     public partial class VehicleMake : Entity<VehicleMake>
@@ -1749,10 +1751,11 @@ namespace Insurance.Domain
         public string VRN { get; set; }
         public string CertSerialNo { get; set; }
         public string PolicyType { get; set; }
-        public int EndorsmentPolicyId { get; set; }
+       // public int EndorsmentPolicyId { get; set; }
 
         public int EndorsmentVehicleId { get; set; }
 
+        public int VehicleId { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
     }

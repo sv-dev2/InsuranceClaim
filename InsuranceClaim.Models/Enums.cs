@@ -79,7 +79,7 @@ namespace InsuranceClaim.Models
         ecocash = 2,
         Zimswitch = 6,
         Cash = 1,
-         PayLater = 7,
+         PayLater = 6,
          PayNow = 3,
         //PayLater = 1008
     }
@@ -88,6 +88,13 @@ namespace InsuranceClaim.Models
     {
         USD = 1,
         RTGS=6
+    }
+
+    public enum PolicyType
+    {
+        New,
+        Renew,
+        Endorsement,
     }
 
 

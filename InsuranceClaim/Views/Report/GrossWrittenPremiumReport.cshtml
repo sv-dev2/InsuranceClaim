@@ -72,8 +72,6 @@
                 <table  class="table table-striped tablesorter"  id="report2excel">
 
                     <thead style='display:none;'>
-
-
                         <tr>
                             <td>
                                 <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
@@ -82,6 +80,7 @@
                                     var dt = new Date();
                                     document.getElementById("datetime").innerHTML = dt.toLocaleString();
                                 </script>
+
                             </td>
                             <td></td>
                             <td>
@@ -273,7 +272,6 @@
                                  {
                                     @item.RenewPolicyNumber
                                  }
-
 
                                 </td>
                                 <td>@item.CoverNoteNum</td>

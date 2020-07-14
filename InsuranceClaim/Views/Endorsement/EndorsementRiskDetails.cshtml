@@ -22,7 +22,8 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                     <div class="Process-step-section process-block">
-                        <div class="col-xs-2 bs-wizard-step complete">
+                       
+                         <div class="col-xs-2 bs-wizard-step complete">
                             <div class="progress"><div class="progress-bar"></div></div>
                             <a href="#" class="bs-wizard-dot"></a>
                             <div class="text-center bs-wizard-stepnum">Client Details</div>
@@ -381,8 +382,6 @@
                                                         <li>
                                                             @Html.CheckBoxFor(x => x.PassengerAccidentCover)
                                                             @Html.Label("Passenger Accident Cover", new { @class = "gender-label" })
-
-
                                                         </li>
                                                         <li>
                                                             @Html.CheckBoxFor(x => x.ExcessBuyBack)
@@ -512,6 +511,8 @@
                                                         @Html.ValidationMessageFor(m => m.RadioLicenseCost, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
+
+
                                             </div>
 
 
@@ -525,6 +526,16 @@
                                                 @Html.CheckBoxFor(x => x.IsLicenseDiskNeeded, new { @style = "width: 40px;height: 36px;" })
                                             </div>
                                         </div>
+
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.Label("Certificate Serial No", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(m => m.CertSerialNo, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Certificate Serial No" })
+                                               
+                                            </div>
+                                        </div>
+
+
                                     </div>
 
 

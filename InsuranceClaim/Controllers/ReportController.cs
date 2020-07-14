@@ -4077,7 +4077,7 @@ namespace InsuranceClaim.Controllers
 
             string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
             query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
-            query +=" join Customer on CertSerialNoDetail.CreatedBy = Customer.Id";
+            query += " join Customer on CertSerialNoDetail.CreatedBy = Customer.Id order by CertSerialNoDetail.id desc";
                
             var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
             {
@@ -4308,71 +4308,98 @@ namespace InsuranceClaim.Controllers
         public ActionResult DisablePolicy()
         {
 
-            string query = "select top 100 PolicyDetail.Id as PolicyId , PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
-            query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
-            query += "   VehicleMake.MakeDescription as Make, VehicleModel.ModelDescription as Model, Currency.Name as currency, VehicleDetail.SumInsured, ";
-            query += " VehicleDetail.Id as VehicleId, VehicleDetail.isLapsed, VehicleDetail.IsActive, VehicleDetail.RenewalDate, VehicleDetail.LicExpiryDate, VehicleDetail.RenewPolicyNumber,ReinsuranceCommission,ReinsurancePremium, ReinsuranceAmount ";
-            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id  join VehicleDetail on VehicleDetail.PolicyId= PolicyDetail.Id ";
-            query += " join  SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.VehicleDetailsId ";
-            query += "  join SummaryDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId   ";
-            // query += "  join PaymentInformation on PaymentInformation.SummaryDetailId = SummaryDetail.Id   ";
-            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
-            query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode ";
-            query += " left join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
-            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId where SummaryDetail.isQuotation=0  ";
-            query += " order by SummaryDetail.CreatedOn desc";
-
+            string query = "select PolicyDetail.PolicyNumber, VehicleDetail.RegistrationNo, VehicleMake.MakeDescription, VehicleModel.ModelDescription, ";
+            query += " Customer.FirstName + ' '+ Customer.LastName as CustomerName, VehicleDetail.Premium , VehicleDetail.StampDuty, VehicleDetail.ZTSCLevy ,VehicleDetail.VehicleLicenceFee,  ";
+            query += " VehicleDetail.IncludeRadioLicenseCost, VehicleDetail.RadioLicenseCost, VehicleDetail.TransactionDate, [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as CreatedBy from VehicleDetail ";
+            query += " join PolicyDetail on PolicyDetail.Id=VehicleDetail.PolicyId ";
+            query += " join SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.Id ";
+            query += " join SummaryDetail on SummaryDetail.Id= SummaryVehicleDetail.SummaryDetailId ";
+            query += "  join Customer on VehicleDetail.CustomerId=Customer.Id ";
+            query += " left join VehicleMake on VehicleDetail.MakeId=VehicleMake.MakeCode ";
+            query += " left join VehicleModel on VehicleDetail.ModelId=VehicleModel.ModelDescription  ";
+            query += " where VehicleDetail.IsActive=0 and isLapsed=0 order by VehicleDetail.id desc ";
+            
             ListPolicy policylist = new ListPolicy();
             policylist.listpolicy = new List<PolicyListViewModel>();
             PolicyListViewModel policylistviewmodel = new PolicyListViewModel();
-
             var paymentInformationList = InsuranceContext.PaymentInformations.All();
 
 
             List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
             {
-                PolicyId = x.PolicyId,
                 PolicyNumber = x.PolicyNumber,
-                CustomerName = x.CustomerName,
-                CustomerId = x.CustomerId,
-                PaymentMethod = x.PaymentMethod,
-                TotalSumInsured = x.TotalSumInsured == null ? 0 : x.TotalSumInsured,
-                TotalPremium = x.TotalPremium == null ? 0 : x.TotalPremium,
-                createdOn = x.CreatedOn,
-                SummaryId = x.Id,
                 RegisterationNumber = x.RegistrationNo,
-                Make = x.Make,
-                Model = x.Model,
-                Currency = x.currency,
-                VehicleSumInsured = x.SumInsured == null ? 0 : x.SumInsured,
-                isLapsed = x.isLapsed,
-                IsActive = x.IsActive == null ? true : x.IsActive,
-                VehicleDetailId = x.VehicleId,
-               // RenewalDate = GetRenewalDate(x.RenewalDate == null ? "" : Convert.ToDateTime(x.RenewalDate).ToShortDateString(), x.LicExpiryDate),
-                RenewPolicyNumber = x.RenewPolicyNumber,
-                BrokerCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
-                AutoFacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
-                FacultativeCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
-                FacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
-                FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount),
-                PaymentStatus = x.PaymentMethod == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid",
+                Make = x.MakeDescription,
+                Model = x.ModelDescription,
+                CustomerName = x.CustomerName,
+                TotalPremium = CalculatePremium(x.Premium , x.StampDuty , x.ZTSCLevy , x.VehicleLicenceFee , x.IncludeRadioLicenseCost , x.RadioLicenseCost),
+                createdOn = x.TransactionDate,
+                AgentName= x.CreatedBy
             }).ToList();
 
+            policylist.listpolicy = list;
 
-            List<PolicyListViewModel> newList = new List<PolicyListViewModel>();
-            foreach (var item in list)
+            return View(policylist);
+        }
+
+        [HttpPost]
+        public ActionResult SearchDisablePolicy(ListPolicy model)
+        {
+
+            string query = "select PolicyDetail.PolicyNumber, VehicleDetail.RegistrationNo, VehicleMake.MakeDescription, VehicleModel.ModelDescription, ";
+            query += " Customer.FirstName + ' '+ Customer.LastName as CustomerName, VehicleDetail.Premium , VehicleDetail.StampDuty, VehicleDetail.ZTSCLevy ,VehicleDetail.VehicleLicenceFee,  ";
+            query += " VehicleDetail.IncludeRadioLicenseCost, VehicleDetail.RadioLicenseCost, VehicleDetail.TransactionDate, [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as CreatedBy from VehicleDetail ";
+            query += " join PolicyDetail on PolicyDetail.Id=VehicleDetail.PolicyId ";
+            query += " join SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.Id ";
+            query += " join SummaryDetail on SummaryDetail.Id= SummaryVehicleDetail.SummaryDetailId ";
+            query += "  join Customer on VehicleDetail.CustomerId=Customer.Id ";
+            query += " left join VehicleMake on VehicleDetail.MakeId=VehicleMake.MakeCode ";
+            query += " left join VehicleModel on VehicleDetail.ModelId=VehicleModel.ModelDescription  ";
+            query += " where VehicleDetail.IsActive=0 and isLapsed=0  ";
+            query += "   and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + model.FromDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + model.EndDate + "', 101))  order by  VehicleDetail.Id desc";
+
+            ListPolicy policylist = new ListPolicy();
+            policylist.listpolicy = new List<PolicyListViewModel>();
+            PolicyListViewModel policylistviewmodel = new PolicyListViewModel();
+            var paymentInformationList = InsuranceContext.PaymentInformations.All();
+
+
+            List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
             {
-                var paymentDetail = paymentInformationList.Where(c => c.SummaryDetailId == item.SummaryId);
-                if (paymentDetail == null)
-                    continue;
+                PolicyNumber = x.PolicyNumber,
+                RegisterationNumber = x.RegistrationNo,
+                Make = x.MakeDescription,
+                Model = x.ModelDescription,
+                CustomerName = x.CustomerName,
+                TotalPremium = CalculatePremium(x.Premium, x.StampDuty, x.ZTSCLevy, x.VehicleLicenceFee, x.IncludeRadioLicenseCost, x.RadioLicenseCost),
+                createdOn = x.TransactionDate,
+                AgentName = x.CreatedBy
+            }).ToList();
 
-                newList.Add(item);
-            }
+            policylist.listpolicy = list;
 
-            //FacultativeCommission
-            return View(newList);
+            return View("DisablePolicy", policylist);
+
+
+
 
         }
+
+        public decimal CalculatePremium(decimal premium, decimal stampDuty, decimal ztscLevy, decimal licensefee, bool IsIncludePrem, decimal? radioLicenseCost)
+        {
+            decimal calpremium = 0;
+
+            calpremium = premium + stampDuty + ztscLevy + licensefee;
+            if(IsIncludePrem)
+                calpremium = calpremium + Convert.ToDecimal(radioLicenseCost);
+            
+            return calpremium;
+        }
+
+      
+
+
+
 
         public ActionResult DailyReport()
         {

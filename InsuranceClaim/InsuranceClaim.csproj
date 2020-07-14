@@ -1183,6 +1183,7 @@
     <Content Include="Views\Shared\EmaiTemplates\UserCallBack.cshtml" />
     <Content Include="Views\WebCustomer\Index.cshtml" />
     <Content Include="Views\Report\DailyReport.cshtml" />
+    <Content Include="Views\Report\DisablePolicy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />
