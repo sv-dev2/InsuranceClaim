@@ -2560,7 +2560,7 @@ namespace InsuranceClaim.Controllers
             var paymentType= summary.PaymentMethodId == 1 ? "Cash" : (summary.PaymentMethodId == 2 ? "PayPal" : "PayNow");
             List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
             ListOfVehicles.Add(vehicle);
-            MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, customer.AddressLine1, customer.AddressLine2, policy.PolicyNumber, summary.TotalPremium, summary.PaymentTermId, paymentType, ListOfVehicles, "renew");
+            //MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, customer.AddressLine1, customer.AddressLine2, policy.PolicyNumber, summary.TotalPremium, summary.PaymentTermId, paymentType, ListOfVehicles, "renew");
 
             #endregion
 
@@ -3389,7 +3389,7 @@ namespace InsuranceClaim.Controllers
                     }
 
                     if (res.Response != null && res.Response.LicenceCert != null)
-                        _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.RegistrationNo);
+                        _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, Convert.ToString(vichelDetails.Id));
 
                     string format = "yyyyMMdd";
                     if (res.Response != null && res.Response.LicExpiryDate!=null)

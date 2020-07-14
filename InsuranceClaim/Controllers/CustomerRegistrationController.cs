@@ -3651,7 +3651,7 @@ namespace InsuranceClaim.Controllers
             if (res.Response != null && res.Response.LicenceCert != null)
             {
 
-                file = SavePdf(res.Response.LicenceCert, model.VRN);
+                file = SavePdf(res.Response.LicenceCert, Convert.ToString(vehicle.Id));
             }
             else
             {
@@ -3757,12 +3757,12 @@ namespace InsuranceClaim.Controllers
             return result;
         }
 
-        private string SavePdf(string base64BinaryStr, string vrn)
+        private string SavePdf(string base64BinaryStr, string id)
         {
             var path = "";
             try
             {
-                path = MiscellaneousService.LicensePdf(base64BinaryStr, vrn);
+                path = MiscellaneousService.LicensePdf(base64BinaryStr, id);
                 if (!string.IsNullOrEmpty(path))
                 {
                     //  DownloadLogFile(path);
