@@ -920,12 +920,16 @@ namespace InsuranceClaim.Controllers
                 PaymentMethod = "paynow";
                 // PaymentMethod = "EcoCash";
             }
-            else if (Paymentid == "6")
+            else if (Paymentid == Convert.ToString( (int)paymentMethod.PayLater))
             {
-                // PaymentMethod = "paynow";
-
                 PaymentMethod = "Zimswitch";
             }
+
+
+            //else if (Paymentid == "6")
+            //{
+            //    PaymentMethod = "Zimswitch";
+            //}
             else if (Paymentid == "")
             {
                 PaymentMethod = "CASH";

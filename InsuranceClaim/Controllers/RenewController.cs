@@ -1843,7 +1843,7 @@ namespace InsuranceClaim.Controllers
 
                        
                         if (model.PaymentMethodId == 1 || model.PaymentMethodId == (int)paymentMethod.PayLater)
-                            return RedirectToAction("SaveDetailList", "Renew", new { id = summary.Id, invoiceNumer = model.InvoiceNumber });
+                            return RedirectToAction("SaveDetailList", "Renew", new { id = summary.Id, invoiceNumer = model.InvoiceNumber, Paymentid= model.PaymentMethodId });
                         if (model.PaymentMethodId == 3)
                         {
                             var payNow = PayNow(DbEntry.Id, model.InvoiceNumber, model.PaymentMethodId.Value, Convert.ToDecimal(model.TotalPremium));
@@ -2254,7 +2254,7 @@ namespace InsuranceClaim.Controllers
 
 
             var vehicleId = (Int32)Session["RenewVehicleId"];
-            var PaymentId = Session["PaymentId"];
+           // var PaymentId = Session["PaymentId"];
             var InvoiceId = Session["InvoiceId"];
             var summary = InsuranceContext.SummaryDetails.Single(id);
             var policy = (PolicyDetail)Session["RenewVehiclePolicy"];
@@ -2300,7 +2300,7 @@ namespace InsuranceClaim.Controllers
                 objSaveDetailListModel.SummaryDetailId = id;
                 objSaveDetailListModel.DebitNote = summary.DebitNote;
                 objSaveDetailListModel.ProductId = _item.ProductId;
-                objSaveDetailListModel.PaymentId = PaymentId == null ? "" : PaymentId.ToString();
+                objSaveDetailListModel.PaymentId = paymentId;
                 objSaveDetailListModel.InvoiceId = InvoiceId == null ? "" : InvoiceId.ToString();
                 objSaveDetailListModel.InvoiceNumber = policy.PolicyNumber;
                 objSaveDetailListModel.CreatedOn = DateTime.Now;
@@ -2362,7 +2362,7 @@ namespace InsuranceClaim.Controllers
                 objSaveDetailListModel.SummaryDetailId = id;
                 objSaveDetailListModel.DebitNote = summary.DebitNote;
                 objSaveDetailListModel.ProductId = vehicle.ProductId;
-                objSaveDetailListModel.PaymentId = PaymentId == null ? "" : PaymentId.ToString();
+                objSaveDetailListModel.PaymentId = paymentId ;
                 objSaveDetailListModel.InvoiceId = InvoiceId == null ? "" : InvoiceId.ToString();
                 InsuranceContext.PaymentInformations.Insert(objSaveDetailListModel);
                 MiscellaneousService.AddLoyaltyPoints(summary.CustomerId.Value, policy.Id, Mapper.Map<VehicleDetail, RiskDetailModel>(vehicle));
