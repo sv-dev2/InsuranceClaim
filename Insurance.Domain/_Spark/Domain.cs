@@ -513,6 +513,8 @@ namespace Insurance.Domain
         public decimal ArrearsAmt { get; set; }
 
         public decimal AdministrationAmt { get; set; }
+
+        public bool IsMobile { get; set; }
     }
 
     public partial class VehicleMake : Entity<VehicleMake>

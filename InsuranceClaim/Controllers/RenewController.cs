@@ -1417,6 +1417,7 @@ namespace InsuranceClaim.Controllers
                                 vehicle.IncludeRadioLicenseCost = true;
                             }
 
+                            vehicle.IsMobile = false;
 
                             var _item = vehicle;
 
@@ -2406,7 +2407,10 @@ namespace InsuranceClaim.Controllers
             #region Send Payment SMS
 
             // done
-            string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summary.AmountPaid) + " upon receiving your policy to merchant code 249341. Policy number is : " + policy.PolicyNumber + "\n" + "\nThanks.";
+
+            
+
+            string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summary.TotalPremium) + " upon receiving your policy to merchant code 249341. Policy number is : " + policy.PolicyNumber + "\n" + "\nThanks.";
             var Recieptresult = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, Recieptbody);
 
             SmsLog objRecieptsmslog = new SmsLog()

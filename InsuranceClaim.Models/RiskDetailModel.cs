@@ -173,7 +173,7 @@ namespace InsuranceClaim.Models
 
         public string LicenseDeliveryWay { get; set; }
 
-
+        public bool IsMobile { get; set; }
 
 
 

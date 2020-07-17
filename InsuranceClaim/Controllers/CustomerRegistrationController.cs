@@ -1798,7 +1798,8 @@ namespace InsuranceClaim.Controllers
                                     item.IncludeRadioLicenseCost = true;
                                 }
 
-
+                                item.IsMobile = false;
+                               
 
                                 var _item = item;
 

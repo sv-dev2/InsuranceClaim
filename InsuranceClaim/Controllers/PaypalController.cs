@@ -1121,7 +1121,7 @@ namespace InsuranceClaim.Controllers
 
             //string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summaryDetail.AmountPaid) + " upon receiving your policy to merchant code 249341. Policy number is " + policy.PolicyNumber + "\n" + "\nThanks.";
 
-            string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summaryDetail.AmountPaid) + " upon receiving your policy to merchant code 249341. Policy number is " + policy.PolicyNumber + "\n" + "\nThanks.";
+            string Recieptbody = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Please pay " + "$" + Convert.ToString(summaryDetail.TotalPremium) + " upon receiving your policy to merchant code 249341. Policy number is " + policy.PolicyNumber + "\n" + "\nThanks.";
 
 
 

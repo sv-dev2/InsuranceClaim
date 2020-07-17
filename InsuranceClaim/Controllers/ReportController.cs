@@ -1328,7 +1328,8 @@ namespace InsuranceClaim.Controllers
             var branchList = InsuranceContext.Branches.All();
             var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
-            var query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            // Customer.ALMId is null replace condition with SummaryDetail.CreatedBy is not null
+            var query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when SummaryDetail.CreatedBy is not null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
             query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
@@ -1341,7 +1342,7 @@ namespace InsuranceClaim.Controllers
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
             query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
            // query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
-            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            query += " left join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
             query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
@@ -1361,7 +1362,7 @@ namespace InsuranceClaim.Controllers
                     Customer_Name = x.Customer_Name,
                     Transaction_date = x.Transaction_date.ToShortDateString(),
                     CoverNoteNum = x.CoverNoteNum,
-                    Payment_Mode = x.Payment_Mode,
+                    Payment_Mode = x.Payment_Mode==null? "Cash" : x.Payment_Mode,
                     Payment_Term = x.Payment_Term,
                     CoverType = x.CoverType,
                     Currency = x.Currency,
@@ -1479,7 +1480,7 @@ namespace InsuranceClaim.Controllers
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
             var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
-            var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            var query = " select PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when SummaryDetail.CreatedBy is not null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
             query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
@@ -1492,7 +1493,7 @@ namespace InsuranceClaim.Controllers
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
             query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
            //query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
-            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            query += " left join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
             query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
             query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
