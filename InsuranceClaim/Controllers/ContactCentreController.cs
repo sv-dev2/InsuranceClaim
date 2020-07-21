@@ -226,9 +226,17 @@ namespace InsuranceClaim.Controllers
             List<RiskDetailModel> listRiskDetail = new List<RiskDetailModel>();
             foreach (var item in SummaryVehicleDetails)
             {
-                var _vehicle = InsuranceContext.VehicleDetails.Single(item.VehicleDetailsId);
-                RiskDetailModel riskDetail = Mapper.Map<VehicleDetail, RiskDetailModel>(_vehicle);
-                listRiskDetail.Add(riskDetail);
+
+                // var _vehicle = InsuranceContext.VehicleDetails.Single(item.VehicleDetailsId); after renew qutation
+                var _vehicle = InsuranceContext.VehicleDetails.Single(where: "id=" + item.VehicleDetailsId + " and IsActive=1");
+
+                if(_vehicle!=null)
+                {
+                    RiskDetailModel riskDetail = Mapper.Map<VehicleDetail, RiskDetailModel>(_vehicle);
+                    listRiskDetail.Add(riskDetail);
+                }
+                
+                
             }
             Session["VehicleDetails"] = listRiskDetail;
 

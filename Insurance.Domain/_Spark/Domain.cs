@@ -401,6 +401,7 @@ namespace Insurance.Domain
         public int AgentId { get; set; }
         public string ModuleName { get; set; }
         public bool PayLaterStatus { get; set; }
+        public bool IsRenewQutation { get; set; }
 
     }
 

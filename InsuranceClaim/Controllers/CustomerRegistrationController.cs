@@ -596,8 +596,6 @@ namespace InsuranceClaim.Controllers
                     }
                 }
             }
-
-
             return View(viewModel);
         }
 
@@ -622,9 +620,15 @@ namespace InsuranceClaim.Controllers
             List<RiskDetailModel> listRiskDetail = new List<RiskDetailModel>();
             foreach (var item in SummaryVehicleDetails)
             {
-                var _vehicle = InsuranceContext.VehicleDetails.Single(item.VehicleDetailsId);
-                RiskDetailModel riskDetail = Mapper.Map<VehicleDetail, RiskDetailModel>(_vehicle);
-                listRiskDetail.Add(riskDetail);
+              //  var _vehicle = InsuranceContext.VehicleDetails.Single(item.VehicleDetailsId);
+
+                var _vehicle = InsuranceContext.VehicleDetails.Single(where: "id=" + item.VehicleDetailsId + " and IsActive=1");
+                if(_vehicle!=null)
+                {
+                    RiskDetailModel riskDetail = Mapper.Map<VehicleDetail, RiskDetailModel>(_vehicle);
+                    listRiskDetail.Add(riskDetail);
+                }
+                
             }
             Session["VehicleDetails"] = listRiskDetail;
 
@@ -1429,7 +1433,6 @@ namespace InsuranceClaim.Controllers
                         }
 
                         var summaryDetial = InsuranceContext.SummaryVehicleDetails.Single(where: $"SummaryDetailId = '" + model.CustomSumarryDetilId + "'");
-
 
                         if (summaryDetial != null && btnSendQuatation == "") // while user come from qutation email
                         {
@@ -2551,7 +2554,7 @@ namespace InsuranceClaim.Controllers
                             // done
                             // string Recieptbody = "Hi " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " for a " + converType+ " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
 
-                            string Recieptbody = "Dear " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " for a " + converType + " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
+                            string Recieptbody = "Dear " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.TotalPremium) + " for a " + converType + " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
 
 
                             var Recieptresult = await objsmsService.SendSMS(customer.CountryCode.Replace("+", "") + user.PhoneNumber, Recieptbody);

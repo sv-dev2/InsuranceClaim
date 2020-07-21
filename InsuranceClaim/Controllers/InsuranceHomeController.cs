@@ -70,17 +70,16 @@ namespace InsuranceClaim.Controllers
 
 
         [HttpPost]
-        public ActionResult SearchVrn(SearchVRNModel model)
+        public ActionResult SearchVrn(string RegistrationNum, string NationalId)
         {
-            if(!string.IsNullOrWhiteSpace(model.RegistrationNum))
+            if(!string.IsNullOrWhiteSpace(RegistrationNum))
             {
-                return RedirectToAction("Index", "WebCustomer", new { reg = model.RegistrationNum, NationalId = model.NationalId });
+                return RedirectToAction("Index", "WebCustomer", new { reg =RegistrationNum, NationalId = NationalId });
             }
             else
             {
-                return View("Index", model);
-            }
-          
+                return View("Index");
+            }     
         }
 
 

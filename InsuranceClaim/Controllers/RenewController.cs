@@ -1054,8 +1054,10 @@ namespace InsuranceClaim.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> SubmitPlan1(SummaryDetailModel model)
+        public async Task<ActionResult> SubmitPlan1(SummaryDetailModel model, string btnSendQuatation)
         {
+            SummaryDetailService servicedetail = new SummaryDetailService();
+
             try
             {
                 if (model != null)
@@ -1105,11 +1107,16 @@ namespace InsuranceClaim.Controllers
                         }
 
                         //Ds31Jan
+
+                        
+
+
+
                         var vehicleREnewid = (RiskDetailModel)Session["CheckRenewVehicleDetails"];
                         if (vehicleREnewid != null)
                         {
                             var summaryDetial = InsuranceContext.SummaryVehicleDetails.Single(where: $"VehicleDetailsId = '" + vehicleREnewid.Id + "'");
-                            if (summaryDetial != null) // while user come from qutation email
+                            if (summaryDetial != null && btnSendQuatation == "") // while user come from qutation email
                             {
                                 var vehicledetail = InsuranceContext.VehicleDetails.Single(where: $"Id = '{summaryDetial.VehicleDetailsId}'");
                                 if (vehicledetail != null)
@@ -1736,6 +1743,14 @@ namespace InsuranceClaim.Controllers
                             {
                                 summarydata.Notes = "";
                             }
+
+                            if (!string.IsNullOrEmpty(btnSendQuatation))
+                            {
+                                summarydata.isQuotation = true;
+                                summarydata.IsRenewQutation = true;
+                            }
+
+
                             //summarydata.CustomerId = vehicle[0].CustomerId;
 
                             summarydata.CustomerId = customer.Id;
@@ -1838,6 +1853,205 @@ namespace InsuranceClaim.Controllers
                         }
 
                         #endregion
+
+
+
+
+                        #region Quotation Email
+                        if (!string.IsNullOrEmpty(btnSendQuatation))
+                        {
+                            List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
+                            var SummaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={model.Id}").ToList();
+                            foreach (var itemSummaryVehicleDetails in SummaryVehicleDetails)
+                            {
+                                var itemVehicle = InsuranceContext.VehicleDetails.Single(where : "id="+  itemSummaryVehicleDetails.VehicleDetailsId + " and IsActive=1");
+
+                                if(itemVehicle!=null)
+                                {
+                                    ListOfVehicles.Add(itemVehicle);
+                                }
+
+                                
+                            }
+
+                            var currencylist = servicedetail.GetAllCurrency();
+                            string CurrencyName = "";
+
+                            //List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
+                            string Summeryofcover = "";
+                            var RoadsideAssistanceAmount = 0.00m;
+                            var MedicalExpensesAmount = 0.00m;
+                            var ExcessBuyBackAmount = 0.00m;
+                            var PassengerAccidentCoverAmount = 0.00m;
+                            var ExcessAmount = 0.00m;
+
+                            var ePaymentTermData = from ePaymentTerm e in Enum.GetValues(typeof(ePaymentTerm)) select new { ID = (int)e, Name = e.ToString() };
+
+                            string converType = "";
+
+                            foreach (var item in ListOfVehicles)
+                            {
+                                Insurance.Service.VehicleService obj = new Insurance.Service.VehicleService();
+                                VehicleModel modell = InsuranceContext.VehicleModels.Single(where: $"ModelCode='{item.ModelId}'");
+                                VehicleMake make = InsuranceContext.VehicleMakes.Single(where: $" MakeCode='{item.MakeId}'");
+
+                                string vehicledescription = modell.ModelDescription + " / " + make.MakeDescription;
+
+                                RoadsideAssistanceAmount = RoadsideAssistanceAmount + Convert.ToDecimal(item.RoadsideAssistanceAmount);
+                                MedicalExpensesAmount = MedicalExpensesAmount + Convert.ToDecimal(item.MedicalExpensesAmount);
+                                ExcessBuyBackAmount = ExcessBuyBackAmount + Convert.ToDecimal(item.ExcessBuyBackAmount);
+                                PassengerAccidentCoverAmount = PassengerAccidentCoverAmount + Convert.ToDecimal(item.PassengerAccidentCoverAmount);
+                                ExcessAmount = ExcessAmount + Convert.ToDecimal(item.ExcessAmount);
+
+                                if (item.CoverTypeId == 1)
+                                {
+                                    converType = eCoverType.ThirdParty.ToString();
+                                }
+                                if (item.CoverTypeId == 2)
+                                {
+                                    converType = eCoverType.FullThirdParty.ToString();
+                                }
+
+                                if (item.CoverTypeId == 4)
+                                {
+                                    converType = eCoverType.Comprehensive.ToString();
+                                }
+
+                                string paymentTermsNmae = "";
+                                var paymentTermVehicel = ePaymentTermData.FirstOrDefault(p => p.ID == item.PaymentTermId);
+
+
+                                if (item.PaymentTermId == 1)
+                                    paymentTermsNmae = "Annual";
+                                else if (item.PaymentTermId == 4)
+                                    paymentTermsNmae = "Termly";
+                                else
+                                    paymentTermsNmae = paymentTermVehicel.Name + " Months";
+
+                                var vehicledetail = InsuranceContext.VehicleDetails.Single(where: "id=" + item.Id + " and IsActive=1" );
+                                CurrencyName = servicedetail.GetCurrencyName(currencylist, vehicledetail.CurrencyId);
+                                string policyPeriod = item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + item.CoverEndDate.Value.ToString("dd/MM/yyyy");
+
+                                Summeryofcover += "<tr> <td style='padding: 7px 10px; font - size:15px;'>" + item.RegistrationNo + " </td> <td style='padding: 7px 10px; font - size:15px;'>" + vehicledescription + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + item.SumInsured + "</td><td style='padding: 7px 10px; font - size:15px;'>" + converType + "</td><td style='padding: 7px 10px; font - size:15px;'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</td> <td style='padding: 7px 10px; font - size:15px;'>" + policyPeriod + "</td><td style='padding: 7px 10px; font - size:15px;'>" + paymentTermsNmae + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + Convert.ToString(item.Premium + item.Discount) + "</td></tr>";
+
+                            }
+
+
+                            var summaryDetail = InsuranceContext.SummaryDetails.Single(model.Id);
+
+                            if (summaryDetail != null)
+                            {
+                                model.CustomSumarryDetilId = summaryDetail.Id;
+                            }
+
+                            string filepath = System.Configuration.ConfigurationManager.AppSettings["urlPath"];
+                            var customerQuotation = InsuranceContext.Customers.Single(summaryDetail.CustomerId);
+                            var user = UserManager.FindById(customerQuotation.UserID);
+                            //var SummaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={model.Id}").ToList();
+                            int QutationVehicleId = ListOfVehicles[0].Id;
+     
+                            var vehicleQuotation = InsuranceContext.VehicleDetails.Single(where: "id=" + QutationVehicleId + " and IsActive=1");
+                            var policyQuotation = InsuranceContext.PolicyDetails.Single(vehicleQuotation.PolicyId);
+                            //  var ePaymentTermData = from ePaymentTerm e in Enum.GetValues(typeof(ePaymentTerm)) select new { ID = (int)e, Name = e.ToString() };
+                            var paymentTerm = ePaymentTermData.FirstOrDefault(p => p.ID == vehicleQuotation.PaymentTermId);
+
+
+                            Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
+
+                            string QuotationEmailPath = "/Views/Shared/EmaiTemplates/QuotationEmail.cshtml";
+
+
+                            string urlPath = WebConfigurationManager.AppSettings["urlPath"];
+
+                            string rootPath = urlPath + "/CustomerRegistration/SummaryDetail?summaryDetailId=" + summaryDetail.Id;
+
+                            // need to do work
+
+                            // Product name
+
+                            string MotorBody = System.IO.File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath(QuotationEmailPath));
+                            var Bodyy = MotorBody.Replace("##PolicyNo##", policyQuotation.PolicyNumber).Replace("##path##", filepath).Replace("##Cellnumber##", user.PhoneNumber).
+                                Replace("##FirstName##", customerQuotation.FirstName).Replace("##LastName##", customerQuotation.LastName).Replace("##Email##", user.Email).
+                                Replace("##BirthDate##", customerQuotation.DateOfBirth.Value.ToString("dd/MM/yyyy")).Replace("##Address1##", customerQuotation.AddressLine1).
+                                Replace("##Address2##", customerQuotation.AddressLine2).Replace("##Renewal##", vehicleQuotation.RenewalDate.Value.ToString("dd/MM/yyyy")).
+                                Replace("##InceptionDate##", vehicleQuotation.CoverStartDate.Value.ToString("dd/MM/yyyy")).Replace("##package##", paymentTerm.Name + " Months").
+                                Replace("##Summeryofcover##", Summeryofcover).Replace("##PaymentTerm##", (vehicleQuotation.PaymentTermId == 1 ? paymentTerm.Name + "(1 Year)" : paymentTerm.Name + " Months")).
+                                Replace("##TotalPremiumDue##", Convert.ToString(summaryDetail.TotalPremium)).Replace("##StampDuty##", Convert.ToString(summaryDetail.TotalStampDuty)).
+                                Replace("##MotorLevy##", Convert.ToString(summaryDetail.TotalZTSCLevies)).
+                                Replace("##PremiumDue##", Convert.ToString(ListOfVehicles.Sum(x => x.Premium) + ListOfVehicles.Sum(x => x.Discount))).
+                                Replace("##PostalAddress##", customerQuotation.Zipcode).Replace("##ExcessBuyBackAmount##", Convert.ToString(ExcessBuyBackAmount)).
+                                Replace("##MedicalExpenses##", Convert.ToString(MedicalExpensesAmount)).Replace("##PassengerAccidentCover##", Convert.ToString(PassengerAccidentCoverAmount)).
+                                Replace("##RoadsideAssistance##", Convert.ToString(RoadsideAssistanceAmount)).Replace("##RadioLicence##", Convert.ToString(summaryDetail.TotalRadioLicenseCost)).
+                                Replace("##Discount##", Convert.ToString(ListOfVehicles.Sum(x => x.Discount)))
+                                 .Replace("##PenaltiesAmt##", Convert.ToString(ListOfVehicles.Sum(x => x.PenaltiesAmt)))
+                                .Replace("##ExcessAmount##", Convert.ToString(ExcessAmount))
+                                .Replace("##CurrencyNames##", CurrencyName).
+                                Replace("##SummaryDetailsPath##", Convert.ToString(rootPath)).Replace("##insurance_period##", vehicleQuotation.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + vehicleQuotation.CoverEndDate.Value.ToString("dd/MM/yyyy")).
+                                Replace("##NINumber##", customerQuotation.NationalIdentificationNumber).Replace("##VehicleLicenceFee##", Convert.ToString(ListOfVehicles.Sum(x => x.VehicleLicenceFee)));
+
+                            #region Invoice PDF
+                            var attacehmetn_File = MiscellaneousService.EmailPdf(Bodyy, policyQuotation.CustomerId, policyQuotation.PolicyNumber, "Quotation");
+                            #endregion
+
+                            #region Invoice EMail
+                            //var _yAtter = "~/Pdf/14809 Gene Insure Motor Policy Book.pdf";
+                            List<string> _attachementss = new List<string>();
+                            _attachementss.Add(attacehmetn_File);
+                            //_attachementss.Add(_yAtter);
+
+
+                            if (customer.IsCustomEmail)
+                                objEmailService.SendEmail(LoggedUserEmail(), "", "", "Renew Quotation", Bodyy, _attachementss);
+                            else
+                                objEmailService.SendEmail(user.Email, "", "", "Renew Quotation", Bodyy, _attachementss);
+                            
+                            #endregion
+                            #region Send Quotation SMS
+                            Insurance.Service.smsService objsmsService = new Insurance.Service.smsService();
+
+
+                            // done
+                            // string Recieptbody = "Hi " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.AmountPaid) + " for a " + converType+ " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
+
+                            string Recieptbody = "Dear " + customer.FirstName + "\nYour quote is" + "$" + Convert.ToString(summaryDetail.TotalPremium) + " for a " + converType + " with GeneInsure. Please confirm your acceptance for policy activation. Thank you.";
+
+
+                            var Recieptresult = await objsmsService.SendSMS(customer.CountryCode.Replace("+", "") + user.PhoneNumber, Recieptbody);
+
+                            SmsLog objRecieptsmslog = new SmsLog()
+                            {
+                                Sendto = user.PhoneNumber,
+                                Body = Recieptbody,
+                                Response = Recieptresult,
+                                CreatedBy = customer.Id,
+                                CreatedOn = DateTime.Now
+                            };
+
+                            InsuranceContext.SmsLogs.Insert(objRecieptsmslog);
+                            #endregion
+
+
+                            ClearRenewSession();
+
+
+                            TempData["SucessMsg"] = "Quotation has been sent email sucessfully.";
+
+
+                            bool _userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+
+                            if (_userLoggedin)
+                            {
+                                return RedirectToAction("QuotationList", "Account");
+                            }
+                            else
+                            {
+                                return Redirect("/CustomerRegistration/index");
+                            }
+
+                            // return RedirectToAction("SummaryDetail");
+                        }
+                        #endregion
+
 
                         Session["RenewVehicleId"] = vehicle.Id;
                         // return RedirectToAction("InitiatePaynowTransaction", "Paypal", new { id = DbEntry.Id, TotalPremiumPaid = Convert.ToString(model.AmountPaid), PolicyNumber = policy.PolicyNumber, Email = customer.EmailAddress });

@@ -1,4 +1,4 @@
-﻿@model InsuranceClaim.Models.SearchVRNModel
+﻿
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
@@ -340,7 +340,7 @@
         </div>
 </div>
 
-            <div class="col-sm-5 col-md-6 col-lg-7">
+            @*<div class="col-sm-5 col-md-6 col-lg-7">
                 <div class="banner-form">
 
 
@@ -356,14 +356,10 @@
 
 
                 </div>
-            </div>
-
-
-		@*<div>
-                <div class="item active">
-                    <img src="~/Images/genebanner-1.jpg" />
-                </div>
             </div>*@
+
+
+		
            
 
         </div>
@@ -430,7 +426,7 @@
 
                         <div style="margin-top:25px">
                             <!-- <button type="button" onclick="GetQuote();" class="btn btn-success">Get a quote <i class="fa fa-arrow-right"></i></button> -->
-							<button class="learn-more" onclick="GetQuote();"> <span class="circle" aria-hidden="true"> <span class="icon arrow"></span> </span>
+							<button class="learn-more" onclick="RequestQuote();"> <span class="circle" aria-hidden="true"> <span class="icon arrow"></span> </span>
 							  <span class="button-text">Get a quote</span></button>
                         </div>
                         
