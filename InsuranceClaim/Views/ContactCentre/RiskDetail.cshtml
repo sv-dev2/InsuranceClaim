@@ -1787,7 +1787,7 @@
 
 
         debugger;
-        if (flag) {
+       
             $(".loading-area").show();
             $.ajax({
                 async: false,
@@ -1912,15 +1912,15 @@
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     $(".loading-area").hide();
                     if (textStatus == 'timeout') {
-                        //doe iets
+                        $(".loading-area").hide();
                     } else if (textStatus == 'error') {
-                        //doe iets
+                        $(".loading-area").hide();
                     }
                 } //EINDE error
             }); //EINDE ajax
 
 
-        }
+        $(".loading-area").hide();
 
     }
 

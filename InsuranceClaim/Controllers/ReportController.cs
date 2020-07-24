@@ -1336,7 +1336,7 @@ namespace InsuranceClaim.Controllers
             query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
             query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
             query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
-            query += " VehicleDetail.BusinessSourceDetailId,SummaryDetail.id as SummaryDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " VehicleDetail.BusinessSourceDetailId,SummaryDetail.id as SummaryDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName, VehicleDetail.SumInsured from PolicyDetail ";
             query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
             query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
@@ -1380,7 +1380,8 @@ namespace InsuranceClaim.Controllers
                     BusinessSourceName = x.BusinessSourceName,
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     SourceDetailName = x.SourceDetailName,
-                    SummaryDetailId = x.SummaryDetailId
+                    SummaryDetailId = x.SummaryDetailId,
+                    Sum_Insured=x.SumInsured
                 }).ToList();
 
 
@@ -1409,6 +1410,7 @@ namespace InsuranceClaim.Controllers
                 model.PolicyRenewalDate = item.PolicyRenewalDate;
                 model.SourceDetailName = item.SourceDetailName;
                 model.BusinessSourceName = item.BusinessSourceName;
+                
                 //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
 
                 var index = list.FindIndex(c => c.Policy_Number == item.Policy_Number);
@@ -1421,6 +1423,7 @@ namespace InsuranceClaim.Controllers
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     list[index].RadioLicenseCost += item.RadioLicenseCost;
                     list[index].Zinara_License_Fee += item.Zinara_License_Fee;
+                    list[index].Sum_Insured += item.Sum_Insured;
                 }
                 else
                 {
@@ -1431,6 +1434,7 @@ namespace InsuranceClaim.Controllers
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     model.RadioLicenseCost = item.RadioLicenseCost;
                     model.Zinara_License_Fee = item.Zinara_License_Fee;
+                    model.Sum_Insured = item.Sum_Insured;
                     list.Add(model);
                 }
             }
@@ -1487,7 +1491,7 @@ namespace InsuranceClaim.Controllers
             query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
             query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
             query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
-            query += " VehicleDetail.BusinessSourceDetailId, SummaryDetail.id as SummaryDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " VehicleDetail.BusinessSourceDetailId, SummaryDetail.id as SummaryDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName, VehicleDetail.SumInsured from PolicyDetail ";
             query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
             query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
@@ -1531,7 +1535,8 @@ namespace InsuranceClaim.Controllers
                     BusinessSourceName = x.BusinessSourceName,
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     SourceDetailName = x.SourceDetailName,
-                    SummaryDetailId = x.SummaryDetailId
+                    SummaryDetailId = x.SummaryDetailId,
+                    Sum_Insured =x.SumInsured
                 }).ToList();
 
 
@@ -1574,6 +1579,7 @@ namespace InsuranceClaim.Controllers
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     list[index].RadioLicenseCost += item.RadioLicenseCost;
                     list[index].Zinara_License_Fee += item.Zinara_License_Fee;
+                    list[index].Sum_Insured += item.Sum_Insured;
                 }
                 else
                 {
@@ -1584,6 +1590,7 @@ namespace InsuranceClaim.Controllers
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     model.RadioLicenseCost = item.RadioLicenseCost;
                     model.Zinara_License_Fee = item.Zinara_License_Fee;
+                    model.Sum_Insured = item.Sum_Insured;
                     list.Add(model);
                 }
             }

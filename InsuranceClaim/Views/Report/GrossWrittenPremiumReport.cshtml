@@ -121,7 +121,7 @@
                             <th>Term Period</th>
                             <th>Cover Type</th>
                             <th>Currency</th>
-
+                            <th>SumInsured</th>
                             <th>Premium</th>
 
                             <th>Stamp Duty</th>
@@ -285,6 +285,7 @@
 
                                 <td>@item.CoverType</td>
                                 <td> @item.Currency </td>
+                                <td>@item.Sum_Insured</td>
                                 <td>
                                     @item.Premium_due
                                 </td>
@@ -344,6 +345,8 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 <b> @premiumDueTotal </b>
                             </td>
@@ -380,7 +383,7 @@
 
                         <tr>
                           
-                            <td colspan="8"></td>                       
+                            <td colspan="10"></td>                       
                             <td colspan="3"><strong>Currency</strong></td>
                             <td colspan="3"><strong>Amount</strong></td>
                             <td colspan="3"><strong>Count</strong></td>   
@@ -390,7 +393,7 @@
                         </tr>
 
                         <tr>
-                            <td colspan="8"><strong>New Business:</strong></td>
+                            <td colspan="10"><strong>New Business:</strong></td>
                            
                            
                             <td colspan="3">USD</td>
@@ -401,7 +404,7 @@
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@rtgstotal</td>
@@ -411,11 +414,11 @@
                         </tr>
 
                         <tr>
-                            <td colspan="17"></td>
+                            <td colspan="19"></td>
                             <td colspan="2"></td>
                         </tr>
                         <tr>
-                            <td colspan="8"><strong>Renewals</strong></td>
+                            <td colspan="10"><strong>Renewals</strong></td>
                           
                             <td colspan="3">USD</td>
                             <td colspan="3">@Reustotal</td>
@@ -425,7 +428,7 @@
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">RTGS$</td>
                            
@@ -436,13 +439,13 @@
                         </tr>
 
                         <tr>
-                            <td colspan="17"></td>
+                            <td colspan="19"></td>
                             <td colspan="2"></td>
                         </tr>
 
 
                         <tr>
-                            <td colspan="8"><strong>Grand Total</strong></td>
+                            <td colspan="10"><strong>Grand Total</strong></td>
                           
                            
                             <td colspan="3"> USD</td>
@@ -453,7 +456,7 @@
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@(rtgstotal + Rertgstotal)</td>
@@ -463,7 +466,7 @@
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">TOTAL RTGS$</td>
                             <td colspan="3">@(ustotal + Reustotal + rtgstotal + Rertgstotal)</td>

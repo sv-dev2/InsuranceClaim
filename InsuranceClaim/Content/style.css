@@ -154,6 +154,57 @@ th.action-th {
     /*margin-right: 3%;*/
     width: 1314px;
 }
+        .custom-form .modal-body {
+    position: relative;
+    padding: 15px;
+    border-bottom: transparent 1px solid !important;
+    margin-bottom: 60px;
+}
+.custom-form .banner-form input {
+    background-position: 20px center;
+    background-repeat: no-repeat;
+    font-size: 16px;
+}
+ .custom-form .banner-form input.dropdown.tr-change-dropdown {
+    background-position: 20px center;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    border-left: 1px transparent;
+    border-radius: 0px 50px 50px 0px;
+    border: 1px solid #cdcdcd;
+}
+.custom-form .banner-form {
+    text-align: left;
+    margin-top: 0px;
+     padding-left: 0px;
+    margin-bottom: 50px;
+}
+.custom-form .banner-form input {
+    width: 268px !important;
+    padding: 0 27px;
+}
+.custom-form .banner-form input.form-control {
+    background-position: 20px center;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    border-radius: 50px 0px 0px 50px;
+    border-right: transparent;
+    border-bottom: #cdcdcd 1px solid;
+    border-left: #cdcdcd 1px solid;
+}
+        .custom-form .modal-footer button.btn.btn-primary {
+    background-color: #7db43d;
+    border-radius: 100px;
+    padding: 10px 15px;
+}
+
+.custom-form .modal-footer button.btn.btn-secondary {
+    padding: 10px 15px;
+    border-radius: 100px;
+}
+
+
+
 
 .HideSummary {
     display: none;
@@ -363,19 +414,20 @@ th.action-th {
 
 .menu-navigation .navbar-nav li a {
     padding: 4px 10px;
-    color: #000000;
+    color: #fff;
     font-size: 12px;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
     border-right: 2px solid #fff;
     font-weight: 500;
     border: 1px solid #7db43d;
     margin: 0 2px;
     border-radius: 100px;
+    background: #7db43d;
 }
-
- 
+.menu-navigation .navbar-nav li a:hover {
+    color: #7db43d !important;
+}
 
 .menu-navigation .navbar-nav {
     text-align: center;
@@ -1518,27 +1570,27 @@ div#invoiceNumberDiv .form-group {
     }
 
 .menu-navigation .navbar-nav.login-btn li a {
-    background: none !important;
-    color: #222;
+    background: #7db43d !important;
+    color: #fff;
+	padding:5px 10px;
+	border:#7db43d 1px solid;
+	text-decoration:none;
 }
-.menu-navigation .navbar-nav.login-btn {
-    margin-top: 6px;
+.menu-navigation .navbar-nav.login-btn li a:hover {
+    background: #fff !important;
+    color: #7db43d; 
+     padding: 5px 10px;
+	 	border:#7db43d 1px solid;
 }
+.home-slider-sectopn .carousel-inner .item img {  height:500px;  object-fit: cover;}
+.menu-navigation .navbar-nav.login-btn {  margin-top: 5px;}
 body .menu-navigation .navbar.navbar-default{padding-top:10px;}
-.menu-navigation .navbar-nav.login-btn li:hover .dropdown-menu {
-    display: block;
-}
-
-.policy-option ul li img {
-    width: 145px;
-}
-
-.touch-heading {
-    margin-bottom: 30px;
-}
+.menu-navigation .navbar-nav.login-btn li:hover .dropdown-menu {  display: block;}
+.policy-option ul li img {  width: 145px;}
+.touch-heading {   margin-bottom: 30px;}
 
 .touch-heading h3 { color: #16909d; text-transform: uppercase;     font-size: 30px;     font-weight: 400;    font-family: 'Oswald', sans-serif; }
-.contact-details { margin: 15px 0 0;     font-family: 'Oswald', sans-serif;}
+.contact-details { margin: 15px 0 0; }
 .contact-details h4 { color:#5f8b2b;font-size:20px;  margin-bottom: 15px; }
 .contact-details p {color: #222; font-size: 15px; margin-bottom:7px;  }
 .contact-details p strong { font-weight: 600; color: #000; display: inline-block;}
@@ -1823,7 +1875,12 @@ span.customer_title {
 
 
 .compare-bx-content h4 { font-size: 22px; font-weight: 600; margin: 0 0 10px;}
-.compare-bx-content p {font-size: 16px;  color: #555;  margin: 0 0 15px;}
+.compare-bx-content p {
+    font-size: 14px;
+    color: #fff;
+    margin: 20px 0 0;
+    font-weight: 600;
+}
 .compare-bx-content p.margin-bottom-0 {margin:0;}
 
 .compare-bx-input .input-group input.form-control, .compare-bx-input .input-group span.input-group-btn button {
@@ -1834,7 +1891,7 @@ span.customer_title {
 .compare-bx-input .input-group span.input-group-btn button {order:none;}
 .compare-bx-content button.btn.btn-success { height: 40px;  border-radius: 0; border: none;  padding: 0 40px 0 15px;  position: relative;}
 .compare-bx-content button.btn.btn-success i { position: absolute;  right: 10px;  top: 12px;}
-a.ph-no { font-size: 20px;  margin: -14px 0 0;  display: inline-block; font-weight: 600; color:#333; text-decoration:none; transition:all 0.7s ease-in-out}
+a.ph-no { font-size: 20px;  margin: -14px 0 0;  display: inline-block; font-weight: 600; color:#fff; text-decoration:none; transition:all 0.7s ease-in-out}
 a.ph-no:hover{color:#337ab7}
 .col-mb-15px{margin-bottom:15px}
 .col-mb-25px{margin-bottom:25px}
@@ -1843,8 +1900,8 @@ a.ph-no:hover{color:#337ab7}
 .compare-bx-input li a img {  position: absolute;  left: 0;  top:6px;}
 .compare-bx-input{float: left;  width: 100%;}
 .d-flex-bx{display:flex;}
-.bg-shadow-bx{    background: #fff;  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);  padding: 25px;  border-radius: 25px 0 25px 0;  height: 100%;     border:1px dashed rgba(22, 144, 157, 0.8);}
-.compare-bx-content svg{fill: #000;  border-radius: 100px;  box-shadow: 0 1px 13px rgba(0, 0, 0, 0.2); padding:10px; width:75px; height:75px}
+.bg-shadow-bx{    background:linear-gradient(to top, #3c670a 0%, #80bf38 50%,#8cbf4e 100%);  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);  padding: 25px;  border-radius: 25px;   height: 100%;}
+.compare-bx-content svg{fill: #000;  border-radius: 100px;      background: #fff;box-shadow: 0 1px 13px rgba(0, 0, 0, 0.2); padding:10px; width:75px; height:75px}
 
 
 button.learn-more {position: relative;display: inline-block; cursor: pointer; outline: none; border: 0; vertical-align: middle;text-decoration: none;
@@ -1858,7 +1915,7 @@ button.learn-more .circle .icon.arrow {  -webkit-transition: all 0.45s cubic-bez
 button.learn-more .circle .icon.arrow::before { position: absolute;  content: ''; top: -0.25rem;  right: 0.0625rem;  width: 0.625rem;  height: 0.625rem;
   border-top: 0.125rem solid #fff;  border-right: 0.125rem solid #fff;  -webkit-transform: rotate(45deg); transform: rotate(45deg);}
 button.learn-more .button-text {-webkit-transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-  position: absolute; top: 0;  left: 0;  right: 0; bottom: 0;  padding:0.45rem 0;  margin: 0 0 0 1.85rem;  color: #282936;  font-weight: 700;  line-height: 1.6;
+  position: absolute; top: 0;  left: 0;  right: 0; bottom: 0;  padding:0.45rem 0;  margin: 0 0 0 1.85rem;  color: #fff;  font-weight: 700;  line-height: 1.6;
   text-align: center;  text-transform: uppercase;}
 button:hover .circle { width: 100%;}
 button:hover .circle .icon.arrow { background: #fff;  -webkit-transform: translate(1rem, 0);   transform: translate(1rem, 0);}
@@ -1916,6 +1973,17 @@ button:hover .button-text { color: #fff;}
     font-size: 17px;
 }
 
+.home-slider-sectopn .carousel-inner {
+    position: relative;
+    height:500px;
+}
+.insurance-text h2 {
+    font-weight: 600;
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    margin: 0 0 10px;
+}
+
 @media print {
     .print-btn { display:none !important;}
     .top-header-section { display:none;    }
@@ -1926,6 +1994,24 @@ button:hover .button-text { color: #fff;}
 
 
 @media(max-width:767px) {
+    .custom-form .banner-form input.form-control {
+    border: #cdcdcd 1px solid !important;
+    margin-bottom: 20px;
+    width: 100%;
+    border-radius:0px;
+}
+ .custom-form .banner-form input.dropdown.tr-change-dropdown {
+    border-radius: 0px;
+    border: 1px solid #cdcdcd !important;
+        margin-bottom: 20px;
+    width: 100%;
+}
+  .custom-form .modal-footer {
+    border-top: 1px solid transparent !important;
+}
+ .custom-form .modal-body {
+    margin-bottom: 0px;
+}
 .home-slider-sectopn .banner-form a.btn-primary{width:100%; border-radius:0;}
 .banner-form form{border-radius:0;}
 .home-slider-sectopn .banner-form{padding:0 15px;     margin-top: 30px;}

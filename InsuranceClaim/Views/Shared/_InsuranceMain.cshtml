@@ -2,10 +2,8 @@
 @using Insurance.Domain;
 @using Microsoft.AspNet.Identity;
 
-
 @{
     Layout = null;
-
     bool userLoggedin = ((System.Web.HttpContext.Current.User != null) && (System.Web.HttpContext.Current.User.Identity.IsAuthenticated));
     string userId = User.Identity.GetUserId();
     var role = "";
@@ -139,6 +137,8 @@
 
                                                     @*<li><a href="/Individual/RegisterUser">Individual motor</a></li>
                                                         <li><a href="/Domestic/RegisterUser">Domestic</a></li>*@
+
+                                                    <li><a href="/InsuranceHome/Index">Home</a></li>
 
                                                     @if (userLoggedin && (User.IsInRole("Staff") || User.IsInRole("Renewals")))
                                                     {
@@ -331,11 +331,8 @@
 
 
 
-
-
-
     <!-- Modal -->
-    <div class="modal fade" id="SearchVRNModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade custom-form" id="SearchVRNModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -348,14 +345,14 @@
                 @using (Html.BeginForm("SearchVrn", "InsuranceHome", FormMethod.Post))
             {
                     <div class="modal-body">
-
-                        <div class="col-sm-5 col-md-6 col-lg-7">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
                             <div class="banner-form">
                                 @Html.TextBox("RegistrationNum", "", new { @class = "form-control", @autocomplete = "off", @placeholder = "Registration Number" })
                                 @Html.TextBox("NationalId", "", new { @class = "dropdown tr-change-dropdown", @autocomplete = "off", @placeholder = "National Id" })
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Request Quote</button>
@@ -447,6 +444,8 @@
 
     </script>
     <style>
+
+
         .menu-navigation .navbar.navbar-default {
             background: #fff;
             margin: 0;
@@ -502,6 +501,7 @@
             float: right;
             margin-bottom: 15px;
         }
+
     </style>
 
 </body>
