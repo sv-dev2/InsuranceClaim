@@ -58,6 +58,7 @@ namespace Insurance.Service
             {
                 //17 jun 2020  
                 decimal? minAmount = 0;
+                float incrementRate = Convert.ToSingle(0.5);
                 InsuranceRate = vehicleUsage.ComprehensiveRate;
 
                 
@@ -68,7 +69,7 @@ namespace Insurance.Service
                     //InsuranceMinAmount = minAmount;
                 
                 
-                    InsuranceRate = vehicleUsage.ComprehensiveRate;
+                    InsuranceRate = vehicleUsage.ComprehensiveRate + incrementRate;
                     InsuranceMinAmount = vehicleUsage.MinCompAmount;
                                     
             }
@@ -470,10 +471,10 @@ namespace Insurance.Service
                 this.Discount = this.Discount * (5*2);
             }
 
-            if(currencyId==(int)currencyType.USD) // 17th jun 2020
-            {
-                this.Discount = 0;
-            }
+            //if(currencyId==(int)currencyType.USD) // 17th jun 2020 // updated on 24 july 2020
+            //{
+            //    this.Discount = 0;
+            //}
 
             // totalPremium = premium - this.Discount;
             decimal totalPremium = 0;

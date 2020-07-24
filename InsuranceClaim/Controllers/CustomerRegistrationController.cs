@@ -3130,15 +3130,16 @@ namespace InsuranceClaim.Controllers
         public decimal GetMinimumSumInsured(int vehicleUsageId, int currencyId)
         {
             decimal amount = 0;
+            decimal minSumInsuredUSD = 3500;
             RiskDetailService service = new RiskDetailService();
             var vehicleUsage = service.GetVehicleUsageById(vehicleUsageId);
 
             if (currencyId == (int)currencyType.USD)
             {
                 if (vehicleUsage != null)
-                    amount = vehicleUsage.USDBenchmark == null ? 2500 : Convert.ToDecimal(vehicleUsage.USDBenchmark);
+                    amount = vehicleUsage.USDBenchmark == null ? minSumInsuredUSD : Convert.ToDecimal(vehicleUsage.USDBenchmark);
                 else
-                    amount = 2500;
+                    amount = minSumInsuredUSD;
             }
             else
             {
