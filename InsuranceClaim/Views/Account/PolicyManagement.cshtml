@@ -106,7 +106,7 @@
                                     <td>@item.TotalPremium</td>
                                     <td>@item.createdOn.ToString("dd-MMM-yyyy")</td>
                                     <td>
-                                         @item.PaymentStatus
+                                        @item.PaymentStatus
                                     </td>
                                     <td>
                                         <div class="tbl-btn-list">
@@ -160,12 +160,31 @@
                                                             <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
                                                         </ul>
                                                     </div>
-                                                 </td>
+                                                </td>
                                             }
                                             else if (item.isLapsed && item.IsActive == false)
                                             {
                                                 <td>Renewed</td>
-                                                <td class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
+
+                                                <td colspan="3">
+                                                    <div class="tbl-btn-list">
+                                                        <ul class="list-inline">
+
+                                                            @if (!User.IsInRole("Team Leaders"))
+                                                            {
+                                                                <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+                                                            }
+
+                                                            <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
+                                                            <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
+                                                            <li class="btn-width-auto"><a href="javascript:void(0)" class="btn-sm btn-primary" onclick="RsendPolicys(@item.VehicleDetailId)">Resend Policy </a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+
+
+
+
 
                                             }
                                             else if (!item.IsActive)
@@ -188,7 +207,12 @@
                                                 <td colspan="3">
                                                     <div class="tbl-btn-list">
                                                         <ul class="list-inline">
-                                                            <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+
+                                                            @if (!User.IsInRole("Team Leaders"))
+                                                            {
+                                                                <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+                                                            }
+
                                                             <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
                                                             <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
                                                             <li class="btn-width-auto"><a href="javascript:void(0)" class="btn-sm btn-primary" onclick="RsendPolicys(@item.VehicleDetailId)">Resend Policy </a></li>
@@ -202,7 +226,11 @@
                                                 <td class="btn-width-auto"> @Html.ActionLink("Renew", "Index", "Renew", new { vehicleid = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
                                                 <td>
                                                     <ul class="list-inline">
-                                                        <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+                                                        @if (!User.IsInRole("Team Leaders"))
+                                                        {
+                                                            <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+                                                        }
+
                                                         <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
                                                         <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
                                                         <li class="btn-width-auto"><a href="javascript:void(0)" class="btn-sm btn-primary" onclick="RsendPolicys(@item.VehicleDetailId)">Resend Policy </a></li>
@@ -216,7 +244,13 @@
                                                 <td class="btn-width-auto"> @Html.ActionLink("Renew", "Index", "Renew", new { vehicleid = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
                                                 <td colspan="2">
                                                     <ul class="list-inline">
-                                                        <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+
+                                                        @if (!User.IsInRole("Team Leaders"))
+                                                        {
+                                                            <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
+                                                        }
+
+
                                                         <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@item.VehicleDetailId');">View/Upload Document</button></li>
                                                         <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</li>
                                                     </ul>
@@ -399,7 +433,14 @@
             success: function (result) {
                 if (result) {
                     toastr.success("Vehicle De-Activated Successfully !!");
-                    location.reload();
+
+                    $(".loading-area").show();
+                    setTimeout(function () {
+                        $(".loading-area").hide();
+                        location.reload();
+                    }, 500);
+
+
                 }
                 else {
                     toastr.error("Unable To De-Activate, Please Try Again !!");

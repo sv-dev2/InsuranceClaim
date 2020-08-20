@@ -140,7 +140,7 @@
 
                                                     <li><a href="/InsuranceHome/Index">Home</a></li>
 
-                                                    @if (userLoggedin && (User.IsInRole("Staff") || User.IsInRole("Renewals")))
+                                                    @if (userLoggedin && (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Team Leaders")))
                                                     {
                                                         <li><a href="/CustomerRegistration/Index">Issue Quotation</a></li>
                                                     }

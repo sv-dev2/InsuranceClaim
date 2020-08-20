@@ -36,8 +36,9 @@ namespace InsuranceClaim.Models
 
         public string startdate { get; set; }
         public string enddate { get; set; }
-
         public string RenewalDate { get; set; }
+
+        public DateTime TransactionDate { get; set; }
 
         public string Currency { get; set; }
 

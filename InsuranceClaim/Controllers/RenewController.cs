@@ -633,6 +633,11 @@ namespace InsuranceClaim.Controllers
             ViewBag.Products = InsuranceContext.Products.All(where: "Active = 'True' or Active is null").ToList();
             ViewBag.PaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is null").ToList();
 
+            ViewBag.VehicleLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+            ViewBag.RadioLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+
+
+
             var eExcessTypeData = from eExcessType e in Enum.GetValues(typeof(eExcessType))
                                   select new
                                   {
@@ -646,6 +651,16 @@ namespace InsuranceClaim.Controllers
                 var model = service.GetModel(makers.FirstOrDefault().MakeCode);
                 ViewBag.Model = model;
             }
+
+            if (TempData["ViewModel"] != null)
+            {
+                
+                viewModels = (RiskDetailModel)TempData["ViewModel"];
+                return View(viewModels);
+            }
+
+
+
 
             viewModels.NoOfCarsCovered = 1;
 
@@ -735,6 +750,12 @@ namespace InsuranceClaim.Controllers
                     viewModels.IsPolicyExpire = RiskDetail.IsPolicyExpire;
                     viewModels.TaxClassId = RiskDetail.TaxClassId;
                     viewModels.CombinedID = RiskDetail.CombinedID;
+
+                    viewModels.IncludeLicenseFee = RiskDetail.IncludeLicenseFee;
+                    viewModels.IncludeRadioLicenseCost = RiskDetail.IncludeRadioLicenseCost;
+                    viewModels.ZinaraLicensePaymentTermId = RiskDetail.ZinaraLicensePaymentTermId;
+                    viewModels.RadioLicensePaymentTermId = RiskDetail.RadioLicensePaymentTermId;
+                    viewModels.TaxClassId = RiskDetail.TaxClassId;
 
 
                     var ser = new VehicleService();
@@ -871,9 +892,28 @@ namespace InsuranceClaim.Controllers
                 model.ErrorMessage = "Sum Insured amount should be greater or equal to " + miniumSumInsured;
                 TempData["ViewModel"] = model;
 
-                if (User.IsInRole("Staff"))                  
+                //if (User.IsInRole("Staff"))                  
                     return RedirectToAction("RiskDetail", new { id = 1 });
             }
+
+            // for license payment term
+
+            VehicleService _service = new VehicleService();
+            var validationMsg = _service.ValidationMessage(model);
+
+            if (validationMsg != "")
+            {
+                model.ErrorMessage = validationMsg;
+                TempData["ViewModel"] = model;
+
+               // if (User.IsInRole("Staff"))
+                    return RedirectToAction("RiskDetail", new { id = 1 });
+            }
+
+
+
+
+
 
 
             DateTimeFormatInfo usDtfi = new CultureInfo("en-US", false).DateTimeFormat;
@@ -1180,7 +1220,7 @@ namespace InsuranceClaim.Controllers
 
                         //if user staff
 
-                        if (role == "Staff" || role == "Renewals" || role == "Administrator")
+                        if (role == "Staff" || role == "Renewals" || role == "Team Leaders" || role == "Administrator")
                         {
                             // check if email id exist in user table
                             var user = UserManager.FindByEmail(customer.EmailAddress);
@@ -2787,7 +2827,9 @@ namespace InsuranceClaim.Controllers
 
             #region Send License PDFVerficationcode SMS
 
-            if (_pdfPath != "" && _pdfCode != "")
+            var IswebCustomer = User.IsInRole("Web Customer");
+
+            if (_pdfPath != "" && _pdfCode != "" && IswebCustomer==true)
             {
                 string RecieptbodyPdf = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Your license pdf verifation code is: " + _pdfCode + "\n" + "\nThanks.";
                 var RecieptresultPdf = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, RecieptbodyPdf);
@@ -2818,7 +2860,7 @@ namespace InsuranceClaim.Controllers
 
             ClearRenewSession();
 
-            var IswebCustomer = User.IsInRole("Web Customer");
+           
             if (_pdfPath != "" && !IswebCustomer)
                 ViewBag.file = System.Configuration.ConfigurationManager.AppSettings["urlPath"] + _pdfPath;
 
@@ -3384,103 +3426,105 @@ namespace InsuranceClaim.Controllers
             return json;
         }
 
-        [HttpPost]
-        public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, int VehicleYear, int CoverTypeId, int VehicleType, string CoverStartDate, string CoverEndDate, bool VehilceLicense, string taxClassId, bool RadioLicense)
-        {
-            CustomerRegistrationController.checkVRNwithICEcashResponse response = new CustomerRegistrationController.checkVRNwithICEcashResponse();
-            JsonResult json = new JsonResult();
-            json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            //json.Data = "";
+        //[HttpPost]
+        //public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, int VehicleYear, int CoverTypeId, int VehicleType, string CoverStartDate, string CoverEndDate, bool VehilceLicense, string taxClassId, bool RadioLicense)
+        //{
+        //    CustomerRegistrationController.checkVRNwithICEcashResponse response = new CustomerRegistrationController.checkVRNwithICEcashResponse();
+        //    JsonResult json = new JsonResult();
+        //    json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+        //    //json.Data = "";
 
-            try
-            {
-                Insurance.Service.ICEcashService ICEcashService = new Insurance.Service.ICEcashService();
-                var tokenObject = new ICEcashTokenResponse();
+        //    try
+        //    {
+        //        Insurance.Service.ICEcashService ICEcashService = new Insurance.Service.ICEcashService();
+        //        var tokenObject = new ICEcashTokenResponse();
 
-                #region get ICE cash token
-                //if (Session["ICEcashToken"] != null)
-                //{
-                //    ICEcashService.getToken();
-                //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-                //}
-                //else
-                //{
-                //    ICEcashService.getToken();
-                //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-                //}
-
-
-                string patnerToken = SummaryDetailService.GetLatestToken();
-
-                if (patnerToken == "")
-                {
-                    tokenObject = ICEcashService.getToken();
-                    SummaryDetailService.UpdateToken(tokenObject);
-                }
+        //        #region get ICE cash token
+        //        //if (Session["ICEcashToken"] != null)
+        //        //{
+        //        //    ICEcashService.getToken();
+        //        //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+        //        //}
+        //        //else
+        //        //{
+        //        //    ICEcashService.getToken();
+        //        //    tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+        //        //}
 
 
+        //        string patnerToken = SummaryDetailService.GetLatestToken();
 
-                #endregion
-
-                List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
-                //objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo });
-                objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo, PaymentTermId = Convert.ToInt32(PaymentTerm) });
-
-
-                DateTime Cover_StartDate = CoverStartDate == null ? DateTime.Now : Convert.ToDateTime(CoverStartDate);
-                DateTime Cover_EndDate = CoverEndDate == null ? DateTime.Now : Convert.ToDateTime(CoverEndDate);
-
-                ResultRootObject quoteresponse = new ResultRootObject();
-
-                if (patnerToken != "")
-                {
-                    if (VehilceLicense)
-                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
-                    else
-                        quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
-
-
-                    if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
-                    {
-
-                        tokenObject = ICEcashService.getToken();
-                        SummaryDetailService.UpdateToken(tokenObject);
-                        //  tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
-
-                        if (VehilceLicense)
-                            quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
-                        else
-                            quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+        //        if (patnerToken == "")
+        //        {
+        //            tokenObject = ICEcashService.getToken();
+        //            SummaryDetailService.UpdateToken(tokenObject);
+        //        }
 
 
 
-                    }
+        //        #endregion
+
+        //        List<RiskDetailModel> objVehicles = new List<RiskDetailModel>();
+        //        //objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo });
+        //        objVehicles.Add(new RiskDetailModel { RegistrationNo = regNo, PaymentTermId = Convert.ToInt32(PaymentTerm) });
+
+
+        //        DateTime Cover_StartDate = CoverStartDate == null ? DateTime.Now : Convert.ToDateTime(CoverStartDate);
+        //        DateTime Cover_EndDate = CoverEndDate == null ? DateTime.Now : Convert.ToDateTime(CoverEndDate);
+
+        //        ResultRootObject quoteresponse = new ResultRootObject();
+
+        //        if (patnerToken != "")
+        //        {
+        //            if (VehilceLicense)
+        //                quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
+        //            else
+        //                quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+
+
+        //            if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
+        //            {
+
+        //                tokenObject = ICEcashService.getToken();
+        //                SummaryDetailService.UpdateToken(tokenObject);
+        //                //  tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
+
+        //                if (VehilceLicense)
+        //                    quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
+        //                else
+        //                    quoteresponse = ICEcashService.RequestQuote(tokenObject.Response.PartnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), VehicleYear, CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+
+
+
+        //            }
 
 
 
 
-                    response.result = quoteresponse.Response.Result;
-                    if (response.result == 0)
-                    {
-                        response.message = quoteresponse.Response.Quotes[0].Message;
-                    }
-                    else
-                    {
-                        response.Data = quoteresponse;
-                    }
-                }
-                json.Data = response;
-            }
-            catch (Exception ex)
-            {
-                response.message = "Error occured.";
-                json.Data = new ResultResponse();
-            }
+        //            response.result = quoteresponse.Response.Result;
+        //            if (response.result == 0)
+        //            {
+        //                response.message = quoteresponse.Response.Quotes[0].Message;
+        //            }
+        //            else
+        //            {
+        //                response.Data = quoteresponse;
+        //            }
+        //        }
+        //        json.Data = response;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.message = "Error occured.";
+        //        json.Data = new ResultResponse();
+        //    }
 
 
 
-            return json;
-        }
+        //    return json;
+        //}
+
+
         [HttpGet]
         public JsonResult getVehicleList(int summaryDetailId = 0)
         {

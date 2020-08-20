@@ -151,10 +151,25 @@ namespace InsuranceClaim.Controllers
                     //if (product != null)
                     //    tempVehicleType = product.VehicleTypeId;
 
-                    if (VehilceLicense)
-                        quoteresponse = ICEcashService.TPILICQuoteWebUser(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense, radioLicensePaymentTerm, zinaraLicensePaymentTerm);
+                    // quoteresponse = ICEcashService.TPILICQuoteWebUser(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense, radioLicensePaymentTerm, zinaraLicensePaymentTerm);
+
+
+                    //if (VehilceLicense)
+                    //    quoteresponse = ICEcashService.TPILICQuoteWebUser(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense, radioLicensePaymentTerm, zinaraLicensePaymentTerm);
+                    //else
+                    //    quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1");
+
+
+                    if (VehilceLicense && RadioLicense)
+                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense, zinaraLicensePaymentTerm, radioLicensePaymentTerm);
+                    else if (VehilceLicense)
+                        quoteresponse = ICEcashService.TPILICQuoteZinaraOnly(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense, zinaraLicensePaymentTerm);
                     else
                         quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1");
+
+
+
+
 
 
                     // Invalid Partner Token. 
@@ -167,10 +182,13 @@ namespace InsuranceClaim.Controllers
                         patnerToken = tokenObject.Response.PartnerToken;
                         //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
                         //tokenObject = service.CheckSessionExpired();
-                        if (VehilceLicense)
-                            quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, 1, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense);
+                        if (VehilceLicense && RadioLicense)
+                            quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense, zinaraLicensePaymentTerm, radioLicensePaymentTerm);
+                        else if (VehilceLicense)
+                            quoteresponse = ICEcashService.TPILICQuoteZinaraOnly(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1", VehilceLicense, RadioLicense, zinaraLicensePaymentTerm);
                         else
-                            quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, 1, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1");
+                            quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, "", "", Convert.ToInt32(PaymentTerm), Convert.ToInt32(DateTime.Now.Year), CoverTypeId, vehilceUsage, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, "1");
+
 
                     }
 

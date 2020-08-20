@@ -186,13 +186,10 @@
                                                 <td class="btn-width-auto"> @Html.ActionLink("Renew", "Index", "Renew", new { vehicleid = _item.VehicleId }, new { @class = "btn-sm btn-primary" })</td>
 
                                                 <td colspan="2">
-                                                    <ul class="list-inline">
-                                                       
+                                                    <ul class="list-inline">                                        
                                                         <li class="btn-width-auto"><button type="button" class="btn-sm btn-primary" onclick="showPopupp('@item.PolicyNumber','@item.CustomerId','@_item.VehicleId');">View/Upload Document</button></li>
-                                                        <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = _item.VehicleId }, new { @class = "btn-sm btn-primary" })</li>
-                                                     
+                                                        <li class="btn-width-auto">@Html.ActionLink("View RenewPolicy", "customeRenew", "Renew", new { renewvehicle = _item.VehicleId }, new { @class = "btn-sm btn-primary" })</li>                                                   
                                                     </ul>
-
                                                 </td>
 
                                             }

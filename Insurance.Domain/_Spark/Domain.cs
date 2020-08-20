@@ -1485,6 +1485,10 @@ namespace Insurance.Domain
         public int TaxClassId { get; set; }
         public string CombinedID { get; set; }
 
+        public int ZinaraLicensePaymentTermId { get; set; }
+
+        public int RadioLicensePaymentTermId { get; set; }
+
     }
 
 

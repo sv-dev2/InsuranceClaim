@@ -41,6 +41,10 @@ namespace InsuranceClaim.Controllers
             ViewBag.VehicleUsage = service.GetAllVehicleUsage();
             ViewBag.Products = InsuranceContext.Products.All(where: "Active = 'True' or Active is Null").ToList();
             ViewBag.PaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+            ViewBag.VehicleLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+            ViewBag.RadioLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+
+
             ViewBag.TaxClass = InsuranceContext.VehicleTaxClasses.All().ToList();
             ViewBag.AgentCommission = service.GetAgentCommission();
             var makers = service.GetMakers();
@@ -177,6 +181,10 @@ namespace InsuranceClaim.Controllers
                         viewModel.PaymentTermId = data.PaymentTermId;
                         viewModel.ProductId = data.ProductId;
                         viewModel.IncludeRadioLicenseCost = data.IncludeRadioLicenseCost;
+                        viewModel.IncludeLicenseFee = data.IncludeLicenseFee;
+                        viewModel.ZinaraLicensePaymentTermId = data.ZinaraLicensePaymentTermId;
+                        viewModel.RadioLicensePaymentTermId = data.RadioLicensePaymentTermId;
+
                         viewModel.RenewalDate = data.RenewalDate;
                         viewModel.TransactionDate = data.TransactionDate;
                         viewModel.AnnualRiskPremium = data.AnnualRiskPremium;
@@ -204,8 +212,6 @@ namespace InsuranceClaim.Controllers
 
             return View(viewModel);
         }
-
-
 
         public void SetValueIntoSession(int summaryId)
         {
@@ -250,22 +256,16 @@ namespace InsuranceClaim.Controllers
         public ActionResult GetRadioLicenseCost(int? id, int productId)
         {
             JsonResult jsonResult = new JsonResult();
-
-
             //RadioLicenseCostCommercialvehicles
 
             jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
 
             int RadioLicenseCosts = 0;
-
             if (productId == 3)// for  Commercial vehicles
-            {
                 RadioLicenseCosts = Convert.ToInt32(InsuranceContext.Settings.All().Where(x => x.keyname == "RadioLicenseCostCommercialvehicles").Select(x => x.value).FirstOrDefault());
-            }
             else
-            {
                 RadioLicenseCosts = Convert.ToInt32(InsuranceContext.Settings.All().Where(x => x.keyname == "RadioLicenseCost").Select(x => x.value).FirstOrDefault());
-            }
+            
 
 
             //if (id == (int)ePaymentTerm.Annual)
@@ -314,5 +314,6 @@ namespace InsuranceClaim.Controllers
 
             return jsonResult;
         }
+
     }
 }

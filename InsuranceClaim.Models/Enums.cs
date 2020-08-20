@@ -98,4 +98,9 @@ namespace InsuranceClaim.Models
     }
 
 
+    
+
+    
+
+
 }

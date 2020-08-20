@@ -8,8 +8,6 @@
 <div class="productsave-section">
     <div class="container-fluid">
 
-
-
         <div class="row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
                 <div class="head-title">
@@ -159,19 +157,21 @@
                                 }
                             </td>
                             <td> @item.TotalPremium</td>
-                            <td> Lapsed </td>
+                            <td>
+                                @item.PolicyStatus
+                                </td>
 
                             </tr>
 
 
                     }
-            </tbody>
+                </tbody>
 
 
 
-        </table>
+            </table>
+        </div>
     </div>
-</div>
 </div>
 
 

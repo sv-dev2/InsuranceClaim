@@ -59,19 +59,27 @@ namespace Insurance.Service
                 //17 jun 2020  
                 decimal? minAmount = 0;
                 float incrementRate = Convert.ToSingle(0.5);
-                InsuranceRate = vehicleUsage.ComprehensiveRate;
+               // InsuranceRate = vehicleUsage.ComprehensiveRate;
 
-                
-                    //decimal InflationFactorAmt = 25;
-                    //decimal premiumRate = Convert.ToDecimal((vehicleUsage.ComprehensiveRate * 90) / 100);
-                    //minAmount = ((vehicleUsage.USDBenchmark * InflationFactorAmt) * premiumRate) / 100;
-                    ////InsuranceMinAmount = vehicleUsage.MinCompAmount;
-                    //InsuranceMinAmount = minAmount;
-                
-                
+
+                //decimal InflationFactorAmt = 25;
+                //decimal premiumRate = Convert.ToDecimal((vehicleUsage.ComprehensiveRate * 90) / 100);
+                //minAmount = ((vehicleUsage.USDBenchmark * InflationFactorAmt) * premiumRate) / 100;
+                ////InsuranceMinAmount = vehicleUsage.MinCompAmount;
+                //InsuranceMinAmount = minAmount;
+
+
+                if (currencyId == (int)currencyType.USD)
+                {
+                    incrementRate = Convert.ToSingle(0.5);
                     InsuranceRate = vehicleUsage.ComprehensiveRate + incrementRate;
+                }
+                else
+                {
+                    InsuranceRate = vehicleUsage.ComprehensiveRate;
                     InsuranceMinAmount = vehicleUsage.MinCompAmount;
-                                    
+                }
+
             }
 
            
@@ -588,13 +596,14 @@ namespace Insurance.Service
                     maxZTSC = 22.00 * (5*2);
                 }
 
-                if (currencyId == 1) // for usd
+                if (currencyId == (int)currencyType.USD) // for usd
                 {
                     maxZTSC = 10.80;
+                    if (ProductId == 3 || ProductId == 11) // Commercial Commuter Omnibus and Commercial Vehicle
+                    {           
+                        maxZTSC = 22.80;
+                    }
                 }
-
-
-
 
                 switch (PaymentTermid)
                 {
@@ -692,17 +701,17 @@ namespace Insurance.Service
             if (IsEndorsment && coverType == eCoverType.Comprehensive)
                 this.Premium = CalculatPremiumAccourdingDay(premium, PaymentTermid, vehicleEndDate);
 
-            if (coverType == eCoverType.Comprehensive && currencyId==(int)currencyType.USD)
-            {
-                RiskDetailModel modelUsd = new RiskDetailModel();
-                modelUsd= GetCalculationDetailForUsd(PaymentTermid, this.Premium);
-                if(modelUsd.Premium!=null && modelUsd.Premium!=0)
-                {
-                    this.Premium = Convert.ToDecimal(modelUsd.Premium);
-                    this.StamDuty = Convert.ToDecimal(modelUsd.StampDuty);
-                    this.ZtscLevy = Convert.ToDecimal(modelUsd.ZTSCLevy);
-                }
-            }
+            //if (coverType == eCoverType.Comprehensive && currencyId==(int)currencyType.USD)
+            //{
+            //    RiskDetailModel modelUsd = new RiskDetailModel();
+            //    modelUsd= GetCalculationDetailForUsd(PaymentTermid, this.Premium);
+            //    if(modelUsd.Premium!=null && modelUsd.Premium!=0)
+            //    {
+            //        this.Premium = Convert.ToDecimal(modelUsd.Premium);
+            //        this.StamDuty = Convert.ToDecimal(modelUsd.StampDuty);
+            //        this.ZtscLevy = Convert.ToDecimal(modelUsd.ZTSCLevy);
+            //    }
+            //}
             
             return this;
         }
@@ -713,7 +722,8 @@ namespace Insurance.Service
 
             RiskDetailModel model = new RiskDetailModel();
 
-            decimal premium = 300;
+            //decimal premium = 300;
+            decimal premium = 210;
             decimal StamDuty = 18;
             decimal ZtscLevy = 12;
 

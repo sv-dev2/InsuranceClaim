@@ -367,7 +367,11 @@ namespace InsuranceClaim.Controllers
                             endorsementpolicy.ModifiedBy = _endorsement.ModifiedBy;
                             endorsementpolicy.ModifiedOn = _endorsement.ModifiedOn;
                             endorsementpolicy.IsActive = _endorsement.IsActive;
+                            
+
                             endorsementpolicy.PrimaryPolicyId = _endorsement.PrimaryPolicyId;
+
+                            
 
                             InsuranceContext.EndorsementPolicyDetails.Update(endorsementpolicy);
                             Session["PolicyDataView"] = endorsementpolicy;
@@ -784,6 +788,10 @@ namespace InsuranceClaim.Controllers
 
             ViewBag.TaxClass = InsuranceContext.VehicleTaxClasses.All().ToList();
 
+            ViewBag.VehicleLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+            ViewBag.RadioLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+
+
 
             var ePaymentTermData = from ePaymentTerm e in Enum.GetValues(typeof(ePaymentTerm))
                                    select new
@@ -821,6 +829,15 @@ namespace InsuranceClaim.Controllers
                 var model = service.GetModel(makers.FirstOrDefault().MakeCode);
                 ViewBag.Model = model;
             }
+
+            if (TempData["ViewModel"] != null)
+            {
+
+                viewModel = (EndorsementRiskDetailModel)TempData["ViewModel"];
+                return View(viewModel);
+            }
+
+
 
             viewModel.NoOfCarsCovered = 1;
 
@@ -895,7 +912,16 @@ namespace InsuranceClaim.Controllers
                         viewModel.BalanceAmount = data.BalanceAmount;
                         viewModel.TaxClassId = data.TaxClassId;
                         viewModel.CombinedID = data.CombinedID;
-                    
+
+
+                        viewModel.IncludeLicenseFee = data.IncludeLicenseFee;
+                        viewModel.IncludeRadioLicenseCost = data.IncludeRadioLicenseCost;
+                        viewModel.ZinaraLicensePaymentTermId = data.ZinaraLicensePaymentTermId;
+                        viewModel.RadioLicensePaymentTermId = data.RadioLicensePaymentTermId;
+                        
+
+
+
                         viewModel.Id = data.Id;
                         var ser = new VehicleService();
                         var model = ser.GetModel(data.MakeId);
@@ -1015,6 +1041,20 @@ namespace InsuranceClaim.Controllers
         }
         public ActionResult SaveEndorsementRiskDetails(EndorsementRiskDetailModel model)
         {
+
+            VehicleService _service = new VehicleService();
+            var validationMsg = _service.EndorsmentValidationMessage(model);
+
+            if (validationMsg != "")
+            {
+                model.ErrorMessage = validationMsg;
+                TempData["ViewModel"] = model;
+
+                // if (User.IsInRole("Staff"))
+                return RedirectToAction("EndorsementRiskDetails", new { id = 1 });
+            }
+
+
 
             var dbVehicle = InsuranceContext.VehicleDetails.Single(where: $"Id={model.VehicleId}");
 
@@ -2424,6 +2464,11 @@ namespace InsuranceClaim.Controllers
             ViewBag.VehicleUsage = service.GetAllVehicleUsage();
 
 
+            ViewBag.VehicleLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+            ViewBag.RadioLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+
+
+
             endorsementRisk.NumberofPersons = 0;
             endorsementRisk.AddThirdPartyAmount = 0.00m;
             endorsementRisk.RadioLicenseCost = Convert.ToDecimal(RadioLicenseCosts);
@@ -2439,6 +2484,14 @@ namespace InsuranceClaim.Controllers
                 var model = service.GetModel(makers.FirstOrDefault().MakeCode);
                 ViewBag.Model = model;
             }
+
+            if (TempData["ViewModel"] != null)
+            {
+                endorsementRisk = (EndorsementRiskDetailModel)TempData["ViewModel"];
+                return View(endorsementRisk);
+            }
+
+
 
             endorsementRisk.NoOfCarsCovered = 1;
             if (Session["EndorselistVehicles"] != null)

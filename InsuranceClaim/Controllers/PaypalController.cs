@@ -1143,7 +1143,9 @@ namespace InsuranceClaim.Controllers
 
             #region Send License PDFVerficationcode SMS
 
-            if (_pdfPath != "" && _pdfCode != "")
+            var IswebCustomer = User.IsInRole("Web Customer");
+
+            if (_pdfPath != "" && _pdfCode != "" && IswebCustomer==true)
             {
                 string RecieptbodyPdf = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Your license pdf verifation code is: " + _pdfCode + "\n" + "\nThanks.";
                 var RecieptresultPdf = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, RecieptbodyPdf);
@@ -1335,7 +1337,7 @@ namespace InsuranceClaim.Controllers
 
             #endregion
 
-            var IswebCustomer = User.IsInRole("Web Customer");
+           
 
             if (_pdfPath != "" && !IswebCustomer)
             {
@@ -1343,13 +1345,13 @@ namespace InsuranceClaim.Controllers
                 TempData["vehicleId"] = vehicle.Id;
             }
 
-            //var IsStaff = User.IsInRole("Staff");
-            //if(IsStaff && _pdfPath!="")
-            //{
-            //    return RedirectToAction("CertificateSerialNumber", "CustomerRegistration", new { VehicleId = vehicle.Id });
-            //}
+            var IsStaff = User.IsInRole("Staff");
+            if (IsStaff && _pdfPath != "")
+            {
+                return RedirectToAction("CertificateSerialNumber", "CustomerRegistration", new { VehicleId = vehicle.Id });
+            }
 
-            
+
 
 
             return RedirectToAction("ThankYou");

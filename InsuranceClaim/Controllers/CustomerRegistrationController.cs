@@ -93,7 +93,7 @@ namespace InsuranceClaim.Controllers
 
                 ViewBag.CurrentUserRole = role;
 
-                if ((role != null && (role != "Staff" && role != "Renewals")))
+                if ((role != null && (role != "Staff" && role != "Renewals" && role != "Team Leaders")))
                 {
                     if (customerData != null)
                     {
@@ -227,7 +227,7 @@ namespace InsuranceClaim.Controllers
                     //    return Json(new { IsError = false, error = "Email " + model.EmailAddress + " already exists." }, JsonRequestBehavior.AllowGet);
                     //}
 
-                    if (User.IsInRole("Staff") || User.IsInRole("Renewals"))
+                    if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Team Leaders"))
                     {
                         //if (buttonUpdate != null)
                         //{
@@ -343,7 +343,7 @@ namespace InsuranceClaim.Controllers
 
             if (User != null && User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("Staff"))
+                if (User.IsInRole("Staff") || User.IsInRole("Team Leaders"))
                 {
                     return RedirectToAction("RiskDetail", "ContactCentre");
                 }
@@ -397,19 +397,13 @@ namespace InsuranceClaim.Controllers
 
             ViewBag.Products = InsuranceContext.Products.All(where: "Active = 'True' or Active is null").ToList();
 
-            ViewBag.TaxClass = InsuranceContext.VehicleTaxClasses.All().ToList();
-
-            //var ePaymentTermData = from ePaymentTerm e in Enum.GetValues(typeof(ePaymentTerm))
-            //                       select new
-            //                       {
-            //                           ID = (int)e,
-            //                           Name = e.ToString()
-            //                       };
-
-            //ViewBag.ePaymentTermData = new SelectList(ePaymentTermData, "ID", "Name");
-
-            // ViewBag.PaymentTermId = InsuranceContext.PaymentTerms.All().ToList();
+            ViewBag.TaxClass = InsuranceContext.VehicleTaxClasses.All().ToList();        
             ViewBag.PaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is null").ToList();
+
+            ViewBag.VehicleLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+            ViewBag.RadioLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
+
+
 
             int RadioLicenseCosts = 0;
 
@@ -465,6 +459,13 @@ namespace InsuranceClaim.Controllers
             // viewModel.CurrencyId = 7; // default "RTGS$" selected
 
             viewModel.CurrencyId = 6; // default "RTGS$" selected
+
+
+            if (TempData["ViewModel"] != null)
+            {
+                viewModel = (RiskDetailModel)TempData["ViewModel"];
+                return View(viewModel);
+            }
 
 
 
@@ -590,6 +591,15 @@ namespace InsuranceClaim.Controllers
                         viewModel.BusinessSourceDetailId = data.BusinessSourceDetailId;
                         viewModel.CurrencyId = data.CurrencyId;
 
+
+                        viewModel.IncludeLicenseFee = data.IncludeLicenseFee;
+                        viewModel.IncludeRadioLicenseCost = data.IncludeRadioLicenseCost;
+                        viewModel.ZinaraLicensePaymentTermId = data.ZinaraLicensePaymentTermId;
+                        viewModel.RadioLicensePaymentTermId = data.RadioLicensePaymentTermId;
+                        viewModel.TaxClassId = data.TaxClassId;
+
+
+
                         var ser = new VehicleService();
                         var model = ser.GetModel(data.MakeId);
                         ViewBag.Model = model;
@@ -683,6 +693,31 @@ namespace InsuranceClaim.Controllers
                 }
                  
             }
+
+            // for license payment term
+
+            VehicleService _service = new VehicleService();
+            var validationMsg= _service.ValidationMessage(model);
+
+            if(validationMsg!="")
+            {
+                model.ErrorMessage = validationMsg;
+                TempData["ViewModel"] = model;
+
+                if (User.IsInRole("Staff"))
+                {
+                    return RedirectToAction("RiskDetail", "ContactCentre", new { id = 1 });
+                    //  return Json("/ContactCentre/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return RedirectToAction("RiskDetail", new { id = 1 });
+                    //return Json("/CustomerRegistration/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                }
+            }
+
+
+
 
             if (model.NumberofPersons == null)
             {
@@ -907,6 +942,9 @@ namespace InsuranceClaim.Controllers
             }
         }
 
+      
+
+
         public bool CheckIsVrnAlreadyExist(string vrn)
         {
             bool result = false;
@@ -920,7 +958,7 @@ namespace InsuranceClaim.Controllers
             if (list.Count > 0 && vrn != "TBA")
                 result = true;
 
-            //result = false; // to do
+            result = false; // to do
             return result;
         }
 
@@ -1512,7 +1550,7 @@ namespace InsuranceClaim.Controllers
 
                         //if user staff
 
-                        if (role == "Staff" || role == "Renewals" || role == "Administrator")
+                        if (role == "Staff" || role == "Renewals" || role == "Team Leaders" || role == "Administrator")
                         {
                             // check if email id exist in user table
 
@@ -1693,9 +1731,14 @@ namespace InsuranceClaim.Controllers
                                     {
                                         if (!User.IsInRole("Renewals"))
                                         {
-                                            InsuranceContext.Customers.Update(customerdata); // 13_june_2019
+                                            if (!User.IsInRole("Team Leaders"))
+                                            {
+                                                InsuranceContext.Customers.Update(customerdata); // 13_june_2019
+                                            }                                            
                                         }
                                     }
+
+
 
                                 }
                             }
@@ -3250,7 +3293,7 @@ namespace InsuranceClaim.Controllers
         }
 
         [HttpPost]
-        public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, string VehicleYear, int CoverTypeId, int VehicleType, string CoverStartDate, string CoverEndDate, bool VehilceLicense, string taxClassId, bool RadioLicense)
+        public JsonResult getPolicyDetailsFromICEcash(string regNo, string PaymentTerm, string SumInsured, string make, string model, string VehicleYear, int CoverTypeId, int VehicleType, string CoverStartDate, string CoverEndDate, bool VehilceLicense, string taxClassId, bool RadioLicense, string licensePaymentTerm, string radioPaymentTerm)
         {
             checkVRNwithICEcashResponse response = new checkVRNwithICEcashResponse();
             JsonResult json = new JsonResult();
@@ -3320,9 +3363,9 @@ namespace InsuranceClaim.Controllers
 
 
                     if (VehilceLicense && RadioLicense)
-                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
+                        quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense, licensePaymentTerm, radioPaymentTerm);
                     else if(VehilceLicense)
-                        quoteresponse = ICEcashService.TPILICQuoteZinaraOnly(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
+                        quoteresponse = ICEcashService.TPILICQuoteZinaraOnly(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense, licensePaymentTerm);
                     else
                         quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
 
@@ -3337,10 +3380,14 @@ namespace InsuranceClaim.Controllers
                         patnerToken = tokenObject.Response.PartnerToken;
                         //   tokenObject = (ICEcashTokenResponse)Session["ICEcashToken"];
                         //tokenObject = service.CheckSessionExpired();
-                        if (VehilceLicense)
-                            quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense);
+                        if (VehilceLicense && RadioLicense)
+                            quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense, licensePaymentTerm, radioPaymentTerm);
+                        else if (VehilceLicense)
+                            quoteresponse = ICEcashService.TPILICQuoteZinaraOnly(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense, licensePaymentTerm);
                         else
-                            quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, VehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+                            quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
+
+
                     }
 
                     response.result = quoteresponse.Response.Result;
@@ -3357,6 +3404,29 @@ namespace InsuranceClaim.Controllers
                         {
                             Session["InsuranceId"] = quoteresponse.Response.Quotes[0].InsuranceID;
                         }
+
+                        if (quoteresponse.Response.Quotes[0] != null && quoteresponse.Response.Quotes[0].Licence!=null)
+                        {
+                            decimal penaltiesAmt = quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt==null ? 0: Convert.ToDecimal( quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt);
+
+                            decimal administrationAmt = quoteresponse.Response.Quotes[0].Licence.AdministrationAmt == null ? 0 : Convert.ToDecimal(quoteresponse.Response.Quotes[0].Licence.AdministrationAmt);
+
+                            if (penaltiesAmt>0 && administrationAmt==0)
+                            {
+                                // default administration amount
+                                decimal administratationAmt = 188;
+                                quoteresponse.Response.Quotes[0].Licence.AdministrationAmt = administratationAmt.ToString();
+                                decimal ArrearsAmt = quoteresponse.Response.Quotes[0].Licence.ArrearsAmt == null ? 0 : Convert.ToDecimal(quoteresponse.Response.Quotes[0].Licence.ArrearsAmt);
+                                decimal transactionAmt = quoteresponse.Response.Quotes[0].Licence.TransactionAmt == null ? 0 : Convert.ToDecimal(quoteresponse.Response.Quotes[0].Licence.TransactionAmt);
+
+                                decimal totalLicAmount = ArrearsAmt + transactionAmt + administratationAmt + penaltiesAmt;
+                                quoteresponse.Response.Quotes[0].Licence.TotalLicAmt = totalLicAmount.ToString();
+
+                            }
+
+                        }
+
+
                     }
                 }
 

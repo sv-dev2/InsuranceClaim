@@ -129,10 +129,24 @@ namespace InsuranceClaim.Models
 
         public bool IncludeLicenseFee { get; set; }
 
+        public int? ZinaraLicensePaymentTermId { get; set; }
+        public int? RadioLicensePaymentTermId { get; set; }
+
         public string CombinedID { get; set; }
 
         [Display(Name="Serial Number")]
         public string CertSerialNo { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+
+        public string ArrearsAmt { get; set; }
+        public decimal PenaltiesAmt { get; set; }
+
+        public decimal TransactionAmt { get; set; }
+
+        public decimal AdministrationAmt { get; set; }
+
 
     }
 }

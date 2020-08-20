@@ -300,6 +300,8 @@
                                 <td> @item.Zinara_License_Fee </td>
 
 
+                                
+
                                 @if (DateTime.Now > item.PolicyRenewalDate)
                                 {
                                     <td>Lapsed</td>
@@ -313,7 +315,13 @@
                                     <td>In Force</td>
                                 }
 
-                                @if (item.RenewPolicyNumber == null)
+
+                                @if (item.PolicyRenewalDate != null && item.PolicyRenewalDate == DateTime.MinValue)
+                                {
+                                    <td>Endorsment</td>
+                                }
+
+                                else if (item.RenewPolicyNumber == null)
                                 {
                                     <td>New Business</td>
                                 }

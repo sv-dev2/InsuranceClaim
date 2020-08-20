@@ -13,7 +13,7 @@
     </div>
 </div>
 <div class="body-content-section">
-    
+
 
     <div class="form-section-top">
         <div class="container">
@@ -22,8 +22,8 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                     <div class="Process-step-section process-block">
-                       
-                         <div class="col-xs-2 bs-wizard-step complete">
+
+                        <div class="col-xs-2 bs-wizard-step complete">
                             <div class="progress"><div class="progress-bar"></div></div>
                             <a href="#" class="bs-wizard-dot"></a>
                             <div class="text-center bs-wizard-stepnum">Client Details</div>
@@ -53,7 +53,7 @@
                         </div>
 
                     </div>
-                 </div>
+                </div>
 
                 <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
 
@@ -79,6 +79,9 @@
                             @Html.HiddenFor(m => m.AnnualRiskPremium)
                             @Html.HiddenFor(m => m.QuaterlyRiskPremium)
                             @Html.HiddenFor(m => m.TermlyRiskPremium)
+
+                            @Html.HiddenFor(m => m.ErrorMessage)
+
                             @Html.Hidden("isVehicleRegisteredonICEcash")
                             @Html.Hidden("basicPremiumICEcash")
                             @Html.Hidden("stampDutyICEcash")
@@ -180,6 +183,7 @@
                                             </div>
                                         </div>
 
+                                        <hr class="higlighter" />
 
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
@@ -197,6 +201,29 @@
                                             </div>
                                         </div>
 
+                                        <div class="row">
+
+                                            <div class="col-sm-6 col-md-6 form-group-select">
+                                                <div class="form-group">
+                                                    @Html.Label("Vehicle Licence Payment Term", new { @class = "gender-label" })
+                                                    @*@Html.DropDownListFor(x => x.PaymentTermId, ViewBag.ePaymentTermData as SelectList, "Select Payment Term", new { @class = "form-control" })*@
+                                                    @Html.DropDownListFor(x => x.ZinaraLicensePaymentTermId, new SelectList(ViewBag.VehicleLicensePaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(x => x.ZinaraLicensePaymentTermId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 form-group-select">
+                                                <div class="form-group">
+                                                    @Html.Label("Radio License Payment Term", new { @class = "gender-label" })
+                                                    @*@Html.DropDownListFor(x => x.PaymentTermId, ViewBag.ePaymentTermData as SelectList, "Select Payment Term", new { @class = "form-control" })*@
+                                                    @Html.DropDownListFor(x => x.RadioLicensePaymentTermId, new SelectList(ViewBag.RadioLicensePaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(x => x.RadioLicensePaymentTermId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <hr class="higlighter" />
 
                                         <div class="row">
                                             <div class="col-sm-12 col-md-12 form-group-select">
@@ -354,10 +381,10 @@
                                                     @Html.DropDownListFor(x => x.ExcessType, ViewBag.eExcessTypeData as SelectList, new { @class = "form-control" })
 
                                                     @*@Html.Label("Excess Type", new { @class = "gender-label" })
-                                            <select name="ExcessType" class="form-control" id="ExcessType">
-                                                <option value="1">Percentage</option>
-                                                <option value="2">Fixed Amount</option>
-                                            </select>*@
+                                                        <select name="ExcessType" class="form-control" id="ExcessType">
+                                                            <option value="1">Percentage</option>
+                                                            <option value="2">Fixed Amount</option>
+                                                        </select>*@
                                                 </div>
                                             </div>
 
@@ -444,13 +471,13 @@
 
 
                                         @*<div class="row">
-                                    <div class="col-sm-6 col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
-                                            @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
-                                        </div>
-                                    </div>
-                                </div>*@
+                                                <div class="col-sm-6 col-md-6 form-group-text">
+                                                    <div class="form-group">
+                                                        @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
+                                                        @Html.TextBoxFor(x => x.VehicleLicenceFee, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Licence Fee" })
+                                                    </div>
+                                                </div>
+                                            </div>*@
                                         <div>
                                             <hr class="higlighter" />
                                             <div class="row">
@@ -496,7 +523,38 @@
 
 
                                             <div id="thridparty" class="row">
+                                                <div class="col-sm-3 col-md-3 form-group-text">
+                                                    <div class="form-group">
+                                                        @Html.Label("Arrears Fee", new { @class = "gender-label" })
+                                                        @Html.TextBoxFor(x => x.ArrearsAmt, new { @class = "form-control inputDisabled", @autocomplete = "off", @value = "0" })
+                                                    </div>
+                                                </div>
 
+                                                <div class="col-sm-3 col-md-3 form-group-text">
+                                                    <div class="form-group">
+                                                        @Html.Label("Penalties", new { @class = "gender-label" })
+                                                        @Html.TextBoxFor(x => x.PenaltiesAmt, new { @class = "form-control inputDisabled", @autocomplete = "off" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-3 col-md-3 form-group-text">
+                                                    <div class="form-group">
+                                                        @Html.Label("Transaction fee", new { @class = "gender-label" })
+                                                        @Html.TextBoxFor(x => x.TransactionAmt, new { @class = "form-control ", @autocomplete = "off" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-3 col-md-3 form-group-text">
+                                                    <div class="form-group">
+                                                        @Html.Label("Administration fee", new { @class = "gender-label" })
+                                                        @Html.TextBoxFor(x => x.AdministrationAmt, new { @class = "form-control ", @autocomplete = "off" })
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div id="thridparty" class="row">
                                                 <div class="col-sm-6 col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Vehicle Licence Fee", new { @class = "gender-label" })
@@ -507,13 +565,12 @@
                                                 <div class="col-sm-6 col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Radio License Cost", new { @class = "gender-label" })
-                                                        @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off", @maxlength = "5" })
+                                                        @Html.TextBoxFor(m => m.RadioLicenseCost, new { @class = "form-control ", @autocomplete = "off" })
                                                         @Html.ValidationMessageFor(m => m.RadioLicenseCost, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
-
-
                                             </div>
+
 
 
                                         </div>
@@ -531,7 +588,7 @@
                                             <div class="form-group">
                                                 @Html.Label("Certificate Serial No", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(m => m.CertSerialNo, new { @class = "form-control ", @autocomplete = "off", @placeholder = "Certificate Serial No" })
-                                               
+
                                             </div>
                                         </div>
 
@@ -558,32 +615,32 @@
                                     </div>
                                     @*<hr />*@
                                     @*@if (true)
-                            {
-                                /**/
-                            }
-                            else
-                            {
-                                <hr class="higlighter" />
-                            }*@
+                                        {
+                                            /**/
+                                        }
+                                        else
+                                        {
+                                            <hr class="higlighter" />
+                                        }*@
                                     @*<div class="row">
-                                <div class="next-btn">
-                                    <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            @Html.Label("Add More Vehicles ?", new { @class = "gender-label" })
+                                            <div class="next-btn">
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group">
+                                                        @Html.Label("Add More Vehicles ?", new { @class = "gender-label" })
 
 
 
-                                            @Html.CheckBoxFor(m => m.chkAddVehicles, new { @class = "", @style = "width: 40px;height: 36px;" })
+                                                        @Html.CheckBoxFor(m => m.chkAddVehicles, new { @class = "", @style = "width: 40px;height: 36px;" })
 
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6">
-                                        <div class="form-group text-right">
-                                            <button type="submit" id="btnAddVehicle" name="btnAddVehicle" value="addvehical" class="btn btnDisabled @(Model.isUpdate ? "btnDisabled" : "")" style="width: 270px;    margin-top: 8px;">Submit & Add More Vehicle</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>*@
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="form-group text-right">
+                                                        <button type="submit" id="btnAddVehicle" name="btnAddVehicle" value="addvehical" class="btn btnDisabled @(Model.isUpdate ? "btnDisabled" : "")" style="width: 270px;    margin-top: 8px;">Submit & Add More Vehicle</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>*@
 
                                     @*<hr />*@
                                     <div class="row">
@@ -600,20 +657,20 @@
                                                 </div>
 
                                                 @*<div class=@(Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] ? "col-sm-4 col-md-4" : "col-sm-6 col-md-6")>
-                                            <div class="text-right">
-                                                <button type="submit" id="btnGenerateQuote" class="btn @(Model.isUpdate ? "btnDisabled" : "")" style="padding:20px 10px;width: auto;">Submit & Generate Quote</button>
-                                            </div>
-                                        </div>
+                                                        <div class="text-right">
+                                                            <button type="submit" id="btnGenerateQuote" class="btn @(Model.isUpdate ? "btnDisabled" : "")" style="padding:20px 10px;width: auto;">Submit & Generate Quote</button>
+                                                        </div>
+                                                    </div>
 
-                                        @if (Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] && Session["VehicleDetails"] != null && ((List<InsuranceClaim.Models.RiskDetailModel>)Session["VehicleDetails"]).Count > 0)
-                                        {
+                                                    @if (Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] && Session["VehicleDetails"] != null && ((List<InsuranceClaim.Models.RiskDetailModel>)Session["VehicleDetails"]).Count > 0)
+                                                    {
 
-                                            <div class="col-sm-4 col-md-4">
-                                                <div class="text-right">
-                                                    <button type="button" id="btnSkip" onclick="redirectToSummary();" class="btn" style="padding:20px 10px;width: 170px;">Skip</button>
-                                                </div>
-                                            </div>
-                                        }*@
+                                                        <div class="col-sm-4 col-md-4">
+                                                            <div class="text-right">
+                                                                <button type="button" id="btnSkip" onclick="redirectToSummary();" class="btn" style="padding:20px 10px;width: 170px;">Skip</button>
+                                                            </div>
+                                                        </div>
+                                                    }*@
 
                                             </div>
                                         </div>
@@ -714,8 +771,8 @@
                     }
 
                 </div>
-             
-                </div>          
+
+            </div>
         </div>
     </div>
 </div>
@@ -817,6 +874,62 @@
     });
 
 
+    function ClearLicenseIfNotChek()
+    {
+        if (!$("#IncludeLicenseFee").is(":checked"))
+        {
+            $("#LicenseId").val("");
+            $("#VehicleLicenceFee").val("");
+            //  $("#VehicleLicenceFee").addClass("inputDisabled");
+            $("#LicExpiryDate").val("");
+        }
+        else
+        {
+            //  $("#VehicleLicenceFee").removeClass("inputDisabled");
+
+            var licensePaymentTermId= $("#ZinaraLicensePaymentTermId").val();
+            if(licensePaymentTermId!="")
+            {
+                $(".loading-area").show();
+                setTimeout(function(){
+                    $(".loading-area").hide();
+                    CalculatePremiumByCoverType();
+                }, 1000);
+            }
+
+
+
+        }
+    }
+
+
+    function GetRadioLicenseCost(){
+        ValidateRadioLicense();
+
+        if(!$("#IncludeRadioLicenseCost").is(':checked'))
+        {
+            $("#RadioLicenseCost").val("");
+            // $("#RadioLicenseCost").addClass("inputDisabled");
+        }
+        else
+        {
+            //$("#RadioLicenseCost").removeClass("inputDisabled");
+
+
+            debugger;
+
+            var RadioLicensePaymentTermId = $("#RadioLicensePaymentTermId").val();
+
+            if(RadioLicensePaymentTermId!="")
+            {
+                $(".loading-area").show();
+                setTimeout(function(){
+                    $(".loading-area").hide();
+                    CalculatePremiumByCoverType();
+                }, 1000);
+            }
+        }
+    }
 
 
 </script>
@@ -973,6 +1086,11 @@
                 break;
 
         }
+
+
+
+
+
     }
 
     $(document).ready(function () {
@@ -992,6 +1110,13 @@
             $(this).data("DateTimePicker").hide();
             updateEndDate();
         });
+
+        if('@Model.ErrorMessage' !="")
+        {
+            toastr.error('@Model.ErrorMessage');
+            $("fieldset").removeAttr("disabled");
+        }
+
 
         updateEndDate();
 
@@ -1041,6 +1166,62 @@
 
 
 
+        if (parseInt($("#NoOfCarsCovered").val()) > 0) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("CheckDuplicateRegisterationNumberExist", "CustomerRegistration")",
+                data: { regNo: $("#RegistrationNo").val() },
+                success: function (data) {
+
+                    debugger;
+                    if (data) {
+                        toastr.warning("Vehicle with same Registeration Number already exist.");
+                        $("#RegistrationNo").focus();
+                    }
+                    else
+                    {
+                        if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "") {
+                            // checkVRNwithICEcash();
+
+                            $(".loading-area").show();
+                            setTimeout(function(){
+                                $(".loading-area").hide();
+                                CalculatePremiumByCoverType();
+                            }, 1000);
+
+                        }
+                        else{
+                            toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
+                        }
+
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (textStatus == 'timeout') {
+                        //doe iets
+                    } else if (textStatus == 'error') {
+                        //doe iets
+                    }
+                } //EINDE error
+            }); //EINDE ajax
+        }
+        else
+        {
+            if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "") {
+                // checkVRNwithICEcash();
+                $(".loading-area").show();
+                setTimeout(function(){
+                    $(".loading-area").hide();
+                    CalculatePremiumByCoverType();
+                }, 1000);
+
+            }
+            else{
+                toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
+            }
+        }
+
+
         $("#PaymentTermId").change(function () {
             var selectedTerm = $("#PaymentTermId option:selected").val();
             switch (parseInt(selectedTerm)) {
@@ -1080,25 +1261,11 @@
                     break;
             }
 
-            if ($("fieldset").attr("disabled") != "disabled") {
-                //if ($("#isVehicleRegisteredonICEcash").val() == 1) {
-                //    generateQuotewithICEcash();
-                //}
-                //else{
-                //    QuoteCalculation();
-                //}
-                generateQuotewithICEcash();
-            }
-            else
-            {
-                if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "") {
-                    checkVRNwithICEcash();
-                }
-                else{
-                    toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
-                }
-            }
-            GetRadioLicenseCost();
+            $(".loading-area").show();
+            setTimeout(function(){
+                $(".loading-area").hide();
+                CalculatePremiumByCoverType();
+            }, 1000);
 
         });
 
@@ -1155,7 +1322,78 @@
         });
         // getsessionvalue();
 
+        if('@Model.ErrorMessage' !="")
+        {
+            toastr.error('@Model.ErrorMessage');
+            $("fieldset").removeAttr("disabled");
+        }
+
+
+
+        $("#ZinaraLicensePaymentTermId").change(function() {
+            var IsVehicleLicense = $("#IncludeLicenseFee").is(":checked");
+            var vehicleLicensePaymentTerm = $("#ZinaraLicensePaymentTermId").val();
+
+
+            if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="" && ($("#TaxClassId").val()!="" && $("#TaxClassId").val()!=null) && IsVehicleLicense==true && vehicleLicensePaymentTerm!="")
+            {
+                $(".loading-area").show();
+                setTimeout(function(){
+                    $(".loading-area").hide();
+                    CalculatePremiumByCoverType();
+                }, 1000);
+            }
+        });
+
+        $("#RadioLicensePaymentTermId").change(function() {
+
+            var IsRadioLicense = $("#IncludeRadioLicenseCost").is(":checked");
+            var radioLicensePaymentTerm = $("#RadioLicensePaymentTermId").val();
+
+            if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="" && ($("#TaxClassId").val()!="" && $("#TaxClassId").val()!=null) && IsRadioLicense==true && radioLicensePaymentTerm!="")
+            {
+                $(".loading-area").show();
+                setTimeout(function(){
+                    $(".loading-area").hide();
+                    CalculatePremiumByCoverType();
+                }, 1000);
+            }
+
+        });
+
+        $("#TaxClassId").change(function() {
+
+            if($("#TaxClassId").val()!="")
+            {
+                $(".loading-area").show();
+
+                setTimeout(function(){
+                    $(".loading-area").hide();
+                    CalculatePremiumByCoverType();
+                }, 1000);
+
+            }
+        });
+
+
     });
+
+
+    function CalculatePremiumByCoverType()
+    {
+
+        if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="")
+        {
+            var coverytype = $('#CoverTypeId option:selected').val();
+            //if (coverytype != 4) {
+            generateQuotewithICEcash();
+
+            //}
+            //else {
+            //    QuoteCalculation();
+            //}
+        }
+    }
 
 
     ////////////////////
@@ -1171,18 +1409,32 @@
 
         $("#ProductId").change(function () {
             GetVehicleUsage();
+            GetVehicleTaxClass($("#ProductId").val());
 
-            if ($("fieldset").attr("disabled") == "disabled") {
-                if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "") {
-                    checkVRNwithICEcash();
-                }
-                else{
-                    toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
-                }
-            }
 
-            GetRadioLicenseCost();
+            $(".loading-area").show();
+
+            setTimeout(function(){
+                $(".loading-area").hide();
+                CalculatePremiumByCoverType();
+            }, 1000);
+
+            //if ($("fieldset").attr("disabled") == "disabled") {
+            //    if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "") {
+            //        checkVRNwithICEcash();
+            //    }
+            //    else{
+            //        toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
+            //    }
+            //}
+
+            //GetRadioLicenseCost();
+
+
         });
+
+
+
 
         $("#MakeId").change(function () {
             GetVehicleModels("");
@@ -1192,6 +1444,9 @@
 
 
         $("#RegistrationNo").blur(function () {
+
+            debugger;
+
             if (parseInt($("#NoOfCarsCovered").val()) > 1) {
                 $.ajax({
                     type: "POST",
@@ -1205,12 +1460,11 @@
                         }
                         else
                         {
-                            if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "") {
-                                checkVRNwithICEcash();
-                            }
-                            else{
-                                toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
-                            }
+                            $(".loading-area").show();
+                            setTimeout(function(){
+                                $(".loading-area").hide();
+                                CalculatePremiumByCoverType();
+                            }, 1000);
 
                         }
                     },
@@ -1225,12 +1479,11 @@
             }
             else
             {
-                if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "") {
-                    checkVRNwithICEcash();
-                }
-                else{
-                    toastr.warning("Please Select Valid Payment Term And Vehicle Type And Vehicle Registeration Number.");
-                }
+                $(".loading-area").show();
+                setTimeout(function(){
+                    $(".loading-area").hide();
+                    CalculatePremiumByCoverType();
+                }, 1000);
             }
         });
 
@@ -1310,16 +1563,16 @@
             debugger;
 
 
-            if($("#IncludeRadioLicenseCost").prop("checked") == true){
-                GetRadioLicenseCost();
-            }
-            else if($("#IncludeRadioLicenseCost").prop("checked") == false){
-                $("#RadioLicenseCost").val(0)
-            }
+            //if($("#IncludeRadioLicenseCost").prop("checked") == true){
+            //    GetRadioLicenseCost();
+            //}
+            //else if($("#IncludeRadioLicenseCost").prop("checked") == false){
+            //    $("#RadioLicenseCost").val(0)
+            //}
+
+            //QuoteCalculation();
 
 
-
-            QuoteCalculation();
         });
 
         //called when key is pressed in textbox
@@ -1332,6 +1585,32 @@
             }
         });
     });
+
+
+
+    function GetVehicleTaxClass(productId)
+    {
+        $.ajax({
+            url: "@Url.Action("GetVehicleTaxClass", "CustomerRegistration")",
+            type: "POST",
+            data: { vehicleTypeId: productId},
+            dataType: "json",
+            success: function (result) {
+                debugger;
+                var $dropdown = $("#TaxClassId");
+                $dropdown.empty();
+                $dropdown.append($("<option />").val("").text("Select Tax Class"));
+                $.each(result, function () {
+                    $dropdown.append($("<option />").val(this.TaxClassId).text(this.Description));
+                });
+                var taxClassId = '@Model.TaxClassId';
+                if (taxClassId != "") {
+                    $('#TaxClassId').val(taxClassId);
+                }
+            }
+        });
+    }
+
     function getProductIdbyVehicleUsageId(vUsage){
         $.ajax({
             type: "POST",
@@ -1436,6 +1715,8 @@
     }
 
     function generateQuotewithICEcash() {
+
+        debugger;
         var flag = true;
         if ($("#CoverTypeId").val() == "4") {
             if($("#SumInsured").val() == "" || $("#SumInsured").val() == "0.00")
@@ -1462,15 +1743,31 @@
         var isRadioLicense = $("#IncludeRadioLicenseCost").is(':checked');
         var taxClass =  $("#TaxClassId").val();
 
-       
-        debugger;
+        var licensePaymentTerm = $("#ZinaraLicensePaymentTermId").val();
+        var  radioPaymentTerm = $("#RadioLicensePaymentTermId").val();
 
 
+        if(isLicense==true && licensePaymentTerm=="")
+        {
+            flag = false;
+            toastr.warning("Please Select A Payment Term of Vehicle license !!");
+        }
+
+
+        if(isRadioLicense==true && radioPaymentTerm=="")
+        {
+            flag = false;
+            toastr.warning("Please Select A Payment Term of Radio license !!");
+        }
+
+
+        if(flag)
+        {
             $(".loading-area").show();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("getPolicyDetailsFromICEcash", "CustomerRegistration")",
-                data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#ProductId").val(), CoverStartDate: $("#CoverStartDate").val() , CoverEndDate : $("#CoverEndDate").val(), VehilceLicense: isLicense, taxClassId: taxClass, RadioLicense: isRadioLicense },
+                data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#ProductId").val(), CoverStartDate: $("#CoverStartDate").val() , CoverEndDate : $("#CoverEndDate").val(), VehilceLicense: isLicense, taxClassId: taxClass, RadioLicense: isRadioLicense, licensePaymentTerm:licensePaymentTerm, radioPaymentTerm:radioPaymentTerm },
                 //data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#VehicleUsage").val() },
                 success: function (data) {
 
@@ -1500,16 +1797,59 @@
 
                         $("#InsuranceId").val(data.Data.Response.Quotes[0].InsuranceID);
 
+
                         $("#basicPremiumICEcash").val(parseFloat(CoverAmount).toFixed(2));
 
                         $("#stampDutyICEcash").val(parseFloat(StampDuty).toFixed(2))
                         $("#LevyICEcash").val(parseFloat(GovernmentLevy).toFixed(2))
+
+
+                        if(data.Data.Response.Quotes[0]!=null && data.Data.Response.Quotes[0].Licence!=null)
+                        {
+
+                            $("#LicenseId").val(data.Data.Response.Quotes[0].LicenceID);
+
+                            var arrAmount = parseFloat(data.Data.Response.Quotes[0].Licence.TotalLicAmt).toFixed(2);
+                            var penaltiesAmount = parseFloat(data.Data.Response.Quotes[0].Licence.PenaltiesAmt).toFixed(2);
+
+                            var transactionAmt = parseFloat(data.Data.Response.Quotes[0].Licence.TransactionAmt).toFixed(2);
+                            var administrationAmt = parseFloat(data.Data.Response.Quotes[0].Licence.AdministrationAmt).toFixed(2);
+
+                            //if(penaltiesAmount>0)
+                            //    toastr.error("Please pay first Penalties amount.");
+
+
+                            if(isRadioLicense)
+                                $("#RadioLicenseCost").val(parseFloat(data.Data.Response.Quotes[0].Licence.TotalRadioTVAmt).toFixed(2));
+
+                            $("#ArrearsAmt").val(arrAmount);
+                            $("#PenaltiesAmt").val(penaltiesAmount);
+
+                            $("#TransactionAmt").val(transactionAmt);
+                            $("#AdministrationAmt").val(administrationAmt);
+
+
+                            $("#VehicleLicenceFee").val(parseFloat(data.Data.Response.Quotes[0].Licence.TotalLicAmt).toFixed(2) );
+                           // $("#LicExpiryDate").val(data.Data.Response.Quotes[0].Licence.LicExpiryDate);
+                            $("#CombinedID").val(data.Data.Response.Quotes[0].CombinedID);
+                        }
+
+
+
+
+
                         QuoteCalculation()
                         $(".loading-area").hide();
                     }
+                    else
+                    {
+                        QuoteCalculation();
+                        $(".loading-area").hide();
+                    }
+
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                   
+
                     if (textStatus == 'timeout') {
                         $(".loading-area").hide();
                     } else if (textStatus == 'error') {
@@ -1517,7 +1857,9 @@
                     }
                 } //EINDE error
             }); //EINDE ajax
-       
+
+        }
+
         $(".loading-area").hide();
     }
 

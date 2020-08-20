@@ -140,6 +140,124 @@ namespace Insurance.Service
         }
 
 
+        public string ValidationMessage(RiskDetailModel model)
+        {
+            string msg = "";
+
+            if (model.IncludeLicenseFee == true && (model.ZinaraLicensePaymentTermId == 0 || model.ZinaraLicensePaymentTermId==null))
+            {
+                msg = "Please select payment term of vehicle license.";
+            }
+
+            if (model.IncludeRadioLicenseCost == true && (model.RadioLicensePaymentTermId == 0 || model.RadioLicensePaymentTermId==null))
+            {
+                msg = "Please select payment term of radio license.";
+            }
+
+
+
+
+            if (model.IncludeLicenseFee)
+            {
+                if (model.ZinaraLicensePaymentTermId > 0)
+                {
+                    if (!IsPaymentTermValidForInsuranceLicense(model.PaymentTermId, Convert.ToInt32(model.ZinaraLicensePaymentTermId)))
+                    {
+                        msg = "Licence payment term should be equal or less than Insurance payment term.";
+                    }
+                }
+            }
+
+
+
+
+            if (model.IncludeRadioLicenseCost)
+            {
+                if (model.RadioLicensePaymentTermId > 0)
+                {
+                    if (!IsPaymentTermValidForInsuranceLicense(model.PaymentTermId, Convert.ToInt32(model.RadioLicensePaymentTermId)))
+                    {
+                        msg = "Licence payment term should be equal or less than Insurance payment term.";
+
+                    }
+                }
+            }
+
+            return msg;
+
+        }
+
+
+        public string EndorsmentValidationMessage(EndorsementRiskDetailModel model)
+        {
+            string msg = "";
+
+            if (model.IncludeLicenseFee == true && (model.ZinaraLicensePaymentTermId == 0 || model.ZinaraLicensePaymentTermId == null))
+            {
+                msg = "Please select payment term of vehicle license.";
+            }
+
+            if (model.IncludeRadioLicenseCost == true && (model.RadioLicensePaymentTermId == 0 || model.RadioLicensePaymentTermId == null))
+            {
+                msg = "Please select payment term of radio license.";
+            }
+
+
+
+
+            if (model.IncludeLicenseFee)
+            {
+                if (model.ZinaraLicensePaymentTermId > 0)
+                {
+                    if (!IsPaymentTermValidForInsuranceLicense(model.PaymentTermId, Convert.ToInt32(model.ZinaraLicensePaymentTermId)))
+                    {
+                        msg = "Licence payment term should be equal or less than Insurance payment term.";
+                    }
+                }
+            }
+
+
+
+
+            if (model.IncludeRadioLicenseCost)
+            {
+                if (model.RadioLicensePaymentTermId > 0)
+                {
+                    if (!IsPaymentTermValidForInsuranceLicense(model.PaymentTermId, Convert.ToInt32(model.RadioLicensePaymentTermId)))
+                    {
+                        msg = "Licence payment term should be equal or less than Insurance payment term.";
+
+                    }
+                }
+            }
+
+            return msg;
+
+        }
+
+
+
+
+        public bool IsPaymentTermValidForInsuranceLicense(int insurancePaymentTerm, int licesnePaymentTerm)
+        {
+            bool result = true;
+
+            if (insurancePaymentTerm == 1)
+                insurancePaymentTerm = 12;
+
+            if (licesnePaymentTerm == 1)
+                licesnePaymentTerm = 12;
+
+            if (insurancePaymentTerm != licesnePaymentTerm)
+            {
+                if (licesnePaymentTerm > insurancePaymentTerm)
+                {
+                    result = false;
+                }
+            }
+            return result;
+        }
+
 
     }
 }

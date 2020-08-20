@@ -36,7 +36,7 @@ namespace InsuranceClaim.Models
         public string ModelId { get; set; }
         [Required(ErrorMessage = "Please Enter Cubic Capacity")]
         public decimal? CubicCapacity { get; set; }
-       // [Required(ErrorMessage = "Please Enter Vehicle Year")]
+        [Required(ErrorMessage = "Please Enter Vehicle Year")]
         public int? VehicleYear { get; set; }
         [Required(ErrorMessage = "Please Enter Engine Number")]
         public string EngineNumber { get; set; }
@@ -115,6 +115,10 @@ namespace InsuranceClaim.Models
         public string ArrearsAmt { get; set; }
         public decimal PenaltiesAmt { get; set; }
 
+        public decimal TransactionAmt { get; set; }
+
+        public decimal AdministrationAmt { get; set; }
+
         public int? SummaryId { get; set; }
 
         public CustomerModel CustomerDetails { get; set; }
@@ -166,10 +170,10 @@ namespace InsuranceClaim.Models
 
         public bool ALMLocator { get; set; }
 
-        public int RadioLicensePaymentTermId { get; set; }
+        public int? RadioLicensePaymentTermId { get; set; }
 
       
-        public int ZinaraLicensePaymentTermId { get; set; }
+        public int? ZinaraLicensePaymentTermId { get; set; }
 
         public string LicenseDeliveryWay { get; set; }
 
