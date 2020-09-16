@@ -79,7 +79,7 @@ namespace InsuranceClaim.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-
+            
             Session.Abandon();
             Session.Clear();
             ViewBag.ReturnUrl = returnUrl;
@@ -2337,7 +2337,7 @@ namespace InsuranceClaim.Controllers
             query += " left join VehicleModel on VehicleDetail.ModelId= VehicleModel.ModelCode ";
             query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) ";
             query += " and SummaryDetail.isQuotation=0 and SummaryDetail.PaymentMethodId<>" + (int)paymentMethod.PayLater + "and  ";
-            query += "  (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + Model.FromDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + Model.EndDate + "', 101))  order by  VehicleDetail.Id desc ";
+            query += "  (  CONVERT(date, VehicleDetail.RenewalDate) >= convert(date, '" + Model.FromDate + "', 101)  and CONVERT(date, VehicleDetail.RenewalDate) <= convert(date, '" + Model.EndDate + "', 101))  order by  VehicleDetail.Id desc ";
 
 
             var result = InsuranceContext.Query(query).Select(c => new PolicyListViewModel()
@@ -3827,7 +3827,9 @@ namespace InsuranceClaim.Controllers
                 var customerDetails = InsuranceContext.Customers.Single(where: "id=" + CustomerId);
                 if (customerDetails != null && customerDetails.ALMId != null)
                 {
-                    baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
+                    // baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
+                    baseUrl = System.Configuration.ConfigurationManager.AppSettings["urlpath"];
+
                 }
 
                 string path = "/Documents/" + CustomerId + "/" + PolicyNumber + "/";
@@ -5749,10 +5751,72 @@ namespace InsuranceClaim.Controllers
                 TotalPremium = c.TotalPremium
             }).OrderByDescending(c => c.VehicleID).ToList();
 
-            model.PayLaterPolicyDetails = result;
+           // model.PayLaterPolicyDetails = result;
+
+            var newList = new List<PayLaterPolicyDetail>();
+
+            foreach(var item in  result)
+            {
+                var details = newList.FirstOrDefault(c=>c.SummaryDetailId==item.SummaryDetailId);
+                if(details==null)
+                    newList.Add(item);
+            }
+
+            model.PayLaterPolicyDetails = newList;
 
             return View(model);
         }
+
+
+        [HttpPost]
+        public ActionResult PayLaterPolicy(PayLaterPolicyModel model)
+        {
+            
+            string query = " select PolicyDetail.PolicyNumber, PolicyDetail.Id as PolicyId, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
+            query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, VehicleDetail.Id as VehicleID, ";
+            query += " VehicleModel.ModelDescription, SummaryDetail.TotalPremium, SummaryDetail.Id as SummaryDetailId, ";
+            query += " PaymentInformation.Id as PaymentInformationId,  case when ";
+            query += " PaymentMethod.Name <> 'PayLater' then 'Paid' else 'PayLater' end as PaymentStatus ";
+            query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id ";
+            query += " join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id   ";
+            query += " join SummaryVehicleDetail on VehicleDetail.Id= SummaryVehicleDetail.VehicleDetailsId  ";
+            query += " join SummaryDetail on SummaryVehicleDetail.SummaryDetailId = SummaryDetail.Id ";
+            query += " left join VehicleMake on VehicleDetail.MakeId = VehicleMake.MakeCode  left ";
+            query += " join VehicleModel on VehicleDetail.ModelId = VehicleModel.ModelCode ";
+            query += " join PaymentInformation on SummaryDetail.Id = PaymentInformation.SummaryDetailId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id  where SummaryDetail.PaymentMethodId =" + (int)paymentMethod.PayLater + "and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + model.FromDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + model.EndDate + "', 101))";
+
+            var result = InsuranceContext.Query(query).Select(c => new PayLaterPolicyDetail()
+            {
+                VehicleID = c.VehicleID,
+                PolicyId = c.PolicyId,
+                SummaryDetailId = c.SummaryDetailId,
+                PaymentInformationId = c.PaymentInformationId,
+                PolicyNumber = c.PolicyNumber,
+                CustomerName = c.CustomerName,
+                RegistrationNo = c.RegistrationNo,
+                MakeDescription = c.MakeDescription,
+                ModelDescription = c.ModelDescription,
+                TotalPremium = c.TotalPremium
+            }).OrderByDescending(c => c.VehicleID).ToList();
+
+            // model.PayLaterPolicyDetails = result;
+
+            var newList = new List<PayLaterPolicyDetail>();
+
+            foreach (var item in result)
+            {
+                var details = newList.FirstOrDefault(c => c.SummaryDetailId == item.SummaryDetailId);
+                if (details == null)
+                    newList.Add(item);
+            }
+
+            model.PayLaterPolicyDetails = newList;
+
+            return View(model);
+        }
+
+
 
 
         [HttpGet]

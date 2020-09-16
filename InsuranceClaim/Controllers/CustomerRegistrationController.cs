@@ -2456,6 +2456,8 @@ namespace InsuranceClaim.Controllers
                             var currencylist = servicedetail.GetAllCurrency();
                             string CurrencyName = "";
 
+                            string AgentDetials = "";
+
                             //List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
                             string Summeryofcover = "";
                             var RoadsideAssistanceAmount = 0.00m;
@@ -2516,8 +2518,26 @@ namespace InsuranceClaim.Controllers
 
                             }
 
-
                             var summaryDetail = InsuranceContext.SummaryDetails.Single(model.Id);
+
+
+
+                            if (userLoggedin && User.IsInRole("Staff"))
+                            {
+
+                                VehicleService vehicleService = new VehicleService();
+                                var agentDetail = vehicleService.GetAgentDetails(summaryDetail, System.Web.HttpContext.Current.User.Identity.GetUserName());
+
+                                AgentDetials += "<table width='565' border='1' cellspacing='0' cellpadding='5' style='border - collapse:collapse; border: 1px solid #000; width:900px;'>";
+                                AgentDetials += "<tr> <td bgcolor='#000' colspan ='2' style = 'background:#000; color: white;text-align: center; padding:10px; font-size:16px;  word-break: break-all;' >< font size = '3' > INSURED PARTY DETAILS</ font ></td></tr>";
+                                AgentDetials += "<tr> <td style='padding: 7px 10px; font - size:15px;'> Name:  </td> <td style='padding: 7px 10px; font - size:15px;'>" + agentDetail.FirstName + " " + agentDetail.LastName + " </td></tr>";
+                                AgentDetials += "<tr> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>Email: </font></td> <td style='padding: 7px 10px; font - size:15px;'> " + agentDetail.EmailAddress + " </td> </tr>";
+                                AgentDetials += " <tr> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>Mobile: </font></td> <td style='padding: 7px 10px; font - size:15px;'> " + agentDetail.PhoneNumber + " </td> </tr>";
+                                AgentDetials += " <tr> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>Address: </font></td> <td style='padding: 7px 10px; font - size:15px;'> " + agentDetail.AddressLine1 + " " + agentDetail.City + " </td></tr>";
+                                AgentDetials += " <tr> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>ID Number: </font></td> <td style='padding: 7px 10px; font - size:15px;'> " + agentDetail.NationalIdentificationNumber + " </td></tr> </table> ";
+
+                            }
+
 
                             if (summaryDetail != null)
                             {
@@ -2548,7 +2568,10 @@ namespace InsuranceClaim.Controllers
                             // Product name
 
                             string MotorBody = System.IO.File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath(QuotationEmailPath));
-                            var Bodyy = MotorBody.Replace("##PolicyNo##", policyQuotation.PolicyNumber).Replace("##path##", filepath).Replace("##Cellnumber##", user.PhoneNumber).
+                            var Bodyy = MotorBody.Replace("##PolicyNo##", policyQuotation.PolicyNumber)
+                                  .Replace("##TransactionDate##", vehicleQuotation.TransactionDate.Value.ToShortDateString())
+                                 .Replace("##AgentDetials##", AgentDetials)
+                                .Replace("##path##", filepath).Replace("##Cellnumber##", user.PhoneNumber).
                                 Replace("##FirstName##", customerQuotation.FirstName).Replace("##LastName##", customerQuotation.LastName).Replace("##Email##", user.Email).
                                 Replace("##BirthDate##", customerQuotation.DateOfBirth.Value.ToString("dd/MM/yyyy")).Replace("##Address1##", customerQuotation.AddressLine1).
                                 Replace("##Address2##", customerQuotation.AddressLine2).Replace("##Renewal##", vehicleQuotation.RenewalDate.Value.ToString("dd/MM/yyyy")).
@@ -3403,10 +3426,18 @@ namespace InsuranceClaim.Controllers
                         if (quoteresponse.Response.Quotes[0] != null)
                         {
                             Session["InsuranceId"] = quoteresponse.Response.Quotes[0].InsuranceID;
+                            int year = quoteresponse.Response.Quotes[0].Vehicle.YearManufacture == "" ? DateTime.Now.Year : Convert.ToInt32(quoteresponse.Response.Quotes[0].Vehicle.YearManufacture);
+                            quoteresponse.Response.Quotes[0].Vehicle.YearManufacture = year.ToString();
                         }
+
+
+                        
+
 
                         if (quoteresponse.Response.Quotes[0] != null && quoteresponse.Response.Quotes[0].Licence!=null)
                         {
+
+                           
                             decimal penaltiesAmt = quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt==null ? 0: Convert.ToDecimal( quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt);
 
                             decimal administrationAmt = quoteresponse.Response.Quotes[0].Licence.AdministrationAmt == null ? 0 : Convert.ToDecimal(quoteresponse.Response.Quotes[0].Licence.AdministrationAmt);
@@ -3423,8 +3454,9 @@ namespace InsuranceClaim.Controllers
                                 quoteresponse.Response.Quotes[0].Licence.TotalLicAmt = totalLicAmount.ToString();
 
                             }
-
                         }
+
+
 
 
                     }

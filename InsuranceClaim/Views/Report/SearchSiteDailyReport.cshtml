@@ -251,6 +251,41 @@
             format: 'MM/D/YYYY'
 
         });
+
+
+        var result = [];
+        var grandTotal = 0;
+        $('table tr').each(function () {
+            $('td', this).each(function (index, val) {
+                if (!result[index]) result[index] = 0;
+                result[index] += parseInt($(val).text());
+            });
+        });
+
+        $('table').append('<tr></tr>');
+
+
+
+        $(result).each(function () {
+
+            var result = this;
+            var txt = "Daily Totals: ";
+            if (isNaN(result))
+                result = "<b>" + txt + " </b>";
+
+            if (!isNaN(result))
+                grandTotal += parseInt(result);
+
+            $('table tr').last().append('<td>' + result + '</td>')
+        });
+
+
+        $('table').append('<tr class="gt_row"></tr>');
+
+        $('table tr').last().append('<td><b>Grand Total </b></td> <td colspan="30">' + grandTotal + '</td>')
+
+
+
     });
 
 

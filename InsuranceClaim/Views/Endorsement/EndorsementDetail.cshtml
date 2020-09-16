@@ -89,7 +89,7 @@
                         <tr class="policynumber-tr">
                             <td>@item.PolicyNumber-@(rowNo += 1)</td>
                             <td>@item.PolicyNumber</td>
-                            <td>@MiscellaneousService.GetCustomerNamebyID(item.CustomerId)</td>
+                            <td>@item.CustomerName</td>
                             <td>@item.CustomerEmail
                             <td>@MiscellaneousService.GetPaymentMethodNamebyID(item.PaymentMethodId)</td>
                             <td>@item.Currency</td>

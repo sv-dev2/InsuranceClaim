@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
                 <div class="head-title">
-                    <h2>Disable Policy</h2>
+                    <h2>Cancelled Policy</h2>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
@@ -76,36 +76,21 @@
                 }
 
 
-
-
-
-
-
                 <div class="product-table-grid">
-
                     <div class="table-responsive">
-
-
                         <table class="table table-striped" id="report2excel">
-
-
                             <thead>
-
-
                                 <tr>
-
                                     <th>Policy Number </th>
                                     <th> Registration Number </th>
                                     <th> Vehicle </th>
                                     <th> Customer Name</th>
                                     <th> Total Premium </th>
                                     <th> Created On</th>
-                                    <th >Agent Name</th>
+                                    <th>Agent Name</th>
                                 </tr>
                             </thead>
-
                             <tbody>
-
 
                                 @foreach (var item in Model.listpolicy)
             {
@@ -135,55 +120,48 @@
 
 <script>
 
-        $(document).ready(function () {
-
-            
-
-
-            $("#datetimenew").datetimepicker({
-                format: 'MM/D/YYYY'
-            });
-            $("#datetimenew12").datetimepicker({
-                format: 'MM/D/YYYY'
-
-            });
+    $(document).ready(function () {
+        $("#datetimenew").datetimepicker({
+            format: 'MM/D/YYYY'
         });
+        $("#datetimenew12").datetimepicker({
+            format: 'MM/D/YYYY'
+
+        });
+    });
 
 
-        function removeSearchBox() {
-            window.location.href = "/Report/GrossWrittenPremiumReport";
+    function removeSearchBox() {
+        window.location.href = "/Report/GrossWrittenPremiumReport";
+    }
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "Disablepolicy" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
         }
+    };
 
-        $("#generateExcel").click(function () {
-            debugger;
-            $("#report2excel").table2excel({
-                // exclude CSS class
-                exclude: ".noExl",
-                name: "Worksheet Name",
-                filename: "Disablepolicy" //do not include extension
+    $('#generatePdf').click(function () {
 
-            });
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
         });
+        doc.save('DisablePolicy.pdf');
 
-        var doc = new jsPDF({ format: [600, 600] });
-        var specialElementHandlers = {
-            '#editor': function (element, renderer) {
-                return true;
-            }
-        };
-
-        $('#generatePdf').click(function () {
-
-            doc.fromHTML($('#content').html(), 15, 15, {
-                'width': 500,
-                'elementHandlers': specialElementHandlers
-            });
-            doc.save('DisablePolicy.pdf');
-
-        });
-
-
-
+    });
 
 </script>
 

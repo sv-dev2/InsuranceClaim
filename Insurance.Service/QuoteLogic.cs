@@ -59,7 +59,7 @@ namespace Insurance.Service
                 //17 jun 2020  
                 decimal? minAmount = 0;
                 float incrementRate = Convert.ToSingle(0.5);
-               // InsuranceRate = vehicleUsage.ComprehensiveRate;
+                // InsuranceRate = vehicleUsage.ComprehensiveRate;
 
 
                 //decimal InflationFactorAmt = 25;
@@ -68,15 +68,18 @@ namespace Insurance.Service
                 ////InsuranceMinAmount = vehicleUsage.MinCompAmount;
                 //InsuranceMinAmount = minAmount;
 
+                incrementRate = Convert.ToSingle(0.5);
+                InsuranceRate = vehicleUsage.ComprehensiveRate + incrementRate;
+
+
 
                 if (currencyId == (int)currencyType.USD)
                 {
-                    incrementRate = Convert.ToSingle(0.5);
-                    InsuranceRate = vehicleUsage.ComprehensiveRate + incrementRate;
+                   // incrementRate = Convert.ToSingle(0.5);
+                  //  InsuranceRate = vehicleUsage.ComprehensiveRate + incrementRate;
                 }
                 else
                 {
-                    InsuranceRate = vehicleUsage.ComprehensiveRate;
                     InsuranceMinAmount = vehicleUsage.MinCompAmount;
                 }
 

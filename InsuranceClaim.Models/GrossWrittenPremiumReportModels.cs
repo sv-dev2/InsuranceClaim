@@ -23,6 +23,7 @@ namespace InsuranceClaim.Models
         public decimal ZTSC_Levy { get; set; }
         public decimal? Net_Premium { get; set; }
         public decimal Premium_due { get; set; }
+        public decimal GrandPremium { get; set; }
         public decimal Comission_percentage { get; set; }
         public decimal Comission_Amount { get; set; }
         public decimal Sum_Insured { get; set; }
@@ -51,9 +52,17 @@ namespace InsuranceClaim.Models
 
         public string SourceDetailName { get; set; }
 
-        public int SummaryDetailId { get; set; }
+        public int SummaryDetailId { get; set; } 
+
+        public int PaymentMethodId { get; set; }
 
 
+    }
+
+    public class ReportType
+    {
+        public int Id { get; set; }
+        public string ReportName { get; set; }
     }
     public class ListGrossWrittenPremiumReportModels
     {

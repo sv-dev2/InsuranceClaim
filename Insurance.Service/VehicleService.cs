@@ -134,6 +134,20 @@ namespace Insurance.Service
         }
 
 
+        public CustomerModel GetAgentDetails(SummaryDetail summaryDetail, string agentEmail)
+        {
+            var customerDetial = InsuranceContext.Customers.Single(summaryDetail.CreatedBy);
+            CustomerModel model = new CustomerModel();
+
+            if (customerDetial != null)
+            {
+                model = new CustomerModel { FirstName = customerDetial.FirstName, LastName = customerDetial.LastName, PhoneNumber = customerDetial.PhoneNumber, NationalIdentificationNumber = customerDetial.NationalIdentificationNumber, EmailAddress = agentEmail, AddressLine1 = customerDetial.AddressLine1 + ' ' + customerDetial.City };
+            }
+
+            return model;
+        }
+
+
         public List<Domestic_RiskItem> GetRiskCoverItem(string RiskCoverId)
         {
             return InsuranceContext.Domestic_RiskItems.All(where: $"CoverId='{RiskCoverId}'").ToList();

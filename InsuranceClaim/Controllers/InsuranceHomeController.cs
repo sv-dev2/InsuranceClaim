@@ -27,6 +27,22 @@ namespace InsuranceClaim.Controllers
            return View();
         }
 
+
+        private void CheckRecursive()
+        {
+            int i = 5;
+
+            while (true)
+            {
+                i++;
+
+                if (i > 10)
+                    break;
+            }
+        }
+
+
+
         public ActionResult DownloadLogFile()
         {
             string path = Server.MapPath("/LogFile.txt"); 

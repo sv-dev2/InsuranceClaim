@@ -22,6 +22,8 @@ namespace InsuranceClaim.Models
 
         public string CustomerEmail { get; set; }
 
+        public string CustomerName { get; set; }
+
         public string Currency { get; set; }
     }
     public class ListEndorsementPolicy

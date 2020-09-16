@@ -7,7 +7,8 @@
 <div class="productsave-section GrossWrittenPremiumReport">
 
     <div class="container-fluid" id="content">
-        <div class="row">
+      
+          <div class="row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
                 <div class="head-title">
                     <h2>Site Daily Report</h2>
@@ -112,7 +113,7 @@
                         @foreach (var item in Model.SiteDailyList)
                         {
                             <tr>
-                                <td style="width: 170px;">
+                                <td style="width: 170px;" class="branchName">
                                     @item.BranchName
                                 </td>
                                 <td>
@@ -220,12 +221,11 @@
 </div>
 <script>
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
+    
             $(".tablesorter").tablesorter({
-
                 headers: {
-
                     2: {
                         sorter: false
                     },
@@ -239,7 +239,6 @@
                     9: {
                         sorter: false
                     },
-
                 }
             });
 
@@ -247,10 +246,59 @@
             $("#datetimenew").datetimepicker({
                 format: 'MM/D/YYYY'
             });
+
             $("#datetimenew12").datetimepicker({
                 format: 'MM/D/YYYY'
-
             });
+
+        // to get daily total
+            var result = [];
+            var grandTotal = 0;
+            $('table tr').each(function(){
+                $('td', this).each(function(index, val){
+                    if(!result[index]) result[index] = 0;
+                    result[index] += parseInt($(val).text());
+                });
+            });
+  
+            $('table').append('<tr class="bt_row"></tr>');
+
+
+            $(result).each(function () {
+
+                var result1 = this;
+                var txt = "Daily Totals: ";
+                if (isNaN(result1))
+                    result1 = "<b>" + txt + " </b>";
+
+                if (!isNaN(result1))
+                    grandTotal += parseInt(result1);
+
+
+                $('table tr').last().append('<td>' + result1 + '</td>')
+            });
+
+        // to get grand total
+            $('table').append('<tr class="gt_row"></tr>');
+            
+            $('table tr').last().append('<td><b>Grand Total </b></td> <td colspan="30">' + grandTotal + '</td>')
+
+            
+
+            
+
+
+
+           
+
+
+            
+
+
+
+
+            
+       
         });
 
 

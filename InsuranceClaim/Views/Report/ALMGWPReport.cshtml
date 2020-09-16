@@ -153,8 +153,8 @@
                             <th>Cover Type</th>
                             <th>Currency</th>
 
-                            <th style="width:170px;">Total Premium</th>
-                            <th style="width:170px;">Net Premium</th>
+                            <th style="width:170px;"> Premium</th>
+                            <th style="width:170px;">Grand total</th>
                             <th width="170px;">Stamp Duty</th>
                             <th>ZTSC Levy</th>
                             @*<th>Commission Detail</th>*@
@@ -306,12 +306,15 @@
 
                                     <td>@item.CoverType</td>
                                     <td> @item.Currency </td>
+
+                                    <td>
+                                        @(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy + item.Zinara_License_Fee + item.RadioLicenseCost))
+                                    </td>
+
                                     <td>
                                         @item.Premium_due
                                     </td>
-                                    <td>
-                                        @(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy))
-                                    </td>
+                                    
 
                                     <td> @item.Stamp_duty</td>
                                     <td> @item.ZTSC_Levy</td>
@@ -368,6 +371,8 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
+                                <td></td>
                                 <td>
                                     <b> @premiumDueTotal </b>
                                 </td>
@@ -380,7 +385,7 @@
                                 <td><strong> @ZinaraLicenseFee </strong> </td>*@
                                 <td></td>
                                 <td></td>
-                                <td colspan="4"></td>
+                                <td colspan="2"></td>
 
                             </tr>
                             @*<tr>

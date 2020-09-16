@@ -1030,7 +1030,7 @@ namespace Insurance.Service
             }
 
 
-            if (paymentMethod == 2) // it's represent to visa
+            if (paymentMethod == 2 || paymentMethod==(int)InsuranceClaim.Models.paymentMethod.PayLater) // it's represent to visa
             {
                 paymentMethod = 1;
             }
@@ -1216,7 +1216,7 @@ namespace Insurance.Service
             }
 
 
-            if (paymentMethod == 2) // it's represent to visa
+            if (paymentMethod == 2 || paymentMethod == (int)InsuranceClaim.Models.paymentMethod.PayLater) // it's represent to visa
             {
                 paymentMethod = 1;
             }

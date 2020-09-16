@@ -2271,6 +2271,8 @@ namespace InsuranceClaim.Controllers
             SummaryDetailService detialService = new SummaryDetailService();
             var currencyList = detialService.GetAllCurrency();
 
+          
+
            
 
             var endorsementsummary = new List<EndorsementSummaryDetail>();
@@ -2306,6 +2308,12 @@ namespace InsuranceClaim.Controllers
                 ListEndorsmentDetail.PaymentMethodId = Convert.ToInt32(item.PaymentMethodId);
                 ListEndorsmentDetail.CustomerId = Convert.ToInt32(item.CustomerId);
                 ListEndorsmentDetail.CustomerEmail = GetCustomerEmailbyCustomerID(item.CustomerId);
+
+                var endCustomerDetail = InsuranceContext.EndorsementCustomers.Single(item.EndorsementCustomerId);
+
+                if(endCustomerDetail!=null)
+                    ListEndorsmentDetail.CustomerName = endCustomerDetail.FirstName + " " + endCustomerDetail.LastName;
+
                 ListEndorsmentDetail.SummaryId = item.SummaryId;
                 ListEndorsmentDetail.createdOn = Convert.ToDateTime(item.CreatedOn);
                 ListEndorsmentDetail.EndorsementSummaryId = item.Id;
