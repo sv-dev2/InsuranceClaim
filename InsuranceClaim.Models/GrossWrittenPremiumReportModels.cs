@@ -56,6 +56,23 @@ namespace InsuranceClaim.Models
 
         public int PaymentMethodId { get; set; }
 
+        public int CreatedBy { get; set; }
+
+        public int AgentActualPolicy { get; set; }
+
+        public decimal AgentTargetPolicy { get; set; }
+
+        public decimal AgentTargetGwp { get; set; }
+
+        public decimal AgentActualGwp { get; set; }
+
+        public decimal TransactionPerformance { get; set; }
+
+        public decimal TransactionVariance { get; set; }
+
+        public decimal GwpPerformance { get; set; }
+
+        public decimal GwpVariance { get; set; }
 
     }
 
@@ -72,6 +89,8 @@ namespace InsuranceClaim.Models
     {
         
         public List<int> BranchId { get; set; }
+
+        public int ReportTypeId { get; set; }
         public List<BranchModel> ListBranchModelData { get; set; }
         public List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReportdata { get; set; }
         

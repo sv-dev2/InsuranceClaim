@@ -170,7 +170,7 @@
                                                     <div class="tbl-btn-list">
                                                         <ul class="list-inline">
 
-                                                            @if (!User.IsInRole("Team Leaders"))
+                                                            @if (User.IsInRole("Administrator"))
                                                             {
                                                                 <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
                                                             }
@@ -208,7 +208,7 @@
                                                     <div class="tbl-btn-list">
                                                         <ul class="list-inline">
 
-                                                            @if (!User.IsInRole("Team Leaders"))
+                                                            @if (User.IsInRole("Administrator"))
                                                             {
                                                                 <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
                                                             }
@@ -226,7 +226,7 @@
                                                 <td class="btn-width-auto"> @Html.ActionLink("Renew", "Index", "Renew", new { vehicleid = item.VehicleDetailId }, new { @class = "btn-sm btn-primary" })</td>
                                                 <td>
                                                     <ul class="list-inline">
-                                                        @if (!User.IsInRole("Team Leaders"))
+                                                        @if (User.IsInRole("Administrator"))
                                                         {
                                                             <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
                                                         }
@@ -245,7 +245,7 @@
                                                 <td colspan="2">
                                                     <ul class="list-inline">
 
-                                                        @if (!User.IsInRole("Team Leaders"))
+                                                        @if (User.IsInRole("Administrator"))
                                                         {
                                                             <li class="btn-width-auto"><button onclick="disableVehicle('@item.VehicleDetailId')" class="btn-sm btn-danger">Disable Policy</button></li>
                                                         }

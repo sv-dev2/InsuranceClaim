@@ -20,9 +20,11 @@
                 </div>
             </div>
         </div>
+
         
         @using (Html.BeginForm("SearchGrossReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
+
             <div class="container-main">
                 <div class="form-group-section-date">
                     <div class="form-group-input">
@@ -51,7 +53,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 form-group-btn">
+
+
+                            <div class="col-sm-3 col-md-3 form-group-select">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' >
+                                        @Html.DropDownListFor(x => x.ReportTypeId, new SelectList(ViewBag.ReportList, "Id", "ReportName"), new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-sm-3 col-md-3 form-group-btn">
                                 <div class="form-group">
                                     <ul class="list-inline">
                                         <li><button type="submit" class="btn btn-success">Search</button></li>

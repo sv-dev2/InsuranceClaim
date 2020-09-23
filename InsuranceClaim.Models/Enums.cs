@@ -97,5 +97,19 @@ namespace InsuranceClaim.Models
         Endorsement,
     }
 
+    public enum ReportTypeEnum
+    {
+        Combined = 1,
+        ALM = 2,
+        CallCenter = 3
+    }
+
+    public enum ALMBranch
+    {
+        GeneCallCentre=6
+    }
+
+   
+
 
 }
