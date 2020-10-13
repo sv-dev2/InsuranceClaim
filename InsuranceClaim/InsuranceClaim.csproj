@@ -1186,6 +1186,7 @@
     <Content Include="Views\Report\DisablePolicy.cshtml" />
     <Content Include="Views\Report\Endorsments.cshtml" />
     <Content Include="Views\Report\CallcentreGrosswrittenReport.cshtml" />
+    <Content Include="Views\Report\ALMBranchReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />

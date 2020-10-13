@@ -261,11 +261,8 @@ namespace Insurance.Service
 
 
                 var report2 = getGWPData(secondWeekStart, secondWeekEnd);
-
                 var report3 = getGWPData(thirdWeekStart, thirdWeekEnd);
-
                 var report4 = getGWPData(fourthWeekStart, fourthWeekEnd);
-
                 var report5 = getGWPData(firstWeekStart, fourthWeekEnd);
 
             List<BranchModel> branches = InsuranceContext.Query("select * from Branch").Select(x => new BranchModel
@@ -428,6 +425,9 @@ namespace Insurance.Service
                     Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
 
                     string email = System.Web.Configuration.WebConfigurationManager.AppSettings["gwpemail"];
+
+                    email = "chandan.kumar@kindlebit.com";
+
 
                     objEmailService.SendAttachedEmail(email, "", "", "Summary GWP Report - " + DateTime.Now.ToLongDateString(), mailBody.ToString(), attachmentModels);
                 }

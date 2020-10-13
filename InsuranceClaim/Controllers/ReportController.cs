@@ -1474,8 +1474,11 @@ namespace InsuranceClaim.Controllers
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
             var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
+            var callCenterTargetSetting = InsuranceContext.Settings.Single(where: "keyname='CallCenterTarget'") ;
+            var policyAmountSetting = InsuranceContext.Settings.Single(where: "keyname='PolicyAmount'");
 
-            ViewBag.ReportList = ReportsList();
+
+            // ViewBag.ReportList = ReportsList();
 
             var query = " select SummaryDetail.PaymentMethodId, SummaryDetail.CreatedBy, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
@@ -1483,11 +1486,11 @@ namespace InsuranceClaim.Controllers
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
             query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
             query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
-            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber ";
+            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, [dbo].[fn_GetUserWorkType] (SummaryDetail.CreatedBy) as WorkDesc ";
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id ";
             query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
-            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId  ";
             //query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
             query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0  and   CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + DateTime.Now.ToShortDateString() + "', 101)   ";
           //  query += "and Customer.BranchId=" + (int)ALMBranch.GeneCallCentre;
@@ -1514,8 +1517,9 @@ namespace InsuranceClaim.Controllers
                     RadioLicenseCost = x.RadioLicenseCost == null ? 0 : x.RadioLicenseCost,
                     Zinara_License_Fee = x.Zinara_License_Fee == null ? 0 : x.Zinara_License_Fee,
                     PolicyRenewalDate = x.PolicyRenewalDate,
-                    IsActive = x.IsActive
-                
+                    IsActive = x.IsActive,
+                    WorkDesc = x.WorkDesc
+
                 }).ToList();
 
 
@@ -1551,6 +1555,7 @@ namespace InsuranceClaim.Controllers
                 model.SourceDetailName = item.SourceDetailName;
                 model.BusinessSourceName = item.BusinessSourceName;
                 model.PaymentMethodId = item.PaymentMethodId;
+                model.WorkDesc = item.WorkDesc;
                 //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
 
                 var index = list.FindIndex(c => c.Policy_Number == item.Policy_Number);
@@ -1580,6 +1585,7 @@ namespace InsuranceClaim.Controllers
             }
 
             var listCustomer = InsuranceContext.Customers.All(where: "BranchId=" + (int)ALMBranch.GeneCallCentre).ToList();
+            var WorkTypsList = InsuranceContext.WorkTypes.All().ToList();
 
             List<GrossWrittenPremiumReportModels> resultList = new List<GrossWrittenPremiumReportModels>();
             var listCreatedBy= list.Select(o => o.CreatedBy).Distinct().ToList();
@@ -1588,14 +1594,14 @@ namespace InsuranceClaim.Controllers
             {
                 GrossWrittenPremiumReportModels model = new GrossWrittenPremiumReportModels();
                 model.AgentActualPolicy = list.Where(c => c.CreatedBy == item).Count();
-               
+
                 // 69 policy for monthly
-                model.AgentTargetPolicy = 3;
+                model.AgentTargetPolicy = Convert.ToInt32(callCenterTargetSetting.value);
 
                 model.AgentActualGwp =  list.Where(c => c.CreatedBy == item).Select(c=>c.Premium_due).Sum();
 
-                // 22080 for monthly
-                model.AgentTargetGwp = 960;
+                // 22080 for monthly, 320 per policy
+                model.AgentTargetGwp = Convert.ToDecimal(policyAmountSetting.value) * Convert.ToInt32(callCenterTargetSetting.value);
 
                 var agentDetail = listCustomer.FirstOrDefault(c => c.Id == item);
                 if (agentDetail != null)
@@ -1606,6 +1612,12 @@ namespace InsuranceClaim.Controllers
 
                 model.GwpPerformance = Math.Round( ((model.AgentActualGwp / model.AgentTargetGwp) * 100), 2);
                 model.GwpVariance = model.AgentActualGwp - model.AgentTargetGwp;
+
+               var WorkDescDetails= list.Where(c => c.CreatedBy == item).FirstOrDefault();
+                if(WorkDescDetails!=null)
+                    model.WorkDesc = WorkDescDetails.WorkDesc;
+
+
 
                 resultList.Add(model);
             }
@@ -1626,7 +1638,8 @@ namespace InsuranceClaim.Controllers
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
             var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
-
+            var callCenterTargetSetting = InsuranceContext.Settings.Single(where: "keyname='CallCenterTarget'");
+            var policyAmountSetting = InsuranceContext.Settings.Single(where: "keyname='PolicyAmount'");
 
             DateTime start = Convert.ToDateTime(_model.FormDate);
             DateTime end = Convert.ToDateTime(_model.EndDate);
@@ -1636,9 +1649,7 @@ namespace InsuranceClaim.Controllers
             int differntDays = difference.Days + 1;
 
 
-
-
-            ViewBag.ReportList = ReportsList();
+           // ViewBag.ReportList = ReportsList();
 
             var query = " select SummaryDetail.PaymentMethodId, SummaryDetail.CreatedBy, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
@@ -1646,7 +1657,7 @@ namespace InsuranceClaim.Controllers
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
             query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
             query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
-            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber ";
+            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber,[dbo].[fn_GetUserWorkType] (SummaryDetail.CreatedBy) as WorkDesc ";
             query += " from PolicyDetail join Customer on PolicyDetail.CustomerId = Customer.Id ";
             query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
@@ -1660,8 +1671,8 @@ namespace InsuranceClaim.Controllers
             ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
                 Select(x => new GrossWrittenPremiumReportModels()
                 {
-                    PaymentMethodId = x.PaymentMethodId,
-                    CreatedBy = x.CreatedBy,
+                    PaymentMethodId = x.PaymentMethodId==null? 0 : x.PaymentMethodId,
+                    CreatedBy = x.CreatedBy==null? 0 : Convert.ToInt32(x.CreatedBy),
                     Policy_Number = x.Policy_Number,
                     BranchName = x.BranchName,
                     PolicyCreatedBy = x.PolicyCreatedBy,
@@ -1671,13 +1682,14 @@ namespace InsuranceClaim.Controllers
                     Premium_due = x.Premium_due == null ? 0 : x.Premium_due,
                     Stamp_duty = x.Stamp_duty == null ? 0 : x.Stamp_duty,
                     ZTSC_Levy = x.ZTSC_Levy == null ? 0 : x.ZTSC_Levy,
-                    ALMId = x.ALMId,
+                    ALMId = x.ALMId==null? "" : Convert.ToString( x.ALMId),
                     Comission_Amount = x.Comission_Amount == null ? 0 : x.Comission_Amount,
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     RadioLicenseCost = x.RadioLicenseCost == null ? 0 : x.RadioLicenseCost,
                     Zinara_License_Fee = x.Zinara_License_Fee == null ? 0 : x.Zinara_License_Fee,
                     PolicyRenewalDate = x.PolicyRenewalDate,
-                    IsActive = x.IsActive
+                    IsActive = x.IsActive,
+                    WorkDesc = x.WorkDesc
                 }).ToList();
 
             ListGrossWrittenPremiumReport = ListGrossWrittenPremiumReport.Where(c => c.BranchName == CallCenterBranch).ToList();
@@ -1712,6 +1724,7 @@ namespace InsuranceClaim.Controllers
                 model.SourceDetailName = item.SourceDetailName;
                 model.BusinessSourceName = item.BusinessSourceName;
                 model.PaymentMethodId = item.PaymentMethodId;
+                model.WorkDesc = item.WorkDesc;
                 //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
 
                 var index = list.FindIndex(c => c.Policy_Number == item.Policy_Number);
@@ -1751,12 +1764,15 @@ namespace InsuranceClaim.Controllers
                 model.AgentActualPolicy = list.Where(c => c.CreatedBy == item).Count();
 
                 // 69 policy for monthly
-                model.AgentTargetPolicy = 3 * differntDays;
+                // model.AgentTargetPolicy = 3 * differntDays;
+                model.AgentTargetPolicy = Convert.ToInt32 (callCenterTargetSetting.value) * differntDays;
 
                 model.AgentActualGwp = list.Where(c => c.CreatedBy == item).Select(c => c.Premium_due).Sum();
 
-                // 22080 for monthly
-                model.AgentTargetGwp = 960 * differntDays;
+                // 22080 for monthly // 320 per policy
+
+                var perDayTarget = Convert.ToDecimal(policyAmountSetting.value) * Convert.ToInt32(callCenterTargetSetting.value);
+                model.AgentTargetGwp = perDayTarget* differntDays;
 
                 var agentDetail = listCustomer.FirstOrDefault(c => c.Id == item);
                 if (agentDetail != null)
@@ -1768,6 +1784,10 @@ namespace InsuranceClaim.Controllers
                 model.GwpPerformance = Math.Round(((model.AgentActualGwp / model.AgentTargetGwp) * 100), 2);
                 model.GwpVariance = model.AgentActualGwp - model.AgentTargetGwp;
 
+                var WorkDescDetails = list.Where(c => c.CreatedBy == item).FirstOrDefault();
+                if (WorkDescDetails != null)
+                    model.WorkDesc = WorkDescDetails.WorkDesc;
+
                 resultList.Add(model);
             }
 
@@ -1777,6 +1797,264 @@ namespace InsuranceClaim.Controllers
         }
 
 
+        public ActionResult ALMBranchReport()
+        {
+
+
+            List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
+            ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
+            _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
+            GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
+
+
+            var callCenterTargetSetting = InsuranceContext.Settings.Single(where: "keyname='CallCenterTarget'");
+            var policyAmountSetting = InsuranceContext.Settings.Single(where: "keyname='PolicyAmount'");
+
+            //IEnumerable<Branch> branches = InsuranceContext.Branches.All();
+
+            List<BranchModel> obj = InsuranceContext.Query("select * from Branch where id != 6").Select(x => new BranchModel
+            {
+                Id = x.Id,
+                BranchName = x.BranchName
+            }).ToList();
+
+            MultiSelectList selectListItems = new MultiSelectList(obj, "Id", "BranchName");
+
+            ViewBag.Branch = selectListItems;
+
+            var branchList = InsuranceContext.Branches.All();
+
+
+            var query = " select top 100 PolicyDetail.PolicyNumber as Policy_Number, SummaryDetail.CreatedBy, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+            query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+            query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy + VehicleDetail.VehicleLicenceFee + COALESCE(CAST(VehicleDetail.RadioLicenseCost as DECIMAL(9,2)),0)   as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+            query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+            query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+            query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+            query += "join Branch on Customer.BranchId = Branch.Id";
+            query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+            query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+            query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+            query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+            query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+            query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' ";
+            query +=" and   CONVERT(date, VehicleDetail.TransactionDate) = convert(date, '" + DateTime.Now.ToShortDateString()+"', 101) order by  VehicleDetail.Id desc";
+
+
+            ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
+                Select(x => new GrossWrittenPremiumReportModels()
+                {
+
+                    Policy_Number = x.Policy_Number,
+                    CreatedBy = x.CreatedBy,
+                    BranchName = x.BranchName,
+                    PolicyCreatedBy = x.PolicyCreatedBy,
+                    Customer_Name = x.Customer_Name,
+                    Transaction_date = x.Transaction_date.ToShortDateString(),
+                    CoverNoteNum = x.CoverNoteNum,
+                    Payment_Mode = x.Payment_Mode,
+                    Payment_Term = x.Payment_Term,
+                    CoverType = x.CoverType,
+                    Currency = x.Currency,
+                    Premium_due = x.Premium_due,
+                    Stamp_duty = x.Stamp_duty,
+                    ZTSC_Levy = x.ZTSC_Levy,
+                    ALMId = x.ALMId,
+                    Comission_Amount = x.Comission_Amount,
+                    //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                    RadioLicenseCost = x.RadioLicenseCost,
+                    Zinara_License_Fee = x.Zinara_License_Fee,
+                    PolicyRenewalDate = x.PolicyRenewalDate,
+                    IsActive = x.IsActive,
+                    RenewPolicyNumber = x.RenewPolicyNumber,
+                    // BusinessSourceName = x.BusinessSourceName,
+                    //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                    SourceDetailName = x.SourceDetailName,
+                }).ToList();
+
+            var listCreatedBy = ListGrossWrittenPremiumReport.Select(o => o.BranchName).Distinct().ToList();
+
+
+            int differntDays = 1;
+
+            var resultList = new List<GrossWrittenPremiumReportModels>();
+
+            foreach (var item in listCreatedBy)
+            {
+                GrossWrittenPremiumReportModels model = new GrossWrittenPremiumReportModels();
+                model.AgentActualPolicy = ListGrossWrittenPremiumReport.Where(c => c.BranchName == item).Count();
+
+                // 69 policy for monthly
+                // model.AgentTargetPolicy = 3 * differntDays;
+                model.AgentTargetPolicy = Convert.ToInt32(callCenterTargetSetting.value) * differntDays;
+
+                model.AgentActualGwp = ListGrossWrittenPremiumReport.Where(c => c.BranchName == item).Select(c => c.Premium_due).Sum();
+
+                // 22080 for monthly
+                // model.AgentTargetGwp = 960 * differntDays;
+
+                var perDayTarget = Convert.ToDecimal(policyAmountSetting.value) * Convert.ToInt32(callCenterTargetSetting.value);
+
+                model.AgentTargetGwp = perDayTarget * differntDays;
+
+
+
+              model.PolicyCreatedBy = item;
+
+                model.TransactionPerformance = Math.Round(((model.AgentActualPolicy / model.AgentTargetPolicy) * 100), 2);
+                model.TransactionVariance = model.AgentActualPolicy - model.AgentTargetPolicy;
+
+                model.GwpPerformance = Math.Round(((model.AgentActualGwp / model.AgentTargetGwp) * 100), 2);
+                model.GwpVariance = model.AgentActualGwp - model.AgentTargetGwp;
+
+                resultList.Add(model);
+            }
+
+
+            Model.ListGrossWrittenPremiumReportdata = resultList;
+
+            return View(Model);
+        }
+
+
+        [HttpPost]
+        public ActionResult SearchALMBranchReport(GrossWrittenPremiumReportSearchModels _model)
+        {
+
+
+            List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
+            ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
+            _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
+            GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
+
+
+            DateTime start = Convert.ToDateTime(_model.FormDate);
+            DateTime end = Convert.ToDateTime(_model.EndDate);
+
+            var callCenterTargetSetting = InsuranceContext.Settings.Single(where: "keyname='CallCenterTarget'");
+            var policyAmountSetting = InsuranceContext.Settings.Single(where: "keyname='PolicyAmount'");
+
+
+            TimeSpan difference = end - start; //create TimeSpan object
+
+            int differntDays = difference.Days + 1;
+
+            //IEnumerable<Branch> branches = InsuranceContext.Branches.All();
+
+            List<BranchModel> obj = InsuranceContext.Query("select * from Branch where id != 6").Select(x => new BranchModel
+            {
+                Id = x.Id,
+                BranchName = x.BranchName
+            }).ToList();
+
+            MultiSelectList selectListItems = new MultiSelectList(obj, "Id", "BranchName");
+
+            ViewBag.Branch = selectListItems;
+
+            var branchList = InsuranceContext.Branches.All();
+
+
+            var query = " select  PolicyDetail.PolicyNumber as Policy_Number, SummaryDetail.CreatedBy, Customer.ALMId, case when Customer.ALMId is null  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(Customer.BranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
+            query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
+            query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy + VehicleDetail.VehicleLicenceFee + COALESCE(CAST(VehicleDetail.RadioLicenseCost as DECIMAL(9,2)),0)   as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
+            query += " cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost, ";
+            query += " CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, ";
+            query += " VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, ";
+            query += " VehicleDetail.BusinessSourceDetailId, BusinessSource.Source as BusinessSourceName, SourceDetail.FirstName + ' ' + SourceDetail.LastName as SourceDetailName from PolicyDetail ";
+            query += " join Customer on PolicyDetail.CustomerId = Customer.Id ";
+            query += "join Branch on Customer.BranchId = Branch.Id";
+            query += "  join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+            query += "join SummaryVehicleDetail on VehicleDetail.id = SummaryVehicleDetail.VehicleDetailsId ";
+            query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
+            query += " join PaymentMethod on SummaryDetail.PaymentMethodId = PaymentMethod.Id ";
+            query += "join PaymentTerm on VehicleDetail.PaymentTermId = PaymentTerm.Id ";
+            query += " left join CoverType on VehicleDetail.CoverTypeId = CoverType.Id ";
+            query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
+            query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
+            query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
+            query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' ";
+            query += " and   (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101)) order by  VehicleDetail.Id desc";
+
+
+            ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
+                Select(x => new GrossWrittenPremiumReportModels()
+                {
+
+                    Policy_Number = x.Policy_Number,
+                    CreatedBy = x.CreatedBy,
+                    BranchName = x.BranchName,
+                    PolicyCreatedBy = x.PolicyCreatedBy,
+                    Customer_Name = x.Customer_Name,
+                    Transaction_date = x.Transaction_date.ToShortDateString(),
+                    CoverNoteNum = x.CoverNoteNum,
+                    Payment_Mode = x.Payment_Mode,
+                    Payment_Term = x.Payment_Term,
+                    CoverType = x.CoverType,
+                    Currency = x.Currency,
+                    Premium_due = x.Premium_due,
+                    Stamp_duty = x.Stamp_duty,
+                    ZTSC_Levy = x.ZTSC_Levy,
+                    ALMId = x.ALMId,
+                    Comission_Amount = x.Comission_Amount,
+                    //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                    RadioLicenseCost = x.RadioLicenseCost,
+                    Zinara_License_Fee = x.Zinara_License_Fee,
+                    PolicyRenewalDate = x.PolicyRenewalDate,
+                    IsActive = x.IsActive,
+                    RenewPolicyNumber = x.RenewPolicyNumber,
+                    // BusinessSourceName = x.BusinessSourceName,
+                    //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
+                    SourceDetailName = x.SourceDetailName,
+                }).ToList();
+
+            var listCreatedBy = ListGrossWrittenPremiumReport.Select(o => o.BranchName).Distinct().ToList();
+
+
+           
+
+            var resultList = new List<GrossWrittenPremiumReportModels>();
+
+            foreach (var item in listCreatedBy)
+            {
+                GrossWrittenPremiumReportModels model = new GrossWrittenPremiumReportModels();
+                model.AgentActualPolicy = ListGrossWrittenPremiumReport.Where(c => c.BranchName == item).Count();
+
+                // 69 policy for monthly
+                //  model.AgentTargetPolicy = 3 * differntDays;
+                model.AgentTargetPolicy = Convert.ToInt32(callCenterTargetSetting.value) * differntDays;
+
+                model.AgentActualGwp = ListGrossWrittenPremiumReport.Where(c => c.BranchName == item).Select(c => c.Premium_due).Sum();
+
+                // 22080 for monthly
+                //model.AgentTargetGwp = 960 * differntDays;
+                var perDayTarget = Convert.ToDecimal(policyAmountSetting.value) * Convert.ToInt32(callCenterTargetSetting.value);
+                model.AgentTargetGwp = perDayTarget * differntDays;
+
+
+                model.PolicyCreatedBy = item;
+
+                model.TransactionPerformance = Math.Round(((model.AgentActualPolicy / model.AgentTargetPolicy) * 100), 2);
+                model.TransactionVariance = model.AgentActualPolicy - model.AgentTargetPolicy;
+
+                model.GwpPerformance = Math.Round(((model.AgentActualGwp / model.AgentTargetGwp) * 100), 2);
+                model.GwpVariance = model.AgentActualGwp - model.AgentTargetGwp;
+
+                resultList.Add(model);
+            }
+
+
+            Model.ListGrossWrittenPremiumReportdata = resultList;
+
+            return View("ALMBranchReport", Model);
+        }
 
 
 
@@ -4877,7 +5155,7 @@ namespace InsuranceClaim.Controllers
         [HttpPost]
         public ActionResult SearchEndorsments(GrossWrittenPremiumReportSearchModels model)
         {
-            model.ListGrossWrittenPremiumReportdata = GetGWPEndorsmentReport(new GrossWrittenPremiumReportSearchModels());
+            model.ListGrossWrittenPremiumReportdata = GetGWPEndorsmentReport(model);
             return View("Endorsments", model);
         }
 

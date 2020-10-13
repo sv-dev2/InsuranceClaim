@@ -145,6 +145,8 @@ namespace Insurance.Domain
 
         public static CertSerialNoDetails CertSerialNoDetails { get { return new CertSerialNoDetails(); } }
 
+        public static WorkTypes WorkTypes { get { return new WorkTypes(); } }
+
         //17/03/2020
         public static AspNetUsersDetails AspNetUsersDetails { get { return new AspNetUsersDetails(); } }
 

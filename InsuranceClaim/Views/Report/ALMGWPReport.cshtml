@@ -173,6 +173,7 @@
                                 decimal sumInsuredTotal = 0;
                                 decimal annualPremiumTotal = 0;
                                 decimal premiumDueTotal = 0;
+                                decimal premiumTotal = 0;
                                 decimal netPremiumTotal = 0;
                                 decimal stampdutyTotal = 0;
                                 decimal ztscLevyTotal = 0;
@@ -197,6 +198,7 @@
                                 decimal Reustotal = 0;
                                 int Rertgscount = 0;
                                 int Reuscount = 0;
+                                decimal sumOfBasicPremium = 0;
 
 
                             }
@@ -267,15 +269,24 @@
                                     count3 = count3 + 1;
                                 }
 
+                                decimal premium = Convert.ToDecimal(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy + item.Zinara_License_Fee + item.RadioLicenseCost));
+
+                                sumOfBasicPremium += premium;
                                 sumInsuredTotal += item.Sum_Insured;
                                 annualPremiumTotal += item.Annual_Premium;
+                                premiumTotal += premium;
                                 premiumDueTotal += item.Premium_due;
+
                                 netPremiumTotal += Convert.ToDecimal(item.Net_Premium);
                                 stampdutyTotal += item.Stamp_duty;
                                 ztscLevyTotal += item.ZTSC_Levy;
                                 commissionAmountTotal += item.Comission_Amount;
                                 radioLicenseCostTotal += Convert.ToDecimal(item.RadioLicenseCost);
                                 ZinaraLicenseFee += Convert.ToDecimal(item.Zinara_License_Fee);
+
+
+                                
+
                                 <tr>
                                     <td>
                                         @item.PolicyCreatedBy
@@ -308,7 +319,7 @@
                                     <td> @item.Currency </td>
 
                                     <td>
-                                        @(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy + item.Zinara_License_Fee + item.RadioLicenseCost))
+                                       @(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy + item.Zinara_License_Fee + item.RadioLicenseCost));
                                     </td>
 
                                     <td>
@@ -372,7 +383,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td><b>@premiumTotal </b>  </td>
                                 <td>
                                     <b> @premiumDueTotal </b>
                                 </td>

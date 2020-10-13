@@ -1,8 +1,14 @@
 ﻿@model InsuranceClaim.Models.GrossWrittenPremiumReportSearchModels
 @{
-    ViewBag.Title = "CallcentreGrosswrittenReport";
+    ViewBag.Title = "ALMBranchReport";
     Layout = "~/Views/Shared/_InsuranceMain.cshtml";
 }
+
+
+
+
+
+
 
 
 <div class="productsave-section GrossWrittenPremiumReport">
@@ -12,7 +18,7 @@
         <div class="row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
                 <div class="head-title">
-                    <h2>Callcentre GrosswrittenReport</h2>
+                    <h2>ALM BranchReport</h2>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
@@ -23,7 +29,7 @@
         </div>
 
 
-        @using (Html.BeginForm("SearchCallcentreGrosswrittenReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("SearchALMBranchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
 
             <div class="container-main">
@@ -56,7 +62,7 @@
                             </div>
 
 
-                           
+
 
 
 
@@ -119,7 +125,7 @@
 
                     <thead>
                         <tr>
-                            <th>User/Call center agent</th>
+                            <th>Branch</th>
                             <th>Target Transactions</th>
                             <th>Actual Transactions</th>
                             <th>Performance %   </th>
@@ -128,33 +134,14 @@
                             <th>Actual GWP</th>
                             <th>Performance %</th>
                             <th>Variance</th>
-                            <th>Work From</th>
                         </tr>
                     </thead>
                     <tbody>
-
-
-                        
-                        @{
-                            int targetTransaction = 0;
-                            int actualTransaction = 0;
-
-                            decimal targetGwp = 0;
-                            decimal actualGwp = 0;
-                        }
-
-
                         @foreach (var item in Model.ListGrossWrittenPremiumReportdata.ToList())
                         {
-                            targetTransaction += Convert.ToInt32(item.AgentTargetPolicy);
-                            actualTransaction += item.AgentActualPolicy;
-
-                            targetGwp += Convert.ToInt32(item.AgentTargetGwp);
-                            actualGwp += Convert.ToInt32(item.AgentActualGwp);
-
                             <tr>
                                 <td> @item.PolicyCreatedBy  </td>
-                                
+
                                 <td> @item.AgentTargetPolicy</td>
                                 <td> @item.AgentActualPolicy </td>
 
@@ -168,32 +155,10 @@
 
                                 <th> @item.GwpPerformance %   </th>
                                 <th> @item.GwpVariance </th>
-                                <th> @item.WorkDesc</th>
 
                             </tr>
                         }
                     </tbody>
-                   <tfoot>
-
-                       <tr>
-                           <td><b>Total</b> </td>
-                           <td> <b> @targetTransaction</b> </td>
-                           <td> <b> @actualTransaction </b>   </td>
-                           <td></td>
-                           <td></td>
-                           <td>
-                             <b>@targetGwp </b>  
-                           </td>
-                           <td>
-                              <b> @actualGwp</b> 
-                           </td>
-                           <td></td>
-                           <td></td>
-                           <td></td>
-
-                       </tr>
-
-                   </tfoot>
 
 
 
@@ -229,16 +194,16 @@
         });
 
 
-        
 
-     
+
+
 
         $("#datetimenew").datetimepicker({
             format: 'MM/D/YYYY'
 
         });
 
-        
+
 
 
 
@@ -253,7 +218,7 @@
 
 
     function removeSearchBox() {
-        window.location.href = "/Report/CallcentreGrosswrittenReport";
+        window.location.href = "/Report/ALMBranchReport";
     }
 
     $("#generateExcel").click(function () {
@@ -262,7 +227,7 @@
             // exclude CSS class
             exclude: ".noExl",
             name: "Worksheet Name",
-            filename: "CallCenterGwpReport" //do not include extension
+            filename: "ALMBranchReport" //do not include extension
 
         });
     });
@@ -280,7 +245,7 @@
             'width': 500,
             'elementHandlers': specialElementHandlers
         });
-        doc.save('CallCenterGwpReport.pdf');
+        doc.save('ALMBranchReport.pdf');
 
     });
 

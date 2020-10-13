@@ -237,6 +237,8 @@ namespace Insurance.Domain
 
         public string AgentBranch { get; set; }
 
+        public int WorkTypeId { get; set; }
+
     }
 
     public partial class LicenseDelivery : Entity<LicenseDelivery>
@@ -534,6 +536,7 @@ namespace Insurance.Domain
 
     }
 
+    
     public partial class VehicleModel : Entity<VehicleModel>
     {
         public VehicleModel() { }
@@ -561,6 +564,15 @@ namespace Insurance.Domain
 
         public string AlmId { get; set; }
 
+    }
+
+
+    public partial class WorkType : Entity<WorkType>
+    {
+        public WorkType() { }
+        public WorkType(bool defaults) : base(defaults) { }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public partial class RiskCoverItem : Entity<RiskCoverItem>

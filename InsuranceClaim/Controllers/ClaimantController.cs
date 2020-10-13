@@ -1155,8 +1155,27 @@ namespace InsuranceClaim.Controllers
 
                 if(detail==null)
                 {
+                    // to get renew policy details
                     var vehicle = InsuranceContext.VehicleDetails.Single(where: $"RenewPolicyNumber = '{policyNumber}'");
                     detail = InsuranceContext.PolicyDetails.Single(where: $"Id='{vehicle.PolicyId}'");
+
+                    if(detail!=null)
+                    {
+                        var customerdetail = InsuranceContext.Customers.Single(where: $"Id='{detail.CustomerId}'");
+                        customerName = customerdetail.FirstName + " " + customerdetail.LastName;
+
+                        model.CustomerName = customerName;
+                        model.RegistrationNo = vrn;
+                        model.PolicyNumber = policyNumber;
+
+                        model.CoverStartDate = Convert.ToDateTime(vehicle.CoverStartDate);
+                        model.CoverEndDate = Convert.ToDateTime(vehicle.CoverEndDate);
+                        //model.CoverStartDate =Convert.ToDateTime(vehicle.CoverStartDate).ToShortDateString();
+                        //model.CoverEndDate =Convert.ToDateTime(vehicle.CoverEndDate).ToShortDateString();
+
+                        return Json(model, JsonRequestBehavior.AllowGet);
+                    }
+                
                 }
 
 

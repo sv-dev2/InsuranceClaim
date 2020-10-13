@@ -111,9 +111,10 @@ namespace InsuranceClaim.Models
 
         public string Corporate { get; set; }
 
-
+        [Display(Name = "Location")]
+        public int WorkTypeId { get; set; }
       
-
+        public string WorkDesc { get; set; }
 
 
     }

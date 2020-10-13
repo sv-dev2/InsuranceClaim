@@ -74,6 +74,8 @@ namespace InsuranceClaim.Models
 
         public string PaymentStatus { get; set; }
 
+        public string LicExpDate { get; set; }
+
     }
 
     public class ListPolicy

@@ -273,6 +273,7 @@
     <Compile Include="Repository\VehicleModels.cs" />
     <Compile Include="Repository\VehicleTaxClasses.cs" />
     <Compile Include="Repository\VehicleUsages.cs" />
+    <Compile Include="Repository\WorkType.cs" />
     <Compile Include="UnitOfWork\UnitOfWork.partial.cs" />
     <Compile Include="_Spark\Core.cs" />
     <Compile Include="_Spark\Data.cs" />

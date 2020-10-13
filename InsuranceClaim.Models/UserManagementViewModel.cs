@@ -71,6 +71,8 @@ namespace InsuranceClaim.Models
         public string CountryCode { get; set; }
         public string role { get; set; }
 
+        public int WorkTypeId { get; set; }
+
         //public bool IsUpdatePresonal { get; set; }
 
 

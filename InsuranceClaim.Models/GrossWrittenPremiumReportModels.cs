@@ -74,6 +74,8 @@ namespace InsuranceClaim.Models
 
         public decimal GwpVariance { get; set; }
 
+        public string WorkDesc { get; set; }
+
     }
 
     public class ReportType

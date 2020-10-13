@@ -79,7 +79,7 @@ namespace InsuranceClaim.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            
+
             Session.Abandon();
             Session.Clear();
             ViewBag.ReturnUrl = returnUrl;
@@ -804,11 +804,44 @@ namespace InsuranceClaim.Controllers
                         paymentTermsName = paymentTermVehicel.Name + " Months";
 
 
-
-
+                    var productDetail = InsuranceContext.Products.Single(Convert.ToInt32(vehicledetail.ProductId));                
+                    var taxClassDetials = InsuranceContext.VehicleTaxClasses.Single(vehicledetail.TaxClassId);
+                    decimal? premiumDue = vehicledetail.Premium + vehicledetail.StampDuty + vehicledetail.ZTSCLevy + vehicledetail.VehicleLicenceFee + vehicledetail.RadioLicenseCost;
 
                     string policyPeriod = vehicledetail.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + vehicledetail.CoverEndDate.Value.ToString("dd/MM/yyyy");
-                    Summeryofcover += "<tr><td style='padding: 7px 10px; font - size:15px;'>" + vehicledetail.RegistrationNo + " </td> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + vehicledescription + "</font></td>  <td style='padding: 7px 10px; font - size:15px;'>" + vehicledetail.CoverNote + " </td> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + currencyName + vehicledetail.SumInsured + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + (vehicledetail.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(vehicledetail.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + policyPeriod + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>$" + paymentTermsName + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + currencyName + Convert.ToString(vehicledetail.Premium) + "</font></td></tr>";
+                    // Summeryofcover += "<tr><td style='padding: 7px 10px; font - size:15px;'>" + vehicledetail.RegistrationNo + " </td> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + vehicledescription + "</font></td>  <td style='padding: 7px 10px; font - size:15px;'>" + vehicledetail.CoverNote + " </td> <td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + currencyName + vehicledetail.SumInsured + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + (vehicledetail.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(vehicledetail.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + policyPeriod + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>$" + paymentTermsName + "</font></td><td style='padding: 7px 10px; font - size:15px;'><font size='2'>" + currencyName + Convert.ToString(vehicledetail.Premium) + "</font></td></tr>";
+
+
+                    Summeryofcover += "<table border='0' cellspacing='0' cellpadding='2' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid;' >";
+                    Summeryofcover += "<tr> <th  bgcolor='#000' colspan='2' style='background:#000; color: white;text-align: center; padding:10px; font-size:16px;  word-break: break-all;'> <font size='3'>Gene-Insure</font> </th> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Cover Note #: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.CoverNote + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Transaction Date: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.TransactionDate.Value.ToShortDateString() + " </font> </td> </tr>";
+                    Summeryofcover += " </table> <br/>";
+
+                    Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='2' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid;' >";
+                    Summeryofcover += "<tr> <th  bgcolor='#000' colspan='2' style='background:#000; color: white;text-align: center; padding:10px; font-size:16px;  word-break: break-all;'> <font size='3'>Certificate of Motor Insurance</font>  </th> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Insurance Type: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>Road Traffic Act </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Vehicle Type: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + (vehicledetail.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + " " + InsuranceContext.VehicleUsages.All(Convert.ToString(vehicledetail.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Start Date: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> End Date: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.CoverEndDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Period: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + paymentTermsName + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Premium: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.Premium + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Gvt Levy: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.ZTSCLevy + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Stamp Duty: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.StampDuty + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Premium Due: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + Math.Round(Convert.ToDecimal(premiumDue), 2) + " </font> </td> </tr>";
+                    Summeryofcover += " </table> <br/>";
+
+                    // #ddd
+                    Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='2' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid' >";
+                    Summeryofcover += "<tr> <th  bgcolor='#000' colspan='2' style='background:#000; color: white;text-align: center; padding:10px; font-size:16px;  word-break: break-all;'> <font size='3'>Vehicle Details</font> </th> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Vehicle Reg. Number: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.RegistrationNo + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Vehicle Type: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + productDetail.ProductName + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Tax Class: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + taxClassDetials.Description + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Sum Insured: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledetail.SumInsured + " </font> </td> </tr>";
+                    Summeryofcover += "<tr> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'> Vehicle: </font> </td> <td style='padding: 7px 10px; font-size:15px;'> <font size='2'>" + vehicledescription + " </font> </td> </tr>";
+                    Summeryofcover += " </table> <br/>";
+
+
                     var paymentTerm = ePaymentTermData.FirstOrDefault(p => p.ID == vehicledetail.PaymentTermId);
 
 
@@ -822,7 +855,7 @@ namespace InsuranceClaim.Controllers
 
 
                     var Bodyy = MotorBody.Replace("##PolicyNo##", policyinfo.PolicyNumber).Replace("##currencyName##", currencyName)
-                        .Replace("##paht##", filepath).Replace("##Cellnumber##", userinfo.PhoneNumber).Replace("##FirstName##", customerinfo.FirstName)
+                        .Replace("##path##", filepath).Replace("##Cellnumber##", userinfo.PhoneNumber).Replace("##FirstName##", customerinfo.FirstName)
                         .Replace("##LastName##", customerinfo.LastName).Replace("##Email##", userinfo.Email).Replace("##BirthDate##", customerinfo.DateOfBirth.Value.ToString("dd/MM/yyyy"))
                         .Replace("##Address1##", customerinfo.AddressLine1).Replace("##Address2##", customerinfo.AddressLine2).Replace("##Renewal##", vehicledetail.RenewalDate.Value.ToString("dd/MM/yyyy"))
                         .Replace("##InceptionDate##", vehicledetail.CoverStartDate.Value.ToString("dd/MM/yyyy")).Replace("##package##", paymentTerm.Name)
@@ -837,6 +870,10 @@ namespace InsuranceClaim.Controllers
                          .Replace("##currencyName##", currencyName)
                          .Replace("##QRpath##", QRpath)
                         .Replace("##NINumber##", customerinfo.NationalIdentificationNumber).Replace("##VehicleLicenceFee##", Convert.ToString(vehicledetail.VehicleLicenceFee));
+                  
+                    
+                    
+                    
                     #region Invoice PDF
                     var attacehmetnFile = MiscellaneousService.EmailPdf(Bodyy, policyinfo.CustomerId, policyinfo.PolicyNumber, "Schedule-motor");
                     var Atter = "~/Pdf/14809 Gene Insure Motor Policy Book.pdf";
@@ -1280,6 +1317,7 @@ namespace InsuranceClaim.Controllers
 
             ViewBag.Cities = InsuranceContext.Cities.All();
             ViewBag.Branches = InsuranceContext.Branches.All();
+            ViewBag.WorkTypes = InsuranceContext.WorkTypes.All();
 
 
 
@@ -1339,6 +1377,7 @@ namespace InsuranceClaim.Controllers
                 obj.role = role;
                 obj.PhoneNumber = Convert.ToString(phone);
                 obj.EmailAddress = Convert.ToString(email);
+                obj.WorkTypeId = data.WorkTypeId;
 
             }
             return View(obj);
@@ -1419,6 +1458,7 @@ namespace InsuranceClaim.Controllers
                         cstmr.IsWelcomeNoteSent = model.IsWelcomeNoteSent;
                         cstmr.UserID = user.Id;
                         cstmr.PhoneNumber = model.PhoneNumber;
+                        cstmr.WorkTypeId = model.WorkTypeId;
                         InsuranceContext.Customers.Insert(cstmr);
 
                     }
@@ -1469,6 +1509,7 @@ namespace InsuranceClaim.Controllers
                 ctems.IsPolicyDocSent = model.IsPolicyDocSent;
                 ctems.IsWelcomeNoteSent = model.IsWelcomeNoteSent;
                 ctems.PhoneNumber = model.PhoneNumber;
+                ctems.WorkTypeId = model.WorkTypeId;
 
                 InsuranceContext.Customers.Update(ctems);
                 UserManager.Update(user);
@@ -1568,7 +1609,9 @@ namespace InsuranceClaim.Controllers
 
             List<CustomerModel> ListUserViewModel = new List<CustomerModel>();
             var name = "Customer";
-            var secondQuery = "select TOP 100 AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where AspNetRoles.Name !='" + name + "' and AspNetRoles.Name != 'Web Customer' and (Customer.IsActive is Null or Customer.IsActive=1)  order by Customer.Id desc";
+            var secondQuery = "select TOP 100 AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName, WorkType.Name as WorkDesc ";
+            secondQuery += " from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId ";
+            secondQuery += " left join WorkType on Customer.worktypeId= WorkType.Id where AspNetRoles.Name !='" + name + "' and AspNetRoles.Name != 'Web Customer' and (Customer.IsActive is Null or Customer.IsActive=1)  order by Customer.Id desc";
 
             ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
             {
@@ -1588,6 +1631,7 @@ namespace InsuranceClaim.Controllers
                 CountryCode = x.Countrycode,
                 City = x.City,
                 Country = x.Country,
+                WorkDesc = x.WorkDesc
             }).ToList();
 
 
@@ -1701,7 +1745,9 @@ namespace InsuranceClaim.Controllers
                     var searchtext1 = Convert.ToString(custom[0]);
                     var searchtext2 = Convert.ToString(custom[1]);
 
-                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer') and (Customer.IsActive is Null or Customer.IsActive=1) ";
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName, WorkType.Name as WorkDesc";
+                    secondQuery += " from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId";
+                    secondQuery += " left join WorkType on Customer.worktypeId= WorkType.Id where (FirstName like '%" + searchtext1 + "%' and LastName like '%" + searchtext2 + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer') and (Customer.IsActive is Null or Customer.IsActive=1) ";
 
                     ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
                     {
@@ -1721,6 +1767,7 @@ namespace InsuranceClaim.Controllers
                         CountryCode = x.Countrycode,
                         City = x.City,
                         Country = x.Country,
+                        WorkDesc = x.WorkDesc
                     }).ToList();
 
                     lstUserModel.ListUsers = ListUserViewModel;
@@ -1729,7 +1776,7 @@ namespace InsuranceClaim.Controllers
                 }
                 if (custom.Length == 1)
                 {
-                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId where (FirstName like '%" + searchText + "%' or LastName like '%" + searchText + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer')";
+                    var secondQuery = "select AspNetUsers.Email, AspNetUsers.UserName, Customer.Gender, Customer.DateOfBirth, Customer.Country, Customer.City, Customer.Countrycode, Customer.Id as CustomerId, Customer.Id as Id, AspNetUsers.Id as UserID, Customer.PhoneNumber, Customer.FirstName, Customer.LastName, AspNetRoles.Name, Branch.BranchName, WorkType.Name as WorkDesc  from AspNetUsers join AspNetUserRoles on AspNetUsers.Id = AspNetUserRoles.UserId join AspNetRoles on AspNetUserRoles.RoleId = AspNetRoles.Id join Customer on AspNetUsers.Id = Customer.UserID left join Branch on Branch.Id = Customer.BranchId left join WorkType on Customer.worktypeId= WorkType.Id where (FirstName like '%" + searchText + "%' or LastName like '%" + searchText + "%') AND (AspNetRoles.Name != 'Web Customer' and AspNetRoles.Name != 'Customer')";
 
                     ListUserViewModel = InsuranceContext.Query(secondQuery).Select(x => new CustomerModel()
                     {
@@ -1742,13 +1789,13 @@ namespace InsuranceClaim.Controllers
                         CustomerId = x.CustomerId,
                         PhoneNumber = x.PhoneNumber,
                         role = x.Name,
-
                         Branch = x.BranchName,
                         Gender = x.Gender,
                         DateOfBirth = x.DateOfBirth,
                         CountryCode = x.Countrycode,
                         City = x.City,
                         Country = x.Country,
+                        WorkDesc = x.WorkDesc
                     }).ToList();
 
                     lstUserModel.ListUsers = ListUserViewModel;
@@ -2090,11 +2137,11 @@ namespace InsuranceClaim.Controllers
             ListPolicy policylist = new ListPolicy();
             policylist.listpolicy = new List<PolicyListViewModel>();
 
-          
+
 
             var query = "   select top 500 PolicyDetail.PolicyNumber as Policy_Number,  Customer.PhoneNumber, ";
             query += " case when VehicleDetail.ALMBranchId = 0  then[dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
-            query += " VehicleDetail.CoverStartDate, VehicleDetail.CoverEndDate, VehicleDetail.RegistrationNo, ";
+            query += " VehicleDetail.CoverStartDate, VehicleDetail.CoverEndDate, VehicleDetail.LicExpiryDate, VehicleDetail.RegistrationNo, ";
             query += " VehicleMake.MakeDescription , VehicleModel.ModelDescription, SummaryDetail.TotalPremium, ";
             query += " VehicleDetail.TransactionDate as Transaction_date, ";
             query += " case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName,  VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency,  VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy,  cast(VehicleDetail.Premium* 30 / 100 as decimal(10, 2))    as Comission_Amount, VehicleDetail.IncludeRadioLicenseCost,  CASE WHEN IncludeRadioLicenseCost = 1 THEN VehicleDetail.RadioLicenseCost else 0 end as RadioLicenseCost, VehicleDetail.VehicleLicenceFee as Zinara_License_Fee, VehicleDetail.RenewalDate as PolicyRenewalDate, VehicleDetail.IsActive, VehicleDetail.RenewPolicyNumber as RenewPolicyNumber, VehicleDetail.BusinessSourceDetailId, SummaryDetail.id as SummaryDetailId, VehicleDetail.SumInsured, VehicleDetail.RenewalDate from PolicyDetail ";
@@ -2109,7 +2156,7 @@ namespace InsuranceClaim.Controllers
             query += " left join VehicleMake on VehicleDetail.MakeId= VehicleMake.MakeCode ";
             query += " left join VehicleModel on VehicleDetail.ModelId= VehicleModel.ModelCode ";
             query += "     where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) ";
-            query += "  and SummaryDetail.isQuotation=0 and SummaryDetail.PaymentMethodId<>"+ (int)paymentMethod.PayLater +" and  ";
+            query += "  and SummaryDetail.isQuotation=0 and SummaryDetail.PaymentMethodId<>" + (int)paymentMethod.PayLater + " and  ";
             query += " CONVERT(date, VehicleDetail.TransactionDate) <=  GETDATE() order by  VehicleDetail.Id desc ";
 
             // transaction date match with search date and policy number greater then 1 it means renwed
@@ -2122,8 +2169,8 @@ namespace InsuranceClaim.Controllers
                 CustomerContactNumber = c.PhoneNumber,
                 TotalPremium = Convert.ToDecimal(c.TotalPremium),
                 TotalSumInsured = Convert.ToDecimal(c.SumInsured),
-               // SummaryId = c.Id,
-               // createdOn = Convert.ToDateTime(c.CreatedOn),
+                // SummaryId = c.Id,
+                // createdOn = Convert.ToDateTime(c.CreatedOn),
                 PolicyNumber = c.Policy_Number,
                 RenewPolicyNumber = c.RenewPolicyNumber,
                 CoverTypeName = c.CoverType,
@@ -2131,7 +2178,8 @@ namespace InsuranceClaim.Controllers
                 Model = c.ModelDescription,
                 RegisterationNumber = c.RegistrationNo,
                 startdate = Convert.ToDateTime(c.CoverStartDate).ToShortDateString(),
-                enddate =  Convert.ToDateTime(c.CoverEndDate).ToShortDateString(),
+                enddate = Convert.ToDateTime(c.CoverEndDate).ToShortDateString(),
+                LicExpDate = c.LicExpiryDate,
                 RenewalDate = Convert.ToDateTime(c.RenewalDate).ToShortDateString(),
                 TransactionDate = c.Transaction_date,
                 Currency = c.Currency
@@ -2140,22 +2188,22 @@ namespace InsuranceClaim.Controllers
 
 
             var newList = new List<PolicyListViewModel>();
-            foreach(var item in  result )
+            foreach (var item in result)
             {
                 PolicyListViewModel details = new PolicyListViewModel();
 
-                if(item.RenewPolicyNumber!=null)
+                if (item.RenewPolicyNumber != null)
                 {
                     item.PolicyNumber = item.RenewPolicyNumber;
                 }
 
 
-                if(Convert.ToDateTime(item.RenewalDate)<DateTime.Now)
+                if (Convert.ToDateTime(item.RenewalDate) < DateTime.Now)
                 {
                     item.PolicyStatus = "Lapsed";
                     newList.Add(item);
                 }
-                else if(item.TransactionDate <DateTime.Now && item.RenewPolicyNumber!=null && Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
+                else if (item.TransactionDate < DateTime.Now && item.RenewPolicyNumber != null && Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
                 {
                     item.PolicyStatus = "Renewed";
                     newList.Add(item);
@@ -2163,7 +2211,7 @@ namespace InsuranceClaim.Controllers
             }
 
 
-            
+
             policylist.listpolicy = newList;
 
             //ListPolicy policylist = new ListPolicy();
@@ -2319,7 +2367,7 @@ namespace InsuranceClaim.Controllers
 
             var query = "   select  PolicyDetail.PolicyNumber as Policy_Number,  Customer.PhoneNumber, ";
             query += " case when VehicleDetail.ALMBranchId = 0  then[dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
-            query += " VehicleDetail.CoverStartDate, VehicleDetail.CoverEndDate, VehicleDetail.RegistrationNo, ";
+            query += " VehicleDetail.CoverStartDate, VehicleDetail.CoverEndDate, VehicleDetail.LicExpiryDate, VehicleDetail.RegistrationNo, ";
             query += " VehicleMake.MakeDescription , VehicleModel.ModelDescription, SummaryDetail.TotalPremium, ";
             query += " VehicleDetail.TransactionDate as Transaction_date, ";
             query += " case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName,  VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency,  VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, ";
@@ -2347,8 +2395,9 @@ namespace InsuranceClaim.Controllers
                 CustomerContactNumber = c.PhoneNumber,
                 TotalPremium = Convert.ToDecimal(c.TotalPremium),
                 TotalSumInsured = Convert.ToDecimal(c.SumInsured),
-               // SummaryId = c.Id,
-               // createdOn = Convert.ToDateTime(c.CreatedOn),
+                LicExpDate = c.LicExpiryDate,
+                // SummaryId = c.Id,
+                // createdOn = Convert.ToDateTime(c.CreatedOn),
                 PolicyNumber = c.Policy_Number,
                 RenewPolicyNumber = c.RenewPolicyNumber,
                 CoverTypeName = c.CoverType,
@@ -2394,7 +2443,7 @@ namespace InsuranceClaim.Controllers
 
             //ListPolicy policylist = new ListPolicy();
             //policylist.listpolicy = new List<PolicyListViewModel>();
-     
+
             //var CoverTypeList = InsuranceContext.CoverTypes.All().ToList();
             //var SummaryList = new List<SummaryDetail>();
 
@@ -3796,6 +3845,98 @@ namespace InsuranceClaim.Controllers
             }
 
         }
+        //[HttpPost]
+        //public JsonResult GetUplodedFiles()
+        //{
+        //    var list = new List<InsuranceClaim.Models.PolicyDocumentModels>();
+
+        //    try
+        //    {
+        //        var PolicyNumber = System.Web.HttpContext.Current.Request.Params["PolicyNumber"];
+        //        var CustomerId = System.Web.HttpContext.Current.Request.Params["CustomerId"];
+        //        var vehicleId = System.Web.HttpContext.Current.Request.Params["vehicleId"];
+
+        //        //string[] filePaths = Directory.GetFiles(Server.MapPath("~/Documents/" + CustomerId + "/" + PolicyNumber + "/" + vehicleId + "/"));
+
+        //        var FileList = InsuranceContext.PolicyDocuments.All(where: $"CustomerId={CustomerId} and PolicyNumber='{PolicyNumber}' and vehicleId={vehicleId}");
+
+        //        foreach (var item in FileList)
+        //        {
+        //            var obj = new InsuranceClaim.Models.PolicyDocumentModels();
+        //            obj.Title = item.Title;
+        //            obj.Decription = item.Description;
+        //            obj.FilePath = item.FilePath;
+        //            obj.id = item.Id;
+        //            list.Add(obj);
+        //        }
+
+        //        string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
+        //        Request.ApplicationPath.TrimEnd('/') + "/";
+
+
+
+
+
+
+
+        //        var vehicleDetails = InsuranceContext.VehicleDetails.Single(where: "Id=" + vehicleId);
+        //        if (vehicleDetails != null && vehicleDetails.ALMBranchId > 0)
+        //        {
+        //            baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
+        //            // baseUrl = System.Configuration.ConfigurationManager.AppSettings["urlpath"];
+
+        //            string path = @"C:\inetpub\windowsapi_latest\Documents\" + CustomerId + '/' + PolicyNumber + "/";
+
+        //            foreach (var files in Directory.GetFiles(path))
+        //            {
+        //                FileInfo info = new FileInfo(files);
+        //                var fileName = Path.GetFileName(info.FullName);
+        //                var obj = new InsuranceClaim.Models.PolicyDocumentModels();
+        //                obj.Title = fileName;
+        //                obj.Decription = "";
+        //                string documentPath = baseUrl + path + fileName;
+        //                obj.FilePath = documentPath;
+        //                list.Add(obj);
+        //            }
+
+        //        }
+
+        //        else
+        //        {
+        //            string path = "/Documents/" + CustomerId + "/" + PolicyNumber + "/";
+        //            string filePath = Server.MapPath(path);
+
+        //            foreach (var files in Directory.GetFiles(filePath))
+        //            {
+        //                FileInfo info = new FileInfo(files);
+        //                var fileName = Path.GetFileName(info.FullName);
+        //                var obj = new InsuranceClaim.Models.PolicyDocumentModels();
+        //                obj.Title = fileName;
+        //                obj.Decription = "";
+        //                string documentPath = baseUrl + path + fileName;
+        //                obj.FilePath = documentPath;
+        //                list.Add(obj);
+        //            }
+        //        }
+
+
+
+
+
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // SummaryDetailService.WriteLog(data, response.Content, "TPIQuote");
+        //    }
+
+
+        //    return Json(list, JsonRequestBehavior.AllowGet);
+        //}
+
+
+
         [HttpPost]
         public JsonResult GetUplodedFiles()
         {
@@ -3809,43 +3950,98 @@ namespace InsuranceClaim.Controllers
 
                 //string[] filePaths = Directory.GetFiles(Server.MapPath("~/Documents/" + CustomerId + "/" + PolicyNumber + "/" + vehicleId + "/"));
 
-                var FileList = InsuranceContext.PolicyDocuments.All(where: $"CustomerId={CustomerId} and PolicyNumber='{PolicyNumber}' and vehicleId={vehicleId}");
+                //var FileList = InsuranceContext.PolicyDocuments.All(where: $"CustomerId={CustomerId} and PolicyNumber='{PolicyNumber}' and vehicleId={vehicleId}");
 
-                foreach (var item in FileList)
-                {
-                    var obj = new InsuranceClaim.Models.PolicyDocumentModels();
-                    obj.Title = item.Title;
-                    obj.Decription = item.Description;
-                    obj.FilePath = item.FilePath;
-                    obj.id = item.Id;
-                    list.Add(obj);
-                }
+                //foreach (var item in FileList)
+                //{
+                //    var obj = new InsuranceClaim.Models.PolicyDocumentModels();
+                //    obj.Title = item.Title;
+                //    obj.Decription = item.Description;
+                //    obj.FilePath = item.FilePath;
+                //    obj.id = item.Id;
+                //    list.Add(obj);
+                //}
 
                 string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority +
                 Request.ApplicationPath.TrimEnd('/') + "/";
 
                 var customerDetails = InsuranceContext.Customers.Single(where: "id=" + CustomerId);
-                if (customerDetails != null && customerDetails.ALMId != null)
-                {
-                    // baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
-                    baseUrl = System.Configuration.ConfigurationManager.AppSettings["urlpath"];
+                //if (customerDetails != null && customerDetails.ALMId != null)
+                //{
+                //    // baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
+                //    baseUrl = System.Configuration.ConfigurationManager.AppSettings["urlpath"];
 
-                }
+                //}
 
                 string path = "/Documents/" + CustomerId + "/" + PolicyNumber + "/";
                 string filePath = Server.MapPath(path);
-
-                foreach (var files in Directory.GetFiles(filePath))
+                try
                 {
-                    FileInfo info = new FileInfo(files);
-                    var fileName = Path.GetFileName(info.FullName);
-                    var obj = new InsuranceClaim.Models.PolicyDocumentModels();
-                    obj.Title = fileName;
-                    obj.Decription = "";
-                    string documentPath = baseUrl + path + fileName;
-                    obj.FilePath = documentPath;
-                    list.Add(obj);
+                    foreach (var files in Directory.GetFiles(filePath))
+                    {
+                        FileInfo info = new FileInfo(files);
+                        var fileName = Path.GetFileName(info.FullName);
+                        var obj = new InsuranceClaim.Models.PolicyDocumentModels();
+                        obj.Title = fileName;
+                        obj.Decription = "";
+                        string documentPath = baseUrl + path + fileName;
+                        obj.FilePath = documentPath;
+                        list.Add(obj);
+                    }
+
                 }
+                catch (Exception ex)
+                {
+
+                }
+
+
+
+                // for alm pdf
+
+                try
+                {
+
+                
+                var vehicleDetails = InsuranceContext.VehicleDetails.Single(where: "Id=" + vehicleId);
+
+                 string pathDc = "/Documents/" + CustomerId + "/" + PolicyNumber + "/";
+
+                    baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
+
+
+                 if (vehicleDetails != null && vehicleDetails.ALMBranchId > 0)
+                {
+                    baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
+                    // baseUrl = System.Configuration.ConfigurationManager.AppSettings["urlpath"];
+
+                    string path1 = @"C:\inetpub\windowsapi_latest\Documents\" + CustomerId + '/' + PolicyNumber + "/";
+
+                    foreach (var files in Directory.GetFiles(path1))
+                    {
+                        FileInfo info = new FileInfo(files);
+                        var fileName = Path.GetFileName(info.FullName);
+                        var obj = new InsuranceClaim.Models.PolicyDocumentModels();
+                        obj.Title = fileName;
+                        obj.Decription = "";
+                        string documentPath = baseUrl+ pathDc + fileName;
+                        obj.FilePath = documentPath;
+                        list.Add(obj);
+                    }
+
+                }
+
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
+
+
+
             }
             catch (Exception ex)
             {
@@ -3855,6 +4051,7 @@ namespace InsuranceClaim.Controllers
 
             return Json(list, JsonRequestBehavior.AllowGet);
         }
+
 
         [AllowAnonymous]
         public ActionResult ChangePassword()
@@ -5751,14 +5948,14 @@ namespace InsuranceClaim.Controllers
                 TotalPremium = c.TotalPremium
             }).OrderByDescending(c => c.VehicleID).ToList();
 
-           // model.PayLaterPolicyDetails = result;
+            // model.PayLaterPolicyDetails = result;
 
             var newList = new List<PayLaterPolicyDetail>();
 
-            foreach(var item in  result)
+            foreach (var item in result)
             {
-                var details = newList.FirstOrDefault(c=>c.SummaryDetailId==item.SummaryDetailId);
-                if(details==null)
+                var details = newList.FirstOrDefault(c => c.SummaryDetailId == item.SummaryDetailId);
+                if (details == null)
                     newList.Add(item);
             }
 
@@ -5771,7 +5968,7 @@ namespace InsuranceClaim.Controllers
         [HttpPost]
         public ActionResult PayLaterPolicy(PayLaterPolicyModel model)
         {
-            
+
             string query = " select PolicyDetail.PolicyNumber, PolicyDetail.Id as PolicyId, Customer.FirstName + ' ' + Customer.LastName as CustomerName, ";
             query += " VehicleDetail.RegistrationNo as RegistrationNo, VehicleMake.MakeDescription, VehicleDetail.Id as VehicleID, ";
             query += " VehicleModel.ModelDescription, SummaryDetail.TotalPremium, SummaryDetail.Id as SummaryDetailId, ";
