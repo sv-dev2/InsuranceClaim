@@ -28,6 +28,7 @@ namespace InsuranceClaim.Models
         //[DefaultValue(1)]
         public int? NoOfCarsCovered { get; set; }
         [Required(ErrorMessage = "Please Enter Registration No")]
+        [RegularExpression(@"^[0-9A-Z]+$", ErrorMessage = "Enter valid Reg Number with no spaces in capital letters")]
         public string RegistrationNo { get; set; }
         public int? CustomerId { get; set; }
         [Required(ErrorMessage = "Please Select Vehicle Make")]

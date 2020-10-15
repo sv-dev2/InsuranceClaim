@@ -20,6 +20,7 @@ namespace InsuranceClaim.Models
         public string EmailAddress { get; set; }
         [Display(Name = "Phone Number")]
         [Required(ErrorMessage = "Please Enter Country Code and Phone Number.")]
+        [RegularExpression(@"^[0-9]{9}$", ErrorMessage = "Enter Valid Phone Number")]
         //[RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number.")]
         public string PhoneNumber { get; set; }
         [Display(Name = "First Name")]
@@ -46,6 +47,7 @@ namespace InsuranceClaim.Models
         public string City { get; set; }
         [Display(Name = "National Identification Number")]
         [Required(ErrorMessage = " Please Enter National Identification Number")]
+        [RegularExpression(@"^[0-9]{8,9}[A-Z]{1}[0-9]{2}$", ErrorMessage = "Enter valid ID number in the format 11111111X11")]
         // [RegularExpression(@"^([0-9]{2}-[0-9]{6,7}[a-zA-Z]{1}[0-9]{2})$", ErrorMessage = "Not a Valid Identification Number")]        
         public string NationalIdentificationNumber { get; set; }
         [Display(Name = "Zip Code")]

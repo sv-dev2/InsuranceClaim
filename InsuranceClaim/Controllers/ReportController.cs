@@ -2745,7 +2745,7 @@ namespace InsuranceClaim.Controllers
             _BasicCommissionReport.BasicCommissionReport = new List<BasicCommissionReportModel>();
             BasicCommissionReportSearchModel model = new BasicCommissionReportSearchModel();
 
-            var VehicleDetails = InsuranceContext.VehicleDetails.All(where: "IsActive ='True'").ToList();
+            var VehicleDetails = InsuranceContext.VehicleDetails.All(where: "IsActive ='True'").ToList().OrderByDescending(c=>c.Id).Take(200);
 
             var currenyList = _summaryDetailService.GetAllCurrency();
 
@@ -2754,24 +2754,29 @@ namespace InsuranceClaim.Controllers
             {
                 var Policy = InsuranceContext.PolicyDetails.Single(item.PolicyId);
                 var Customer = InsuranceContext.Customers.Single(item.CustomerId);
-                //var Vehicle = InsuranceContext.VehicleDetails.Single(item.Id);
-                var ReinsuranceTransaction = InsuranceContext.ReinsuranceTransactions.All(where: $"VehicleId={item.Id}").ToList();
-                var commision = InsuranceContext.AgentCommissions.Single(item.AgentCommissionId);
-                if (ReinsuranceTransaction.Count > 0 && ReinsuranceTransaction != null)
+
+                if (Policy != null)
                 {
-                    ListBasicCommissionReport.Add(new BasicCommissionReportModel()
+                    //var Vehicle = InsuranceContext.VehicleDetails.Single(item.Id);
+                    var ReinsuranceTransaction = InsuranceContext.ReinsuranceTransactions.All(where: $"VehicleId={item.Id}").ToList();
+                    var commision = InsuranceContext.AgentCommissions.Single(item.AgentCommissionId);
+                    if (ReinsuranceTransaction.Count > 0 && ReinsuranceTransaction != null)
                     {
-                        FirstName = Customer.FirstName,
-                        LastName = Customer.LastName,
-                        PolicyNumber = Policy.PolicyNumber,
-                        TransactionDate = item.TransactionDate == null ? null : item.TransactionDate.Value.ToString("dd/MM/yyyy"),
-                        SumInsured = item.SumInsured,
-                        Premium = item.Premium,
-                        Commission = (item.Premium - item.RoadsideAssistanceAmount - item.PassengerAccidentCoverAmount - item.ExcessBuyBackAmount - item.ExcessAmount - item.MedicalExpensesAmount) * Convert.ToDecimal(commision.CommissionAmount) / 100,
-                        ManagementCommission = (item.Premium - item.RoadsideAssistanceAmount - item.PassengerAccidentCoverAmount - item.ExcessBuyBackAmount - item.ExcessAmount - item.MedicalExpensesAmount) * Convert.ToDecimal(commision.ManagementCommission) / 100,
-                        Currency = _summaryDetailService.GetCurrencyName(currenyList, item.CurrencyId)
-                    });
+                        ListBasicCommissionReport.Add(new BasicCommissionReportModel()
+                        {
+                            FirstName = Customer.FirstName,
+                            LastName = Customer.LastName,
+                            PolicyNumber = Policy.PolicyNumber,
+                            TransactionDate = item.TransactionDate == null ? null : item.TransactionDate.Value.ToString("dd/MM/yyyy"),
+                            SumInsured = item.SumInsured,
+                            Premium = item.Premium,
+                            Commission = (item.Premium - item.RoadsideAssistanceAmount - item.PassengerAccidentCoverAmount - item.ExcessBuyBackAmount - item.ExcessAmount - item.MedicalExpensesAmount) * Convert.ToDecimal(commision.CommissionAmount) / 100,
+                            ManagementCommission = (item.Premium - item.RoadsideAssistanceAmount - item.PassengerAccidentCoverAmount - item.ExcessBuyBackAmount - item.ExcessAmount - item.MedicalExpensesAmount) * Convert.ToDecimal(commision.ManagementCommission) / 100,
+                            Currency = _summaryDetailService.GetCurrencyName(currenyList, item.CurrencyId)
+                        });
+                    }
                 }
+
             }
             model.BasicCommissionReport = ListBasicCommissionReport.OrderBy(x => x.FirstName).ToList();
             return View(model);

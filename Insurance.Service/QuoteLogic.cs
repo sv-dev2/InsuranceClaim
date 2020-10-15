@@ -32,7 +32,7 @@ namespace Insurance.Service
         public decimal QuaterlyRiskPremium { get; set; }
         public decimal Discount { get; set; }
 
-        public QuoteLogic CalculatePremium(int vehicleUsageId, decimal sumInsured, eCoverType coverType, eExcessType excessType, decimal excess, int PaymentTermid, decimal? AddThirdPartyAmount, int NumberofPersons, Boolean Addthirdparty, Boolean PassengerAccidentCover, Boolean ExcessBuyBack, Boolean RoadsideAssistance, Boolean MedicalExpenses, decimal? RadioLicenseCost, Boolean IncludeRadioLicenseCost, Boolean isVehicleRegisteredonICEcash, string BasicPremiumICEcash, string StampDutyICEcash, string ZTSCLevyICEcash, int ProductId = 0, string vehicleStartDate = "", string vehicleEndDate = "", string manufacturerYear = "", bool isAgentStaff = false, bool IsEndorsment = false, int currencyId=6)
+        public QuoteLogic CalculatePremium(int vehicleUsageId, decimal sumInsured, eCoverType coverType, eExcessType excessType, decimal excess, int PaymentTermid, decimal? AddThirdPartyAmount, int NumberofPersons, Boolean Addthirdparty, Boolean PassengerAccidentCover, Boolean ExcessBuyBack, Boolean RoadsideAssistance, Boolean MedicalExpenses, decimal? RadioLicenseCost, Boolean IncludeRadioLicenseCost, Boolean isVehicleRegisteredonICEcash, string BasicPremiumICEcash, string StampDutyICEcash, string ZTSCLevyICEcash, int ProductId = 0, string vehicleStartDate = "", string vehicleEndDate = "", string manufacturerYear = "", bool isAgentStaff = false, bool IsEndorsment = false, int currencyId = 6)
         {
             var vehicleUsage = InsuranceContext.VehicleUsages.Single(vehicleUsageId);
             var Setting = InsuranceContext.Settings.All();
@@ -40,7 +40,7 @@ namespace Insurance.Service
 
             decimal ratingPremium = 0;
 
-            
+
             var additionalchargeatp = 0.0m;
             var additionalchargepac = 0.0m;
             var additionalchargeebb = 0.0m;
@@ -75,8 +75,8 @@ namespace Insurance.Service
 
                 if (currencyId == (int)currencyType.USD)
                 {
-                   // incrementRate = Convert.ToSingle(0.5);
-                  //  InsuranceRate = vehicleUsage.ComprehensiveRate + incrementRate;
+                    // incrementRate = Convert.ToSingle(0.5);
+                    //  InsuranceRate = vehicleUsage.ComprehensiveRate + incrementRate;
                 }
                 else
                 {
@@ -85,7 +85,7 @@ namespace Insurance.Service
 
             }
 
-           
+
 
             else if (coverType == eCoverType.ThirdParty)
             {
@@ -305,11 +305,11 @@ namespace Insurance.Service
 
             //  this.Premium = premium;// 04_sep_2019
 
-           
 
 
-             if (!isVehicleRegisteredonICEcash && coverType != eCoverType.Comprehensive)
-                this.Premium = premium * (5*2);
+
+            if (!isVehicleRegisteredonICEcash && coverType != eCoverType.Comprehensive)
+                this.Premium = premium;   //premium * (5*2)
             else
                 this.Premium = premium;
 
@@ -479,7 +479,7 @@ namespace Insurance.Service
 
             if (!isVehicleRegisteredonICEcash && coverType != eCoverType.Comprehensive)
             {
-                this.Discount = this.Discount * (5*2);
+                this.Discount = this.Discount; //this.Discount * (5*2);
             }
 
             //if(currencyId==(int)currencyType.USD) // 17th jun 2020 // updated on 24 july 2020
@@ -509,7 +509,7 @@ namespace Insurance.Service
 
             var stampDuty = 0.00m;
 
-           var totalPremiumForStampDuty = (this.Premium + discountField + this.Discount);
+            var totalPremiumForStampDuty = (this.Premium + discountField + this.Discount);
 
             if (StampDutySetting.ValueType == Convert.ToInt32(eSettingValueType.percentage))
             {
@@ -517,7 +517,7 @@ namespace Insurance.Service
                 // stampDuty = (totalPremium * Convert.ToDecimal(StampDutySetting.value)) / 100;
             }
             else
-            {              
+            {
                 stampDuty = totalPremiumForStampDuty + Convert.ToDecimal(StampDutySetting.value);
                 // stampDuty = totalPremium + Convert.ToDecimal(StampDutySetting.value);
             }
@@ -587,24 +587,28 @@ namespace Insurance.Service
             }
             else
             {
-                
 
+                double maxZTSC = 1100;
                 //  double maxZTSC = 10.80 ; // default ProductId=1;
-                double maxZTSC = 10.80 * (5*2); // default ProductId=1;
-                            // ztsc new calucation will be also aply for comprehensive
+                //double maxZTSC = 10.80 * (5*2); // default ProductId=1;
+                //            // ztsc new calucation will be also aply for comprehensive
 
-                if (ProductId == 3 || ProductId == 11) // Commercial Commuter Omnibus and Commercial Vehicle
-                {
-                    //  maxZTSC = 22.00;             
-                    maxZTSC = 22.00 * (5*2);
-                }
 
-                if (currencyId == (int)currencyType.USD) // for usd
+                if (coverType == eCoverType.Comprehensive)
                 {
-                    maxZTSC = 10.80;
                     if (ProductId == 3 || ProductId == 11) // Commercial Commuter Omnibus and Commercial Vehicle
-                    {           
-                        maxZTSC = 22.80;
+                    {
+                        //  maxZTSC = 22.00;             
+                        maxZTSC = 22.00 * (5 * 2);
+                    }
+
+                    if (currencyId == (int)currencyType.USD) // for usd
+                    {
+                        maxZTSC = 10.80;
+                        if (ProductId == 3 || ProductId == 11) // Commercial Commuter Omnibus and Commercial Vehicle
+                        {
+                            maxZTSC = 22.80;
+                        }
                     }
                 }
 
@@ -685,11 +689,11 @@ namespace Insurance.Service
 
             if (!string.IsNullOrEmpty(StampDutyICEcash) && Convert.ToDecimal(StampDutyICEcash) > 100000)
             {
-                this.StamDuty = 100000*2;
+                this.StamDuty = 100000 * 2;
             }
             else if (coverType != eCoverType.Comprehensive && Convert.ToDecimal(StampDutyICEcash) < Convert.ToDecimal(7.50)) // minimum stamp duty
             {
-                this.StamDuty = Convert.ToDecimal(7.50*2);
+                this.StamDuty = Convert.ToDecimal(7.50 * 2);
             }
 
 
@@ -715,7 +719,7 @@ namespace Insurance.Service
             //        this.ZtscLevy = Convert.ToDecimal(modelUsd.ZTSCLevy);
             //    }
             //}
-            
+
             return this;
         }
 
@@ -735,21 +739,21 @@ namespace Insurance.Service
             {
                 case 1:
 
-                    if(calculatedPremium < premium)
+                    if (calculatedPremium < premium)
                     {
                         model.Premium = premium;
                         model.StampDuty = StamDuty;
                         model.ZTSCLevy = ZtscLevy;
                     }
-                    
+
                     break;
                 case 3:
-                    premium = (premium/ 12) *3;
+                    premium = (premium / 12) * 3;
                     if (calculatedPremium < premium)
                     {
                         model.Premium = premium;
-                        model.StampDuty = (StamDuty / 12) * 3 ;
-                        model.ZTSCLevy = (ZtscLevy / 12) * 3 ;
+                        model.StampDuty = (StamDuty / 12) * 3;
+                        model.ZTSCLevy = (ZtscLevy / 12) * 3;
                     }
 
                     break;
@@ -831,17 +835,17 @@ namespace Insurance.Service
         }
 
 
-       
+
 
 
         public QuoteLogic CalculateDomesticPremium(decimal InsuranceRate, decimal coverAmount, int PaymentTermid)
         {
 
-             var Setting = InsuranceContext.Settings.All();
+            var Setting = InsuranceContext.Settings.All();
             var premium = 0.00m;
             int day = 0;
 
-        
+
             // double calulateTerm = 0;           
             premium = (coverAmount * Convert.ToDecimal(InsuranceRate)) / 100;
 
@@ -892,7 +896,7 @@ namespace Insurance.Service
                 stampDuty = (totalPremium * Convert.ToDecimal(StampDutySetting.value)) / 100;
             else
                 stampDuty = totalPremium + Convert.ToDecimal(StampDutySetting.value);
-            
+
 
 
             this.StamDuty = Math.Round(stampDuty, 2);

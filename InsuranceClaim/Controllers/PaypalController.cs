@@ -1224,10 +1224,8 @@ namespace InsuranceClaim.Controllers
                 string paymentTermsName = "";
                 if (item.PaymentTermId == 1)
                     paymentTermsName = "Annual";
-                else if (item.PaymentTermId == 4)
-                    paymentTermsName = "Termly";
-                else
-                    paymentTermsName = paymentTermVehicel.Name + " Months";
+                
+                    paymentTermsName = item.PaymentTermId + " Months";
 
                 decimal? premiumDue = item.Premium + item.StampDuty + item.ZTSCLevy + item.VehicleLicenceFee + item.RadioLicenseCost;
 
@@ -1241,38 +1239,34 @@ namespace InsuranceClaim.Controllers
                 //Summeryofcover += "<tr> <td valign='middle' style='padding: 5px 10px; font-size:15px;'> Transaction Date:</td> <td>" + item.TransactionDate.Value.ToShortDateString() + " </td> </tr>";
                 //Summeryofcover += " </table> <br/><br/>";
 
-                // this section will be append on 
-
-                // yahi bhi kero
-
 
                 Summeryofcover += "<table border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid;' >";
-                Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:10px;   word-break: break-all;'> <font size='1'>Gene-Insure</font> </th> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Cover Note #: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>"+ item.CoverNote +" </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px; '> <font size='1'> Transaction Date: </font> </td> <td style='padding: 1px 10px; '> <font size='1'>" + item.TransactionDate.Value.ToShortDateString() + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;   word-break: break-all;'> <font size='1'><b> GENE-INSURE </b></font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Cover Note # </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverNote +" </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px; '> <font size='1'> Transaction Date </font> </td> <td style='padding: 1px 10px; '> <font size='1'>" + item.TransactionDate.Value.ToShortDateString() + " </font> </td> </tr>";
                 Summeryofcover += " </table>";
 
-                Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid;' >";             
-                Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:1px;   word-break: break-all;'> <font size='1'>Certificate of Motor Insurance</font>  </th> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Insurance Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>Road Traffic Act </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + " " + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Start Date: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";         
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> End Date: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverEndDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Period: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + paymentTermsName + " </font> </td> </tr>";           
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Premium: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.Premium + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Gvt Levy: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.ZTSCLevy + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Stamp Duty: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.StampDuty + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Premium Due: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + Math.Round( Convert.ToDecimal(premiumDue),2) + " </font> </td> </tr>";
+                Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid; width:900px;' >";             
+                Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;word-break: break-all;'> <font size='1'><b> CERTIFICATE OF MOTOR INSURANCE </b> </font>  </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Insurance Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>Road Traffic Act </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + " " + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Start Date </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";         
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> End Date </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverEndDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'>Policy Period </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + paymentTermsName + " </font> </td> </tr>";           
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Premium </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.Premium + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Gvt Levy </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.ZTSCLevy + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Stamp Duty </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.StampDuty + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Premium Due </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + Math.Round( Convert.ToDecimal(premiumDue),2) + " </font> </td> </tr>";
                 Summeryofcover += " </table>";
 
                 // #ddd
                 Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid' >";
-                Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:10px;  word-break: break-all;'> <font size='1'>Vehicle Details</font> </th> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Reg. Number: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.RegistrationNo + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + productDetail.ProductName + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Tax Class: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + taxClassDetials.Description + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px; font-size:15px;'> <font size='1'> Sum Insured: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.SumInsured + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle: </font> </td> <td style='padding: 5px 10px;'> <font size='1'>" + vehicledescription + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;  word-break: break-all;'> <font size='1'><b> VEHICLE DETAILS </b></font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle Reg. Number </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.RegistrationNo + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + productDetail.ProductName + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Tax Class </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + taxClassDetials.Description + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px; font-size:15px;'> <font size='1'> Sum Insured </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.SumInsured + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle: </font> </td> <td style='padding: 5px 10px;'> <font size='1'>" + vehicledescription + " </font> </td> </tr>";
                 Summeryofcover += " </table> ";
 
                
