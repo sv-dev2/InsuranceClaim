@@ -143,6 +143,7 @@
                                                     @if (userLoggedin && (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Team Leaders")))
                                                     {
                                                         <li><a href="/CustomerRegistration/Index">Issue Quotation</a></li>
+                                                        <li><a href="/Account/Dashboard">Dashboard</a></li>
                                                     }
                                                     else if (userLoggedin == false)
                                                     {

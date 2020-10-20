@@ -1963,10 +1963,8 @@ namespace InsuranceClaim.Controllers
 
                                 if (item.PaymentTermId == 1)
                                     paymentTermsNmae = "Annual";
-                                else if (item.PaymentTermId == 4)
-                                    paymentTermsNmae = "Termly";
                                 else
-                                    paymentTermsNmae = paymentTermVehicel.Name + " Months";
+                                    paymentTermsNmae = item.PaymentTermId + " Months";
 
                                 decimal? premiumDue = item.Premium + item.StampDuty + item.ZTSCLevy + item.VehicleLicenceFee + item.RadioLicenseCost;
                                 var productDetail = InsuranceContext.Products.Single(Convert.ToInt32(item.ProductId));
@@ -2061,7 +2059,7 @@ namespace InsuranceClaim.Controllers
                                 Replace("##Discount##", Convert.ToString(ListOfVehicles.Sum(x => x.Discount)))
                                  .Replace("##PenaltiesAmt##", Convert.ToString(ListOfVehicles.Sum(x => x.PenaltiesAmt)))
                                 .Replace("##ExcessAmount##", Convert.ToString(ExcessAmount))
-                                .Replace("##CurrencyNames##", CurrencyName).
+                                .Replace("##currencyName##", CurrencyName).
                                 Replace("##SummaryDetailsPath##", Convert.ToString(rootPath)).Replace("##insurance_period##", vehicleQuotation.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + vehicleQuotation.CoverEndDate.Value.ToString("dd/MM/yyyy")).
                                 Replace("##NINumber##", customerQuotation.NationalIdentificationNumber).Replace("##VehicleLicenceFee##", Convert.ToString(ListOfVehicles.Sum(x => x.VehicleLicenceFee)));
 

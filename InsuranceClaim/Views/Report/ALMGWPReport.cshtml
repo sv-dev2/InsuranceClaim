@@ -160,9 +160,10 @@
                             @*<th>Commission Detail</th>*@
                             <th>Radio Licence Cost</th>
                             <th>Zinara License Fee</th>
+                            <th>Grand total</th>
                             <th>Status</th>
                             <th>Policy Status</th>
-                            <th>Grand total</th>
+                            
                             @*<th>
                                 Business Source
                             </th>*@
@@ -334,6 +335,9 @@
                                   </td>*@
                                     <td>@item.RadioLicenseCost</td>
                                     <td> @item.Zinara_License_Fee </td>
+                                    <td>
+                                        @item.Premium_due
+                                    </td>
 
 
                                     @if (DateTime.Now > item.PolicyRenewalDate)
@@ -367,9 +371,7 @@
                                     <td>@item.BusinessSourceName <span>-</span>   @item.SourceDetailName</td>
                                     *@
 
-                                    <td>
-                                        @item.Premium_due
-                                    </td>
+                                    
                                 </tr>
                             }
                         </tbody>
@@ -394,48 +396,24 @@
                                 </td>
                                 <td><strong>@radioLicenseCostTotal</strong></td>
                                 <td><strong> @ZinaraLicenseFee </strong> </td>*@
-                                <td>@radioLicenseCostTotal</td>
-                                <td>@ZinaraLicenseFee</td>
-                                <td colspan="2"></td>
+                                <td><strong>  @radioLicenseCostTotal </strong></td>
+                                <td><strong>  @ZinaraLicenseFee </strong></td>
                                 <td>
-                                    <b> @premiumDueTotal </b>
+                                    <b> <strong>  @premiumDueTotal </strong></b>
                                 </td>
-
+                                <td colspan="2"></td>                        
                             </tr>
-                            @*<tr>
-                                <td><strong>Currency Total:</strong></td>
-                                <td></td>
-                                <td><strong>Us$ Total:</strong></td>
-                                <td>@TotalUs</td>
-                                <td>Us$ Total Count:@count</td>
-                                <td><strong>RTGS$ Total:</strong></td>
-                                <td>@TotalRTGS</td>
-                                <td>RTGS$ Total Count:@count1</td>
-                                <td><strong>USD Total:</strong></td>
-                                <td>@TotalUSD</td>
-                                <td>USD Total:@count2</td>
-                                <td><strong>INR Total:</strong></td>
-                                <td>@TotalINR</td>
-                                <td>INR Total Count:@count3</td>
-                                <td></td>
-                                <td></td>
-                            </tr>*@
-
+                            
                             <tr>
-
                                 <td colspan="8"></td>
                                 <td colspan="3"><strong>Currency</strong></td>
                                 <td colspan="3"><strong>Amount</strong></td>
                                 <td colspan="3"><strong>Count</strong></td>
-
                                 <td colspan="2"></td>
-
                             </tr>
 
                             <tr>
                                 <td colspan="8"><strong>New Business:</strong></td>
-
-
                                 <td colspan="3">US$ FCA</td>
                                 <td colspan="3">@ustotal</td>
                                 <td colspan="3">@uscount</td>

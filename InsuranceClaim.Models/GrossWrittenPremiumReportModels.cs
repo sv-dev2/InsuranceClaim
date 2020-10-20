@@ -101,5 +101,8 @@ namespace InsuranceClaim.Models
         [Required(ErrorMessage = "Please Enter End Date.")]
         public string EndDate { get; set; }
 
+        [Display(Name = "View Unpaid")]
+        public int? PaymentStatus { get; set; }
+
     }
 }

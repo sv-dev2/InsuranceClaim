@@ -1339,6 +1339,7 @@ namespace InsuranceClaim.Controllers
             var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
             ViewBag.ReportList = ReportsList();
+            ViewBag.PaymentMethod = PaymentMethodsList();
 
             // Customer.ALMId is null replace condition with SummaryDetail.CreatedBy is not null
             var query = " select top 500 SummaryDetail.PaymentMethodId, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
@@ -2230,6 +2231,7 @@ namespace InsuranceClaim.Controllers
 
 
             ViewBag.ReportList = ReportsList();
+            ViewBag.PaymentMethod = PaymentMethodsList();
 
             var query = " select SummaryDetail.PaymentMethodId, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
@@ -2254,6 +2256,10 @@ namespace InsuranceClaim.Controllers
 
             if (_model.ReportTypeId == (int)ReportTypeEnum.ALM)
                 query += "and ALMBranchId <>0";
+
+            if (_model.PaymentStatus != null)
+                query += " and SummaryDetail.PaymentMethodId= " + _model.PaymentStatus.ToString() + " ";
+            
 
             //if (_model.ReportTypeId == (int)ReportTypeEnum.CallCenter)
             //    query += "and Customer.BranchId=" + (int)ALMBranch.GeneCallCentre;
@@ -2356,9 +2362,6 @@ namespace InsuranceClaim.Controllers
                 }
             }
 
-
-
-
             //_model.ListGrossWrittenPremiumReportdata = ListGrossWrittenPremiumReport.OrderByDescending(p => p.Id).ToList();
             _model.ListGrossWrittenPremiumReportdata = list.OrderByDescending(p => p.Id).ToList();
 
@@ -2367,200 +2370,21 @@ namespace InsuranceClaim.Controllers
             _model.ListGrossWrittenPremiumReportdata.AddRange(endorsmentList);
 
             return View("GrossWrittenPremiumReport", _model);
-
-
-
-
-
-            //List<GrossWrittenPremiumReportModels> ListGrossWrittenPremiumReport = new List<GrossWrittenPremiumReportModels>();
-            //ListGrossWrittenPremiumReportModels _ListGrossWrittenPremiumReport = new ListGrossWrittenPremiumReportModels();
-            //_ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
-
-            //GrossWrittenPremiumReportSearchModels Model = new GrossWrittenPremiumReportSearchModels();
-
-            //var vehicledetail = InsuranceContext.VehicleDetails.All(where: $"IsActive='1'").OrderByDescending(c => c.Id).ToList();
-            //var branchList = InsuranceContext.Branches.All();
-
-
-            //DateTime fromDate = DateTime.Now.AddDays(-1);
-            //DateTime endDate = DateTime.Now;
-
-            //if (!string.IsNullOrEmpty(_model.FormDate) && !string.IsNullOrEmpty(_model.EndDate))
-            //{
-            //    fromDate = Convert.ToDateTime(_model.FormDate);
-            //    endDate = Convert.ToDateTime(_model.EndDate);
-
-
-            //    ViewBag.fromdate = fromDate.ToString("dd/MM/yyyy");
-            //    ViewBag.enddate = endDate.ToString("dd/MM/yyyy");
-
-            //}
-
-
-            //vehicledetail = vehicledetail.Where(c => Convert.ToDateTime(c.TransactionDate.Value.ToShortDateString()) >= fromDate && Convert.ToDateTime(c.TransactionDate.Value.ToShortDateString()) <= endDate).ToList();
-
-
-            //var currencyList = _summaryDetailService.GetAllCurrency();
-
-
-
-            //var businessSourceList = InsuranceContext.BusinessSources.All();
-            //var sourceList = InsuranceContext.SourceDetails.All();
-
-
-
-
-
-            //foreach (var item in vehicledetail)
-            //{
-            //    var Vehicle = InsuranceContext.VehicleDetails.Single(item.Id);
-            //    GrossWrittenPremiumReportModels obj = new GrossWrittenPremiumReportModels();
-            //    var policy = InsuranceContext.PolicyDetails.Single(item.PolicyId);
-
-
-
-            //    var customer = InsuranceContext.Customers.Single(item.CustomerId);
-            //    var make = InsuranceContext.VehicleMakes.Single(where: $"MakeCode='{item.MakeId}'");
-            //    var model = InsuranceContext.VehicleModels.Single(where: $"ModelCode='{item.ModelId}'");
-
-            //    obj.RenewPolicyNumber = item.RenewPolicyNumber;
-            //    obj.CoverNoteNum = item.CoverNote;
-
-
-
-
-            //    var businessSourceListDetails = sourceList.FirstOrDefault(c => c.Id == item.BusinessSourceDetailId);
-            //    if (businessSourceListDetails != null)
-            //    {
-            //        obj.BusinessSourceName = businessSourceListDetails.FirstName + " " + businessSourceListDetails.LastName;
-
-
-            //        var businessSourceDetails = businessSourceList.FirstOrDefault(c => c.Id == businessSourceListDetails.Id);
-            //        if (businessSourceListDetails != null)
-            //        {
-            //            obj.SourceDetailName = businessSourceDetails.Source;
-            //        }
-            //    }
-
-
-            //    var vehicleSUmmarydetail = InsuranceContext.SummaryVehicleDetails.Single(where: $"VehicleDetailsId='{item.Id}'");
-            //    if (vehicleSUmmarydetail != null)
-            //    {
-            //        var summary = InsuranceContext.SummaryDetails.Single(vehicleSUmmarydetail.SummaryDetailId);
-            //        if (summary != null)
-            //        {
-
-            //            if (summary.isQuotation != true)
-            //            {
-            //                var branchDetails = branchList.FirstOrDefault(c => c.Id == customer.BranchId);
-            //                if (branchDetails != null)
-            //                {
-            //                    obj.ALMId = branchDetails.AlmId;
-            //                    obj.BranchName = branchDetails.BranchName;
-            //                }
-
-            //                obj.Payment_Term = InsuranceContext.PaymentTerms.Single(item.PaymentTermId)?.Name;
-            //                obj.Payment_Mode = InsuranceContext.PaymentMethods.Single(summary.PaymentMethodId)?.Name;
-            //                obj.Customer_Name = customer.FirstName + " " + customer.LastName;
-            //                obj.Policy_Number = policy.PolicyNumber;
-            //                obj.Policy_startdate = Convert.ToDateTime(item.CoverStartDate).ToString("dd/MM/yyy");
-            //                obj.Policy_endate = Convert.ToDateTime(item.CoverEndDate).ToString("dd/MM/yyy");
-
-            //                var makeDesc = make == null ? "" : make.MakeDescription;
-            //                var modelDes = model == null ? "" : model.ModelDescription;
-
-            //                obj.Vehicle_makeandmodel = makeDesc + "/" + modelDes;
-            //                obj.Stamp_duty = Convert.ToDecimal(item.StampDuty);
-            //                obj.ZTSC_Levy = Convert.ToDecimal(item.ZTSCLevy);
-            //                obj.Sum_Insured = Convert.ToDecimal(item.SumInsured);
-
-            //                //10 May D
-            //                obj.Id = item.Id;
-            //                //8 Feb
-            //                obj.IsLapsed = item.isLapsed;
-            //                obj.PolicyRenewalDate = Convert.ToDateTime(item.RenewalDate);
-            //                obj.IsActive = item.IsActive;
-
-            //                obj.Currency = _summaryDetailService.GetCurrencyName(currencyList, item.CurrencyId);
-
-            //                var customerDetails = InsuranceContext.Customers.Single(summary.CreatedBy);
-
-            //                if (customerDetails != null)
-            //                    obj.PolicyCreatedBy = customerDetails.FirstName + " " + customerDetails.LastName;
-
-            //                obj.Zinara_License_Fee = Vehicle.VehicleLicenceFee;
-
-
-            //                string converType = "";
-
-            //                if (item.CoverTypeId == (int)eCoverType.ThirdParty)
-            //                    converType = eCoverType.ThirdParty.ToString();
-
-            //                if (item.CoverTypeId == (int)eCoverType.FullThirdParty)
-            //                    converType = eCoverType.FullThirdParty.ToString();
-
-            //                if (item.CoverTypeId == (int)eCoverType.Comprehensive)
-            //                    converType = eCoverType.Comprehensive.ToString();
-
-            //                obj.CoverType = converType;
-
-
-            //                obj.Comission_percentage = 30;
-
-            //                if (Vehicle != null)
-            //                {
-            //                    obj.Comission_Amount = Convert.ToDecimal(Vehicle.Premium * 30 / 100);
-            //                }
-
-
-            //                obj.Net_Premium = item.Premium;
-            //                obj.Transaction_date = Convert.ToDateTime(Vehicle.TransactionDate).ToString("dd/MM/yyy");
-
-
-            //                decimal radioLicenseCost = 0;
-            //                if (item.IncludeRadioLicenseCost.Value)
-            //                {
-            //                    radioLicenseCost = Convert.ToDecimal(item.RadioLicenseCost);
-            //                }
-
-            //                //obj.Annual_Premium = Convert.ToDecimal(item.Premium);
-
-            //                //  obj.Premium_due = Convert.ToDecimal(item.Premium) + Convert.ToDecimal(item.StampDuty) + Convert.ToDecimal(item.ZTSCLevy) + Convert.ToDecimal(item.VehicleLicenceFee) + radioLicenseCost;
-
-            //                obj.Premium_due = Convert.ToDecimal(item.Premium) + Convert.ToDecimal(item.StampDuty) + Convert.ToDecimal(item.ZTSCLevy);
-
-
-            //                //if (item.PaymentTermId == 1)
-            //                //{
-            //                //    obj.Annual_Premium = Convert.ToDecimal(item.Premium);
-
-            //                //    obj.Premium_due = Convert.ToDecimal(item.Premium) + Convert.ToDecimal(item.StampDuty) + Convert.ToDecimal(item.ZTSCLevy) + Convert.ToDecimal(item.RadioLicenseCost);
-            //                //}
-            //                //if (item.PaymentTermId == 3)
-            //                //{
-            //                //    obj.Premium_due = Convert.ToDecimal(item.Premium) + Convert.ToDecimal(item.StampDuty) + Convert.ToDecimal(item.ZTSCLevy) + Convert.ToDecimal(item.RadioLicenseCost);
-            //                //    obj.Annual_Premium = obj.Premium_due * 4;
-
-            //                //}
-            //                //if (item.PaymentTermId == 4)
-            //                //{
-            //                //    obj.Premium_due = Convert.ToDecimal(item.Premium) + Convert.ToDecimal(item.StampDuty) + Convert.ToDecimal(item.ZTSCLevy) + Convert.ToDecimal(item.RadioLicenseCost);
-            //                //    obj.Annual_Premium = obj.Premium_due * 3;
-
-            //                //}
-
-            //                obj.RadioLicenseCost = item.RadioLicenseCost;
-            //                ListGrossWrittenPremiumReport.Add(obj);
-            //            }
-            //        }
-            //    }
-
-            //}
-            ////_ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = ListGrossWrittenPremiumReport.OrderBy(p => p.Customer_Name).ThenBy(p => p.Payment_Term).ThenBy(p => p.Payment_Mode).ToList();
-            //Model.ListGrossWrittenPremiumReportdata = ListGrossWrittenPremiumReport.OrderBy(p => p.Id).ThenBy(p => p.Customer_Name).ThenBy(c => c.Policy_Number).ThenBy(c => c.Policy_Number).ThenBy(p => p.Payment_Term).ThenBy(p => p.Payment_Mode).ToList();
-            //return View("GrossWrittenPremiumReport", Model);
-
         }
+
+
+        public List<PaymentMethod> PaymentMethodsList()
+        {
+            List<PaymentMethod> list = new List<PaymentMethod>();
+            string query = "select * from PaymentMethod";
+            var result = InsuranceContext.Query(query).Select(x => new PaymentMethod()
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToList();
+            return (List<PaymentMethod>)result;
+        }
+
 
         public ActionResult SearchGrossReportsForService(GrossWrittenPremiumReportSearchModels _model)
         {
@@ -4840,18 +4664,24 @@ namespace InsuranceClaim.Controllers
             //SendGWPExcelFile();
             CertSerialNoReportModel model = new CertSerialNoReportModel();
 
-            string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
+            ViewBag.BranchList = InsuranceContext.Branches.All().ToList();
+
+            string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo,ALMBranchId, Branch.BranchName, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
             query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
-            query += " join Customer on CertSerialNoDetail.CreatedBy = Customer.Id order by CertSerialNoDetail.id desc";
+            query += " join Customer on CertSerialNoDetail.CreatedBy = Customer.Id ";
+            query += " join VehicleDetail on VehicleDetail.Id=CertSerialNoDetail.VehicleId ";
+            query += "  join Branch on VehicleDetail.ALMBranchId= Branch.Id ";
+            query +=" order by CertSerialNoDetail.id desc";
 
             var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
             {
-
                 VRN = c.VRN,
                 AgentName = c.AgentName,
                 PolicyNumber = c.PolicyNumber,
                 CertSerialNo = c.CertSerialNo,
-                CreatedOn = c.CreatedOn == null ? "" : Convert.ToString(c.CreatedOn)
+                CreatedOn = c.CreatedOn == null ? "" : Convert.ToString(c.CreatedOn),
+                ALMBranchId = c.ALMBranchId,
+                BranchName = c.BranchName
             }).ToList();
 
             model.List = list;
@@ -4862,7 +4692,6 @@ namespace InsuranceClaim.Controllers
         [Authorize(Roles = "Administrator,Reports,Finance,Team Leaders")]
         public ActionResult CertSerialNoSearchReport(CertSerialNoReportModel model)
         {
-
 
             DateTime fromDate = DateTime.Now.AddDays(-1);
             DateTime endDate = DateTime.Now;
@@ -4876,10 +4705,22 @@ namespace InsuranceClaim.Controllers
                 ViewBag.enddate = endDate.ToString("dd/MM/yyyy");
             }
 
+            ViewBag.BranchList = InsuranceContext.Branches.All().ToList();
 
-            string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn from CertSerialNoDetail";
+            string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, ";
+            query+= " VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn,ALMBranchId, Branch.BranchName from CertSerialNoDetail";
             query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
-            query += " join Customer on CertSerialNoDetail.CreatedBy = Customer.Id where  CertSerialNoDetail.CreatedOn>= '" + fromDate + "' And CertSerialNoDetail.CreatedOn<='" + endDate + "'" + "order  by CertSerialNoDetail.Id desc";
+            query += " join Customer on CertSerialNoDetail.CreatedBy = Customer.Id ";
+            query += " join VehicleDetail on VehicleDetail.Id=CertSerialNoDetail.VehicleId ";
+            query += " join Branch on VehicleDetail.ALMBranchId= Branch.Id ";
+            query += " where  CertSerialNoDetail.CreatedOn>= '" + fromDate + "' And CertSerialNoDetail.CreatedOn<='" + endDate + "'";
+                    
+            if(model.BranchId>0)
+            {
+                query += " and ALMBranchId="+ model.BranchId;
+            }
+
+            query += " order  by CertSerialNoDetail.Id desc";
 
             var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
             {
@@ -4888,7 +4729,9 @@ namespace InsuranceClaim.Controllers
                 AgentName = c.AgentName,
                 PolicyNumber = c.PolicyNumber,
                 CertSerialNo = c.CertSerialNo,
-                CreatedOn = c.CreatedOn == null ? "" : Convert.ToString(c.CreatedOn)
+                CreatedOn = c.CreatedOn == null ? "" : Convert.ToString(c.CreatedOn),
+                BranchName = c.BranchName,
+                ALMBranchId= c.ALMBranchId
             }).ToList();
 
             model.List = list;

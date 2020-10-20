@@ -214,36 +214,36 @@ namespace Insurance.Service
 
         public void SendWeeklyReport() 
         {
-            var dtOneMonthBack = DateTime.Now.AddMonths(-1);
+            var dtOneMonthBack = DateTime.Now;
 
             int year = dtOneMonthBack.Year;
             int month = dtOneMonthBack.Month;
 
-            //string firstWeekStart = dtOneMonthBack.ToString("MM") + "/01/" + DateTime.Now.Year.ToString();
-            //string firstWeekEnd = dtOneMonthBack.ToString("MM") + "/07/" + DateTime.Now.Year.ToString();
-            //string secondWeekStart = dtOneMonthBack.ToString("MM") + "/08/" + DateTime.Now.Year.ToString();
-            //string secondWeekEnd = dtOneMonthBack.ToString("MM") + "/14/" + DateTime.Now.Year.ToString();
+            string firstWeekStart = dtOneMonthBack.ToString("MM") + "/01/" + DateTime.Now.Year.ToString();
+            string firstWeekEnd = dtOneMonthBack.ToString("MM") + "/07/" + DateTime.Now.Year.ToString();
+            string secondWeekStart = dtOneMonthBack.ToString("MM") + "/08/" + DateTime.Now.Year.ToString();
+            string secondWeekEnd = dtOneMonthBack.ToString("MM") + "/14/" + DateTime.Now.Year.ToString();
 
-            //string thirdWeekStart = dtOneMonthBack.ToString("MM") + "/15/" + DateTime.Now.Year.ToString();
-            //string thirdWeekEnd = dtOneMonthBack.ToString("MM") + "/21/" + DateTime.Now.Year.ToString();
-            //string fourthWeekStart = dtOneMonthBack.ToString("MM") + "/22/" + DateTime.Now.Year.ToString();
-            //DateTime lastDate = new DateTime(year, month,
-            //                        DateTime.DaysInMonth(year, month));
-            //string fourthWeekEnd = lastDate.ToString("MM/dd/yyyy");
+            string thirdWeekStart = dtOneMonthBack.ToString("MM") + "/15/" + DateTime.Now.Year.ToString();
+            string thirdWeekEnd = dtOneMonthBack.ToString("MM") + "/21/" + DateTime.Now.Year.ToString();
+            string fourthWeekStart = dtOneMonthBack.ToString("MM") + "/22/" + DateTime.Now.Year.ToString();
+            DateTime lastDate = new DateTime(year, month,
+                                    DateTime.DaysInMonth(year, month));
+            string fourthWeekEnd = lastDate.ToString("MM/dd/yyyy");
 
 
-            string firstWeekStart = dtOneMonthBack.ToString("MM/dd/yyyy");
-            string firstWeekEnd = dtOneMonthBack.AddDays(7).ToString("MM/dd/yyyy");
+            //string firstWeekStart = dtOneMonthBack.ToString("MM/dd/yyyy");
+            //string firstWeekEnd = dtOneMonthBack.AddDays(7).ToString("MM/dd/yyyy");
 
-            string secondWeekStart = dtOneMonthBack.AddDays(8).ToString("MM/dd/yyyy");
-            string secondWeekEnd = dtOneMonthBack.AddDays(14).ToString("MM/dd/yyyy");
+            //string secondWeekStart = dtOneMonthBack.AddDays(8).ToString("MM/dd/yyyy");
+            //string secondWeekEnd = dtOneMonthBack.AddDays(14).ToString("MM/dd/yyyy");
 
-            string thirdWeekStart = dtOneMonthBack.AddDays(15).ToString("MM/dd/yyyy");
-            string thirdWeekEnd = dtOneMonthBack.AddDays(21).ToString("MM/dd/yyyy");
-            string fourthWeekStart = dtOneMonthBack.AddDays(22).ToString("MM/dd/yyyy");
-            //DateTime lastDate = new DateTime(year, month,
-            //                        DateTime.DaysInMonth(year, month));
-            string fourthWeekEnd = DateTime.Now.ToString("MM/dd/yyyy");
+            //string thirdWeekStart = dtOneMonthBack.AddDays(15).ToString("MM/dd/yyyy");
+            //string thirdWeekEnd = dtOneMonthBack.AddDays(21).ToString("MM/dd/yyyy");
+            //string fourthWeekStart = dtOneMonthBack.AddDays(22).ToString("MM/dd/yyyy");
+            ////DateTime lastDate = new DateTime(year, month,
+            ////                        DateTime.DaysInMonth(year, month));
+            //string fourthWeekEnd = DateTime.Now.ToString("MM/dd/yyyy");
 
 
 
@@ -346,20 +346,20 @@ namespace Insurance.Service
             try
             {
 
-                var dtOneMonthBack = DateTime.Now.AddMonths(-1);
+                var dtOneMonthBack = DateTime.Now;
                 int year = dtOneMonthBack.Year;
                 int month = dtOneMonthBack.Month;
 
-                //string firstWeekEnd = DateTime.Now.ToString("MM") + "/07/" + DateTime.Now.Year.ToString();
-                //string secondWeekEnd = DateTime.Now.ToString("MM") + "/14/" + DateTime.Now.Year.ToString();
-                //string thirdWeekEnd = DateTime.Now.ToString("MM") + "/21/" + DateTime.Now.Year.ToString();
-                //DateTime lastDate = new DateTime(year, month,
-                //                    DateTime.DaysInMonth(year, month));
+                string firstWeekEnd = DateTime.Now.ToString("MM") + "/07/" + DateTime.Now.Year.ToString();
+                string secondWeekEnd = DateTime.Now.ToString("MM") + "/14/" + DateTime.Now.Year.ToString();
+                string thirdWeekEnd = DateTime.Now.ToString("MM") + "/21/" + DateTime.Now.Year.ToString();
+                DateTime lastDate = new DateTime(year, month,
+                                    DateTime.DaysInMonth(year, month));
 
-                string firstWeekEnd = dtOneMonthBack.AddDays(7).ToString("MM/dd/yyyy");
-                string secondWeekEnd = dtOneMonthBack.AddDays(14).ToString("MM/dd/yyyy");
-                string thirdWeekEnd = dtOneMonthBack.AddDays(21).ToString("MM/dd/yyyy");
-                DateTime lastDate = DateTime.Now;
+                //string firstWeekEnd = dtOneMonthBack.AddDays(7).ToString("MM/dd/yyyy");
+                //string secondWeekEnd = dtOneMonthBack.AddDays(14).ToString("MM/dd/yyyy");
+                //string thirdWeekEnd = dtOneMonthBack.AddDays(21).ToString("MM/dd/yyyy");
+                //DateTime lastDate = DateTime.Now;
 
                 int firstTotalCount = grossWrittenPremiumReports.Sum(x => x.FirstWeekCount);
                 int secondTotalCount = grossWrittenPremiumReports.Sum(x => x.SecondWeekCount);
@@ -503,15 +503,13 @@ namespace Insurance.Service
                     IsActive = x.IsActive,
                     RenewPolicyNumber = x.RenewPolicyNumber,
                 }).ToList();
-                Debug.WriteLine("**************hdfhd***************");
-                Debug.WriteLine(ListGrossWrittenPremiumReport.Sum(x => x.Premium_due));
-                Debug.WriteLine("**************hdfhd***************");
+                
 
             }
             catch (Exception ex) 
             {
                 
-                Debug.WriteLine(ex);
+               // Debug.WriteLine(ex);
                 return ListGrossWrittenPremiumReport;
             }
 

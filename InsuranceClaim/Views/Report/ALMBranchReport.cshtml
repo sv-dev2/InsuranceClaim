@@ -137,8 +137,25 @@
                         </tr>
                     </thead>
                     <tbody>
+
+                        
+                        @{
+                            int targetTransaction = 0;
+                            int actualTransaction = 0;
+
+                            decimal targetGwp = 0;
+                            decimal actualGwp = 0;
+                        }
+
+
                         @foreach (var item in Model.ListGrossWrittenPremiumReportdata.ToList())
                         {
+                            targetTransaction += Convert.ToInt32(item.AgentTargetPolicy);
+                            actualTransaction += item.AgentActualPolicy;
+
+                            targetGwp += Convert.ToInt32(item.AgentTargetGwp);
+                            actualGwp += Convert.ToInt32(item.AgentActualGwp);
+
                             <tr>
                                 <td> @item.PolicyCreatedBy  </td>
 
@@ -159,6 +176,28 @@
                             </tr>
                         }
                     </tbody>
+
+                    <tfoot>
+
+                        <tr>
+                            <td><b>Total</b> </td>
+                            <td> <b> @targetTransaction</b> </td>
+                            <td> <b> @actualTransaction </b>   </td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <b>@targetGwp </b>
+                            </td>
+                            <td>
+                                <b> @actualGwp</b>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+
+                    </tfoot>
 
 
 

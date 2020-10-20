@@ -29,7 +29,7 @@
                 <div class="form-group-section-date">
                     <div class="form-group-input">
                         <div class="row">
-                            <div class="col-sm-3 col-md-3 form-group-text">
+                            <div class="col-sm-2 col-md-2 form-group-text">
                                 <div class="form-group">
                                     @*@Html.LabelFor(x => x.FromDate, new { @class = "gender-label" })*@
                                     <div class='input-group' id='datetimenew'>
@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3 col-md-3 form-group-text">
+                            <div class="col-sm-2 col-md-2 form-group-text">
                                 <div class="form-group">
                                     @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
                                     <div class='input-group' id='datetimenew12'>
@@ -54,16 +54,23 @@
                                 </div>
                             </div>
 
-
-                            <div class="col-sm-3 col-md-3 form-group-select">
+                            <div class="col-sm-2 col-md-2 form-group-select">
                                 <div class="form-group">
                                     @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
-                                    <div class='input-group' >
+                                    <div class='input-group'>
                                         @Html.DropDownListFor(x => x.ReportTypeId, new SelectList(ViewBag.ReportList, "Id", "ReportName"), new { @class = "form-control" })
                                     </div>
                                 </div>
                             </div>
 
+
+                            <div class="col-sm-2 col-md-2 form-group-select">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        @Html.DropDownListFor(x => x.PaymentStatus, new SelectList(ViewBag.PaymentMethod, "Id", "Name"), "View All", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
 
 
                             <div class="col-sm-3 col-md-3 form-group-btn">
@@ -151,6 +158,7 @@
                                 Business Source
                             </th>
                             <th> Payment Status</th>
+                            <th>Days Due</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -374,6 +382,17 @@
                                 }
 
                                  </td>
+                                <td>
+                                    @if (item.PaymentMethodId == (int)InsuranceClaim.Models.paymentMethod.PayLater)
+                                    {
+
+                                        <span>@DateTime.Today.Subtract(DateTime.Parse(item.Transaction_date)).TotalDays </span>
+                                    }
+                                    else
+                                    {
+                                        <span>Paid</span>
+                                    }
+                                </td>
                                 
 
                                 @*@item.SourceDetailName*@
@@ -408,6 +427,7 @@
                             <td></td>
                             <td></td>
                             <td colspan="2"></td>
+                            <td></td>
                             
                         </tr>
                         @*<tr>
@@ -436,7 +456,7 @@
                             <td colspan="3"><strong>Amount</strong></td>
                             <td colspan="3"><strong>Count</strong></td>   
                             
-                            <td colspan="3"></td>  
+                            <td colspan="4"></td>  
                                       
                         </tr>
 
@@ -447,7 +467,7 @@
                             <td colspan="3">USD</td>
                             <td colspan="3">@ustotal</td>
                             <td colspan="3">@uscount</td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                             
                         </tr>
                         <tr>
@@ -457,13 +477,13 @@
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@rtgstotal</td>
                             <td colspan="3">@rtgscount</td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                           
                         </tr>
 
                         <tr>
                             <td colspan="19"></td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                         </tr>
                         <tr>
                             <td colspan="10"><strong>Renewals</strong></td>
@@ -471,7 +491,7 @@
                             <td colspan="3">USD</td>
                             <td colspan="3">@Reustotal</td>
                             <td colspan="3">@Reuscount</td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                             
                         </tr>
                         <tr>
@@ -482,13 +502,13 @@
                            
                             <td colspan="3" >@Rertgstotal</td>
                             <td colspan="3">@Rertgscount</td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                        
                         </tr>
 
                         <tr>
                             <td colspan="19"></td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                         </tr>
 
 
@@ -499,7 +519,7 @@
                             <td colspan="3"> USD</td>
                             <td colspan="3">@(ustotal + Reustotal)</td>
                             <td colspan="3"> @(uscount + Reuscount) </td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                            
                         </tr>
                         <tr>
@@ -509,7 +529,7 @@
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@(rtgstotal + Rertgstotal)</td>
                             <td colspan="3">@(  rtgscount  + Rertgscount)</td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                            
                         </tr>
                         <tr>
@@ -519,7 +539,7 @@
                             <td colspan="3">TOTAL RTGS$</td>
                             <td colspan="3">@(ustotal + Reustotal + rtgstotal + Rertgstotal)</td>
                             <td colspan="3">@( uscount + Reuscount + rtgscount  + Rertgscount)</td>
-                            <td colspan="3"></td>
+                            <td colspan="4"></td>
                            
                         </tr>
                     </tfoot>
