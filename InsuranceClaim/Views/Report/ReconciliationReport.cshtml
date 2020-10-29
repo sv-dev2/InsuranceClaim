@@ -49,7 +49,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 form-group-btn">
+
+                            <div class="col-sm-2 col-md-2 form-group-select">
+                                <div class="form-group">
+                                    <div class='input-group'>
+                                        @Html.DropDownListFor(x => x.BranchId, new SelectList(ViewBag.BranchList, "Id", "BranchName"), "-Select-", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-4 form-group-btn">
                                 <div class="form-group">
                                     <ul class="list-inline">
                                         <li><button type="submit" class="btn btn-success">Search</button></li>
@@ -109,8 +118,9 @@
                             <th>Receipt Date</th>
                             <th>Paid(yes/no)</th>
                             <th style="text-align:left;">Balance</th>
-                            <th>Payment Type</th>
+                            <th>Payment Type</th>                          
                             <th>Created On</th>
+                            <th>Branch</th>
                             @*
                                     <th>Amount Paid</th>
 
@@ -150,7 +160,15 @@
 
                             if (item.Balance != "")
                             {
-                                balanceTotal += Convert.ToDecimal(item.Balance);
+                                bool res = double.IsNaN(Convert.ToDouble(item.Balance));
+                                if(!res)
+                                {
+                                    balanceTotal += Convert.ToDecimal(item.Balance);
+                                }
+                                
+
+
+
                             }
                             //else
                             //{
@@ -218,6 +236,7 @@
                                 }
 
                                 <td>@item.paymentMethodType</td>
+                                
                                 @if (item.CreatedOn == null)
                                 {
                                     <td>@item.DatePosted.ToString("hh:mm")</td>
@@ -226,6 +245,8 @@
                                 {
                                     <td>@item.CreatedOn.Value.ToString("hh:mm")</td>
                                 }
+
+                                <td>@item.BranchName</td>
 
                                 @*
 
@@ -254,6 +275,7 @@
                             <td></td>
                             <td></td>
                             <td><strong>@balanceTotal</strong></td>
+                            <td></td>
                             <td></td>
                             <td></td>
 

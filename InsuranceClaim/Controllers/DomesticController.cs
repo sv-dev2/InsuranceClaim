@@ -1119,7 +1119,7 @@ namespace InsuranceClaim.Controllers
 
             var policy = _policyService.GetPolicyDetailById(vehicle.PolicyId);
             // Generate QR Code
-            var path = SaveQRCode(policy.PolicyNumber);
+           // var path = SaveQRCode(policy.PolicyNumber);
             var customer = _userService.GetCustomerDetailById(summaryDetail.CustomerId);
             var product = _riskDetailService.GetProductDetailsById(vehicle.ProductId);
             var paymentInformations = _domesticService.GetPaymentInformationById(id);
@@ -1236,7 +1236,6 @@ namespace InsuranceClaim.Controllers
                 .Replace("#AccountName#", customer.FirstName + ", " + customer.LastName)
                 .Replace("#Address1#", customer.AddressLine1).Replace("#Address2#", customer.AddressLine2)
                 .Replace("#currencyName#", currencyName)
-                .Replace("#QRpath#", path)
                 .Replace("#Amount#", Convert.ToString(summaryDetail.AmountPaid)).Replace("#PaymentDetails#", "New Premium").Replace("#ReceiptNumber#", policy.PolicyNumber).Replace("#PaymentType#", (summaryDetail.PaymentMethodId == 1 ? "Cash" : (summaryDetail.PaymentMethodId == 2 ? "PayPal" : "PayNow")));
 
             #region Payment Email

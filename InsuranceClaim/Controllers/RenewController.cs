@@ -2538,11 +2538,7 @@ namespace InsuranceClaim.Controllers
                 {
                     return RedirectToAction("failed_url");
                 }
-
             }
-
-
-
 
             var vehicleId = (Int32)Session["RenewVehicleId"];
            // var PaymentId = Session["PaymentId"];
@@ -2557,8 +2553,6 @@ namespace InsuranceClaim.Controllers
             SummaryDetailService detailService = new SummaryDetailService();
 
             var email = "";
-
-
             var currencylist = detailService.GetAllCurrency();
             var currencyName = "";
 
@@ -2580,10 +2574,7 @@ namespace InsuranceClaim.Controllers
 
                 var _item = (RiskDetailModel)Session["RenewVehicleDetails"];
                 //var product = InsuranceContext.Products.Single(Convert.ToInt32(_item.ProductId));
-
-
                 currencyName = detailService.GetCurrencyName(currencylist, _item.CurrencyId);
-
                 objSaveDetailListModel.CurrencyId = policy.CurrencyId;
                 objSaveDetailListModel.PolicyId = policy.Id;
                 objSaveDetailListModel.VehicleDetailId = _item.Id;
@@ -2719,11 +2710,7 @@ namespace InsuranceClaim.Controllers
 
             decimal totalpaymentdue = 0.00m;
 
-            RenewApproveVRNToIceCash(customer, vehicle); // need to uncomment
-
-
-
-
+            RenewApproveVRNToIceCash(customer, vehicle,  Convert.ToInt32(summary.PaymentMethodId)); // need to uncomment
 
             string Summeryofcover = "";
 
@@ -3741,10 +3728,14 @@ namespace InsuranceClaim.Controllers
         }
 
 
-        public void RenewApproveVRNToIceCash(Customer customerDetails, VehicleDetail vichelDetails)
+        public void RenewApproveVRNToIceCash(Customer customerDetails, VehicleDetail vichelDetails, int PaymentMethod)
         {
             #region update  TPIQuoteUpdate
             Insurance.Service.EmailService log = new Insurance.Service.EmailService();
+
+            if(PaymentMethod!=3)
+                PaymentMethod = 1;
+            
 
             try
             {
@@ -3758,7 +3749,7 @@ namespace InsuranceClaim.Controllers
 
                 if (vichelDetails != null && vichelDetails.CombinedID != null && vichelDetails.VehicleLicenceFee > 0)
                 {
-                    ResultRootObject quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, 1);
+                    ResultRootObject quoteresponse = ICEcashService.TPILICUpdate(customerDetails, vichelDetails, PartnerToken, PaymentMethod);
                     if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
                     {
                         tokenObject = iceCash.getToken();
@@ -3789,13 +3780,10 @@ namespace InsuranceClaim.Controllers
                         DateTime LicExpiryDate = DateTime.ParseExact(res.Response.LicExpiryDate, format, CultureInfo.InvariantCulture);
                         vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
                     }
-
-
-
                 }
                 else if (!string.IsNullOrEmpty(vichelDetails.InsuranceId))
                 {
-                    ResultRootObject quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, 1);
+                    ResultRootObject quoteresponse = ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, PaymentMethod);
 
                     // if partern token expire
                     if (quoteresponse.Response != null && quoteresponse.Response.Message.Contains("Partner Token has expired"))
@@ -3803,7 +3791,7 @@ namespace InsuranceClaim.Controllers
                         tokenObject = iceCash.getToken();
                         SummaryDetailService.UpdateToken(tokenObject);
                         PartnerToken = tokenObject.Response.PartnerToken;
-                        ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, 1);
+                        ICEcashService.TPIQuoteUpdate(customerDetails, vichelDetails, PartnerToken, PaymentMethod);
                     }
 
                     res = ICEcashService.TPIPolicy(vichelDetails, PartnerToken);

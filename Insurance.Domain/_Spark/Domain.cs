@@ -116,6 +116,34 @@ namespace Insurance.Domain
     }
 
 
+    public partial class Partner : Entity<Partner>
+    {
+        public Partner() { }
+        public Partner(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public string PartnerName { get; set; }
+        public bool? Status { get; set; }
+      
+    }
+
+
+    public partial class PartnerCommission : Entity<PartnerCommission>
+    {
+        public PartnerCommission() { }
+        public PartnerCommission(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public int PartnerId { get; set; }
+        public decimal CommissionPercentage { get; set; }
+
+        public DateTime CommissionEffectiveDate { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+    }
+
+
     public partial class Domestic_Vehicle : Entity<Domestic_Vehicle>
     {
         public Domestic_Vehicle() { }
@@ -316,6 +344,8 @@ namespace Insurance.Domain
         public string SignaturePath { get; set; }
 
         public string RenewPolicyNumber { get; set; }
+
+        public decimal TenderedAmount { get; set; }
     }
     public partial class PaymentTerm : Entity<PaymentTerm>
     {

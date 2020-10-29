@@ -15,13 +15,11 @@ namespace InsuranceClaim.Controllers
 {
     public class HomeController : Controller
     {
-
         public ActionResult Index()
         {
-           
             return View();
         }
-
+ 
         public ActionResult About(string res = "")
         {
             if (res != "")
@@ -40,7 +38,6 @@ namespace InsuranceClaim.Controllers
             return View();
         }
 
-
         public void GetGWPData(string res)
         {
             DataTable table = new DataTable();
@@ -54,10 +51,18 @@ namespace InsuranceClaim.Controllers
             //Library.WriteErrorLog("row count: " + table.Rows.Count);    
         }
 
-      
-
-
+     
     }
+
+    public class PartnerModel
+    {
+        public int Id { get; set; }
+        public string PartnerName { get; set; }
+    
+        public bool Status { get; set; }
+    }
+
+
 }
 
 

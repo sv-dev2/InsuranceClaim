@@ -166,7 +166,8 @@ namespace Insurance.Service
             }
             catch (Exception ex)
             {
-
+                Insurance.Service.EmailService service1 = new Insurance.Service.EmailService();
+                service1.WriteLog("email pdf: "+ ex.Message);
             }
 
             sr.Close();

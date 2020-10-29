@@ -34,5 +34,7 @@ namespace InsuranceClaim.Models
         public string FromDate { get; set; }
         [Required(ErrorMessage = "Please Enter End Date.")]
         public string EndDate { get; set; }
+
+        public int? BranchId { get; set; }
     }
 }

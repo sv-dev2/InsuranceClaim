@@ -6,11 +6,7 @@
 
     var customerDetail = (InsuranceClaim.Models.CustomerModel)Session["CustomerDataModal"];
 
-
-
     bool userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
-
-
 
     var isUserStaff = false;
     if ((User.Identity.IsAuthenticated && User.IsInRole("Staff")))
@@ -384,19 +380,12 @@
                                                 <div class="payment-card">
                                                     <ul class="list-inline">
 
-
-
                                                         @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Team Leaders"))
                                                         {
-
                                                             <li id="payment_1" class="payment_type active" onclick="PaymentMethod(1)">  Cash   </li>
-
                                                             // 1008 for test 7 for live
                                                             <li id="payment_6" class="payment_type" onclick="PaymentMethod(6)">Pay Later</li>
                                                        }
-
-
-
 
                                                         @*<li id="payment_2" class="payment_type" onclick="PaymentMethod(2)"><img src="~/Images/master-card.png" /></li>*@
 

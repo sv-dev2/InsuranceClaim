@@ -786,7 +786,7 @@ namespace InsuranceClaim.Controllers
                     Insurance.Service.VehicleService obj = new Insurance.Service.VehicleService();
                     VehicleModel model = InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicledetail.ModelId}'");
                     VehicleMake make = InsuranceContext.VehicleMakes.Single(where: $" MakeCode='{vehicledetail.MakeId}'");
-                    string vehicledescription = model.ModelDescription + " / " + make.MakeDescription;
+                    string vehicledescription = model==null? "" : model.ModelDescription + " / " + make==null? "" : make.MakeDescription;
 
                     RoadsideAssistanceAmount = RoadsideAssistanceAmount + Convert.ToDecimal(vehicledetail.RoadsideAssistanceAmount);
                     MedicalExpensesAmount = MedicalExpensesAmount + Convert.ToDecimal(vehicledetail.MedicalExpensesAmount);
@@ -856,7 +856,7 @@ namespace InsuranceClaim.Controllers
 
                     var Bodyy = MotorBody.Replace("##PolicyNo##", policyinfo.PolicyNumber).Replace("##currencyName##", currencyName)
                         .Replace("##path##", filepath).Replace("##Cellnumber##", userinfo.PhoneNumber).Replace("##FirstName##", customerinfo.FirstName)
-                        .Replace("##LastName##", customerinfo.LastName).Replace("##Email##", userinfo.Email).Replace("##BirthDate##", customerinfo.DateOfBirth.Value.ToString("dd/MM/yyyy"))
+                        .Replace("##LastName##", customerinfo.LastName).Replace("##Email##", userinfo.Email).Replace("##BirthDate##", customerinfo.DateOfBirth==null? "" : customerinfo.DateOfBirth.Value.ToShortDateString())
                         .Replace("##Address1##", customerinfo.AddressLine1).Replace("##Address2##", customerinfo.AddressLine2).Replace("##Renewal##", vehicledetail.RenewalDate.Value.ToString("dd/MM/yyyy"))
                         .Replace("##InceptionDate##", vehicledetail.CoverStartDate.Value.ToString("dd/MM/yyyy")).Replace("##package##", paymentTerm.Name)
                         .Replace("##Summeryofcover##", Summeryofcover).Replace("##PaymentTerm##", (vehicledetail.PaymentTermId == 1 ? paymentTerm.Name + "(1 Year)" : paymentTerm.Name + "(" + vehicledetail.PaymentTermId.ToString() + "Months)"))
@@ -901,6 +901,8 @@ namespace InsuranceClaim.Controllers
             }
             catch (Exception ex)
             {
+                Insurance.Service.EmailService service1 = new Insurance.Service.EmailService();
+                service1.WriteLog("resend email: " + ex.Message);
 
                 throw;
             }

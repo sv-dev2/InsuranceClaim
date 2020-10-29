@@ -442,8 +442,13 @@
                                                                 }
 
                                                                 <div class="text-right">
-                                                                    <button type="submit" id="btnNext" onclick="return checkAmountPaid();" class="btn">Next</button>
+                                                                    <button type="button" id="btnNext" onclick="return checkAmountPaid();" class="btn">Next</button>
+                                                                
+                                                                    <button type="submit" id="btnSubmit" class="btn" style="display:none">Next</button>
+
+                                                                
                                                                 </div>
+
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -821,18 +826,29 @@
             toastr.error("Please Enter Amount To Be Paid");
             return false;
         }
+        else if(paymentMethod=="")
+        {
+            toastr.error("Please select payment type.");
+            return false;
+        }
         else if(paymentMethod=="1")
         {
             if(confirm("Are you sure you want to proceed with CASH payment?"))
             {
-                return true;
+                $("#btnSubmit" ).click();
             }
-            else{
-                gotoExit();
+            else
+            {
+                return false;
             }
+            //else{
+            //    gotoExit();
+            //}
         }
         else{
-            return true;
+
+            $("#btnSubmit" ).click();
+            //return true;
         }
 
         return false;

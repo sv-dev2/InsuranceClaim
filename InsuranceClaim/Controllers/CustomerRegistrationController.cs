@@ -4131,6 +4131,7 @@ namespace InsuranceClaim.Controllers
 
             ReceiptModuleHistory Receipthistory = new ReceiptModuleHistory();
             dbModel.AmountPaid = model.AmountPaid;
+            model.DatePosted = DateTime.Now;
 
             //InsuranceContext.SummaryDetails.Update(dbModel);
 

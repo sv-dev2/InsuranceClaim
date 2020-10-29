@@ -115,8 +115,9 @@
                                 <th>Radio License Cost</th>
                                 <th>Zinara License Cost</th>
                                 <th>Balance</th>
-                                <th>Transaction Reference</th>
-                                <th style="text-align:left;">Payment Type</th>
+                                <th>Reference</th>
+                                <th>Payment Type</th>
+                                <th>TenderedAmount</th>
 
                             </tr>
                         </thead>
@@ -176,6 +177,7 @@
                                 <td>@Math.Round(Convert.ToDecimal(item.Balance), 2)</td>
                                 <td> @item.TransactionReference</td>
                                 <td>@item.paymentMethodType</td>
+                                <td>@item.TenderedAmount</td>
                             </tr>
                             }
                         </tbody>
@@ -192,6 +194,7 @@
                                 <td><strong>@premiumDueTotal</strong></td>
                                 <td><strong>@amountPaidTotal</strong></td>
                                 <td><strong>@balanceTotal</strong></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>

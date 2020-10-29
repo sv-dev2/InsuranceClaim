@@ -47,7 +47,7 @@ namespace InsuranceClaim.Models
         public string City { get; set; }
         [Display(Name = "National Identification Number")]
         [Required(ErrorMessage = " Please Enter National Identification Number")]
-        [RegularExpression(@"^[0-9]{8,9}[A-Z]{1}[0-9]{2}$", ErrorMessage = "Enter valid ID number in the format 11111111X11")]
+       
         // [RegularExpression(@"^([0-9]{2}-[0-9]{6,7}[a-zA-Z]{1}[0-9]{2})$", ErrorMessage = "Not a Valid Identification Number")]        
         public string NationalIdentificationNumber { get; set; }
         [Display(Name = "Zip Code")]

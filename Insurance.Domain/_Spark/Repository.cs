@@ -147,6 +147,10 @@ namespace Insurance.Domain
 
         public static WorkTypes WorkTypes { get { return new WorkTypes(); } }
 
+        public static Partners Partners { get { return new Partners(); } }
+
+        public static PartnerCommissions PartnerCommissions { get { return new PartnerCommissions(); } }
+
         //17/03/2020
         public static AspNetUsersDetails AspNetUsersDetails { get { return new AspNetUsersDetails(); } }
 

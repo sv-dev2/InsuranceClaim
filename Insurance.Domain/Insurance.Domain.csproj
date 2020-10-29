@@ -234,6 +234,8 @@
     <Compile Include="Repository\LogDetailTbls.cs" />
     <Compile Include="Repository\LoyaltyDetails.cs" />
     <Compile Include="Repository\PartialPayment.cs" />
+    <Compile Include="Repository\Partner.cs" />
+    <Compile Include="Repository\PartnerCommission.cs" />
     <Compile Include="Repository\PaymentInformations.cs" />
     <Compile Include="Repository\PaymentMethods.cs" />
     <Compile Include="Repository\PaymentTerms.cs" />
