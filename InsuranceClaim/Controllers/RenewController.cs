@@ -2536,7 +2536,7 @@ namespace InsuranceClaim.Controllers
                 var status = paynow.PollTransaction((string)Session["PollUrl"]);
                 if (!status.Paid())
                 {
-                    return RedirectToAction("failed_url");
+                    return RedirectToAction("failed_url", "paypal");
                 }
             }
 

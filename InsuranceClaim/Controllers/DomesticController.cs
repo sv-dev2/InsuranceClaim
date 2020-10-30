@@ -640,6 +640,8 @@ namespace InsuranceClaim.Controllers
                                 policy.TransactionDate = null;
                                 policy.CreatedBy = customer.Id;
                                 policy.CreatedOn = DateTime.Now;
+                                policy.CurrencyId = 1;
+                               // InsuranceContext.PolicyDetails.Insert(policy);
                                 _policyService.SavePolicy(policy);
 
                                 Session["PolicyData"] = policy;
@@ -662,8 +664,8 @@ namespace InsuranceClaim.Controllers
                                 policydata.TransactionDate = null;
                                 policy.ModifiedBy = customer.Id;
                                 policy.ModifiedOn = DateTime.Now;
-                                //InsuranceContext.PolicyDetails.Update(policydata);
-                                _policyService.UpdatePolicy(policy);
+                               // InsuranceContext.PolicyDetails.Update(policydata);
+                               _policyService.UpdatePolicy(policy);
                             }
                         }
 
@@ -676,9 +678,10 @@ namespace InsuranceClaim.Controllers
                             {
                                 var _item = item;
 
-                                var vehicelDetails = _domesticService.GetVehicleDetail(policy.Id);
+                                
+                              var   vehicelDetails = _domesticService.GetVehicleDetail(policy.Id);
 
-                                if (vehicelDetails != null)
+                                if (vehicelDetails != null && vehicelDetails.Id!=0)
                                 {
                                     item.Id = vehicelDetails.Id;
                                 }
@@ -1412,6 +1415,11 @@ namespace InsuranceClaim.Controllers
             Session.Remove("issummaryformvisited");
             Session.Remove("PaymentId");
             Session.Remove("InvoiceId");
+        }
+
+        public ActionResult ThankYou()
+        {
+            return View();
         }
 
 

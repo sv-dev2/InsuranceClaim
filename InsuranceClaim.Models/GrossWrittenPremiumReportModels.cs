@@ -105,4 +105,35 @@ namespace InsuranceClaim.Models
         public int? PaymentStatus { get; set; }
 
     }
+
+    public class ALMParnterSearchModels
+    {
+
+        public int PartnerId { get; set; }
+
+        public int ReportTypeId { get; set; }
+        public List<PartnerModel> ListPartnerModelData { get; set; }
+        public List<ALMParnterSearchModelsData> ListReportdata { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Start Date.")]
+        public string FormDate { get; set; }
+        [Required(ErrorMessage = "Please Enter End Date.")]
+        public string EndDate { get; set; }
+
+    }
+
+    public class ALMParnterSearchModelsData
+    {
+        public string BranchName { get; set; }
+        public string PolicyNumber { get; set; }
+        public string CoverNoteNumber { get; set; }
+        public string PolicyDate { get; set; }
+        public string PaymentDetail { get; set; }
+        public decimal GrossPremium { get; set; }
+        public decimal CommissionAmount { get; set; }
+        public decimal Totals { get; set; }
+    }
+
+
+
 }

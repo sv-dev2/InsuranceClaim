@@ -1,0 +1,273 @@
+﻿@model InsuranceClaim.Models.ALMParnterSearchModels
+@{
+    ViewBag.Title = "ALM GWP Partner Report";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+
+<div class="productsave-section GrossWrittenPremiumReport">
+
+  
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.13/jspdf.plugin.autotable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" />
+
+    <div class="container-fluid" id="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
+                <div class="head-title">
+                    <h2>ALMGWPPartner Report</h2>
+                </div>
+            </div>
+            @*<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
+                    <div class="text-right">
+                    </div>
+                </div>*@
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" style="margin-top:28px;">
+                <div class="text-right">
+                    <input class="btn btn-primary" type="button" value="Generate PDF" id="generatePDF" />
+
+                    <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("ALMPartnerReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="container-main">
+                <div class="form-group-section-date">
+                    <div class="form-group-input">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-2 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.FromDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew'>
+                                       @Html.TextBoxFor(m => m.FormDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                            @Html.ValidationMessageFor(m => m.FormDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-md-2 form-group-text">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' id='datetimenew12'>
+                                       @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                            @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3 col-md-3">
+                                <div class="form-group-select">
+
+                                    <div class='input-group'>
+                                        @Html.DropDownListFor(x => x.PartnerId, new SelectList(ViewBag.Partner, "Id", "PartnerName"), new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-5 form-group-btn">
+                                <div class="form-group">
+                                    <ul class="list-inline">
+                                        <li><button type="submit" class="btn btn-success">Search</button></li>
+                                        <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        <div class="product-table-grid">
+            <div class="table-responsive">
+                <table width="1785" class="table table-striped tablesorter" style="width:1785px" id="report2excel">
+                    <thead>
+
+                        <tr>
+                            <th>Branch Name</th>
+                            <th>Policy Number</th>
+                            <th>Cover Note Number</th>
+                            <th>Policy Date</th>
+                            <th>Payment Detail</th>
+                            <th>Premium (Gross Premium)</th>
+                            <th>Commission Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportpdf">
+
+                        @{
+                            decimal total = 0;
+                            decimal totalCommissionAmount = 0;
+                            decimal totalAll = 0;
+
+
+                        }
+
+                        @foreach (var item in Model.ListReportdata.ToList())
+                        {
+                            //15 may D
+                            total += item.GrossPremium;
+                            totalCommissionAmount += item.CommissionAmount;
+
+
+                            //decimal premium = Convert.ToDecimal(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy + item.Zinara_License_Fee + item.RadioLicenseCost));
+
+                        <tr>
+
+                            <td>@item.BranchName</td>
+                            <td>@item.PolicyNumber</td>
+                            <td>@item.PolicyNumber</td>
+                            <td>
+                                @item.PolicyDate
+                            </td>
+                            <td>
+                                @item.PaymentDetail
+                            </td>
+                            <td> @item.GrossPremium</td>
+
+                            <td>@item.CommissionAmount</td>
+                            <th></th>
+
+                        </tr>
+
+
+                        }
+
+                        @{
+                            totalAll = total + totalCommissionAmount;
+                        }
+
+
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Total</th>
+                        <th>@total</th>
+                        <th>@totalCommissionAmount</th>
+                        <th></th>
+
+
+
+
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                       
+</tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('.js-example-basic-multiple').select2();
+    });
+
+    $(document).ready(function () {
+
+        $(".tablesorter").tablesorter({
+
+            headers: {
+
+                2: {
+                    sorter: false
+                },
+                4: {
+                    sorter: false
+                },
+
+                6: {
+                    sorter: false
+                },
+                7: {
+                    sorter: false
+                },
+
+            }
+        });
+
+
+        $("#datetimenew").datetimepicker({
+            format: 'MM/D/YYYY'
+        });
+        $("#datetimenew12").datetimepicker({
+            format: 'MM/D/YYYY'
+
+        });
+    });
+
+    function getSelectValue() {
+        alert("Selected value is: " + $("#selectBranch").val());
+    }
+
+
+    function removeSearchBox() {
+        window.location.href = "/Report/ALMGWPPartnerReport";
+    }
+
+    $("#generateExcel").click(function () {
+        debugger;
+        $("#report2excel").table2excel({
+            // exclude CSS class
+            exclude: ".noExl",
+            name: "Worksheet Name",
+            filename: "ALMGWPPartnerReport" //do not include extension
+
+        });
+    });
+
+    var doc = new jsPDF({ format: [600, 600] });
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    $('#generatePdf').click(function () {
+
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('ALMGWPPartnerReport.pdf');
+
+    });
+
+    function generate() {
+        var pdf = new jsPDF('l', 'pt', 'a4');
+        var res = pdf.autoTableHtmlToJson(document.getElementById("report2excel"), false);
+        pdf.autoTable(res.columns, res.data, {
+            startY: 60,
+            tableWidth: 'auto',
+            columnWidth: 'auto',
+            styles: {
+                overflow: 'linebreak'
+            }
+        });
+
+        pdf.save("ALMGWPPartnerReport.pdf");
+    }
+
+    $('#generatePDF').click(function (e) {
+        e.preventDefault();
+        generate();
+    });
+</script>
+

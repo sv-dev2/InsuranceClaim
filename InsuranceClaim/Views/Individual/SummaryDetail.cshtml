@@ -45,67 +45,54 @@
 
 
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-            <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
-
-                    @*<div class="col-xs-2 bs-wizard-step complete">
-                             complete
-                            <div class="progress"><div class="progress-bar"></div></div>
-                            <a href="#" class="bs-wizard-dot"></a>
-                            <div class="text-center bs-wizard-stepnum">Product Details</div>
-                        </div>*@
-
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="form-section-top">
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+            <div class="row bs-wizard">
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                    <div class="Process-step-section process-block">
+                        <div class="col-sm-12 bs-wizard-step complete">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
+
+
+                        <div class="col-sm-12 bs-wizard-step active">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
                     <div class="form-group-section">
                         <div class="form-title">
                             <h4>SUMMARY DETAILS</h4>
-
                             <br />
                             @if (Model.Error != "")
                             {
                                 <label style="font-size:15px; font-weight:bold; color:red; ">@Model.Error</label>
                                 <br />
                             }
-
                             <span> Name: <b>@customerDetail.FirstName  @customerDetail.LastName </b>,  Email: <b>@customerDetail.EmailAddress </b>  </span>
                         </div>
-
                         <div class="choose-plan">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 choose-plan-heading">
@@ -138,7 +125,6 @@
                                             </div>
                                             <div class="col-sm-3 col-md-3 choose-plan-blocl" style="@(Convert.ToString(item.PaymentTermId) == "3" ? "display:block;" : "display:none;")">
                                                 <div class="choose-plan-box" planpurchase="3" style="cursor:pointer" onclick="SelectPlan(this);">
-
                                                     <h4>Quarterly</h4>
                                                     <div class="plan-white-box">
                                                         @*<h3>$ @Math.Round(Convert.ToDouble(Model.TotalPremium)/4,2)</h3>*@
@@ -146,7 +132,6 @@
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{item.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 3 MONTHS</a>
                                                     </div>
-
                                                 </div>
                                             </div>
                                             <div class="col-sm-3 col-md-3 choose-plan-blocl" style="@(Convert.ToString(item.PaymentTermId) == "4" ? "display:block;" : "display:none;")">
@@ -157,10 +142,8 @@
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{item.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 4 MONTHS</a>
                                                     </div>
-
                                                 </div>
                                             </div>
-
 
                                             @if (item.PaymentTermId > 4)
                                             {
@@ -176,14 +159,11 @@
                                                 </div>
                                             }
 
-
                                         </div>
                                     }
                                 }
-
                             </div>
                         </div>
-
                         <div id="divVehicleList" style="display:block;">
                             <table class="table table-striped" id="tblVehicleList">
                                 <thead>
@@ -201,7 +181,6 @@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
-
                             </table>
                             <hr class="higlighter" />
                         </div>
@@ -218,21 +197,16 @@
 
 
                                 <div id="contact-form" class="contact-form ">
-
                                     <div class="@ClassForHide">
-
 
                                         @Html.HiddenFor(m => m.PaymentTermId)
                                         @Html.HiddenFor(m => m.Id)
                                         @Html.HiddenFor(m => m.InsuranceId)
                                         @Html.HiddenFor(m => m.Id)
 
-
-
                                         @if (isUserStaff)
                                         {
                                             <div class="row">
-
                                                 <div class="col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Amount Due", new { @class = "gender-label" })
@@ -266,7 +240,6 @@
                                         else
                                         {
                                             <div class="row">
-
                                                 <div class="col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Amount Due", new { @class = "gender-label" })
@@ -276,7 +249,6 @@
                                                 </div>
                                             </div>
                                         }
-
 
                                         <div class="row" style="display:none;">
                                             <div class="col-md-6 form-group-text">
@@ -293,7 +265,6 @@
                                             </div>
                                         </div>
 
-
                                         <hr />
                                         <div class="row">
                                             <div class="col-md-6 form-group-text">
@@ -309,7 +280,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -324,7 +294,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -354,7 +323,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -369,7 +337,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -382,13 +349,10 @@
                                                     @Html.Label("Discount", new { @class = "gender-label" })
                                                     @Html.TextBoxFor(m => m.Discount, new { @class = "form-control", @autocomplete = "off", @placeholder = "Roadside Assistance Amount", @readonly = "readonly" })
 
-
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-sm-8 col-md-8 form-group-select">
                                             <div class="form-group">
@@ -396,10 +360,8 @@
                                                 @Html.HiddenFor(m => m.PaymentMethodId)
                                                 @Html.HiddenFor(m => m.Id)
                                                 @Html.HiddenFor(m => m.CustomSumarryDetilId)
-
                                                 <div class="payment-card">
                                                     <ul class="list-inline">
-
                                                         @if (User.IsInRole("Staff") || User.IsInRole("Renewals"))
                                                         {
                                                             <li id="payment_1" class="payment_type active" onclick="PaymentMethod(1)">Cash</li>
@@ -416,21 +378,17 @@
                                                         @*<li id="payment_6" class="payment_type" onclick="PaymentMethod(6)"><img width="75px;" src="~/Images/zimswitch.png" /> </li>
 
                                                             <li id="payment_3" class="payment_type" onclick="PaymentMethod(3)"><img width="75px;" src="~/Images/ecocash.jpg" />   </li>*@
-
                                                     </ul>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div id="invoiceNumberDiv" class="col-sm-4 col-md-4 form-group-text">
                                             <div class="form-group">
                                                 @Html.TextBoxFor(c => c.InvoiceNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Invoice number" })
                                             </div>
                                         </div>
 
-
                                     </div>
-
 
                                     <div class="row">
                                         <div class="col-md-12 next-btn">
@@ -447,10 +405,8 @@
                                                                 {
                                                                     <div class="text-right">
                                                                         <button type="submit" id="btnNext1" name="btnSendQuatation" value="sendQuatation" class="btn">Send Quotation</button>
-
                                                                     </div>
                                                                 }
-
                                                                 <div class="text-right">
                                                                     <button type="submit" id="btnNext" onclick="return checkAmountPaid();" class="btn">Next</button>
                                                                 </div>
@@ -458,45 +414,34 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-
                                             </div>
-
                                             <div class="text-right">
                                                 <button type="button" id="btnPreview" onclick="return Preview();" class="btn btn-primary">Preview</button>
                                             </div>
 
 
-
-
                                             <div class="row">
                                                 <div class="col-sm-6 col-md-6">
                                                     <div class="text-right">
-
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6 col-md-6" style="margin-top:5px;">
-
                                                 </div>
                                             </div>
-
 
                                             <input type="hidden" id="sucessmsg" name="sucessmsg" value="@sucessalert" />
                                             <input type="hidden" id="errMsg" value="@errMsg" />
                                         </div>
                                     </div>
 
-
                                 </div>
                             }
                         </div>
 
-
                         <div id="divPreview" style="display:none">
-
                             <!-- Modal -->
                             <div id="myModal" class="modal fade" role="dialog">
                                 <div class="modal-dialog">
-
                                     <!-- Modal content-->
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -512,14 +457,12 @@
                                                     <td>Email Address: </td>
                                                     <td> @customerDetail.EmailAddress </td>
                                                 </tr>
-
                                                 <tr>
                                                     <td>Cell Number: </td>
                                                     <td>@customerDetail.PhoneNumber </td>
                                                     <td> Date of Birth:</td>
                                                     <td> @customerDetail.DateOfBirth.Value.ToShortDateString() </td>
                                                 </tr>
-
                                                 <tr>
                                                     <td>
                                                         ID Number:
@@ -532,7 +475,6 @@
                                                 </tr>
                                             </table>
 
-
                                             <table class="table">
                                                 <tr>
                                                     <th> VRN</th>
@@ -542,7 +484,6 @@
                                                     <th>Payment Term </th>
                                                     <th> Premium</th>
                                                 </tr>
-
                                                 @foreach (var item in vehicleList)
                                                 {
                                                     <tr>
@@ -567,9 +508,7 @@
                                                         <td> @(item.Premium + item.Discount)</td>
                                                     </tr>
                                                 }
-
                                             </table>
-
 
                                             <h5 style="margin-bottom:10px;"> <b>EXTENSIONS & OPTIONAL COVERS </b> </h5>
                                             <table class="table">
@@ -577,7 +516,6 @@
                                                     <td> Passenger Accident Cover</td>
                                                     <td> @Model.PassengerAccidentCoverAmount</td>
                                                 </tr>
-
                                                 <tr>
                                                     <td> Excess Buy Back</td>
                                                     <td> @Model.ExcessBuyBackAmount</td>
@@ -595,8 +533,6 @@
                                                     <td> @Model.ExcessAmount</td>
                                                 </tr>
                                             </table>
-
-
 
                                             <h5 style="margin-left:10px; margin-bottom:10px;"> <b> Premium Summary</b> </h5>
                                             <table class="table">
@@ -617,18 +553,15 @@
                                                     <td>Stamp Duty: </td>
                                                     <td> @Model.TotalStampDuty </td>
                                                 </tr>
-
                                                 <tr>
                                                     <td>ZTSC Levy</td>
                                                     <td>@Model.TotalZTSCLevies</td>
                                                     <td> Radio Licence Cost</td>
                                                     <td> @Model.TotalRadioLicenseCost</td>
                                                 </tr>
-
                                                 <tr>
                                                     <td>Discount </td>
                                                     <td>@Model.Discount </td>
-
                                                     <td>Total Amount Due </td>
                                                     <td>
                                                         @if (vehicleList != null && vehicleList.Count > 0)
@@ -640,41 +573,31 @@
                                                             }
                                                             <span> @amount</span>
                                                         }
-
                                                     </td>
-
                                                 </tr>
 
-
                                             </table>
-
-
 
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
 
 
 
 
-
-
-
-
                         </div>
-
-
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    
 
 </div>
 @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@

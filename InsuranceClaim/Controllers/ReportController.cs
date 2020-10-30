@@ -5057,6 +5057,82 @@ namespace InsuranceClaim.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult ALMPartnerReports(ALMParnterSearchModels _model)
+        {
+
+            List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
+            {
+                Id = x.Id,
+                PartnerName = x.PartnerName,
+                Status = x.Status
+            }).ToList();
+
+            List<ALMParnterSearchModels> ListALMParnterSearchdata = new List<ALMParnterSearchModels>();
+            ALMParnterSearchModels Model = new ALMParnterSearchModels();
+            int Selected = _model.PartnerId;
+
+            string query = "select PolicyDetail.PolicyNumber as PolicyNumber, Branch.BranchName as BranchName,  convert(varchar, PolicyDetail.CreatedOn, 106) as CreatedOn , PaymentInformation.PaymentId, VehicleDetail.Premium,cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, Customer.ALMId from PolicyDetail join Customer on Customer.Id = PolicyDetail.CustomerId join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id join PaymentInformation on PaymentInformation.PolicyId = PolicyDetail.Id join Branch on VehicleDetail.ALMBranchId = Branch.Id join Partners on Partners.Id = Branch.PartnerId where PolicyDetail.CreatedOn BETWEEN '" + _model.FormDate + "' AND '" + _model.EndDate + "' and branch.PartnerId= " + _model.PartnerId;
+
+            List<ALMParnterSearchModelsData> data = InsuranceContext.Query(query).Select(x => new ALMParnterSearchModelsData
+            {
+                BranchName = x.BranchName,
+                PolicyNumber = x.PolicyNumber,
+                PaymentDetail = x.PaymentId,
+                PolicyDate = x.CreatedOn,
+                GrossPremium = x.Premium,
+                CommissionAmount = x.Comission_Amount,
+
+            }).ToList();
+         
+            Model.ListReportdata = data;
+            ViewBag.Partner = ListPartnerModel;
+
+            return View("ALMGWPPartnerReport", Model);
+
+
+
+        }
+
+
+        [Authorize(Roles = "Administrator,Reports,Finance")]
+        public ActionResult ALMGWPPartnerReport()
+        {
+            List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
+            {
+                Id = x.Id,
+                PartnerName = x.PartnerName,
+                Status = x.Status
+            }).ToList();
+
+
+
+
+            List<ALMParnterSearchModels> ListALMParnterSearchdata = new List<ALMParnterSearchModels>();
+            ALMParnterSearchModels Model = new ALMParnterSearchModels();
+            int Selected = 1;
+
+            string query = "select PolicyDetail.PolicyNumber as PolicyNumber, PartnerCommissions.CommissionPercentage ,Branch.BranchName as BranchName,  convert(varchar, PolicyDetail.CreatedOn, 106) as CreatedOn , PaymentInformation.PaymentId, VehicleDetail.Premium,cast(VehicleDetail.Premium * PartnerCommissions.CommissionPercentage as decimal(10, 2)) as Comission_Amount, Customer.ALMId from PolicyDetail join Customer on Customer.Id = PolicyDetail.CustomerId join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id join PaymentInformation on PaymentInformation.PolicyId = PolicyDetail.Id join Branch on VehicleDetail.ALMBranchId = Branch.Id join Partners on Partners.Id = Branch.PartnerId join PartnerCommissions on CommissionEffectiveDate <= PolicyDetail.CreatedOn and PartnerCommissions.PartnerId = branch.PartnerId where branch.PartnerId=" + Selected;
+
+            List<ALMParnterSearchModelsData> data = InsuranceContext.Query(query).Select(x => new ALMParnterSearchModelsData
+            {
+                BranchName = x.BranchName,
+                PolicyNumber = x.PolicyNumber,
+                PaymentDetail = x.PaymentId,
+                PolicyDate = x.CreatedOn,
+                GrossPremium = x.Premium,
+                CommissionAmount = x.Comission_Amount,
+
+            }).ToList();
+            Model.ListReportdata = data;
+            Model.ListPartnerModelData = ListPartnerModel;
+            ViewBag.Partner = ListPartnerModel;
+
+            return View(Model);
+        }
+
+
+
         public void SendZinaraDailyReport()
         {
             WeeklyGWPService service = new WeeklyGWPService();

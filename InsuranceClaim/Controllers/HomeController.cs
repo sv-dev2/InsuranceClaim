@@ -54,13 +54,13 @@ namespace InsuranceClaim.Controllers
      
     }
 
-    public class PartnerModel
-    {
-        public int Id { get; set; }
-        public string PartnerName { get; set; }
+    //public class PartnerModel
+    //{
+    //    public int Id { get; set; }
+    //    public string PartnerName { get; set; }
     
-        public bool Status { get; set; }
-    }
+    //    public bool Status { get; set; }
+    //}
 
 
 }
