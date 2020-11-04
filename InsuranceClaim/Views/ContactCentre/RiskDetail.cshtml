@@ -465,6 +465,7 @@
                                             </div>
                                             <hr class="higlighter" />
                                             <div class="row">
+
                                                 <div class="col-sm-6 col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Basic Premium", new { @class = "gender-label" })
@@ -474,13 +475,13 @@
                                                 </div>
 
 
-
                                                 <div class="col-sm-6 col-md-6 form-group-select" style="display:none;">
                                                     <div class="form-group">
                                                         @Html.Label("Agent Commission", new { @class = "gender-label" })
                                                         @Html.DropDownListFor(x => x.AgentCommissionId, new SelectList(ViewBag.AgentCommission, "Id", "CommissionName"), new { @class = "form-control" })
                                                     </div>
                                                 </div>
+
                                                 <div class="col-sm-6 col-md-6 form-group-text">
                                                     <div class="form-group">
                                                         @Html.Label("Stamp Duty", new { @class = "gender-label" })

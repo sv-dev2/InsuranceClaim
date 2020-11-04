@@ -899,8 +899,9 @@ namespace InsuranceClaim.Controllers
             // for license payment term
 
             VehicleService _service = new VehicleService();
-            var validationMsg = _service.ValidationMessage(model);
+            // var validationMsg = _service.ValidationMessage(model);
 
+            var validationMsg = "";
             if (validationMsg != "")
             {
                 model.ErrorMessage = validationMsg;

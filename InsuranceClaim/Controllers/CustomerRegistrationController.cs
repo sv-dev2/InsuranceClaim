@@ -697,9 +697,11 @@ namespace InsuranceClaim.Controllers
             // for license payment term
 
             VehicleService _service = new VehicleService();
-            var validationMsg= _service.ValidationMessage(model);
+            //var validationMsg= _service.ValidationMessage(model);  // removed validation for now
 
-            if(validationMsg!="")
+            var validationMsg = "";
+
+            if (validationMsg!="")
             {
                 model.ErrorMessage = validationMsg;
                 TempData["ViewModel"] = model;
@@ -3356,8 +3358,6 @@ namespace InsuranceClaim.Controllers
             Session.Remove("PaymentId");
             Session.Remove("InsuranceId");
             Session["RequestNewQuote"] = "1";
-
-
         }
 
 
@@ -4054,6 +4054,8 @@ namespace InsuranceClaim.Controllers
             var totalPremium = 0;
             var amountPaid = 0;
 
+            string renewPolicyNumber = "";
+
 
             var policyAndRegistrationNumber = txtvalue; //Policy Number,VRN Number,Customer Name 
             var policyAndRegistrationNumberArray = policyAndRegistrationNumber.Split(',');
@@ -4076,9 +4078,9 @@ namespace InsuranceClaim.Controllers
 
                 if (vehicleDetail != null)
                 {
+                    renewPolicyNumber = policyNumber;
                     detail = InsuranceContext.PolicyDetails.Single(vehicleDetail.PolicyId);
                 }
-
             }
 
 
@@ -4092,6 +4094,7 @@ namespace InsuranceClaim.Controllers
                 var policyId = InsuranceContext.PaymentInformations.Single(where: $"PolicyId = '{detail.Id}'");
 
                 var query = "SELECT  top 1 [Id] FROM ReceiptModuleHistory order by Id Desc";
+
                 //var re = InsuranceContext.ReceiptHistorys.All(x => x.Id);
                 var receipt = InsuranceContext.Query(query).Select(x => new ReceiptModuleHistory()
                 {
@@ -4099,9 +4102,29 @@ namespace InsuranceClaim.Controllers
                 }).FirstOrDefault();
                 //   var receiptid=InsuranceContext.r
 
+                var query1 = "select top 1* from ReceiptModuleHistory where PolicyId=" + detail.Id + " order by id desc";
+
+                if (!string.IsNullOrEmpty(renewPolicyNumber))
+                {
+                    query1 = "select * from ReceiptModuleHistory where RenewPolicyNumber='" + renewPolicyNumber +"' order by id desc";
+                }
+
+                var receiptDetail = InsuranceContext.Query(query1).Select(x => new ReceiptModuleHistory()
+                {
+                    Id = x.Id,
+                    Balance = x.Balance
+                }).FirstOrDefault();
+
                 customerName = customerdetail.FirstName + " " + customerdetail.LastName;
                 model.Id = receipt.Id + 1;
-                model.AmountDue = Convert.ToInt32(summarydetail.TotalPremium);
+
+                // var recieptDetail = ;
+
+                if (receiptDetail != null)
+                    model.AmountDue = receiptDetail.Balance == null ? 0 : Convert.ToDecimal(receiptDetail.Balance);
+                else
+                    model.AmountDue = Convert.ToInt32(summarydetail.TotalPremium);
+
                 model.CustomerName = customerName;
                 model.InvoiceNumber = policyNumber;
                 model.PolicyNo = policyNumber;
@@ -4158,6 +4181,7 @@ namespace InsuranceClaim.Controllers
                     model.PolicyNo = policyDetail.PolicyNumber;
                     model.RenewPolicyNumber = vehicleDetails.RenewPolicyNumber;
                     model.InvoiceNumber = policyDetail.PolicyNumber;
+                    
                 }
             }
             else

@@ -3320,7 +3320,7 @@ namespace InsuranceClaim.Controllers
             {
                 var details = newList.FirstOrDefault(c => c.PolicyId == item.PolicyId);
 
-                if (details==null)
+                if (details == null)
                 {
                     newList.Add(item);
                 }
@@ -4737,7 +4737,7 @@ namespace InsuranceClaim.Controllers
 
             ViewBag.BranchList = InsuranceContext.Branches.All().ToList();
 
-            string query = "select Customer.FirstName + ' '+ Customer.LastName as AgentName, ";
+            string query = "select [dbo].[fn_GetUserBranch] (CertSerialNoDetail.CreatedBy) as CallCenterBranch, Customer.FirstName + ' '+ Customer.LastName as AgentName, ";
             query += " VRN, PolicyNumber,CertSerialNoDetail.CertSerialNo, CertSerialNoDetail.CreatedOn,ALMBranchId, Branch.BranchName from CertSerialNoDetail";
             query += " join PolicyDetail on CertSerialNoDetail.PolicyId = PolicyDetail.Id ";
             query += " join Customer on CertSerialNoDetail.CreatedBy = Customer.Id ";
@@ -4745,10 +4745,12 @@ namespace InsuranceClaim.Controllers
             query += " join Branch on VehicleDetail.ALMBranchId= Branch.Id ";
             query += " where  CertSerialNoDetail.CreatedOn>= '" + fromDate + "' And CertSerialNoDetail.CreatedOn<='" + endDate + "'";
 
-            if (model.BranchId > 0)
-            {
+            if(model.BranchId== (int)ALMBranch.GeneCallCentre)
+                query += " and [dbo].[fn_GetUserBranch] (CertSerialNoDetail.CreatedBy)='Gene Call Centre'";
+            
+
+            if (model.BranchId > 0 && model.BranchId != 6)
                 query += " and ALMBranchId=" + model.BranchId;
-            }
 
             query += " order  by CertSerialNoDetail.Id desc";
 
@@ -5084,7 +5086,7 @@ namespace InsuranceClaim.Controllers
                 CommissionAmount = x.Comission_Amount,
 
             }).ToList();
-         
+
             Model.ListReportdata = data;
             ViewBag.Partner = ListPartnerModel;
 
