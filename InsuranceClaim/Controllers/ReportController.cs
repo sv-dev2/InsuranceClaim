@@ -16,6 +16,8 @@ using System.ComponentModel;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
+using OfficeOpenXml;
+using System.Data.SqlClient;
 
 namespace InsuranceClaim.Controllers
 {
@@ -2453,11 +2455,6 @@ namespace InsuranceClaim.Controllers
         }
 
 
-
-
-
-
-
         public ActionResult ReinsuranceCommissionReport()
         {
             //ReinsuranceCommissionReportModel ReinsurancReportListmodel = new ReinsuranceCommissionReportModel();
@@ -4745,9 +4742,9 @@ namespace InsuranceClaim.Controllers
             query += " join Branch on VehicleDetail.ALMBranchId= Branch.Id ";
             query += " where  CertSerialNoDetail.CreatedOn>= '" + fromDate + "' And CertSerialNoDetail.CreatedOn<='" + endDate + "'";
 
-            if(model.BranchId== (int)ALMBranch.GeneCallCentre)
+            if (model.BranchId == (int)ALMBranch.GeneCallCentre)
                 query += " and [dbo].[fn_GetUserBranch] (CertSerialNoDetail.CreatedBy)='Gene Call Centre'";
-            
+
 
             if (model.BranchId > 0 && model.BranchId != 6)
                 query += " and ALMBranchId=" + model.BranchId;
@@ -5100,14 +5097,15 @@ namespace InsuranceClaim.Controllers
         [Authorize(Roles = "Administrator,Reports,Finance")]
         public ActionResult ALMGWPPartnerReport()
         {
+           
+
+
             List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
             {
                 Id = x.Id,
                 PartnerName = x.PartnerName,
                 Status = x.Status
             }).ToList();
-
-
 
 
             List<ALMParnterSearchModels> ListALMParnterSearchdata = new List<ALMParnterSearchModels>();
@@ -5134,6 +5132,161 @@ namespace InsuranceClaim.Controllers
         }
 
 
+        public void GetRecieptReport()
+        {
+
+            string startDate = DateTime.Now.AddMonths(-2).ToShortDateString();
+            string endDate = DateTime.Now.ToShortDateString();
+
+            var query = " select [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as AgentName, PolicyDetail.id as PolicyId,  PolicyDetail.PolicyNumber, VehicleDetail.RegistrationNo,VehicleDetail.TransactionDate, Customer.FirstName + ' ' + Customer.LastName as CustomerName, SummaryDetail.TotalPremium  from PolicyDetail join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
+            query += " join SummaryVehicleDetail on VehicleDetail.Id = SummaryVehicleDetail.Id ";
+            query += " join SummaryDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId join Customer on VehicleDetail.CustomerId=Customer.Id ";
+            query += " where(VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation = 0  and(CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + startDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + endDate + "', 101))";
+
+            string connectionString = System.Configuration.ConfigurationManager.AppSettings["Insurance"].ToString();
+
+            var result = new List<RecieptModel>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    // Call Read before accessing data.
+                    while (reader.Read())
+                    {
+                        RecieptModel model = new RecieptModel();
+
+                        model.AgentName = reader["AgentName"] == null ? "" : Convert.ToString(reader["AgentName"]);
+                        model.Policy_Number = reader["PolicyNumber"] == null ? "" : Convert.ToString(reader["PolicyNumber"]);
+                        model.VRN = reader["RegistrationNo"] == null ? "" : Convert.ToString(reader["RegistrationNo"]);
+                        model.Transaction_date = reader["TransactionDate"] == null ? "" : Convert.ToString(reader["TransactionDate"]);
+                        model.Customer_Name = reader["CustomerName"] == null ? "" : Convert.ToString(reader["CustomerName"]);
+                        model.Premium_due = reader["TotalPremium"] == null ? 0 : Convert.ToDecimal(reader["TotalPremium"]);
+                        model.PolicyId = reader["PolicyId"] == null ? 0 : Convert.ToInt32(reader["PolicyId"]);
+
+                        result.Add(model);
+
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+            }
+
+
+
+            var query2 = "select * from ReceiptModuleHistory where (CONVERT(date, ReceiptModuleHistory.CreatedOn) >= convert(date, '" + startDate + "', 101) ";
+            query2 += " and CONVERT(date, ReceiptModuleHistory.CreatedOn) <= convert(date, '" + endDate + "', 101)) ";
+
+            
+
+            var recieptList = new List<RecieptModel>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query2, connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    // Call Read before accessing data.
+                    while (reader.Read())
+                    {
+                        RecieptModel model = new RecieptModel();
+                        model.Transaction_date = reader["CreatedOn"] == null ? "" : Convert.ToString(reader["CreatedOn"]);
+                        model.PolicyId = reader["PolicyId"] == null ? 0 : Convert.ToInt32(reader["PolicyId"]);
+                        recieptList.Add(model);
+
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+            }
+
+
+
+
+            List<RecieptDetail> list = new List<RecieptDetail>();
+
+            DateTime dtCurrent = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+
+            foreach (var item in result)
+            {
+                DateTime policyCreatedDate = Convert.ToDateTime(item.Transaction_date);
+                TimeSpan t = dtCurrent.Subtract(policyCreatedDate);
+                if(t.TotalDays==7 || t.TotalDays == 14 || t.TotalDays == 21 || t.TotalDays==30)
+                {
+                    var receiptDetail = recieptList.FirstOrDefault(c => c.PolicyId == item.PolicyId);
+                    if(receiptDetail==null)
+                    {
+                        item.Days = t.TotalDays;
+
+                        RecieptDetail detail = new RecieptDetail
+                        {
+                            AgentName = item.AgentName,
+                            Policy_Number = item.Policy_Number,
+                            Customer_Name = item.Customer_Name,
+                            Premium_due = item.Premium_due,
+                            Days = item.Days,
+                            VRN = item.VRN,
+                            Transaction_date= item.Transaction_date
+                        };
+
+                        
+                        list.Add(detail);
+                    }
+                }
+            }
+
+
+            MemoryStream outputStream = new MemoryStream();
+            using (ExcelPackage package = new ExcelPackage(outputStream))
+            {
+                var src = DateTime.Now;
+                var hm = new DateTime(src.Year, src.Month, src.Day, src.Hour, src.Minute, 0);
+
+
+                // export each facility's rollup and detail to tabs in Excel (two tabs per facility)
+                ExcelWorksheet facilityWorksheet = package.Workbook.Worksheets.Add("Unreceipt Report");
+                facilityWorksheet.Cells["A1"].LoadFromText("Receipt Report").Style.Font.Bold = true;
+                facilityWorksheet.Cells["A3"].Value = "Report Generated Date: " + DateTime.Now.ToString("HH:mm") + " " + DateTime.Now.ToShortDateString();
+                facilityWorksheet.Cells[4, 1].LoadFromCollection(list, true, OfficeOpenXml.Table.TableStyles.Light1);
+                
+                //facilityDetail.Cells.LoadFromDataTable(dataTable, true);
+
+                package.Save();
+
+                outputStream.Position = 0;
+
+                List<Stream> _attachements = new List<Stream>();
+                List<AttachmentModel> attachmentModels = new List<AttachmentModel>();
+                AttachmentModel attachment = new AttachmentModel();
+                attachment.Attachment = outputStream;
+                attachment.Name = "Unreceipt Report.xlsx";
+                attachmentModels.Add(attachment);
+
+                _attachements.Add(outputStream);
+                Debug.WriteLine("************Attached*************");
+
+                StringBuilder mailBody = new StringBuilder();
+                mailBody.AppendFormat("<div>Please Find Attached.</div>");
+
+                Debug.WriteLine("***********SendEmail**************");
+
+                string email = System.Configuration.ConfigurationManager.AppSettings["gwpemail"];
+
+                 email = "kindlebit.net@gmail.com";
+
+                Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
+                objEmailService.SendAttachedEmail(email, "", "", "Unreceipt Report - " + DateTime.Now.ToLongDateString(), mailBody.ToString(), attachmentModels);
+
+               
+            }
+
+
+
+
+
+        }
 
         public void SendZinaraDailyReport()
         {

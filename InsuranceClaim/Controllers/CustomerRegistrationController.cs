@@ -4084,15 +4084,12 @@ namespace InsuranceClaim.Controllers
             }
 
 
-
             if (detail != null)
             {
                 var invoicenumber = InsuranceContext.PaymentInformations.Single(where: $"PolicyId = '{detail.Id}'");
-
                 var customerdetail = InsuranceContext.Customers.Single(where: $"Id='{detail.CustomerId}'");
                 var summarydetail = InsuranceContext.SummaryDetails.Single(where: $"Id='{invoicenumber.SummaryDetailId}'");
                 var policyId = InsuranceContext.PaymentInformations.Single(where: $"PolicyId = '{detail.Id}'");
-
                 var query = "SELECT  top 1 [Id] FROM ReceiptModuleHistory order by Id Desc";
 
                 //var re = InsuranceContext.ReceiptHistorys.All(x => x.Id);
@@ -4106,7 +4103,7 @@ namespace InsuranceClaim.Controllers
 
                 if (!string.IsNullOrEmpty(renewPolicyNumber))
                 {
-                    query1 = "select * from ReceiptModuleHistory where RenewPolicyNumber='" + renewPolicyNumber +"' order by id desc";
+                    query1 = "select top 1* from ReceiptModuleHistory where RenewPolicyNumber='" + renewPolicyNumber +"' order by id desc";
                 }
 
                 var receiptDetail = InsuranceContext.Query(query1).Select(x => new ReceiptModuleHistory()

@@ -12,6 +12,7 @@ namespace InsuranceClaim.Models
         public int? Id { get; set; }
         public string Customer_Name { get; set; }
         public string Policy_Number { get; set; }
+       
         public string Policy_endate { get; set; }
         public string Policy_startdate { get; set; }
         public string Transaction_date { get; set; }
@@ -57,6 +58,7 @@ namespace InsuranceClaim.Models
         public int PaymentMethodId { get; set; }
 
         public int CreatedBy { get; set; }
+       
 
         public int AgentActualPolicy { get; set; }
 
@@ -76,7 +78,35 @@ namespace InsuranceClaim.Models
 
         public string WorkDesc { get; set; }
 
+       
+
     }
+
+    public class RecieptModel
+    {
+        public string AgentName { get; set; }
+        public string Policy_Number { get; set; }
+        public string VRN { get; set; }
+        public string Transaction_date { get; set; }
+        public string Customer_Name { get; set; }
+        public decimal Premium_due { get; set; }
+        public int PolicyId { get; set; }
+        public double Days { get; set; }
+    }
+
+    public class RecieptDetail
+    {
+        public string AgentName { get; set; }
+        public string Policy_Number { get; set; }
+        public string VRN { get; set; }
+        public string Transaction_date { get; set; }
+        public string Customer_Name { get; set; }
+        public decimal Premium_due { get; set; }
+        public double Days { get; set; }
+    }
+
+
+
 
     public class ReportType
     {
@@ -134,6 +164,8 @@ namespace InsuranceClaim.Models
         public decimal Totals { get; set; }
     }
 
+
+   
 
 
 }
