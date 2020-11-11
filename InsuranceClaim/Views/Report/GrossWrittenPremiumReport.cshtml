@@ -159,7 +159,7 @@
                             </th>
                             <th> Payment Status</th>
                             <th>Days Due</th>
-                            
+                            <th> Receipt No</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -395,6 +395,24 @@
                                     }
                                 </td>
 
+                                <td>
+                                    @if (item.PaymentMethodId != (int)InsuranceClaim.Models.paymentMethod.PayLater)
+                                    {
+                                        if (item.ReceiptNumber == null)
+                                        {
+                                            <span>Not Receipted</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.ReceiptNumber</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span></span>
+                                    }
+                                </td>
+
                             
                                 
 
@@ -429,7 +447,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                             <td></td>
                             
                         </tr>
@@ -459,7 +477,7 @@
                             <td colspan="3"><strong>Amount</strong></td>
                             <td colspan="3"><strong>Count</strong></td>   
                             
-                            <td colspan="4"></td>  
+                            <td colspan="5"></td>  
                                       
                         </tr>
 
@@ -470,7 +488,7 @@
                             <td colspan="3">USD</td>
                             <td colspan="3">@ustotal</td>
                             <td colspan="3">@uscount</td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                             
                         </tr>
                         <tr>
@@ -480,13 +498,13 @@
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@rtgstotal</td>
                             <td colspan="3">@rtgscount</td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                           
                         </tr>
 
                         <tr>
                             <td colspan="19"></td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                         </tr>
                         <tr>
                             <td colspan="10"><strong>Renewals</strong></td>
@@ -494,7 +512,7 @@
                             <td colspan="3">USD</td>
                             <td colspan="3">@Reustotal</td>
                             <td colspan="3">@Reuscount</td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                             
                         </tr>
                         <tr>
@@ -505,13 +523,13 @@
                            
                             <td colspan="3" >@Rertgstotal</td>
                             <td colspan="3">@Rertgscount</td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                        
                         </tr>
 
                         <tr>
                             <td colspan="19"></td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                         </tr>
 
 
@@ -522,7 +540,7 @@
                             <td colspan="3"> USD</td>
                             <td colspan="3">@(ustotal + Reustotal)</td>
                             <td colspan="3"> @(uscount + Reuscount) </td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                            
                         </tr>
                         <tr>
@@ -532,7 +550,7 @@
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@(rtgstotal + Rertgstotal)</td>
                             <td colspan="3">@(  rtgscount  + Rertgscount)</td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                            
                         </tr>
                         <tr>
@@ -542,7 +560,7 @@
                             <td colspan="3">TOTAL RTGS$</td>
                             <td colspan="3">@(ustotal + Reustotal + rtgstotal + Rertgstotal)</td>
                             <td colspan="3">@( uscount + Reuscount + rtgscount  + Rertgscount)</td>
-                            <td colspan="4"></td>
+                            <td colspan="5"></td>
                            
                         </tr>
                     </tfoot>

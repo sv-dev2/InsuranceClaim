@@ -1343,8 +1343,10 @@ namespace InsuranceClaim.Controllers
             ViewBag.ReportList = ReportsList();
             ViewBag.PaymentMethod = PaymentMethodsList();
 
+            var recieptList = InsuranceContext.ReceiptHistorys.All().ToList();
+
             // Customer.ALMId is null replace condition with SummaryDetail.CreatedBy is not null
-            var query = " select top 500 SummaryDetail.PaymentMethodId, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            var query = " select top 500 SummaryDetail.PaymentMethodId, PolicyDetail.Id as policyId, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
             query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
@@ -1363,8 +1365,7 @@ namespace InsuranceClaim.Controllers
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
             query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
             query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
-            query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0  order by  VehicleDetail.Id desc ";
-
+            query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0   order by  VehicleDetail.Id desc ";
 
 
             ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
@@ -1397,7 +1398,8 @@ namespace InsuranceClaim.Controllers
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     SourceDetailName = x.SourceDetailName,
                     SummaryDetailId = x.SummaryDetailId,
-                    Sum_Insured = x.SumInsured
+                    Sum_Insured = x.SumInsured,
+                    ReceiptNumber = RecieptNumber(x.policyId, x.RenewPolicyNumber, recieptList)
                 }).ToList();
 
 
@@ -1427,6 +1429,7 @@ namespace InsuranceClaim.Controllers
                 model.SourceDetailName = item.SourceDetailName;
                 model.BusinessSourceName = item.BusinessSourceName;
                 model.PaymentMethodId = item.PaymentMethodId;
+                model.ReceiptNumber = item.ReceiptNumber;
                 //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
 
                 var index = list.FindIndex(c => c.Policy_Number == item.Policy_Number);
@@ -1465,6 +1468,33 @@ namespace InsuranceClaim.Controllers
 
 
             return View(Model);
+        }
+
+
+        public string RecieptNumber(int policyId, string renewPolicyNumber, List<ReceiptModuleHistory> list)
+        {
+            string recieptNumber = "";
+            int number = 0;
+
+            if (!string.IsNullOrEmpty(renewPolicyNumber))
+            {
+                var renewPolicyDetail = renewPolicyNumber.Split('-');
+                number = Convert.ToInt32(renewPolicyDetail[1]);
+            }
+
+            if (number > 1)
+            {
+                var details = list.Where(c => c.RenewPolicyNumber == renewPolicyNumber && c.PolicyId == policyId).OrderByDescending(c => c.Id).ToList();
+                if (details.Count() > 0)
+                    recieptNumber = Convert.ToString(details.FirstOrDefault().Id);
+            }
+            else
+            {
+                var details = list.Where(c => c.PolicyId == policyId).OrderByDescending(c => c.Id).ToList();
+                if (details.Count() > 0)
+                    recieptNumber = Convert.ToString(details.FirstOrDefault().Id);
+            }
+            return recieptNumber;
         }
 
 
@@ -2234,8 +2264,9 @@ namespace InsuranceClaim.Controllers
 
             ViewBag.ReportList = ReportsList();
             ViewBag.PaymentMethod = PaymentMethodsList();
+            var recieptList = InsuranceContext.ReceiptHistorys.All().ToList();
 
-            var query = " select SummaryDetail.PaymentMethodId, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
+            var query = " select SummaryDetail.PaymentMethodId, PolicyDetail.PolicyNumber as Policy_Number,PolicyDetail.Id as policyId, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
             query += " VehicleDetail.CoverNote as CoverNoteNum, PaymentMethod.Name as Payment_Mode, PaymentTerm.Name as Payment_Term,CoverType.Name as CoverType, Currency.Name as Currency, ";
             query += " VehicleDetail.Premium + VehicleDetail.StampDuty + VehicleDetail.ZTSCLevy as Premium_due, VehicleDetail.StampDuty as Stamp_duty, VehicleDetail.ZTSCLevy as ZTSC_Levy, ";
@@ -2254,7 +2285,7 @@ namespace InsuranceClaim.Controllers
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id ";
             query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
             query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
-            query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0  and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101)) ";
+            query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0  and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101))  ";
 
             if (_model.ReportTypeId == (int)ReportTypeEnum.ALM)
                 query += "and ALMBranchId <>0";
@@ -2299,7 +2330,8 @@ namespace InsuranceClaim.Controllers
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     SourceDetailName = x.SourceDetailName,
                     SummaryDetailId = x.SummaryDetailId,
-                    Sum_Insured = x.SumInsured
+                    Sum_Insured = x.SumInsured,
+                    ReceiptNumber = RecieptNumber(x.policyId, x.RenewPolicyNumber, recieptList)
                 }).ToList();
 
             if (_model.ReportTypeId == (int)ReportTypeEnum.CallCenter)
@@ -2335,6 +2367,7 @@ namespace InsuranceClaim.Controllers
                 model.SourceDetailName = item.SourceDetailName;
                 model.BusinessSourceName = item.BusinessSourceName;
                 model.PaymentMethodId = item.PaymentMethodId;
+                model.ReceiptNumber = item.ReceiptNumber;
                 //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
 
                 var index = list.FindIndex(c => c.Policy_Number == item.Policy_Number);
@@ -2846,13 +2879,10 @@ namespace InsuranceClaim.Controllers
 
             var MakeList = InsuranceContext.VehicleMakes.All();
             var ModelList = InsuranceContext.VehicleModels.All();
-
             var PolicyList = InsuranceContext.PolicyDetails.All();
             var CustomerList = InsuranceContext.Customers.All();
             var VehicleList = InsuranceContext.VehicleDetails.All();
             var ReinsuranceTransactionList = InsuranceContext.ReinsuranceTransactions.All();
-
-
 
             if (!string.IsNullOrEmpty(Model.FromDate) && !string.IsNullOrEmpty(Model.EndDate))
             {
@@ -5097,8 +5127,8 @@ namespace InsuranceClaim.Controllers
         [Authorize(Roles = "Administrator,Reports,Finance")]
         public ActionResult ALMGWPPartnerReport()
         {
-           
 
+            GetRecieptReport();
 
             List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
             {
@@ -5179,7 +5209,7 @@ namespace InsuranceClaim.Controllers
             var query2 = "select * from ReceiptModuleHistory where (CONVERT(date, ReceiptModuleHistory.CreatedOn) >= convert(date, '" + startDate + "', 101) ";
             query2 += " and CONVERT(date, ReceiptModuleHistory.CreatedOn) <= convert(date, '" + endDate + "', 101)) ";
 
-            
+
 
             var recieptList = new List<RecieptModel>();
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -5213,10 +5243,10 @@ namespace InsuranceClaim.Controllers
             {
                 DateTime policyCreatedDate = Convert.ToDateTime(item.Transaction_date);
                 TimeSpan t = dtCurrent.Subtract(policyCreatedDate);
-                if(t.TotalDays==7 || t.TotalDays == 14 || t.TotalDays == 21 || t.TotalDays==30)
+                if (t.TotalDays == 7 || t.TotalDays == 14 || t.TotalDays == 21 || t.TotalDays == 30)
                 {
                     var receiptDetail = recieptList.FirstOrDefault(c => c.PolicyId == item.PolicyId);
-                    if(receiptDetail==null)
+                    if (receiptDetail == null)
                     {
                         item.Days = t.TotalDays;
 
@@ -5228,10 +5258,10 @@ namespace InsuranceClaim.Controllers
                             Premium_due = item.Premium_due,
                             Days = item.Days,
                             VRN = item.VRN,
-                            Transaction_date= item.Transaction_date
+                            Transaction_date = item.Transaction_date
                         };
 
-                        
+
                         list.Add(detail);
                     }
                 }
@@ -5250,7 +5280,7 @@ namespace InsuranceClaim.Controllers
                 facilityWorksheet.Cells["A1"].LoadFromText("Receipt Report").Style.Font.Bold = true;
                 facilityWorksheet.Cells["A3"].Value = "Report Generated Date: " + DateTime.Now.ToString("HH:mm") + " " + DateTime.Now.ToShortDateString();
                 facilityWorksheet.Cells[4, 1].LoadFromCollection(list, true, OfficeOpenXml.Table.TableStyles.Light1);
-                
+
                 //facilityDetail.Cells.LoadFromDataTable(dataTable, true);
 
                 package.Save();
@@ -5274,12 +5304,12 @@ namespace InsuranceClaim.Controllers
 
                 string email = System.Configuration.ConfigurationManager.AppSettings["gwpemail"];
 
-                 email = "kindlebit.net@gmail.com";
+                email = "kindlebit.net@gmail.com";
 
                 Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();
                 objEmailService.SendAttachedEmail(email, "", "", "Unreceipt Report - " + DateTime.Now.ToLongDateString(), mailBody.ToString(), attachmentModels);
 
-               
+
             }
 
 

@@ -20,4 +20,23 @@ namespace InsuranceClaim.Models
         public string Balance { get; set; }
         public DateTime DatePosted { get; set; }
     }
+
+
+    public  class ReceiptDeliveryModule
+    {
+        public string customerFirstName { get; set; }
+        public string customerLastName { get; set; }
+        public string addressLine1 { get; set; }
+        public string addressLine2 { get; set; }
+        public string city { get; set; }
+        public string phoneNumber { get; set; }
+        public int policyID { get; set; }
+        public string policyTransactionDate { get; set; }
+        public decimal policyAmount { get; set; }
+        public string agentID { get; set; }
+        public string agentName { get; set; }
+        public string zoneName { get; set; }
+
+
+    }
 }

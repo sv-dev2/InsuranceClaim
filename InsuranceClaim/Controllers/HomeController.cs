@@ -38,6 +38,8 @@ namespace InsuranceClaim.Controllers
             return View();
         }
 
+
+
         public void GetGWPData(string res)
         {
             DataTable table = new DataTable();

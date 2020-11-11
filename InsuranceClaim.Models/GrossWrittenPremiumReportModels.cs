@@ -78,7 +78,7 @@ namespace InsuranceClaim.Models
 
         public string WorkDesc { get; set; }
 
-       
+       public string ReceiptNumber { get; set; }
 
     }
 

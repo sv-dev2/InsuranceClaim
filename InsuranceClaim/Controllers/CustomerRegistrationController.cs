@@ -189,6 +189,9 @@ namespace InsuranceClaim.Controllers
 
         }
 
+
+        
+        
         public void SetCustomerValueIntoSession(int summaryId)
         {
             Session["ICEcashToken"] = null;
