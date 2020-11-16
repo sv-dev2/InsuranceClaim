@@ -4706,6 +4706,18 @@ namespace InsuranceClaim.Controllers
 
                 InsuranceContext.SmsLogs.Insert(objsmslog);
 
+                bool _userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+                if (_userLoggedin)
+                {
+                    var _User = UserManager.FindById(User.Identity.GetUserId().ToString());
+
+                    var customer = InsuranceContext.Customers.Single(where: "UserID='" + _user.Id + "'");
+                    _vehicle.ModifiedBy = customer.Id;
+                }
+
+
+                _vehicle.ModifiedOn = DateTime.Now;
+                //_vehicle.ModifiedBy=
 
                 InsuranceContext.VehicleDetails.Update(_vehicle);
                 return Json(true, JsonRequestBehavior.AllowGet);

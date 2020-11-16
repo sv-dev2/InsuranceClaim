@@ -76,6 +76,8 @@ namespace InsuranceClaim.Models
 
         public string LicExpDate { get; set; }
 
+        public string ModifiedOn { get; set; }
+
     }
 
     public class ListPolicy

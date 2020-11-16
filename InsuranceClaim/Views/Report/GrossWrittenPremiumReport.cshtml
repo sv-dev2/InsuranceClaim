@@ -398,7 +398,7 @@
                                 <td>
                                     @if (item.PaymentMethodId != (int)InsuranceClaim.Models.paymentMethod.PayLater)
                                     {
-                                        if (item.ReceiptNumber == null)
+                                        if (item.ReceiptNumber == null || item.ReceiptNumber =="")
                                         {
                                             <span>Not Receipted</span>
                                         }

@@ -30,7 +30,7 @@ namespace InsuranceClaim.Models
         public string addressLine2 { get; set; }
         public string city { get; set; }
         public string phoneNumber { get; set; }
-        public int policyID { get; set; }
+        public string policyID { get; set; }
         public string policyTransactionDate { get; set; }
         public decimal policyAmount { get; set; }
         public string agentID { get; set; }

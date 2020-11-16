@@ -4981,7 +4981,7 @@ namespace InsuranceClaim.Controllers
 
             string query = "select PolicyDetail.PolicyNumber, VehicleDetail.RegistrationNo, VehicleMake.MakeDescription, VehicleModel.ModelDescription, ";
             query += " Customer.FirstName + ' '+ Customer.LastName as CustomerName, VehicleDetail.Premium , VehicleDetail.StampDuty, VehicleDetail.ZTSCLevy ,VehicleDetail.VehicleLicenceFee,  ";
-            query += " VehicleDetail.IncludeRadioLicenseCost, VehicleDetail.RadioLicenseCost, VehicleDetail.TransactionDate, [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as CreatedBy from VehicleDetail ";
+            query += " VehicleDetail.IncludeRadioLicenseCost, convert(varchar, VehicleDetail.ModifiedOn, 1) as ModifiedOn , VehicleDetail.RadioLicenseCost, VehicleDetail.TransactionDate, [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as CreatedBy from VehicleDetail ";
             query += " join PolicyDetail on PolicyDetail.Id=VehicleDetail.PolicyId ";
             query += " join SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.Id ";
             query += " join SummaryDetail on SummaryDetail.Id= SummaryVehicleDetail.SummaryDetailId ";
@@ -5005,7 +5005,8 @@ namespace InsuranceClaim.Controllers
                 CustomerName = x.CustomerName,
                 TotalPremium = CalculatePremium(x.Premium, x.StampDuty, x.ZTSCLevy, x.VehicleLicenceFee, x.IncludeRadioLicenseCost, x.RadioLicenseCost),
                 createdOn = x.TransactionDate,
-                AgentName = x.CreatedBy
+                AgentName = x.CreatedBy,
+                ModifiedOn = x.ModifiedOn == null ? "" : Convert.ToString(x.ModifiedOn)
             }).ToList();
 
             policylist.listpolicy = list;
@@ -5019,7 +5020,7 @@ namespace InsuranceClaim.Controllers
 
             string query = "select PolicyDetail.PolicyNumber, VehicleDetail.RegistrationNo, VehicleMake.MakeDescription, VehicleModel.ModelDescription, ";
             query += " Customer.FirstName + ' '+ Customer.LastName as CustomerName, VehicleDetail.Premium , VehicleDetail.StampDuty, VehicleDetail.ZTSCLevy ,VehicleDetail.VehicleLicenceFee,  ";
-            query += " VehicleDetail.IncludeRadioLicenseCost, VehicleDetail.RadioLicenseCost, VehicleDetail.TransactionDate, [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as CreatedBy from VehicleDetail ";
+            query += " VehicleDetail.IncludeRadioLicenseCost, VehicleDetail.RadioLicenseCost,convert(varchar, VehicleDetail.ModifiedOn, 1) as ModifiedOn, VehicleDetail.TransactionDate, [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as CreatedBy from VehicleDetail ";
             query += " join PolicyDetail on PolicyDetail.Id=VehicleDetail.PolicyId ";
             query += " join SummaryVehicleDetail on VehicleDetail.Id=SummaryVehicleDetail.Id ";
             query += " join SummaryDetail on SummaryDetail.Id= SummaryVehicleDetail.SummaryDetailId ";
@@ -5027,7 +5028,7 @@ namespace InsuranceClaim.Controllers
             query += " left join VehicleMake on VehicleDetail.MakeId=VehicleMake.MakeCode ";
             query += " left join VehicleModel on VehicleDetail.ModelId=VehicleModel.ModelDescription  ";
             query += " where VehicleDetail.IsActive=0 and isLapsed=0  ";
-            query += "   and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + model.FromDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + model.EndDate + "', 101))  order by  VehicleDetail.Id desc";
+            query += "   and (CONVERT(date, VehicleDetail.ModifiedOn) >= convert(date, '" + model.FromDate + "', 101)  and CONVERT(date, VehicleDetail.ModifiedOn) <= convert(date, '" + model.EndDate + "', 101))  order by  VehicleDetail.Id desc";
 
             ListPolicy policylist = new ListPolicy();
             policylist.listpolicy = new List<PolicyListViewModel>();
@@ -5044,7 +5045,8 @@ namespace InsuranceClaim.Controllers
                 CustomerName = x.CustomerName,
                 TotalPremium = CalculatePremium(x.Premium, x.StampDuty, x.ZTSCLevy, x.VehicleLicenceFee, x.IncludeRadioLicenseCost, x.RadioLicenseCost),
                 createdOn = x.TransactionDate,
-                AgentName = x.CreatedBy
+                AgentName = x.CreatedBy,
+                ModifiedOn =x.ModifiedOn
             }).ToList();
 
             policylist.listpolicy = list;
@@ -5128,7 +5130,7 @@ namespace InsuranceClaim.Controllers
         public ActionResult ALMGWPPartnerReport()
         {
 
-            GetRecieptReport();
+           // GetRecieptReport();
 
             List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
             {
@@ -5171,9 +5173,9 @@ namespace InsuranceClaim.Controllers
             var query = " select [dbo].[fn_GetUserCallCenterAgent] (SummaryDetail.CreatedBy) as AgentName, PolicyDetail.id as PolicyId,  PolicyDetail.PolicyNumber, VehicleDetail.RegistrationNo,VehicleDetail.TransactionDate, Customer.FirstName + ' ' + Customer.LastName as CustomerName, SummaryDetail.TotalPremium  from PolicyDetail join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId ";
             query += " join SummaryVehicleDetail on VehicleDetail.Id = SummaryVehicleDetail.Id ";
             query += " join SummaryDetail on SummaryDetail.Id = SummaryVehicleDetail.SummaryDetailId join Customer on VehicleDetail.CustomerId=Customer.Id ";
-            query += " where(VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation = 0  and(CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + startDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + endDate + "', 101))";
+            query += " where(VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation = 0 and [dbo].[fn_GetUserBranch] (SummaryDetail.CreatedBy) ='Gene Call Centre'  and(CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + startDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + endDate + "', 101))";
 
-            string connectionString = System.Configuration.ConfigurationManager.AppSettings["Insurance"].ToString();
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["Insurance"].ToString();
 
             var result = new List<RecieptModel>();
 

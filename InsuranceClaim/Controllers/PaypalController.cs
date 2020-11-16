@@ -1088,14 +1088,33 @@ namespace InsuranceClaim.Controllers
             ReceiptDeliveryModule detail = new ReceiptDeliveryModule();
             detail.customerFirstName = customer.FirstName;
             detail.customerLastName = customer.LastName;
-            detail.addressLine1 = customer.AddressLine1;
-            detail.addressLine2 = customer.AddressLine2;
-            detail.city = customer.City;
+
+
+            if(vehicle.IsLicenseDiskNeeded==true)
+            {
+                var licenseDelivery = InsuranceContext.LicenceDiskDeliveryAddresses.Single(where: "vehicleId="+vehicle.Id);
+                if(licenseDelivery!=null)
+                {
+                    detail.addressLine1 = licenseDelivery.Address1;
+                    detail.addressLine2 = licenseDelivery.Address2;
+                    detail.zoneName = licenseDelivery.Address2;
+                    detail.city = licenseDelivery.City;
+                }
+            }
+            else
+            {
+                detail.addressLine1 = "Self";
+                detail.addressLine2 = "Pick";
+                detail.zoneName = "pick";
+                detail.city = "Harare";
+            }
+
+            
             detail.phoneNumber = customer.PhoneNumber;
-            detail.policyID = policy.Id;
+            detail.policyID = policy.PolicyNumber;
             detail.policyTransactionDate = vehicle.TransactionDate.Value.ToShortDateString();
             detail.policyAmount = summaryDetail.TotalPremium.Value;
-            detail.zoneName = customer.AddressLine2;
+            
             if (userLoggedin)
             {
                 detail.agentID = summaryDetail.CreatedBy.ToString();
