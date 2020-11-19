@@ -568,6 +568,7 @@ namespace InsuranceClaim.Controllers
             SummaryDetailService detailService = new SummaryDetailService();
             string CurrencyName = "";
             List<VehicleDetail> ListOfVehicles = new List<VehicleDetail>();
+            
             var SummaryVehicleDetails = InsuranceContext.SummaryVehicleDetails.All(where: $"SummaryDetailId={summaryId}").ToList();
             foreach (var itemSummaryVehicleDetails in SummaryVehicleDetails)
             {
@@ -1422,10 +1423,10 @@ namespace InsuranceClaim.Controllers
                         var currentUser = UserManager.FindByName(user.UserName);
                         var roleresult = UserManager.AddToRole(currentUser.Id, model.role);
 
-                        var objCustomer = InsuranceContext.Customers.All().OrderByDescending(x => x.Id).FirstOrDefault();
+                        var objCustomer = InsuranceContext.SystemUsers.All().OrderByDescending(x => x.Id).FirstOrDefault();
                         if (objCustomer != null)
                         {
-                            custId = objCustomer.CustomerId + 1;
+                            custId = objCustomer.SystemUserId + 1;
                         }
                         else
                         {
@@ -1436,9 +1437,9 @@ namespace InsuranceClaim.Controllers
                         model.UserID = user.Id;
                         model.CustomerId = custId;
 
-                        Customer cstmr = new Customer();
+                        SystemUser cstmr = new SystemUser();
                         cstmr.Id = model.Id;
-                        cstmr.CustomerId = model.CustomerId;
+                        cstmr.SystemUserId = model.CustomerId;
                         cstmr.AddressLine1 = model.AddressLine1;
                         cstmr.AddressLine2 = model.AddressLine2;
                         cstmr.City = model.City;
@@ -1459,12 +1460,14 @@ namespace InsuranceClaim.Controllers
                         cstmr.UserID = user.Id;
                         cstmr.PhoneNumber = model.PhoneNumber;
                         cstmr.WorkTypeId = model.WorkTypeId;
-                        InsuranceContext.Customers.Insert(cstmr);
+                        InsuranceContext.SystemUsers.Insert(cstmr);
+                        //InsuranceContext
 
                     }
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.ToString());
                 }
 
             }

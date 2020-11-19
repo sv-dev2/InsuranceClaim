@@ -51,6 +51,7 @@ namespace InsuranceClaim.Controllers
         }
 
 
+
         // [Authorize(Roles = "Staff,Administrator")]
         public ActionResult Index(int id = 0)
         {
@@ -397,7 +398,7 @@ namespace InsuranceClaim.Controllers
 
             ViewBag.Products = InsuranceContext.Products.All(where: "Active = 'True' or Active is null").ToList();
 
-            ViewBag.TaxClass = InsuranceContext.VehicleTaxClasses.All().ToList();        
+            ViewBag.TaxClass = InsuranceContext.VehicleTaxClasses.All().ToList();
             ViewBag.PaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is null").ToList();
 
             ViewBag.VehicleLicensePaymentTermId = InsuranceContext.PaymentTerms.All(where: "IsActive = 'True' or IsActive is Null").ToList();
@@ -428,10 +429,10 @@ namespace InsuranceClaim.Controllers
             //ViewBag.Sources = InsuranceContext.BusinessSources.All();
 
 
-            
-               
 
-          
+
+
+
 
 
             var data1 = (from p in InsuranceContext.BusinessSources.All().ToList()
@@ -609,7 +610,7 @@ namespace InsuranceClaim.Controllers
             return View(viewModel);
         }
 
-        
+
 
 
         public void SetValueIntoSession(int summaryId)
@@ -630,15 +631,15 @@ namespace InsuranceClaim.Controllers
             List<RiskDetailModel> listRiskDetail = new List<RiskDetailModel>();
             foreach (var item in SummaryVehicleDetails)
             {
-              //  var _vehicle = InsuranceContext.VehicleDetails.Single(item.VehicleDetailsId);
+                //  var _vehicle = InsuranceContext.VehicleDetails.Single(item.VehicleDetailsId);
 
                 var _vehicle = InsuranceContext.VehicleDetails.Single(where: "id=" + item.VehicleDetailsId + " and IsActive=1");
-                if(_vehicle!=null)
+                if (_vehicle != null)
                 {
                     RiskDetailModel riskDetail = Mapper.Map<VehicleDetail, RiskDetailModel>(_vehicle);
                     listRiskDetail.Add(riskDetail);
                 }
-                
+
             }
             Session["VehicleDetails"] = listRiskDetail;
 
@@ -666,9 +667,9 @@ namespace InsuranceClaim.Controllers
                 else
                 {
                     return RedirectToAction("RiskDetail", new { id = 1 });
-                   // return Json("/CustomerRegistration/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                    // return Json("/CustomerRegistration/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
                 }
-                    
+
             }
 
             int vehicleUsage = model.VehicleUsage == null ? 0 : model.VehicleUsage.Value;
@@ -684,22 +685,22 @@ namespace InsuranceClaim.Controllers
                 if (User.IsInRole("Staff"))
                 {
                     return RedirectToAction("RiskDetail", "ContactCentre", new { id = 1 });
-                  //  return Json("/ContactCentre/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
-                }                
+                    //  return Json("/ContactCentre/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
+                }
                 else
                 {
-                      return RedirectToAction("RiskDetail", new { id = 1 });
+                    return RedirectToAction("RiskDetail", new { id = 1 });
                     //return Json("/CustomerRegistration/RiskDetail/id?1", JsonRequestBehavior.AllowGet);
                 }
-                 
+
             }
 
             // for license payment term
 
             VehicleService _service = new VehicleService();
-            var validationMsg= _service.ValidationMessage(model);
+            var validationMsg = _service.ValidationMessage(model);
 
-            if(validationMsg!="")
+            if (validationMsg != "")
             {
                 model.ErrorMessage = validationMsg;
                 TempData["ViewModel"] = model;
@@ -787,21 +788,21 @@ namespace InsuranceClaim.Controllers
 
                     if (btnAddVehicle == "")
                     {
-                         return RedirectToAction("SummaryDetail");
-                       // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
+                        return RedirectToAction("SummaryDetail");
+                        // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
                         // while click on updat button or submit buttton without add more.
                         if (User.IsInRole("Staff"))
                         {
-                             return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
-                           // return Json("/ContactCentre/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
+                            return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
+                            // return Json("/ContactCentre/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
                             return RedirectToAction("RiskDetail", new { id = 0 });
-                           // return Json("/CustomerRegistration/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
+                            // return Json("/CustomerRegistration/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
                         }
 
                     }
@@ -814,12 +815,12 @@ namespace InsuranceClaim.Controllers
                     if (User.IsInRole("Staff"))
                     {
                         return RedirectToAction("RiskDetail", "ContactCentre");
-                       // return Json("/ContactCentre/RiskDetail", JsonRequestBehavior.AllowGet);
+                        // return Json("/ContactCentre/RiskDetail", JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
-                         return RedirectToAction("RiskDetail");
-                       // return Json("/CustomerRegistration/RiskDetail", JsonRequestBehavior.AllowGet);
+                        return RedirectToAction("RiskDetail");
+                        // return Json("/CustomerRegistration/RiskDetail", JsonRequestBehavior.AllowGet);
                     }
                 }
 
@@ -872,8 +873,8 @@ namespace InsuranceClaim.Controllers
 
                         if (User.IsInRole("Staff"))
                         {
-                             return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
-                           // return Json("/ContactCentre/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
+                            return RedirectToAction("RiskDetail", "ContactCentre", new { id = 0 });
+                            // return Json("/ContactCentre/RiskDetail/id?0", JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -929,20 +930,20 @@ namespace InsuranceClaim.Controllers
                         }
 
                         return RedirectToAction("SummaryDetail");
-                       // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
+                        // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
                     }
 
                 }
                 catch (Exception ex)
                 {
                     //  WriteLog(ex.Message);
-                      return RedirectToAction("SummaryDetail");
-                   // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
+                    return RedirectToAction("SummaryDetail");
+                    // return Json("/CustomerRegistration/SummaryDetail", JsonRequestBehavior.AllowGet);
                 }
             }
         }
 
-      
+
 
 
         public bool CheckIsVrnAlreadyExist(string vrn)
@@ -1276,7 +1277,7 @@ namespace InsuranceClaim.Controllers
                 {
                     decimal penalitesAmt = Convert.ToDecimal(item.PenaltiesAmt);
 
-                    model.TotalPremium += item.Premium + item.ZTSCLevy + item.StampDuty + item.VehicleLicenceFee ;
+                    model.TotalPremium += item.Premium + item.ZTSCLevy + item.StampDuty + item.VehicleLicenceFee;
                     if (item.IncludeRadioLicenseCost)
                     {
                         model.TotalPremium += item.RadioLicenseCost;
@@ -1734,7 +1735,7 @@ namespace InsuranceClaim.Controllers
                                             if (!User.IsInRole("Team Leaders"))
                                             {
                                                 InsuranceContext.Customers.Update(customerdata); // 13_june_2019
-                                            }                                            
+                                            }
                                         }
                                     }
 
@@ -1845,7 +1846,7 @@ namespace InsuranceClaim.Controllers
                                 }
 
                                 item.IsMobile = false;
-                               
+
 
                                 var _item = item;
 
@@ -2504,10 +2505,8 @@ namespace InsuranceClaim.Controllers
 
                                 if (item.PaymentTermId == 1)
                                     paymentTermsNmae = "Annual";
-                                else if (item.PaymentTermId == 4)
-                                    paymentTermsNmae = "Termly";
                                 else
-                                    paymentTermsNmae = paymentTermVehicel.Name + " Months";
+                                    paymentTermsNmae = item.PaymentTermId + " Months";
 
                                 var vehicledetail = InsuranceContext.VehicleDetails.Single(SummaryVehicleDetails[0].VehicleDetailsId);
                                 CurrencyName = servicedetail.GetCurrencyName(currencylist, vehicledetail.CurrencyId);
@@ -2517,36 +2516,67 @@ namespace InsuranceClaim.Controllers
                                 var taxClassDetials = InsuranceContext.VehicleTaxClasses.Single(item.TaxClassId);
                                 decimal? premiumDue = item.Premium + item.StampDuty + item.ZTSCLevy + item.VehicleLicenceFee + item.RadioLicenseCost;
 
-                              
-                           
+
+
+                                //Summeryofcover += "<table border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid;' >";
+                                //Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:10px;   word-break: break-all;'> <font size='1'>Gene-Insure</font> </th> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Cover Note #: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverNote + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px; '> <font size='1'> Transaction Date: </font> </td> <td style='padding: 1px 10px; '> <font size='1'>" + item.TransactionDate.Value.ToShortDateString() + " </font> </td> </tr>";
+                                //Summeryofcover += " </table>";
+
+                                //Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid;' >";
+                                //Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:1px;   word-break: break-all;'> <font size='1'>Certificate of Motor Insurance</font>  </th> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Insurance Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>Road Traffic Act </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + " " + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Start Date: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> End Date: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverEndDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Period: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + paymentTermsNmae + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Premium: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.Premium + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Gvt Levy: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.ZTSCLevy + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Stamp Duty: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.StampDuty + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Premium Due: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + Math.Round(Convert.ToDecimal(premiumDue), 2) + " </font> </td> </tr>";
+                                //Summeryofcover += " </table>";
+
+                                //// #ddd
+                                //Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid' >";
+                                //Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:10px;  word-break: break-all;'> <font size='1'>Vehicle Details</font> </th> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Reg. Number: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.RegistrationNo + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + productDetail.ProductName + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Tax Class: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + taxClassDetials.Description + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px; font-size:15px;'> <font size='1'> Sum Insured: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.SumInsured + " </font> </td> </tr>";
+                                //Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle: </font> </td> <td style='padding: 5px 10px;'> <font size='1'>" + vehicledescription + " </font> </td> </tr>";
+                                //Summeryofcover += " </table> ";
+
+
                                 Summeryofcover += "<table border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid;' >";
-                                Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:10px;   word-break: break-all;'> <font size='1'>Gene-Insure</font> </th> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Cover Note #: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverNote + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px; '> <font size='1'> Transaction Date: </font> </td> <td style='padding: 1px 10px; '> <font size='1'>" + item.TransactionDate.Value.ToShortDateString() + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;   word-break: break-all;'> <font size='1'><b> GENE-INSURE </b></font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Cover Note # </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverNote + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px; '> <font size='1'> Transaction Date </font> </td> <td style='padding: 1px 10px; '> <font size='1'>" + item.TransactionDate.Value.ToShortDateString() + " </font> </td> </tr>";
                                 Summeryofcover += " </table>";
 
-                                Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid;' >";
-                                Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:1px;   word-break: break-all;'> <font size='1'>Certificate of Motor Insurance</font>  </th> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Insurance Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>Road Traffic Act </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + " " + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Start Date: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> End Date: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverEndDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Period: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + paymentTermsNmae + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Premium: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.Premium + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Gvt Levy: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.ZTSCLevy + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Stamp Duty: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.StampDuty + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Premium Due: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + Math.Round(Convert.ToDecimal(premiumDue), 2) + " </font> </td> </tr>";
+                                Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid; width:900px;' >";
+                                Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;word-break: break-all;'> <font size='1'><b> CERTIFICATE OF MOTOR INSURANCE </b> </font>  </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Insurance Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>Road Traffic Act </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + " " + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Start Date </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> End Date </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverEndDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'>Policy Period </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + paymentTermsNmae + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Premium </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.Premium + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Gvt Levy </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.ZTSCLevy + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Stamp Duty </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.StampDuty + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Premium Due </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + Math.Round(Convert.ToDecimal(premiumDue), 2) + " </font> </td> </tr>";
                                 Summeryofcover += " </table>";
 
                                 // #ddd
                                 Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid' >";
-                                Summeryofcover += "<tr> <th  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align: center; padding:10px;  word-break: break-all;'> <font size='1'>Vehicle Details</font> </th> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Reg. Number: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.RegistrationNo + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle Type: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + productDetail.ProductName + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Tax Class: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + taxClassDetials.Description + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px; font-size:15px;'> <font size='1'> Sum Insured: </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.SumInsured + " </font> </td> </tr>";
-                                Summeryofcover += "<tr> <td style='padding: 1px 10px;'> <font size='1'> Vehicle: </font> </td> <td style='padding: 5px 10px;'> <font size='1'>" + vehicledescription + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;  word-break: break-all;'> <font size='1'><b> VEHICLE DETAILS </b></font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle Reg. Number </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.RegistrationNo + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + productDetail.ProductName + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Tax Class </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + taxClassDetials.Description + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px; font-size:15px;'> <font size='1'> Sum Insured </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.SumInsured + " </font> </td> </tr>";
+                                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle: </font> </td> <td style='padding: 5px 10px;'> <font size='1'>" + vehicledescription + " </font> </td> </tr>";
                                 Summeryofcover += " </table> ";
+
 
 
                                 //   Summeryofcover += "<tr> <td style='padding: 7px 10px; font - size:15px;'>" + item.RegistrationNo + " </td> <td style='padding: 7px 10px; font - size:15px;'>" + vehicledescription + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + item.SumInsured + "</td><td style='padding: 7px 10px; font - size:15px;'>" + converType + "</td><td style='padding: 7px 10px; font - size:15px;'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</td> <td style='padding: 7px 10px; font - size:15px;'>" + policyPeriod + "</td><td style='padding: 7px 10px; font - size:15px;'>" + paymentTermsNmae + "</td><td style='padding: 7px 10px; font - size:15px;'>" + CurrencyName + Convert.ToString(item.Premium+item.Discount) + "</td></tr>";
@@ -2621,7 +2651,7 @@ namespace InsuranceClaim.Controllers
                                 Replace("##Discount##", Convert.ToString(ListOfVehicles.Sum(x => x.Discount)))
                                  .Replace("##PenaltiesAmt##", Convert.ToString(ListOfVehicles.Sum(x => x.PenaltiesAmt)))
                                 .Replace("##ExcessAmount##", Convert.ToString(ExcessAmount))
-                                .Replace("##CurrencyNames##", CurrencyName).
+                                .Replace("##currencyName##", CurrencyName).
                                 Replace("##SummaryDetailsPath##", Convert.ToString(rootPath)).Replace("##insurance_period##", vehicleQuotation.CoverStartDate.Value.ToString("dd/MM/yyyy") + " - " + vehicleQuotation.CoverEndDate.Value.ToString("dd/MM/yyyy")).
                                 Replace("##NINumber##", customerQuotation.NationalIdentificationNumber).Replace("##VehicleLicenceFee##", Convert.ToString(ListOfVehicles.Sum(x => x.VehicleLicenceFee)));
 
@@ -3422,7 +3452,7 @@ namespace InsuranceClaim.Controllers
 
                     if (VehilceLicense && RadioLicense)
                         quoteresponse = ICEcashService.TPILICQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense, licensePaymentTerm, radioPaymentTerm);
-                    else if(VehilceLicense)
+                    else if (VehilceLicense)
                         quoteresponse = ICEcashService.TPILICQuoteZinaraOnly(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId, VehilceLicense, RadioLicense, licensePaymentTerm);
                     else
                         quoteresponse = ICEcashService.RequestQuote(patnerToken, regNo, SumInsured, make, model, Convert.ToInt32(PaymentTerm), Convert.ToInt32(VehicleYear), CoverTypeId, tempVehicleType, tokenObject.PartnerReference, Cover_StartDate, Cover_EndDate, taxClassId);
@@ -3466,18 +3496,18 @@ namespace InsuranceClaim.Controllers
                         }
 
 
-                        
 
 
-                        if (quoteresponse.Response.Quotes[0] != null && quoteresponse.Response.Quotes[0].Licence!=null)
+
+                        if (quoteresponse.Response.Quotes[0] != null && quoteresponse.Response.Quotes[0].Licence != null)
                         {
 
-                           
-                            decimal penaltiesAmt = quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt==null ? 0: Convert.ToDecimal( quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt);
+
+                            decimal penaltiesAmt = quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt == null ? 0 : Convert.ToDecimal(quoteresponse.Response.Quotes[0].Licence.PenaltiesAmt);
 
                             decimal administrationAmt = quoteresponse.Response.Quotes[0].Licence.AdministrationAmt == null ? 0 : Convert.ToDecimal(quoteresponse.Response.Quotes[0].Licence.AdministrationAmt);
 
-                            if (penaltiesAmt>0 && administrationAmt==0)
+                            if (penaltiesAmt > 0 && administrationAmt == 0)
                             {
                                 // default administration amount
                                 decimal administratationAmt = 188;
@@ -3882,8 +3912,8 @@ namespace InsuranceClaim.Controllers
                     PolicyId = vehilceDetail.PolicyId,
                     VRN = vehilceDetail.RegistrationNo,
                     CertSerialNo = model.SerialNumber,
-                    PolicyType= Enum.GetName(typeof(PolicyType), PolicyType.New),
-                    VehicleId= vehilceDetail.Id,
+                    PolicyType = Enum.GetName(typeof(PolicyType), PolicyType.New),
+                    VehicleId = vehilceDetail.Id,
                     CreatedBy = createdBy,
                     CreatedOn = DateTime.Now
                 };
@@ -4381,10 +4411,10 @@ namespace InsuranceClaim.Controllers
             return Json(new { IsError = false, error = TempData["ErrorMessage"].ToString() }, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpGet]
         public JsonResult PolicyStatusUpdate(string PolicyNo)
         {
-
             string[] plicynum = PolicyNo.Split(',');
             string Policy = plicynum[0];
             var insure = InsuranceContext.PolicyDetails.Single(where: $"PolicyNumber='{Policy}'");
@@ -4393,10 +4423,150 @@ namespace InsuranceClaim.Controllers
             return Json(Policy, JsonRequestBehavior.AllowGet);
         }
 
-        
+        public JsonResult paymentSend( string reference, string policyNumber, decimal amount, string currency, string paymentMethod, int userId, string type = "", string discription = "", string policyId="0")
+        {
+
+            PaymentResponse res = new PaymentResponse();
+            try
+            {
+                ReceiptAndPayment payment = new ReceiptAndPayment();
+                payment.Amount = amount;
+                payment.CreatedBy = userId;
+                payment.Description = discription;
+                payment.policyNumber = policyNumber;
+                payment.policyId = Convert.ToInt32(policyId);
+                payment.CreatedOn = DateTime.Now;
+                payment.currency = currency;
+               
+                payment.type = type;
+                if (type.Length == 0)
+                {
+                    payment.type = "reciept";
+                }
+                payment.reference = reference;
+                payment.paymentMethod = paymentMethod;
+                InsuranceContext.ReceiptAndPayments.Insert(payment);
+                res.success = true;
+                res.message = "payment created";
+            }
+            catch (Exception ex)
+            {
+
+                res.success = false;
+                res.message = "payment created failed ";
+                res.error = ex.ToString();
+            }
+
+
+            return Json(res, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
+        public JsonResult getPayment(string policyNumber)
+        {
+
+            List<RecieptResponse> recieptResponses = new List<RecieptResponse>();
+            //InsuranceContext.ReceiptAndPayments.All().ToList();
+
+            recieptResponses = InsuranceContext.Query("select * from ReceiptAndPayment where type='reciept' and policyNumber='" + policyNumber + "'").Select(x => new RecieptResponse()
+            {
+                paymentMethod = x.paymentMethod,
+                Amount = x.Amount,
+                Id = x.Id,
+
+                policyNumber = x.policyNumber,
+                Description = x.Description,
+                reference = x.reference,
+                currency = x.currency,
+                CreatedOn = x.CreatedOn.ToString("yyyy-MM-dd HH:mm:ss.fff")
+
+            }).ToList();
+
+            return Json(recieptResponses, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getBalance(string policyNumber)
+        {
+
+            AccountBalance accountBalance = new AccountBalance();
+            var balance = InsuranceContext.Query("select COALESCE(SUM(Amount),0) as balance from ReceiptAndPayment where type='invoice' and policyNumber='" + policyNumber + "'").Select(x =>
+             accountBalance.amountDue = x.balance * -1
+            ).FirstOrDefault();
+
+            var AmountDue = InsuranceContext.Query("select COALESCE(SUM(Amount),0) as balance from ReceiptAndPayment where policyNumber='" + policyNumber + "'").Select(x =>
+              accountBalance.balance = x.balance
+
+            ).FirstOrDefault();
 
 
 
+            return Json(accountBalance, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getAutoCustomers(string searchString)
+        {
+
+            List<CustomerResponse> customers = new List<CustomerResponse>();
+            //InsuranceContext.ReceiptAndPayments.All().ToList();
+
+            string query = "select PolicyDetail.CreatedOn ,PolicyDetail.PolicyNumber,PolicyDetail.Id, Customer.FirstName , Customer.LastName , VehicleDetail.RegistrationNo from PolicyDetail ";
+            query += " join Customer on PolicyDetail.CustomerId = Customer.id"; 
+             query += " join VehicleDetail on PolicyDetail.Id = VehicleDetail.PolicyId";
+            query += " where PolicyNumber in(";
+            query += " select policyNumber from(SELECT policyNumber, SUM(Amount) as balance from ReceiptAndPayment group by policyNumber) as p where balance< 0)";
+            query += " and (policyNumber like '%"+ searchString + "%' or Customer.LastName like '%" + searchString + "%'  or Customer.FirstName like '%" + searchString + "%' or VehicleDetail.RegistrationNo like '%" + searchString + "%')";
+
+            customers = InsuranceContext.Query(query).Select(x => new CustomerResponse()
+            {
+                CustomerName = x.FirstName + "  " + x.LastName,
+                vehicleRegNumber = x.RegistrationNo,
+                PolicyNumber = x.PolicyNumber,
+                policyId = x.Id
+
+            }).ToList();
+
+           
+            return Json(customers, JsonRequestBehavior.AllowGet);
+        }
+
+        class CustomerResponse { 
+            public string CustomerName { set; get; }
+            public string vehicleRegNumber { set; get; }
+            public string PolicyNumber { set; get; }
+            public int policyId { set; get; }
+
+        }
+
+
+        class AccountBalance
+        {
+            public decimal balance { get; set; }
+            public decimal amountDue { get; set; }
+        }
+
+        class PaymentResponse
+        {
+            public bool success { get; set; }
+            public string message { get; set; }
+            public string error { get; set; }
+
+        }
+        class RecieptResponse
+        {
+            public int Id { get; set; } // Auto increment
+
+            public string reference { get; set; }
+            public string policyNumber { get; set; } // policy reference check as invoice
+
+            public string paymentMethod { get; set; }
+            public string Description { get; set; } // Description
+            public decimal Amount { get; set; } // Amount - or +
+            public string currency { get; set; } // currency options
+            public string CreatedOn { get; set; }
+
+
+        }
     }
 }
 

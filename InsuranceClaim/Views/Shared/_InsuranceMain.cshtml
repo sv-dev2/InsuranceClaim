@@ -9,6 +9,7 @@
     var role = "";
     var fname = "";
     var lname = "";
+    
     var LoyalyPoints = 0.00m;
 
     if (userLoggedin)
@@ -20,6 +21,8 @@
             role = System.Web.HttpContext.Current.User.IsInRole("Administrator") ? "Administrator" : (System.Web.HttpContext.Current.User.IsInRole("Customer") ? "Customer" : "");
             fname = customer.FirstName;
             lname = customer.LastName;
+            
+            ViewBag.user_id= customer.Id;
         }
     }
 
@@ -393,9 +396,9 @@
                 this.value = this.value.replace(/[^0-9]/g, '');
             });
 
-            $('.date').datetimepicker({
-                format: 'MM/D/YYYY'
-            })
+            //$('.date').datetimepicker({
+             //   format: 'MM/D/YYYY'
+            //})
 
             $('.non-editable').keyup(function () {
                 $('.non-editable').attr("disable", true)

@@ -17,7 +17,9 @@ using System.IO;
 using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
-
+using System.Net.Http;
+using RestSharp;
+using Newtonsoft.Json;
 
 namespace InsuranceClaim.Controllers
 {
@@ -48,7 +50,61 @@ namespace InsuranceClaim.Controllers
         public ActionResult Index(int id)
         {
             // ApproveVRNToIceCash(6153099, 1);
+
             return View();
+        }
+
+
+        public async Task SaveDeliveryAddress(ReceiptDeliveryModule deliveryDetail)
+        {
+            //HttpClient client = new HttpClient();
+
+            //var values = new Dictionary<string, string>
+            //    {
+            //        { "customerFirstName", deliveryDetail.customerFirstName},
+            //        { "customerLastName", deliveryDetail.customerLastName },
+            //        { "addressLine1", deliveryDetail.addressLine1 },
+            //        { "addressLine2", deliveryDetail.addressLine2 },
+            //        { "city", deliveryDetail.city },
+            //        { "phoneNumber", deliveryDetail.phoneNumber },
+            //        { "policyID", deliveryDetail.policyID },
+            //        { "policyTransactionDate", deliveryDetail.policyTransactionDate },
+            //         { "policyAmount", deliveryDetail.policyAmount },
+            //         { "agentID", deliveryDetail.agentID },
+            //         { "agentName", deliveryDetail.agentName },
+            //         { "zoneName", deliveryDetail.zoneName }
+            //    };
+
+            //var content = new FormUrlEncodedContent(values);
+
+            //var response = await client.PostAsync("http://41.190.32.215:5001/api/deliveries/", content);
+
+            //var responseString = await response.Content.ReadAsStringAsync();
+
+
+
+            var client = new RestClient("http://41.190.32.215:5001/api/deliveries/");
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("content-type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(deliveryDetail);
+
+            //request.Timeout = 5000;
+            //request.ReadWriteTimeout = 5000;
+            IRestResponse response = client.Execute(request);
+
+            var re = response;
+
+            // var res = JsonConvert.DeserializeObject<SummaryDetailModel>(response.Content);
+
+
+
+
+
+
+
+
         }
 
 
@@ -138,10 +194,10 @@ namespace InsuranceClaim.Controllers
 
                 }).FirstOrDefault();
 
-                if(detail!=null)
+                if (detail != null)
                     invoiceNumber = detail.PolicyNumber;
-                
-                if(Session["PollUrl"]!=null) // it represent
+
+                if (Session["PollUrl"] != null) // it represent
                 {
                     CustomerRegistrationController customer = new CustomerRegistrationController();
                     var payNow = customer.PayNow(summaryDetail.Id, invoiceNumber, Convert.ToInt32(summaryDetail.PaymentMethodId), Convert.ToDecimal(summaryDetail.TotalPremium));
@@ -157,8 +213,8 @@ namespace InsuranceClaim.Controllers
                         return RedirectToAction("failed_url", "Paypal");
                     }
                 }
-                
-                
+
+
 
 
 
@@ -920,7 +976,7 @@ namespace InsuranceClaim.Controllers
                 PaymentMethod = "paynow";
                 // PaymentMethod = "EcoCash";
             }
-            else if (Paymentid == Convert.ToString( (int)paymentMethod.PayLater))
+            else if (Paymentid == Convert.ToString((int)paymentMethod.PayLater))
             {
                 PaymentMethod = "Zimswitch";
             }
@@ -1025,8 +1081,49 @@ namespace InsuranceClaim.Controllers
                     Paymentid = "1";
 
                 string res = ApproveVRNToIceCash(id, Convert.ToInt16(Paymentid));
-
             }
+
+
+
+            ReceiptDeliveryModule detail = new ReceiptDeliveryModule();
+            detail.customerFirstName = customer.FirstName;
+            detail.customerLastName = customer.LastName;
+            detail.addressLine1 = customer.AddressLine1;
+            detail.addressLine2 = customer.AddressLine2;
+            detail.city = customer.City;
+            detail.phoneNumber = customer.PhoneNumber;
+            detail.policyID = policy.Id;
+            detail.policyTransactionDate = vehicle.TransactionDate.Value.ToShortDateString();
+            detail.policyAmount = summaryDetail.TotalPremium.Value;
+            detail.zoneName = customer.AddressLine2;
+            if (userLoggedin)
+            {
+                detail.agentID = summaryDetail.CreatedBy.ToString();
+                var customerDetial = InsuranceContext.Customers.Single(summaryDetail.CreatedBy);
+                detail.agentName = customerDetial.FirstName + ' ' + customerDetial.LastName;
+            }
+
+            SaveDeliveryAddress(detail);
+
+            ReceiptAndPayment payment = new ReceiptAndPayment();
+            payment.Amount = (summaryDetail.TotalPremium.Value * -1);
+            payment.CreatedBy = Convert.ToInt32(summaryDetail.CreatedBy);
+            payment.Description = "";
+            payment.policyNumber = policy.PolicyNumber;
+            payment.policyId = policy.Id;
+            payment.CreatedOn = DateTime.Now;
+            payment.currency = "--";
+            payment.type = "invoice";
+            payment.reference = "--";
+            payment.paymentMethod = "--";
+            //InsuranceContext.ReceiptAndPayments.Insert(payment);
+
+
+
+            saveRecieptAndPayment(payment);
+
+
+
 
             if (!userLoggedin)
             {
@@ -1144,7 +1241,7 @@ namespace InsuranceClaim.Controllers
 
             var IswebCustomer = User.IsInRole("Web Customer");
 
-            if (_pdfPath != "" && _pdfCode != "" && IswebCustomer==true)
+            if (_pdfPath != "" && _pdfCode != "" && IswebCustomer == true)
             {
                 string RecieptbodyPdf = "Hello " + customer.FirstName + "\nWelcome to GeneInsure. Your license pdf verifation code is: " + _pdfCode + "\n" + "\nThanks.";
                 var RecieptresultPdf = await objsmsService.SendSMS(customer.Countrycode.Replace("+", "") + user.PhoneNumber, RecieptbodyPdf);
@@ -1224,8 +1321,8 @@ namespace InsuranceClaim.Controllers
                 string paymentTermsName = "";
                 if (item.PaymentTermId == 1)
                     paymentTermsName = "Annual";
-                
-                    paymentTermsName = item.PaymentTermId + " Months";
+
+                paymentTermsName = item.PaymentTermId + " Months";
 
                 decimal? premiumDue = item.Premium + item.StampDuty + item.ZTSCLevy + item.VehicleLicenceFee + item.RadioLicenseCost;
 
@@ -1242,21 +1339,21 @@ namespace InsuranceClaim.Controllers
 
                 Summeryofcover += "<table border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100%;  border-color:#ffcc00; border-style:solid;' >";
                 Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;   word-break: break-all;'> <font size='1'><b> GENE-INSURE </b></font> </td> </tr>";
-                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Cover Note # </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverNote +" </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Cover Note # </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverNote + " </font> </td> </tr>";
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px; '> <font size='1'> Transaction Date </font> </td> <td style='padding: 1px 10px; '> <font size='1'>" + item.TransactionDate.Value.ToShortDateString() + " </font> </td> </tr>";
                 Summeryofcover += " </table>";
 
-                Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid; width:900px;' >";             
+                Summeryofcover += "<table  border='0' cellspacing='0' cellpadding='0' style='border-collapse:collapse; width:100% border-color:#ffcc00; border-style:solid; width:900px;' >";
                 Summeryofcover += "<tr> <td  bgcolor='#D3D3D3' colspan='2' style='background:#D3D3D3; color:#000;text-align:left; padding:10px;word-break: break-all;'> <font size='1'><b> CERTIFICATE OF MOTOR INSURANCE </b> </font>  </td> </tr>";
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Insurance Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>Road Traffic Act </font> </td> </tr>";
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle Type </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + " " + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Start Date </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";         
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Start Date </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverStartDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> End Date </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.CoverEndDate.Value.ToString("dd/MM/yyyy") + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'>Policy Period </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + paymentTermsName + " </font> </td> </tr>";           
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'>Policy Period </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + paymentTermsName + " </font> </td> </tr>";
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Premium </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.Premium + " </font> </td> </tr>";
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Gvt Levy </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.ZTSCLevy + " </font> </td> </tr>";
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Stamp Duty </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + item.StampDuty + " </font> </td> </tr>";
-                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Premium Due </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + Math.Round( Convert.ToDecimal(premiumDue),2) + " </font> </td> </tr>";
+                Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Premium Due </font> </td> <td style='padding: 1px 10px;'> <font size='1'>" + Math.Round(Convert.ToDecimal(premiumDue), 2) + " </font> </td> </tr>";
                 Summeryofcover += " </table>";
 
                 // #ddd
@@ -1269,8 +1366,8 @@ namespace InsuranceClaim.Controllers
                 Summeryofcover += "<tr> <td width='100' style='padding: 1px 10px;'> <font size='1'> Vehicle: </font> </td> <td style='padding: 5px 10px;'> <font size='1'>" + vehicledescription + " </font> </td> </tr>";
                 Summeryofcover += " </table> ";
 
-               
-            //Summeryofcover += "<tr><td style='padding: 5px 10px; font - size:15px;'>" + item.RegistrationNo + " </td> <td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + vehicledescription + "</font></td> <td> " + item.CoverNote + " </td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + currencyName + item.SumInsured + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + policyPeriod + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + paymentTermsName + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + currencyName + Convert.ToString(item.Premium + item.Discount) + "</font></td></tr>";
+
+                //Summeryofcover += "<tr><td style='padding: 5px 10px; font - size:15px;'>" + item.RegistrationNo + " </td> <td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + vehicledescription + "</font></td> <td> " + item.CoverNote + " </td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + currencyName + item.SumInsured + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + (item.CoverTypeId == 4 ? eCoverType.Comprehensive.ToString() : eCoverType.ThirdParty.ToString()) + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + InsuranceContext.VehicleUsages.All(Convert.ToString(item.VehicleUsage)).Select(x => x.VehUsage).FirstOrDefault() + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + policyPeriod + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + paymentTermsName + "</font></td><td style='padding: 5px 10px; font - size:15px;'><font size='2'>" + currencyName + Convert.ToString(item.Premium + item.Discount) + "</font></td></tr>";
 
             }
 
@@ -1339,7 +1436,7 @@ namespace InsuranceClaim.Controllers
             // user
 
             var role = user.Roles.FirstOrDefault();
-            if(role.RoleId== _webCustomerRoleId)
+            if (role.RoleId == _webCustomerRoleId)
             {
                 MiscellaneousService.SendEmailNewPolicy(customer.FirstName + " " + customer.LastName, customer.AddressLine1, customer.AddressLine2, policy.PolicyNumber, summaryDetail.TotalPremium, summaryDetail.PaymentTermId, PaymentMethod, ListOfVehicles);
             }
@@ -1398,7 +1495,7 @@ namespace InsuranceClaim.Controllers
 
             #endregion
 
-           
+
 
             if (_pdfPath != "" && !IswebCustomer)
             {
@@ -1415,14 +1512,10 @@ namespace InsuranceClaim.Controllers
             return RedirectToAction("ThankYou");
         }
 
-        
-
-
-       
-
-      
-
-
+        private void saveRecieptAndPayment(ReceiptAndPayment receiptAndPayment)
+        {
+            InsuranceContext.ReceiptAndPayments.Insert(receiptAndPayment);
+        }
 
         public string LoggedUserEmail()
         {
@@ -1507,17 +1600,17 @@ namespace InsuranceClaim.Controllers
                                 _pdfPath = MiscellaneousService.LicensePdf(res.Response.LicenceCert, vichelDetails.Id.ToString());
 
                             string format = "yyyyMMdd";
-                            if (res.Response != null && res.Response.LicExpiryDate!=null)
+                            if (res.Response != null && res.Response.LicExpiryDate != null)
                             {
                                 try
                                 {
                                     DateTime LicExpiryDate = DateTime.ParseExact(res.Response.LicExpiryDate, format, CultureInfo.InvariantCulture);
                                     vichelDetails.LicExpiryDate = LicExpiryDate.ToShortDateString();
                                 }
-                                catch(Exception ex)
+                                catch (Exception ex)
                                 {
 
-                                }                       
+                                }
                             }
                         }
 
@@ -1582,9 +1675,9 @@ namespace InsuranceClaim.Controllers
                             result = res.Response.Status;
                             vichelDetails.InsuranceStatus = "Approved";
                             vichelDetails.CoverNote = res.Response.PolicyNo;
-                           
-                                
-                           
+
+
+
 
                             if (res.Response.LicenceCert != null && res.Response.LicenceCert.Length > 1)
                                 _pdfCode = "PD" + vichelDetails.Id + "" + DateTime.Now.Month;
@@ -1757,7 +1850,7 @@ namespace InsuranceClaim.Controllers
 
         public ActionResult ThankYou()
         {
-           
+
 
 
             LicenseModel model = new LicenseModel();

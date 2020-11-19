@@ -1187,6 +1187,8 @@
     <Content Include="Views\Report\Endorsments.cshtml" />
     <Content Include="Views\Report\CallcentreGrosswrittenReport.cshtml" />
     <Content Include="Views\Report\ALMBranchReport.cshtml" />
+    <Content Include="Views\Report\ALMGWPPartnerReport.cshtml" />
+    <Content Include="Views\Report\NewReconciliationReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AgentLogo\" />

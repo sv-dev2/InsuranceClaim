@@ -62,11 +62,7 @@ function GoToRiskDetail(json) {
 }
 
 function GoToSummaryDetail(json) {
-
-   
         window.location.href = json;
-    
-   
 }
 
 function GoToPaymentDetail(json) {
@@ -104,6 +100,9 @@ function GoToRenewTo(json) {
         }
     }
 }
+
+
+
 
 
 

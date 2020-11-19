@@ -164,6 +164,8 @@
     <Compile Include="Domain\PolicyStatus.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\QRCode.cs" />
+    <Compile Include="Domain\ReceiptAndPayment.cs" />
+    <Compile Include="Repository\ReceiptAndPayments.cs" />
     <Compile Include="Domain\ReceiptModuleHistory.cs" />
     <Compile Include="Domain\RefundPolicy.cs" />
     <Compile Include="Domain\RegistrationDocument.cs" />
@@ -181,6 +183,7 @@
     <Compile Include="Domain\SpecificExcess.cs" />
     <Compile Include="Domain\SummaryDetail.cs" />
     <Compile Include="Domain\SummaryVehicleDetail.cs" />
+    <Compile Include="Domain\SystemUser.cs" />
     <Compile Include="Domain\TokenRequest.cs" />
     <Compile Include="Domain\UserManagementView.cs" />
     <Compile Include="Domain\VehicleCoverType.cs" />
@@ -263,6 +266,7 @@
     <Compile Include="Repository\SpecificExcesses.cs" />
     <Compile Include="Repository\SummaryDetails.cs" />
     <Compile Include="Repository\SummaryVehicleDetails.cs" />
+    <Compile Include="Repository\SystemUsers.cs" />
     <Compile Include="Repository\TokenRequests.cs" />
     <Compile Include="Repository\UniqeTransactions.cs" />
     <Compile Include="Repository\UniqueCustomer.cs" />

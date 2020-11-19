@@ -29,6 +29,7 @@ namespace Insurance.Domain
         // entity specific repositories
         public static string ConnectionString { get { return db.connectionString; } }
         public static Currencies Currencies { get { return new Currencies(); } }
+        public static SystemUsers SystemUsers { get { return new SystemUsers(); } }
         public static AgentCommissions AgentCommissions { get { return new AgentCommissions(); } }
         public static BusinessSources BusinessSources { get { return new BusinessSources(); } }
         public static CoverTypes CoverTypes { get { return new CoverTypes(); } }
@@ -46,6 +47,7 @@ namespace Insurance.Domain
         public static BasicExcesses BasicExcesses { get { return new BasicExcesses(); } }
         public static AgeExcesses AgeExcesses { get { return new AgeExcesses(); } }
         public static SpecificExcesses SpecificExcesses { get { return new SpecificExcesses(); } }
+        public static ReceiptAndPayments ReceiptAndPayments { get { return new ReceiptAndPayments(); } }
 
         public static ReceiptModuleHistorys ReceiptHistorys { get { return new ReceiptModuleHistorys(); } }
 

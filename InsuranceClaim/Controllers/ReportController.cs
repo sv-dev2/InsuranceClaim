@@ -157,7 +157,7 @@ namespace InsuranceClaim.Controllers
             return View(results);
         }
 
-       
+
 
 
         public ActionResult SearchZtscReports(ZTSCLevyReportSeachModels Model)
@@ -1240,6 +1240,81 @@ namespace InsuranceClaim.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult ALMPartnerReports(ALMParnterSearchModels _model)
+        {
+
+            List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
+            {
+                Id = x.Id,
+                PartnerName = x.PartnerName,
+                Status = x.Status
+            }).ToList();
+
+
+
+
+            List<ALMParnterSearchModels> ListALMParnterSearchdata = new List<ALMParnterSearchModels>();
+            ALMParnterSearchModels Model = new ALMParnterSearchModels();
+            int Selected = _model.PartnerId;
+
+            string query = "select PolicyDetail.PolicyNumber as PolicyNumber, Branch.BranchName as BranchName,  convert(varchar, PolicyDetail.CreatedOn, 106) as CreatedOn , PaymentInformation.PaymentId, VehicleDetail.Premium,cast(VehicleDetail.Premium * 30 / 100 as decimal(10, 2))    as Comission_Amount, Customer.ALMId from PolicyDetail join Customer on Customer.Id = PolicyDetail.CustomerId join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id join PaymentInformation on PaymentInformation.PolicyId = PolicyDetail.Id join Branch on VehicleDetail.ALMBranchId = Branch.Id join Partners on Partners.Id = Branch.PartnerId where PolicyDetail.CreatedOn BETWEEN '" + _model.FormDate + "' AND '" + _model.EndDate + "' and branch.PartnerId= " + Selected;
+
+            List<ALMParnterSearchModelsData> data = InsuranceContext.Query(query).Select(x => new ALMParnterSearchModelsData
+            {
+                BranchName = x.BranchName,
+                PolicyNumber = x.PolicyNumber,
+                PaymentDetail = x.PaymentId,
+                PolicyDate = x.CreatedOn,
+                GrossPremium = x.Premium,
+                CommissionAmount = x.Comission_Amount,
+
+            }).ToList();
+            Model.ListReportdata = data;
+            ViewBag.Partner = ListPartnerModel;
+
+            return View("ALMGWPPartnerReport", Model);
+
+
+
+        }
+
+
+        [Authorize(Roles = "Administrator,Reports,Finance")]
+        public ActionResult ALMGWPPartnerReport()
+        {
+            List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
+            {
+                Id = x.Id,
+                PartnerName = x.PartnerName,
+                Status = x.Status
+            }).ToList();
+
+
+
+
+            List<ALMParnterSearchModels> ListALMParnterSearchdata = new List<ALMParnterSearchModels>();
+            ALMParnterSearchModels Model = new ALMParnterSearchModels();
+            int Selected = 1;
+
+            string query = "select PolicyDetail.PolicyNumber as PolicyNumber, PartnerCommissions.CommissionPercentage ,Branch.BranchName as BranchName,  convert(varchar, PolicyDetail.CreatedOn, 106) as CreatedOn , PaymentInformation.PaymentId, VehicleDetail.Premium,cast(VehicleDetail.Premium * PartnerCommissions.CommissionPercentage as decimal(10, 2)) as Comission_Amount, Customer.ALMId from PolicyDetail join Customer on Customer.Id = PolicyDetail.CustomerId join VehicleDetail on VehicleDetail.PolicyId = PolicyDetail.Id join PaymentInformation on PaymentInformation.PolicyId = PolicyDetail.Id join Branch on VehicleDetail.ALMBranchId = Branch.Id join Partners on Partners.Id = Branch.PartnerId join PartnerCommissions on CommissionEffectiveDate <= PolicyDetail.CreatedOn and PartnerCommissions.PartnerId = branch.PartnerId where branch.PartnerId=" + Selected;
+
+            List<ALMParnterSearchModelsData> data = InsuranceContext.Query(query).Select(x => new ALMParnterSearchModelsData {
+                BranchName = x.BranchName,
+                PolicyNumber = x.PolicyNumber,
+                PaymentDetail = x.PaymentId,
+                PolicyDate = x.CreatedOn,
+                GrossPremium = x.Premium,
+                CommissionAmount = x.Comission_Amount,
+
+            }).ToList();
+            Model.ListReportdata = data;
+            //Model.ListPartnerModelData = ListPartnerModel;
+            ViewBag.Partner = ListPartnerModel;
+
+            return View(Model);
+        }
+
         [Authorize(Roles = "Administrator,Reports,Finance")]
         public ActionResult ALMGWPReport()
         {
@@ -1465,7 +1540,7 @@ namespace InsuranceClaim.Controllers
         }
 
 
- 
+
         public ActionResult CallcentreGrosswrittenReport(GrossWrittenPremiumReportSearchModels _model)
         {
 
@@ -1474,7 +1549,7 @@ namespace InsuranceClaim.Controllers
             _ListGrossWrittenPremiumReport.ListGrossWrittenPremiumReportdata = new List<GrossWrittenPremiumReportModels>();
             var paymentInformationsList = InsuranceContext.PaymentInformations.All();
 
-            var callCenterTargetSetting = InsuranceContext.Settings.Single(where: "keyname='CallCenterTarget'") ;
+            var callCenterTargetSetting = InsuranceContext.Settings.Single(where: "keyname='CallCenterTarget'");
             var policyAmountSetting = InsuranceContext.Settings.Single(where: "keyname='PolicyAmount'");
 
 
@@ -1493,7 +1568,7 @@ namespace InsuranceClaim.Controllers
             query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId  ";
             //query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
             query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0  and   CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + DateTime.Now.ToShortDateString() + "', 101)   ";
-          //  query += "and Customer.BranchId=" + (int)ALMBranch.GeneCallCentre;
+            //  query += "and Customer.BranchId=" + (int)ALMBranch.GeneCallCentre;
             query += " order by  VehicleDetail.Id desc ";
 
 
@@ -1588,8 +1663,8 @@ namespace InsuranceClaim.Controllers
             var WorkTypsList = InsuranceContext.WorkTypes.All().ToList();
 
             List<GrossWrittenPremiumReportModels> resultList = new List<GrossWrittenPremiumReportModels>();
-            var listCreatedBy= list.Select(o => o.CreatedBy).Distinct().ToList();
-       
+            var listCreatedBy = list.Select(o => o.CreatedBy).Distinct().ToList();
+
             foreach (var item in listCreatedBy)
             {
                 GrossWrittenPremiumReportModels model = new GrossWrittenPremiumReportModels();
@@ -1598,7 +1673,7 @@ namespace InsuranceClaim.Controllers
                 // 69 policy for monthly
                 model.AgentTargetPolicy = Convert.ToInt32(callCenterTargetSetting.value);
 
-                model.AgentActualGwp =  list.Where(c => c.CreatedBy == item).Select(c=>c.Premium_due).Sum();
+                model.AgentActualGwp = list.Where(c => c.CreatedBy == item).Select(c => c.Premium_due).Sum();
 
                 // 22080 for monthly, 320 per policy
                 model.AgentTargetGwp = Convert.ToDecimal(policyAmountSetting.value) * Convert.ToInt32(callCenterTargetSetting.value);
@@ -1607,14 +1682,14 @@ namespace InsuranceClaim.Controllers
                 if (agentDetail != null)
                     model.PolicyCreatedBy = agentDetail.FirstName + ' ' + agentDetail.LastName;
 
-                model.TransactionPerformance =  Math.Round( ((model.AgentActualPolicy / model.AgentTargetPolicy) * 100), 2);
+                model.TransactionPerformance = Math.Round(((model.AgentActualPolicy / model.AgentTargetPolicy) * 100), 2);
                 model.TransactionVariance = model.AgentActualPolicy - model.AgentTargetPolicy;
 
-                model.GwpPerformance = Math.Round( ((model.AgentActualGwp / model.AgentTargetGwp) * 100), 2);
+                model.GwpPerformance = Math.Round(((model.AgentActualGwp / model.AgentTargetGwp) * 100), 2);
                 model.GwpVariance = model.AgentActualGwp - model.AgentTargetGwp;
 
-               var WorkDescDetails= list.Where(c => c.CreatedBy == item).FirstOrDefault();
-                if(WorkDescDetails!=null)
+                var WorkDescDetails = list.Where(c => c.CreatedBy == item).FirstOrDefault();
+                if (WorkDescDetails != null)
                     model.WorkDesc = WorkDescDetails.WorkDesc;
 
 
@@ -1649,7 +1724,7 @@ namespace InsuranceClaim.Controllers
             int differntDays = difference.Days + 1;
 
 
-           // ViewBag.ReportList = ReportsList();
+            // ViewBag.ReportList = ReportsList();
 
             var query = " select SummaryDetail.PaymentMethodId, SummaryDetail.CreatedBy, PolicyDetail.PolicyNumber as Policy_Number, Customer.ALMId, case when VehicleDetail.ALMBranchId = 0  then  [dbo].fn_GetUserCallCenterAgent(SummaryDetail.CreatedBy) else [dbo].fn_GetUserALM(VehicleDetail.ALMBranchId) end  as PolicyCreatedBy, Customer.FirstName + ' ' + Customer.LastName as Customer_Name,VehicleDetail.TransactionDate as Transaction_date, ";
             query += "  case when Customer.id=SummaryDetail.CreatedBy then [dbo].fn_GetUserBranch(Customer.id) else [dbo].fn_GetUserBranch(SummaryDetail.CreatedBy) end as BranchName, ";
@@ -1664,15 +1739,15 @@ namespace InsuranceClaim.Controllers
             query += " join SummaryDetail on SummaryDetail.id = SummaryVehicleDetail.SummaryDetailId ";
             //query += "  join PaymentInformation on SummaryDetail.Id=PaymentInformation.SummaryDetailId ";
             query += " where (VehicleDetail.IsActive = 1 or VehicleDetail.IsActive = null) and SummaryDetail.isQuotation=0    and (  CONVERT(date, VehicleDetail.TransactionDate) >= convert(date, '" + _model.FormDate + "', 101)  and CONVERT(date, VehicleDetail.TransactionDate) <= convert(date, '" + _model.EndDate + "', 101))  ";
-          //  query += "and Customer.BranchId=" + (int)ALMBranch.GeneCallCentre;
+            //  query += "and Customer.BranchId=" + (int)ALMBranch.GeneCallCentre;
             query += " order by  VehicleDetail.Id desc ";
 
 
             ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
                 Select(x => new GrossWrittenPremiumReportModels()
                 {
-                    PaymentMethodId = x.PaymentMethodId==null? 0 : x.PaymentMethodId,
-                    CreatedBy = x.CreatedBy==null? 0 : Convert.ToInt32(x.CreatedBy),
+                    PaymentMethodId = x.PaymentMethodId == null ? 0 : x.PaymentMethodId,
+                    CreatedBy = x.CreatedBy == null ? 0 : Convert.ToInt32(x.CreatedBy),
                     Policy_Number = x.Policy_Number,
                     BranchName = x.BranchName,
                     PolicyCreatedBy = x.PolicyCreatedBy,
@@ -1682,7 +1757,7 @@ namespace InsuranceClaim.Controllers
                     Premium_due = x.Premium_due == null ? 0 : x.Premium_due,
                     Stamp_duty = x.Stamp_duty == null ? 0 : x.Stamp_duty,
                     ZTSC_Levy = x.ZTSC_Levy == null ? 0 : x.ZTSC_Levy,
-                    ALMId = x.ALMId==null? "" : Convert.ToString( x.ALMId),
+                    ALMId = x.ALMId == null ? "" : Convert.ToString(x.ALMId),
                     Comission_Amount = x.Comission_Amount == null ? 0 : x.Comission_Amount,
                     //IncludeRadioLicenseCost = x.IncludeRadioLicenseCost,
                     RadioLicenseCost = x.RadioLicenseCost == null ? 0 : x.RadioLicenseCost,
@@ -1765,14 +1840,14 @@ namespace InsuranceClaim.Controllers
 
                 // 69 policy for monthly
                 // model.AgentTargetPolicy = 3 * differntDays;
-                model.AgentTargetPolicy = Convert.ToInt32 (callCenterTargetSetting.value) * differntDays;
+                model.AgentTargetPolicy = Convert.ToInt32(callCenterTargetSetting.value) * differntDays;
 
                 model.AgentActualGwp = list.Where(c => c.CreatedBy == item).Select(c => c.Premium_due).Sum();
 
                 // 22080 for monthly // 320 per policy
 
                 var perDayTarget = Convert.ToDecimal(policyAmountSetting.value) * Convert.ToInt32(callCenterTargetSetting.value);
-                model.AgentTargetGwp = perDayTarget* differntDays;
+                model.AgentTargetGwp = perDayTarget * differntDays;
 
                 var agentDetail = listCustomer.FirstOrDefault(c => c.Id == item);
                 if (agentDetail != null)
@@ -1845,7 +1920,7 @@ namespace InsuranceClaim.Controllers
             query += " left join BusinessSource on BusinessSource.Id = VehicleDetail.BusinessSourceDetailId ";
             query += " left   join SourceDetail on VehicleDetail.BusinessSourceDetailId = SourceDetail.Id join AspNetUsers on AspNetUsers.id=customer.UserID join AspNetUserRoles on AspNetUserRoles.UserId=AspNetUsers.Id ";
             query += " where VehicleDetail.IsActive = 1 and SummaryDetail.isQuotation=0 and Customer.id=SummaryDetail.CreatedBy and Branch.BranchName != 'Gene Call Centre' ";
-            query +=" and   CONVERT(date, VehicleDetail.TransactionDate) = convert(date, '" + DateTime.Now.ToShortDateString()+"', 101) order by  VehicleDetail.Id desc";
+            query += " and   CONVERT(date, VehicleDetail.TransactionDate) = convert(date, '" + DateTime.Now.ToShortDateString() + "', 101) order by  VehicleDetail.Id desc";
 
 
             ListGrossWrittenPremiumReport = InsuranceContext.Query(query).
@@ -1906,7 +1981,7 @@ namespace InsuranceClaim.Controllers
 
 
 
-              model.PolicyCreatedBy = item;
+                model.PolicyCreatedBy = item;
 
                 model.TransactionPerformance = Math.Round(((model.AgentActualPolicy / model.AgentTargetPolicy) * 100), 2);
                 model.TransactionVariance = model.AgentActualPolicy - model.AgentTargetPolicy;
@@ -2018,7 +2093,7 @@ namespace InsuranceClaim.Controllers
             var listCreatedBy = ListGrossWrittenPremiumReport.Select(o => o.BranchName).Distinct().ToList();
 
 
-           
+
 
             var resultList = new List<GrossWrittenPremiumReportModels>();
 
@@ -2745,7 +2820,7 @@ namespace InsuranceClaim.Controllers
             _BasicCommissionReport.BasicCommissionReport = new List<BasicCommissionReportModel>();
             BasicCommissionReportSearchModel model = new BasicCommissionReportSearchModel();
 
-            var VehicleDetails = InsuranceContext.VehicleDetails.All(where: "IsActive ='True'").ToList().OrderByDescending(c=>c.Id).Take(200);
+            var VehicleDetails = InsuranceContext.VehicleDetails.All(where: "IsActive ='True'").ToList().OrderByDescending(c => c.Id).Take(200);
 
             var currenyList = _summaryDetailService.GetAllCurrency();
 
@@ -3568,6 +3643,172 @@ namespace InsuranceClaim.Controllers
 
             return View(model);
         }
+
+        public ActionResult NewReconciliationSearchReport(NewReconcilationReportModel model) {
+
+
+            string invoiceSQL = "select sum(Amount) as invoice, policyId , policyNumber , CreatedOn, CreatedBy from ReceiptAndPayment  where type='invoice' " +
+                 "AND CreatedOn BETWEEN '"+model.FromDate+"' AND '"+model.EndDate+"' " +
+                 "group by  policyId,policyNumber , CreatedOn, CreatedBy ";
+
+
+
+            var InvoiceList = InsuranceContext.Query(invoiceSQL).Select(x => new PolicyInvoice
+            {
+
+
+                PolicyId = x.policyId,
+                InvoiceAmount = x.invoice * -1,
+                PolicyNumber = x.policyNumber,
+                CreateOn = x.CreatedOn,
+                CreatedBy = x.CreatedBy
+
+            });
+
+            model.listInvoiceAndReciept = new List<RecieptAndPaymentModel>();
+            foreach (PolicyInvoice invoice in InvoiceList)
+            {
+
+                RecieptAndPaymentModel recieptAndPaymentModel = new RecieptAndPaymentModel();
+                recieptAndPaymentModel.PremiumDue = invoice.InvoiceAmount;
+                recieptAndPaymentModel.PolicyNumber = invoice.PolicyNumber;
+                recieptAndPaymentModel.PolicyCreatedOn = invoice.CreateOn;
+                recieptAndPaymentModel.TransactionDate = invoice.CreateOn;
+                var AmountPaid = InsuranceContext.Query("select  COALESCE(sum(Amount), 0 )  as balance , max(CreatedOn) as CreatedOn from ReceiptAndPayment  where type='reciept' and  policyId='" + invoice.PolicyId + "' ").Select(x => new Balance
+                {
+                    balance = x.balance,
+                    CreatedOn = x.CreatedOn == null ? "--" : x.CreatedOn.ToString("MM/dd/yyyy")
+                }).FirstOrDefault();
+
+                recieptAndPaymentModel.AmountPaid = AmountPaid.balance;
+
+                var balance = InsuranceContext.Query("select  COALESCE(sum(Amount), 0) as balance, max(CreatedOn) as CreatedOn  from ReceiptAndPayment  where policyId = '" + invoice.PolicyId + "'").Select(x => new Balance
+                {
+                    balance = x.balance * -1,
+                    CreatedOn = x.CreatedOn == null ? "--" : x.CreatedOn.ToString("MM/dd/yyyy")
+
+                }).FirstOrDefault();
+
+                recieptAndPaymentModel.Balance = balance.balance;
+                recieptAndPaymentModel.ReceiptDate = AmountPaid.CreatedOn;
+
+                string agentNameSql = "select Customer.FirstName+' '+Customer.LastName as userName from PolicyDetail join Customer on Customer.CustomerId =PolicyDetail.CreatedBy where PolicyDetail.id ='" + invoice.PolicyId + "'";
+                var AgentName = InsuranceContext.Query(agentNameSql).Select(x => new UserName
+                {
+                    UserNameValue = x.userName
+
+                }).FirstOrDefault();
+
+                recieptAndPaymentModel.PolicyCreatedBy = AgentName == null ? " " : AgentName.UserNameValue;
+
+                string CustomerNameSql = "select Customer.FirstName+' '+Customer.LastName as userName , Currency.name as CurrrecyName from PolicyDetail  join Customer on Customer.CustomerId = PolicyDetail.CustomerId  join Currency on PolicyDetail.CurrencyId = Currency.Id where PolicyDetail.id='" + invoice.PolicyId + "'";
+                var CustomerName = InsuranceContext.Query(CustomerNameSql).Select(x => new UserName
+                {
+                    UserNameValue = x.userName == null ? " " : x.userName,
+                    PolicyCurrencyValue = x.CurrrecyName == null ? " " : x.CurrrecyName
+
+                }).FirstOrDefault();
+
+                recieptAndPaymentModel.CustomerName = CustomerName == null ? "" : CustomerName.UserNameValue;
+                recieptAndPaymentModel.Currency = CustomerName == null ? "" : CustomerName.PolicyCurrencyValue;
+
+
+
+                model.listInvoiceAndReciept.Add(recieptAndPaymentModel);
+            }
+
+            return View("NewReconciliationReport",model);
+        }
+
+        public ActionResult NewReconciliationReport()
+        {
+
+            NewReconcilationReportModel model = new NewReconcilationReportModel();
+            string invoiceSQL = "select sum(Amount) as invoice, policyId , policyNumber , CreatedOn, CreatedBy from ReceiptAndPayment  where type='invoice' " +
+                //"AND CreatedOn BETWEEN '"+model.FromDate+"' AND '"+model.EndDate+"' " +
+                "group by  policyId,policyNumber , CreatedOn, CreatedBy ";
+
+           
+
+            var InvoiceList = InsuranceContext.Query(invoiceSQL).Select(x => new PolicyInvoice
+            {
+
+
+                PolicyId = x.policyId,
+                InvoiceAmount = x.invoice * -1,
+                PolicyNumber = x.policyNumber,
+                CreateOn = x.CreatedOn,
+                CreatedBy = x.CreatedBy
+
+            });
+
+            model.listInvoiceAndReciept = new List<RecieptAndPaymentModel>();
+            foreach (PolicyInvoice invoice in InvoiceList)
+            {
+
+                RecieptAndPaymentModel recieptAndPaymentModel = new RecieptAndPaymentModel();
+                recieptAndPaymentModel.PremiumDue = invoice.InvoiceAmount;
+                recieptAndPaymentModel.PolicyNumber = invoice.PolicyNumber;
+                recieptAndPaymentModel.PolicyCreatedOn = invoice.CreateOn;
+                recieptAndPaymentModel.TransactionDate = invoice.CreateOn;
+                var AmountPaid = InsuranceContext.Query("select  COALESCE(sum(Amount), 0 )  as balance , max(CreatedOn) as CreatedOn from ReceiptAndPayment  where type='reciept' and  policyId='" + invoice.PolicyId + "' ").Select(x => new Balance
+                {
+                    balance = x.balance,
+                    CreatedOn = x.CreatedOn == null ? "--" : x.CreatedOn.ToString("MM/dd/yyyy")
+                }).FirstOrDefault();
+
+                recieptAndPaymentModel.AmountPaid = AmountPaid.balance;
+
+                var balance = InsuranceContext.Query("select  COALESCE(sum(Amount), 0) as balance, max(CreatedOn) as CreatedOn  from ReceiptAndPayment  where policyId = '" + invoice.PolicyId + "'").Select(x => new Balance
+                {
+                    balance = x.balance * -1,
+                    CreatedOn = x.CreatedOn == null ? "--" : x.CreatedOn.ToString("MM/dd/yyyy")
+
+                }).FirstOrDefault();
+
+                recieptAndPaymentModel.Balance = balance.balance;
+                recieptAndPaymentModel.ReceiptDate = AmountPaid.CreatedOn;
+
+                string agentNameSql = "select Customer.FirstName+' '+Customer.LastName as userName from PolicyDetail join Customer on Customer.CustomerId =PolicyDetail.CreatedBy where PolicyDetail.id ='" + invoice.PolicyId + "'";
+                var AgentName = InsuranceContext.Query(agentNameSql).Select(x => new UserName
+                {
+                    UserNameValue = x.userName
+
+                }).FirstOrDefault();
+
+                recieptAndPaymentModel.PolicyCreatedBy = AgentName==null ? " ": AgentName.UserNameValue;
+
+                string CustomerNameSql = "select Customer.FirstName+' '+Customer.LastName as userName , Currency.name as CurrrecyName from PolicyDetail  join Customer on Customer.CustomerId = PolicyDetail.CustomerId  join Currency on PolicyDetail.CurrencyId = Currency.Id where PolicyDetail.id='" + invoice.PolicyId + "'";
+                var CustomerName = InsuranceContext.Query(CustomerNameSql).Select(x => new UserName
+                {
+                    UserNameValue = x.userName == null ? " " : x.userName,
+                    PolicyCurrencyValue = x.CurrrecyName == null ? " " : x.CurrrecyName 
+
+                }).FirstOrDefault();
+
+               recieptAndPaymentModel.CustomerName = CustomerName==null? "": CustomerName.UserNameValue;
+               recieptAndPaymentModel.Currency = CustomerName == null ? "" : CustomerName.PolicyCurrencyValue;
+
+
+
+                model.listInvoiceAndReciept.Add(recieptAndPaymentModel);
+            }
+
+            return View("NewReconciliationReport", model);
+        }
+
+
+        class Balance { 
+            public decimal balance { get; set; }
+            public string CreatedOn { get; set; }
+        }
+
+        class UserName
+        {
+            public string UserNameValue { get; set; }
+            public string PolicyCurrencyValue { get; set; }
+        }
+
 
         public ActionResult ReconciliationSearchReport(DailyReceiptsSearchReportModel Model)
         {
@@ -4897,7 +5138,7 @@ namespace InsuranceClaim.Controllers
             // return View(model);
         }
 
-       
+
 
 
 
@@ -5198,11 +5439,16 @@ namespace InsuranceClaim.Controllers
 
 
 
+    }
 
+    class PolicyInvoice {
+        public int PolicyId {get; set;}
+        public string PolicyNumber {get; set;}
+        public decimal InvoiceAmount { get; set; }
+        public int CreatedBy { get; set; }
 
-
-
-
+        public DateTime CreateOn { get; set; }
+        
 
     }
 }

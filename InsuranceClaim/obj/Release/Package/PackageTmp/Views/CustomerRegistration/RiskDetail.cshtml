@@ -166,7 +166,6 @@
 
                                     <fieldset @(Model.isUpdate ? "" : "disabled")>
 
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div id="thirdpartycheck" class="form-group">
@@ -182,6 +181,29 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="row">
+
+                                            <div class="col-sm-6 col-md-6 form-group-select">
+                                                <div class="form-group">
+                                                    @Html.Label("Vehicle Licence Payment Term", new { @class = "gender-label" })
+                                                    @*@Html.DropDownListFor(x => x.PaymentTermId, ViewBag.ePaymentTermData as SelectList, "Select Payment Term", new { @class = "form-control" })*@
+                                                    @Html.DropDownListFor(x => x.ZinaraLicensePaymentTermId, new SelectList(ViewBag.VehicleLicensePaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(x => x.ZinaraLicensePaymentTermId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6 col-md-6 form-group-select">
+                                                <div class="form-group">
+                                                    @Html.Label("Radio License Payment Term", new { @class = "gender-label" })
+                                                    @*@Html.DropDownListFor(x => x.PaymentTermId, ViewBag.ePaymentTermData as SelectList, "Select Payment Term", new { @class = "form-control" })*@
+                                                    @Html.DropDownListFor(x => x.RadioLicensePaymentTermId, new SelectList(ViewBag.RadioLicensePaymentTermId, "Id", "Name"), "Select Payment Term", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(x => x.RadioLicensePaymentTermId, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+
 
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
@@ -515,6 +537,10 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
+
+
 
 
                                     </fieldset>
@@ -1539,7 +1565,7 @@
     function CalculatePremiumByCoverType()
     {
 
-        if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!=""  )
+        if ($("#PaymentTermId").val() != "" && $("#ProductId").val() != "" && $("#RegistrationNo").val() != "" && $("#CoverTypeId").val()!="" && $("#RegistrationNo").val()!="TBA"  )
         {
             var coverytype = $('#CoverTypeId option:selected').val();
             //if (coverytype != 4) {
@@ -1758,6 +1784,23 @@
         var isLicense = $("#IncludeLicenseFee").is(':checked');
         var isRadioLicense = $("#IncludeRadioLicenseCost").is(':checked');
 
+        var licensePaymentTerm = $("#ZinaraLicensePaymentTermId").val();
+        var  radioPaymentTerm = $("#RadioLicensePaymentTermId").val();
+
+        if(isLicense==true && licensePaymentTerm=="")
+        {
+            flag = false;
+            toastr.warning("Please Select A Payment Term of Vehicle license !!");
+        }
+
+
+        if(isRadioLicense==true && radioPaymentTerm=="")
+        {
+            flag = false;
+            toastr.warning("Please Select A Payment Term of Radio license !!");
+        }
+
+
         //var isLicense = false;
         //var isRadioLicense = false;
 
@@ -1772,7 +1815,7 @@
                 cache: false,
                 type: "POST",
                 url: "@Url.Action("getPolicyDetailsFromICEcash", "CustomerRegistration")",
-                data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#ProductId").val(), CoverStartDate: $("#CoverStartDate").val() , CoverEndDate : $("#CoverEndDate").val(), VehilceLicense: isLicense, taxClassId: taxClass, RadioLicense: isRadioLicense },
+                data: { regNo: $("#RegistrationNo").val(), PaymentTerm : $("#PaymentTermId").val(), suminsured : $("#SumInsured").val(), make: $("#MakeId option:selected").text(), model : $("#ModelId option:selected").text(), VehicleYear : $("#VehicleYear").val(), CoverTypeId : $("#CoverTypeId").val(), VehicleType : $("#ProductId").val(), CoverStartDate: $("#CoverStartDate").val() , CoverEndDate : $("#CoverEndDate").val(), VehilceLicense: isLicense, taxClassId: taxClass, RadioLicense: isRadioLicense, licensePaymentTerm: licensePaymentTerm, radioPaymentTerm:radioPaymentTerm },
                 success: function (data) {
                     debugger;
                     if (data.result == 0) {

@@ -4050,3 +4050,59 @@ Error Time: 6/17/2020 4:12:50 PMPayNow execute:---------------------------------
 -----------------------------------------------------------TPIQuote
 
 -----------------------------------------------------------De745122
+ Time: 11/4/2020 11:52:08 AM
+{"Arguments":{"PartnerReference":"e302ac9e-bc72-49fe-8d02-63ed503f6d8c","Date":"20201104115207","Version":"2.0","PartnerToken":"000000000374225","Request":{"Function":"TPILICQuote","Vehicles":[{"VRN":"AFI2505","IDNumber":"11111111F45","FirstName":"testPolicy","LastName":"test","MSISDN":" 263775655676","Address1":"test me ","Address2":"test surb","SuburbID":"1","ClientIDType":"1","InsuranceType":"1","TaxClass":"1","VehicleType":"1","DurationMonths":"5","LicFrequency":"4","RadioTVUsage":"1","RadioTVFrequency":"4"}]}},"MAC":"00FE09F451E62F3B","Mode":"SH"}
+
+-----------------------------------------------------------{"PartnerReference":"e302ac9e-bc72-49fe-8d02-63ed503f6d8c","Date":"20201104115207","Version":"2.0","Response":{"Function":"TPILICQuote","Result":23,"Message":"Invalid Partner Token. "}}
+
+-----------------------------------------------------------TPIQuote
+
+-----------------------------------------------------------
+ Time: 11/4/2020 11:52:09 AM
+{"Arguments":{"PartnerReference":"7b8d0874-0161-4834-8d27-3ecc37369fd5","Date":"20201104115208","Version":"2.0","Request":{"Function":"PartnerToken"}},"MAC":"EFD43B98D9B104D9","Mode":"SH"}
+
+-----------------------------------------------------------{"PartnerReference":"7b8d0874-0161-4834-8d27-3ecc37369fd5","Date":"20201104115208","Version":"2.0","Response":{"Function":"PartnerToken","Result":"1","Message":"Token generated","PartnerToken":"000000000047475","ExpireDate":"20201104175205"}}
+
+-----------------------------------------------------------PartnerToken
+
+-----------------------------------------------------------
+ Time: 11/4/2020 11:52:19 AM
+{"Arguments":{"PartnerReference":"ff5981fd-7d18-42bf-802b-bcf308aa8ae5","Date":"20201104115210","Version":"2.0","PartnerToken":"000000000047475","Request":{"Function":"TPILICQuote","Vehicles":[{"VRN":"AFI2505","IDNumber":"11111111F45","FirstName":"testPolicy","LastName":"test","MSISDN":" 263775655676","Address1":"test me ","Address2":"test surb","SuburbID":"1","ClientIDType":"1","InsuranceType":"1","TaxClass":"1","VehicleType":"1","DurationMonths":"5","LicFrequency":"4","RadioTVUsage":"1","RadioTVFrequency":"4"}]}},"MAC":"EF34441267B429D7","Mode":"SH"}
+
+-----------------------------------------------------------{"PartnerReference":"ff5981fd-7d18-42bf-802b-bcf308aa8ae5","Date":"20201104115219","Version":"2.0","Response":{"Result":0,"Message":"0 quotes generated. 1 failed","Quotes":[{"VRN":"AFI2505","CombinedID":"","InsuranceID":"","LicenceID":"","Result":"39","Message":"Unable to retrieve vehicle info from Zimlic, please check the VRN is correct or try again later."}]}}
+
+-----------------------------------------------------------TPIQuote
+
+-----------------------------------------------------------
+ Time: 11/4/2020 12:16:25 PM
+{"Arguments":{"PartnerReference":"6afc7f6b-3776-49b7-8a63-c7d4baf10069","Date":"20201104121617","Version":"2.0","PartnerToken":"000000000047475","Request":{"Function":"TPILICQuote","Vehicles":[{"VRN":"AFI2505","IDNumber":"11111111F45","FirstName":"testPolicy","LastName":"test","MSISDN":" 263775655676","Address1":"test me ","Address2":"test surb","SuburbID":"1","ClientIDType":"1","InsuranceType":"1","TaxClass":"1","VehicleType":"1","DurationMonths":"5","LicFrequency":"4","RadioTVUsage":"1","RadioTVFrequency":"4"}]}},"MAC":"979F70FD5A4A71BE","Mode":"SH"}
+
+-----------------------------------------------------------{"PartnerReference":"6afc7f6b-3776-49b7-8a63-c7d4baf10069","Date":"20201104121625","Version":"2.0","Response":{"Result":0,"Message":"0 quotes generated. 1 failed","Quotes":[{"VRN":"AFI2505","CombinedID":"","InsuranceID":"","LicenceID":"","Result":"39","Message":"Unable to retrieve vehicle info from Zimlic, please check the VRN is correct or try again later."}]}}
+
+-----------------------------------------------------------TPIQuote
+
+-----------------------------------------------------------
+ Time: 11/4/2020 2:08:35 PM
+{"Arguments":{"PartnerReference":"8e6d7ae6-9706-4691-8a0e-ab7df0436e3c","Date":"20201104020834","Version":"2.0","PartnerToken":"000000000047475","Request":{"Function":"TPILICQuote","Vehicles":[{"VRN":"AGZ2320","IDNumber":"12121212W23","FirstName":"meinsure","LastName":"gene","MSISDN":" 263776787656","Address1":"me home","Address2":"me home","SuburbID":"1","ClientIDType":"1","InsuranceType":"1","TaxClass":"78","VehicleType":"19","DurationMonths":"5","LicFrequency":"4","RadioTVUsage":"1","RadioTVFrequency":"4"}]}},"MAC":"03F2B487D7A28594","Mode":"SH"}
+
+-----------------------------------------------------------{"PartnerReference":"8e6d7ae6-9706-4691-8a0e-ab7df0436e3c","Date":"20201104020834","Version":"2.0","Response":{"Function":"TPILICQuote","Result":25,"Message":"Partner Token has expired. "}}
+
+-----------------------------------------------------------TPIQuote
+
+-----------------------------------------------------------
+ Time: 11/4/2020 2:08:36 PM
+{"Arguments":{"PartnerReference":"82dc7880-98c0-4004-b79e-fd8aba68905b","Date":"20201104020835","Version":"2.0","Request":{"Function":"PartnerToken"}},"MAC":"B2087D8253D1679C","Mode":"SH"}
+
+-----------------------------------------------------------{"PartnerReference":"82dc7880-98c0-4004-b79e-fd8aba68905b","Date":"20201104020835","Version":"2.0","Response":{"Function":"PartnerToken","Result":"1","Message":"Token generated","PartnerToken":"000000000047486","ExpireDate":"20201104200833"}}
+
+-----------------------------------------------------------PartnerToken
+
+-----------------------------------------------------------
+ Time: 11/4/2020 2:08:43 PM
+{"Arguments":{"PartnerReference":"1d2d1f17-2c24-4de7-aa52-ee93d9ee520d","Date":"20201104020836","Version":"2.0","PartnerToken":"000000000047486","Request":{"Function":"TPILICQuote","Vehicles":[{"VRN":"AGZ2320","IDNumber":"12121212W23","FirstName":"meinsure","LastName":"gene","MSISDN":" 263776787656","Address1":"me home","Address2":"me home","SuburbID":"1","ClientIDType":"1","InsuranceType":"1","TaxClass":"78","VehicleType":"19","DurationMonths":"5","LicFrequency":"4","RadioTVUsage":"1","RadioTVFrequency":"4"}]}},"MAC":"60860F194E8C98CF","Mode":"SH"}
+
+-----------------------------------------------------------{"PartnerReference":"1d2d1f17-2c24-4de7-aa52-ee93d9ee520d","Date":"20201104140845","Version":"2.0","Response":{"Result":0,"Message":"0 quotes generated. 1 failed","Quotes":[{"VRN":"AGZ2320","CombinedID":"","InsuranceID":"","LicenceID":"","Result":"39","Message":"Unable to retrieve vehicle info from Zimlic, please check the VRN is correct or try again later."}]}}
+
+-----------------------------------------------------------TPIQuote
+
+-----------------------------------------------------------

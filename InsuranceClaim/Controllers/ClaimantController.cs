@@ -1272,6 +1272,9 @@ namespace InsuranceClaim.Controllers
 
 
 
+        
+
+
         public ActionResult EditRegisterClaim(int id)
         {
 

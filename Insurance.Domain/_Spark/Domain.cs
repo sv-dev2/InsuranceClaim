@@ -39,6 +39,26 @@ namespace Insurance.Domain
 
     }
 
+    public partial class ReceiptAndPayment : Entity<ReceiptAndPayment> {
+
+        public ReceiptAndPayment() { }
+        public ReceiptAndPayment(bool defaults) : base(defaults) { }
+        public int Id { get; set; } // Auto increment
+        public int policyId { get; set; } // policy reference
+        public string reference { get; set; }
+        public string policyNumber { get; set; } // policy reference check as invoice
+        public string type { get; set; } // reciept or invoice
+
+        public string paymentMethod { get; set; }
+        public string Description { get; set; } // Description
+        public decimal Amount { get; set; } // Amount - or +
+        public string currency { get; set; } // currency options
+        public DateTime CreatedOn { get; set; }
+        public int CreatedBy { get; set; }
+
+
+    }
+
 
     public partial class TokenRequest : Entity<TokenRequest>
     {
@@ -50,9 +70,6 @@ namespace Insurance.Domain
         public DateTime ExpiryDate { get; set; }
         public DateTime UpdatedOn { get; set; }
     }
-
-
-
 
 
     public partial class AgentCommission : Entity<AgentCommission>
@@ -240,6 +257,61 @@ namespace Insurance.Domain
         public int WorkTypeId { get; set; }
 
     }
+
+    public partial class SystemUser : Entity<SystemUser>
+    {
+        public SystemUser() { }
+        public SystemUser(bool defaults) : base(defaults) { }
+
+        public int Id { get; set; }
+        public decimal SystemUserId { get; set; }
+        public string UserID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string NationalIdentificationNumber { get; set; }
+        public string Zipcode { get; set; }
+        public string Country { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string Gender { get; set; }
+        public bool? IsWelcomeNoteSent { get; set; }
+        public bool? IsPolicyDocSent { get; set; }
+        public bool? IsLicenseDiskNeeded { get; set; }
+        public bool? IsOTPConfirmed { get; set; }
+        public string PhoneNumber { get; set; }
+
+        public bool? IsActive { get; set; }
+        public string Countrycode { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public int? ModifiedBy { get; set; }
+
+        public bool IsCustomEmail { get; set; }
+
+        // Corporate details
+        public string CompanyName { get; set; }
+        public string CompanyEmail { get; set; }
+        public string CompanyAddress { get; set; }
+        public string CompanyPhone { get; set; }
+        public string CompanyCity { get; set; }
+        public string CompanyBusinessId { get; set; }
+        public bool IsCorporate { get; set; }
+
+        public int BranchId { get; set; }
+
+        public string ALMId { get; set; }
+        public string AgentWhatsapp { get; set; }
+
+        public string AgentBranch { get; set; }
+
+        public int WorkTypeId { get; set; }
+
+    }
+
+    
 
     public partial class LicenseDelivery : Entity<LicenseDelivery>
     {
