@@ -26,7 +26,7 @@ namespace InsuranceClaim.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private ApplicationSignInManager _signInManager;    
+        private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         string AdminEmail = WebConfigurationManager.AppSettings["AdminEmail"];
         RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
@@ -786,7 +786,7 @@ namespace InsuranceClaim.Controllers
                     Insurance.Service.VehicleService obj = new Insurance.Service.VehicleService();
                     VehicleModel model = InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicledetail.ModelId}'");
                     VehicleMake make = InsuranceContext.VehicleMakes.Single(where: $" MakeCode='{vehicledetail.MakeId}'");
-                    string vehicledescription = model==null? "" : model.ModelDescription + " / " + make==null? "" : make.MakeDescription;
+                    string vehicledescription = model == null ? "" : model.ModelDescription + " / " + make == null ? "" : make.MakeDescription;
 
                     RoadsideAssistanceAmount = RoadsideAssistanceAmount + Convert.ToDecimal(vehicledetail.RoadsideAssistanceAmount);
                     MedicalExpensesAmount = MedicalExpensesAmount + Convert.ToDecimal(vehicledetail.MedicalExpensesAmount);
@@ -804,7 +804,7 @@ namespace InsuranceClaim.Controllers
                         paymentTermsName = paymentTermVehicel.Name + " Months";
 
 
-                    var productDetail = InsuranceContext.Products.Single(Convert.ToInt32(vehicledetail.ProductId));                
+                    var productDetail = InsuranceContext.Products.Single(Convert.ToInt32(vehicledetail.ProductId));
                     var taxClassDetials = InsuranceContext.VehicleTaxClasses.Single(vehicledetail.TaxClassId);
                     decimal? premiumDue = vehicledetail.Premium + vehicledetail.StampDuty + vehicledetail.ZTSCLevy + vehicledetail.VehicleLicenceFee + vehicledetail.RadioLicenseCost;
 
@@ -856,7 +856,7 @@ namespace InsuranceClaim.Controllers
 
                     var Bodyy = MotorBody.Replace("##PolicyNo##", policyinfo.PolicyNumber).Replace("##currencyName##", currencyName)
                         .Replace("##path##", filepath).Replace("##Cellnumber##", userinfo.PhoneNumber).Replace("##FirstName##", customerinfo.FirstName)
-                        .Replace("##LastName##", customerinfo.LastName).Replace("##Email##", userinfo.Email).Replace("##BirthDate##", customerinfo.DateOfBirth==null? "" : customerinfo.DateOfBirth.Value.ToShortDateString())
+                        .Replace("##LastName##", customerinfo.LastName).Replace("##Email##", userinfo.Email).Replace("##BirthDate##", customerinfo.DateOfBirth == null ? "" : customerinfo.DateOfBirth.Value.ToShortDateString())
                         .Replace("##Address1##", customerinfo.AddressLine1).Replace("##Address2##", customerinfo.AddressLine2).Replace("##Renewal##", vehicledetail.RenewalDate.Value.ToString("dd/MM/yyyy"))
                         .Replace("##InceptionDate##", vehicledetail.CoverStartDate.Value.ToString("dd/MM/yyyy")).Replace("##package##", paymentTerm.Name)
                         .Replace("##Summeryofcover##", Summeryofcover).Replace("##PaymentTerm##", (vehicledetail.PaymentTermId == 1 ? paymentTerm.Name + "(1 Year)" : paymentTerm.Name + "(" + vehicledetail.PaymentTermId.ToString() + "Months)"))
@@ -870,10 +870,10 @@ namespace InsuranceClaim.Controllers
                          .Replace("##currencyName##", currencyName)
                          .Replace("##QRpath##", QRpath)
                         .Replace("##NINumber##", customerinfo.NationalIdentificationNumber).Replace("##VehicleLicenceFee##", Convert.ToString(vehicledetail.VehicleLicenceFee));
-                  
-                    
-                    
-                    
+
+
+
+
                     #region Invoice PDF
                     var attacehmetnFile = MiscellaneousService.EmailPdf(Bodyy, policyinfo.CustomerId, policyinfo.PolicyNumber, "Schedule-motor");
                     var Atter = "~/Pdf/14809 Gene Insure Motor Policy Book.pdf";
@@ -2060,6 +2060,7 @@ namespace InsuranceClaim.Controllers
             PolicyListViewModel policylistviewmodel = new PolicyListViewModel();
 
             var paymentInformationList = InsuranceContext.PaymentInformations.All();
+            var recieptList = InsuranceContext.ReceiptHistorys.All().ToList();
 
 
             List<PolicyListViewModel> list = InsuranceContext.Query(query).Select(x => new PolicyListViewModel()
@@ -2088,7 +2089,7 @@ namespace InsuranceClaim.Controllers
                 FacultativeCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 FacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
                 FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount),
-                PaymentStatus = x.PaymentMethod == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid",
+                PaymentStatus = GetPaymentStatus(recieptList, x.RenewPolicyNumber, x.PolicyId, x.PaymentMethod)
             }).ToList();
 
 
@@ -2105,6 +2106,33 @@ namespace InsuranceClaim.Controllers
 
             //FacultativeCommission
             return View(newList);
+        }
+
+        public string GetPaymentStatus(List<ReceiptModuleHistory> recieptList, string renewPolicyNum, int policyId, string paymentType)
+        {
+            string paymentStatus = "";
+            paymentStatus = paymentType == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid";
+
+            if (paymentStatus == "Pay Later")
+            {
+
+                var recieptDetail = recieptList.FirstOrDefault(c => c.PolicyId == policyId);
+                if (recieptDetail != null)
+                    paymentStatus = "Paid";
+
+              
+                if(recieptDetail!=null && !string.IsNullOrEmpty(renewPolicyNum))
+                {
+                    var recieptDetailForRenew = recieptList.FirstOrDefault(c => c.RenewPolicyNumber == renewPolicyNum);
+
+                   if(recieptDetailForRenew!=null)
+                        paymentStatus = "Paid";
+
+                }
+
+            }
+
+            return paymentStatus;
         }
 
 
@@ -2860,7 +2888,7 @@ namespace InsuranceClaim.Controllers
             //query += " order by SummaryDetail.CreatedOn desc";
 
             var paymentInformationList = InsuranceContext.PaymentInformations.All();
-
+            var recieptList = InsuranceContext.ReceiptHistorys.All().ToList();
 
             string query = "select top 100 PolicyDetail.Id as PolicyId , PolicyDetail.PolicyNumber,Customer.Id as CustomerId, Customer.FirstName +' ' + Customer.LastName as CustomerName, PaymentMethod.Name as PaymentMethod, ";
             query += " SummaryDetail.TotalSumInsured, SummaryDetail.TotalPremium, SummaryDetail.CreatedOn, SummaryDetail.Id, VehicleDetail.RegistrationNo, ";
@@ -2876,12 +2904,6 @@ namespace InsuranceClaim.Controllers
             query += " left join Currency on VehicleDetail.CurrencyId = Currency.Id left join ReinsuranceTransaction on SummaryDetail.Id=ReinsuranceTransaction.SummaryDetailId   ";
             query += "  where PolicyDetail.PolicyNumber like '%" + searchText + "%' or Customer.FirstName like '%" + searchText + "%' or VehicleDetail.RegistrationNo like'%" + searchText + "%' and SummaryDetail.isQuotation=0  ";
             query += " order by SummaryDetail.CreatedOn desc";
-
-
-
-
-
-
 
 
 
@@ -2916,7 +2938,7 @@ namespace InsuranceClaim.Controllers
                 FacultativeCommission = x.ReinsuranceCommission == null ? 0 : Convert.ToDecimal(x.ReinsuranceCommission),
                 FacPremium = x.ReinsurancePremium == null ? 0 : Convert.ToDecimal(x.ReinsurancePremium),
                 FacReinsuranceAmount = x.ReinsuranceAmount == null ? 0 : Convert.ToDecimal(x.ReinsuranceAmount),
-                PaymentStatus = x.PaymentMethod == paymentMethod.PayLater.ToString() ? "Pay Later" : "Paid"
+                PaymentStatus = GetPaymentStatus(recieptList, x.RenewPolicyNumber, x.PolicyId, x.PaymentMethod)
             }).ToList();
 
 
@@ -4004,34 +4026,34 @@ namespace InsuranceClaim.Controllers
                 try
                 {
 
-                
-                var vehicleDetails = InsuranceContext.VehicleDetails.Single(where: "Id=" + vehicleId);
 
-                 string pathDc = "/Documents/" + CustomerId + "/" + PolicyNumber + "/";
+                    var vehicleDetails = InsuranceContext.VehicleDetails.Single(where: "Id=" + vehicleId);
+
+                    string pathDc = "/Documents/" + CustomerId + "/" + PolicyNumber + "/";
 
                     baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
 
 
-                 if (vehicleDetails != null && vehicleDetails.ALMBranchId > 0)
-                {
-                    baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
-                    // baseUrl = System.Configuration.ConfigurationManager.AppSettings["urlpath"];
-
-                    string path1 = @"C:\inetpub\windowsapi_latest\Documents\" + CustomerId + '/' + PolicyNumber + "/";
-
-                    foreach (var files in Directory.GetFiles(path1))
+                    if (vehicleDetails != null && vehicleDetails.ALMBranchId > 0)
                     {
-                        FileInfo info = new FileInfo(files);
-                        var fileName = Path.GetFileName(info.FullName);
-                        var obj = new InsuranceClaim.Models.PolicyDocumentModels();
-                        obj.Title = fileName;
-                        obj.Decription = "";
-                        string documentPath = baseUrl+ pathDc + fileName;
-                        obj.FilePath = documentPath;
-                        list.Add(obj);
-                    }
+                        baseUrl = System.Configuration.ConfigurationManager.AppSettings["SignaturePath"];
+                        // baseUrl = System.Configuration.ConfigurationManager.AppSettings["urlpath"];
 
-                }
+                        string path1 = @"C:\inetpub\windowsapi_latest\Documents\" + CustomerId + '/' + PolicyNumber + "/";
+
+                        foreach (var files in Directory.GetFiles(path1))
+                        {
+                            FileInfo info = new FileInfo(files);
+                            var fileName = Path.GetFileName(info.FullName);
+                            var obj = new InsuranceClaim.Models.PolicyDocumentModels();
+                            obj.Title = fileName;
+                            obj.Decription = "";
+                            string documentPath = baseUrl + pathDc + fileName;
+                            obj.FilePath = documentPath;
+                            list.Add(obj);
+                        }
+
+                    }
 
 
                 }

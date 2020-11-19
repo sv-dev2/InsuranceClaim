@@ -46,9 +46,7 @@ namespace InsuranceClaim.Controllers
             //List<ZTSCLevyReportModels> listZTSCLevyreport = new List<ZTSCLevyReportModels>();
             //ListZTSCLevyReportModels _listZTSCLevyreport = new ListZTSCLevyReportModels();
             //_listZTSCLevyreport.ListZTSCreportdata = new List<ZTSCLevyReportModels>();
-
             //ZTSCLevyReportSeachModels model = new ZTSCLevyReportSeachModels();
-
             //var currencyList = _summaryDetailService.GetAllCurrency();
 
 
@@ -69,8 +67,8 @@ namespace InsuranceClaim.Controllers
 
             //    listZTSCLevyreport.Add(obj);
             //}
-
             //model.ListZTSCreportdata = listZTSCLevyreport.OrderByDescending(x => x.Transaction_date).ToList();
+
 
             var query = "SELECT top 100 PolicyNumber, VEHICLEDETAIL.TransactionDate,Premium AS PREMIUMDUE,ZTSCLevy, FirstName AS CUSTOMERNAME,Name AS CURRENCY FROM VEHICLEDETAIL left JOIN CUSTOMER ON CUSTOMER.ID = VehicleDetail.CUSTOMERID left  JOIN POLICYDETAIL ON POLICYDETAIL.ID = VehicleDetail.POLICYID left JOIN CURRENCY ON CURRENCY.ID = VehicleDetail.CurrencyId WHERE VEHICLEDETAIL.IsActive = 1";
 
@@ -1657,6 +1655,9 @@ namespace InsuranceClaim.Controllers
 
 
             _model.ListGrossWrittenPremiumReportdata = resultList.OrderByDescending(p => p.Id).ToList();
+
+            _model.NumOfUser = listCreatedBy.Count();
+
             return View("CallcentreGrosswrittenReport", _model);
         }
 
@@ -1826,6 +1827,7 @@ namespace InsuranceClaim.Controllers
 
 
             _model.ListGrossWrittenPremiumReportdata = resultList.OrderByDescending(p => p.Id).ToList();
+            _model.NumOfUser = listCreatedBy.Count();
             return View("CallcentreGrosswrittenReport", _model);
         }
 
@@ -1952,6 +1954,7 @@ namespace InsuranceClaim.Controllers
 
 
             Model.ListGrossWrittenPremiumReportdata = resultList;
+            Model.NumOfUser = listCreatedBy.Count();
 
             return View(Model);
         }
@@ -2085,6 +2088,7 @@ namespace InsuranceClaim.Controllers
 
 
             Model.ListGrossWrittenPremiumReportdata = resultList;
+            Model.NumOfUser = listCreatedBy.Count();
 
             return View("ALMBranchReport", Model);
         }
@@ -3310,7 +3314,7 @@ namespace InsuranceClaim.Controllers
             var currenyList = _summaryDetailService.GetAllCurrency();
 
 
-            var query = "select DISTINCT VehicleDetail.PolicyId as PId,VehicleDetail.Id as VehicleId, VehicleDetail.[CurrencyId], VehicleDetail.RadioLicenseCost as RadioCost, VehicleDetail.VehicleLicenceFee as ZinaraFee, ReceiptModuleHistory.*, Customer.FirstName +' ' + Customer.LastName as PolicyCreatedBy from ReceiptModuleHistory ";
+            var query = "select DISTINCT VehicleDetail.PolicyId as PId,VehicleDetail.Id as VehicleId, VehicleDetail.RenewPolicyNumber as VehileRenewPolicyNum, VehicleDetail.[CurrencyId], VehicleDetail.RadioLicenseCost as RadioCost, VehicleDetail.VehicleLicenceFee as ZinaraFee, ReceiptModuleHistory.*, Customer.FirstName +' ' + Customer.LastName as PolicyCreatedBy from ReceiptModuleHistory ";
             query += " join SummaryDetail on ReceiptModuleHistory.SummaryDetailId = SummaryDetail.id ";
             //query +=  " join Customer on SummaryDetail.CreatedBy = Customer.Id";
             query += "Left join Customer  on ReceiptModuleHistory.CreatedBy = Customer.Id  ";
@@ -3337,7 +3341,8 @@ namespace InsuranceClaim.Controllers
                    ZinaraFee = res.ZinaraFee == null ? 0 : res.ZinaraFee,
                    RadioCost = res.RadioCost == null ? 0 : res.RadioCost,
                    TenderedAmount = res.TenderedAmount == null ? 0 : res.TenderedAmount,
-                   VehicleId = res.VehicleId
+                   VehicleId = res.VehicleId,
+                   RenewPolicyNumber = res.VehileRenewPolicyNum
                }).ToList();
 
 
@@ -3502,7 +3507,7 @@ namespace InsuranceClaim.Controllers
 
 
 
-            var query = "select DISTINCT ReceiptModuleHistory.PolicyId as PID, VehicleDetail.Id as VehicleId,  VehicleDetail.[CurrencyId], ReceiptModuleHistory.*,  VehicleDetail.RadioLicenseCost as RadioCost, VehicleDetail.VehicleLicenceFee as ZinaraFee, Customer.FirstName +' ' + Customer.LastName as PolicyCreatedBy from ReceiptModuleHistory ";
+            var query = "select DISTINCT ReceiptModuleHistory.PolicyId as PID, VehicleDetail.Id as VehicleId, VehicleDetail.RenewPolicyNumber as VehileRenewPolicyNum, VehicleDetail.[CurrencyId], ReceiptModuleHistory.*,  VehicleDetail.RadioLicenseCost as RadioCost, VehicleDetail.VehicleLicenceFee as ZinaraFee, Customer.FirstName +' ' + Customer.LastName as PolicyCreatedBy from ReceiptModuleHistory ";
             query += " join SummaryDetail on ReceiptModuleHistory.SummaryDetailId = SummaryDetail.id ";
             //query += " join Customer on SummaryDetail.CreatedBy = Customer.Id";
             query += "Left join Customer  on ReceiptModuleHistory.CreatedBy = Customer.Id ";
@@ -3528,7 +3533,8 @@ namespace InsuranceClaim.Controllers
                    ZinaraFee = res.ZinaraFee == null ? 0 : res.ZinaraFee,
                    RadioCost = res.RadioCost == null ? 0 : res.RadioCost,
                    TenderedAmount = res.TenderedAmount == null ? 0 : res.TenderedAmount,
-                   VehicleId = res.VehicleId
+                   VehicleId = res.VehicleId,
+                   RenewPolicyNumber = res.VehileRenewPolicyNum
                }).ToList();
 
             ViewBag.fromdate = Model.FromDate;
@@ -4783,7 +4789,6 @@ namespace InsuranceClaim.Controllers
 
             var list = InsuranceContext.Query(query).Select(c => new CertSerialNoModel()
             {
-
                 VRN = c.VRN,
                 AgentName = c.AgentName,
                 PolicyNumber = c.PolicyNumber,
@@ -5130,7 +5135,7 @@ namespace InsuranceClaim.Controllers
         public ActionResult ALMGWPPartnerReport()
         {
 
-           // GetRecieptReport();
+            //GetRecieptReport();
 
             List<PartnerModel> ListPartnerModel = InsuranceContext.Query("select * from Partners").Select(x => new PartnerModel
             {

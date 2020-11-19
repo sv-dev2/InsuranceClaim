@@ -963,8 +963,30 @@ namespace InsuranceClaim.Controllers
             if (list.Count > 0 && vrn != "TBA")
                 result = true;
 
-            result = false; // to do
+            if (CheckTestVrn(vrn))
+                result = false; // to do
             return result;
+        }
+
+
+        public bool CheckTestVrn(string vrn)
+        {
+            List<string> lstString = new List<string>();
+
+            lstString.Add("IEI385TST");
+            lstString.Add("IEI40TST");
+
+            lstString.Add("250507P");
+            lstString.Add("KJVV456456");
+
+            lstString.Add("KJVV123123");
+            lstString.Add("ZBT66223");
+
+            lstString.Add("TRP63631");
+            lstString.Add("MNA58873");
+
+            return lstString.Contains(vrn);
+
         }
 
 

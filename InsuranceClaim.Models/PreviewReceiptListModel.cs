@@ -52,6 +52,8 @@ namespace InsuranceClaim.Models
 
         public string BranchName { get; set; }
 
+        public string RenewPolicyNumber { get; set; }
+
     }
     public class ListReceiptModule
     {

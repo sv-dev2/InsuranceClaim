@@ -141,6 +141,8 @@
 
                             decimal targetGwp = 0;
                             decimal actualGwp = 0;
+                            int averageTransaction = 0;
+
                         }
 
 
@@ -191,6 +193,25 @@
                            <td></td>
                            <td></td>
 
+                       </tr>
+
+                       <tr>
+                        <td><b>  Daily average </b></td>
+                           <td></td>
+                           <td></td>
+                           
+                           <td colspan="7">                          
+                               @{
+                                   if(actualTransaction!=0 && Model.NumOfUser!=0)
+                                   {
+                                       decimal a = Convert.ToDecimal(actualTransaction) / Convert.ToDecimal(Model.NumOfUser);
+                                       averageTransaction = Convert.ToInt32(a);
+                                   }
+                               }                                                                      
+                               <span> <b> @averageTransaction  </b>   </span> 
+                           
+                           
+                              </td>
                        </tr>
 
                    </tfoot>

@@ -1105,7 +1105,7 @@ namespace InsuranceClaim.Controllers
             {
                 detail.addressLine1 = "Self";
                 detail.addressLine2 = "Pick";
-                detail.zoneName = "pick";
+                detail.zoneName = "Pick";
                 detail.city = "Harare";
             }
 
@@ -1121,8 +1121,9 @@ namespace InsuranceClaim.Controllers
                 var customerDetial = InsuranceContext.Customers.Single(summaryDetail.CreatedBy);
                 detail.agentName = customerDetial.FirstName + ' ' + customerDetial.LastName;
             }
-                
-            SaveDeliveryAddress(detail);
+
+            VehicleService vehicleService = new VehicleService();
+            vehicleService.SaveDeliveryAddress(detail);
 
 
 

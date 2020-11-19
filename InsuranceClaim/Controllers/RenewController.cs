@@ -2564,6 +2564,7 @@ namespace InsuranceClaim.Controllers
             var customer = InsuranceContext.Customers.Single(summary.CustomerId.Value);
             var user = UserManager.FindById(customer.UserID);
 
+            bool _userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
             if (Session["RenewVehicleDetails"] != null)
             {
 
@@ -2593,7 +2594,7 @@ namespace InsuranceClaim.Controllers
                 
                 
 
-                bool _userLoggedin = (System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+               
                 if (_userLoggedin)
                 {
                     var _User = UserManager.FindById(User.Identity.GetUserId().ToString());
@@ -2652,6 +2653,45 @@ namespace InsuranceClaim.Controllers
             }
 
 
+            ReceiptDeliveryModule detail = new ReceiptDeliveryModule();
+            detail.customerFirstName = customer.FirstName;
+            detail.customerLastName = customer.LastName;
+
+
+            if (vehicle.IsLicenseDiskNeeded == true)
+            {
+                var licenseDelivery = InsuranceContext.LicenceDiskDeliveryAddresses.Single(where: "vehicleId=" + vehicle.Id);
+                if (licenseDelivery != null)
+                {
+                    detail.addressLine1 = licenseDelivery.Address1;
+                    detail.addressLine2 = licenseDelivery.Address2;
+                    detail.zoneName = licenseDelivery.Address2;
+                    detail.city = licenseDelivery.City;
+                }
+            }
+            else
+            {
+                detail.addressLine1 = "Self";
+                detail.addressLine2 = "Pick";
+                detail.zoneName = "Pick";
+                detail.city = "Harare";
+            }
+
+
+            detail.phoneNumber = customer.PhoneNumber;
+            detail.policyID = policy.PolicyNumber;
+            detail.policyTransactionDate = vehicle.TransactionDate.Value.ToShortDateString();
+            detail.policyAmount = summary.TotalPremium.Value;
+
+            if (_userLoggedin)
+            {
+                detail.agentID = summary.CreatedBy.ToString();
+                var customerDetial = InsuranceContext.Customers.Single(summary.CreatedBy);
+                detail.agentName = customerDetial.FirstName + ' ' + customerDetial.LastName;
+            }
+
+            VehicleService vehicleService = new VehicleService();
+            vehicleService.SaveDeliveryAddress(detail);
 
 
             Insurance.Service.EmailService objEmailService = new Insurance.Service.EmailService();

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using InsuranceClaim.Models;
+using RestSharp;
 
 namespace Insurance.Service
 {
@@ -26,7 +27,59 @@ namespace Insurance.Service
 
         }
 
-       
+        public async Task SaveDeliveryAddress(ReceiptDeliveryModule deliveryDetail)
+        {
+            //HttpClient client = new HttpClient();
+
+            //var values = new Dictionary<string, string>
+            //    {
+            //        { "customerFirstName", deliveryDetail.customerFirstName},
+            //        { "customerLastName", deliveryDetail.customerLastName },
+            //        { "addressLine1", deliveryDetail.addressLine1 },
+            //        { "addressLine2", deliveryDetail.addressLine2 },
+            //        { "city", deliveryDetail.city },
+            //        { "phoneNumber", deliveryDetail.phoneNumber },
+            //        { "policyID", deliveryDetail.policyID },
+            //        { "policyTransactionDate", deliveryDetail.policyTransactionDate },
+            //         { "policyAmount", deliveryDetail.policyAmount },
+            //         { "agentID", deliveryDetail.agentID },
+            //         { "agentName", deliveryDetail.agentName },
+            //         { "zoneName", deliveryDetail.zoneName }
+            //    };
+
+            //var content = new FormUrlEncodedContent(values);
+
+            //var response = await client.PostAsync("http://41.190.32.215:5001/api/deliveries/", content);
+
+            //var responseString = await response.Content.ReadAsStringAsync();
+
+
+
+            var client = new RestClient("http://41.190.32.215:5001/api/deliveries/");
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("content-type", "application/json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(deliveryDetail);
+
+            //request.Timeout = 5000;
+            //request.ReadWriteTimeout = 5000;
+            IRestResponse response = client.Execute(request);
+
+            var re = response;
+
+            // var res = JsonConvert.DeserializeObject<SummaryDetailModel>(response.Content);
+
+
+
+
+
+
+
+
+        }
+
+
 
         public Product GetVehicleTypeByProductId(int productId)
         {

@@ -80,6 +80,8 @@ namespace InsuranceClaim.Models
 
        public string ReceiptNumber { get; set; }
 
+      
+
     }
 
     public class RecieptModel
@@ -133,6 +135,8 @@ namespace InsuranceClaim.Models
 
         [Display(Name = "View Unpaid")]
         public int? PaymentStatus { get; set; }
+
+        public int NumOfUser { get; set; }
 
     }
 
