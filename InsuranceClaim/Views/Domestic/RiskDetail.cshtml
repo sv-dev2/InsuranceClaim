@@ -14,48 +14,45 @@
     </div>
 </div>
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-            <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Corporate Details</div>
-                    </div>
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="form-section-top">
         <div class="container">
+            <div class="row bs-wizard">
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                    <div class="Process-step-section process-block">
+                        <div class="col-sm-12 bs-wizard-step complete">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
 
 
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                        <div class="col-sm-12 bs-wizard-step active">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
                     @using (Html.BeginForm("GenerateQuote", "Domestic"))
                     {
                         <div>
@@ -63,7 +60,6 @@
                             @Html.HiddenFor(m => m.Id)
                             @Html.HiddenFor(m => m.isUpdate)
                             @Html.HiddenFor(m => m.vehicleindex)
-
                         </div>
                         <div class="form-group-section">
                             <div class="form-title">
@@ -72,10 +68,8 @@
                                 <span> Corporate Name: <b>@customerDetail.CompanyName  </b>,  Email: <b>@customerDetail.CompanyEmail </b>  </span>
                             </div>
 
-
                             <div>
                                 <div class="row">
-
                                     <div class="col-sm-6 col-md-6 form-group-select">
                                         <div class="form-group">
                                             @Html.Label("Product", new { @class = "gender-label" })
@@ -84,18 +78,14 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-6 form-group-select">
-
                                         <div class="form-group">
                                             @Html.Label("Risk Cover", new { @class = "gender-label" })
                                             @Html.DropDownListFor(x => x.RiskCoverId, new List<SelectListItem>(), new { @class = "form-control", id = "RiskCover", @onchange = "ddlRiskCoverChanged();" })
                                             @Html.ValidationMessageFor(x => x.RiskCoverId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-
                                 </div>
-
                                 <div class="row">
-
                                     <div class="col-sm-6 col-md-6 form-group-select">
                                         <div class="form-group">
                                             @Html.Label("Risk Item", new { @class = "gender-label" })
@@ -103,7 +93,6 @@
                                             @Html.ValidationMessageFor(x => x.RiskItemId, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-
                                     <div class="col-sm-6 col-md-6 form-group-text">
                                         <div class="form-group">
                                             @Html.Label("Risk Address", new { @class = "gender-label" })
@@ -112,8 +101,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
 
                                 <div class="row">
                                     <div class="col-sm-6 col-md-6 form-group-select">
@@ -132,7 +119,6 @@
                                     </div>
                                 </div>
 
-
                                 <div class="row">
                                     <div class="col-sm-6 col-md-6 form-group-text">
                                         <div class="form-group">
@@ -149,7 +135,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-sm-6 col-md-6 form-group-text">
                                         <div class="form-group">
@@ -158,10 +143,8 @@
                                             @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
-
                                 </div>
                                 <hr class="higlighter" />
-
 
                                 <div class="row">
                                     <div class="col-sm-6 col-md-6 form-group-text">
@@ -189,17 +172,14 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div>
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Basic Premium", new { @class = "gender-label" })
                                                 @Html.TextBoxFor(m => m.BasicPremium, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Basic Premium", @readonly = "readonly" })
-
                                             </div>
                                         </div>
-
                                         <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Stamp Duty", new { @class = "gender-label" })
@@ -212,16 +192,13 @@
                                         <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
                                                 @Html.Label("Premium Due", new { @class = "gender-label" })
-
                                                 @Html.TextBoxFor(m => m.Premium, new { @class = "form-control", @autocomplete = "off", @placeholder = " Premium Due", @readonly = "readonly" })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <hr class="higlighter" />
-
 
                             <div class="row">
                                 <div class="col-md-12 next-btn">
@@ -242,14 +219,15 @@
                             </div>
 
 
-
-
                         </div>
                     }
                 </div>
+
             </div>
         </div>
     </div>
+
+    
 
 </div>
 <script type="text/javascript">

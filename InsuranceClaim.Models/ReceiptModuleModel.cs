@@ -30,6 +30,7 @@ namespace InsuranceClaim.Models
         public int VehicleId { get; set; }
         public string RegistrationNumber { get; set; }
         public string RenewPolicyNumber { get; set; }
+        public decimal TenderedAmount { get; set; }
 
     }
 

@@ -817,6 +817,7 @@ namespace InsuranceClaim.Controllers
                                 policy.TransactionDate = null;
                                 policy.CreatedBy = customer.Id;
                                 policy.CreatedOn = DateTime.Now;
+                                policy.CurrencyId = 1;
                                 _policyService.SavePolicy(policy);
 
                                 Session["PolicyData"] = policy;

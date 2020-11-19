@@ -15,49 +15,46 @@
 </div>
 
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-            <div class="row bs-wizard">
-                <div class="process-block">
-
-                    <div class="col-xs-2 bs-wizard-step complete">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
     <div class="form-section-top">
         <div class="container">
 
+            <div class="row bs-wizard">
 
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                    <div class="Process-step-section process-block">
+                        <div class="col-sm-12 bs-wizard-step complete">
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Client Details</div>
+                        </div>
+
+
+                        <div class="col-sm-12 bs-wizard-step active">
+                            <!-- complete -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                        </div>
+
+                        <div class="col-sm-12 bs-wizard-step disabled">
+                            <!-- active -->
+
+                            <div class="progress"><div class="progress-bar"></div></div>
+                            <a href="#" class="bs-wizard-dot"></a>
+                            <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
                     @using (Html.BeginForm("GenerateQuote", "Individual"))
                     {
                         <div>
@@ -74,7 +71,6 @@
                             @Html.HiddenFor(m => m.RoadsideAssistancePercentage)
                             @Html.HiddenFor(m => m.MedicalExpensesPercentage)
                             @Html.HiddenFor(m => m.ExcessAmount)
-
                             @Html.HiddenFor(m => m.Excess)
                             @Html.HiddenFor(m => m.AnnualRiskPremium)
                             @Html.HiddenFor(m => m.QuaterlyRiskPremium)
@@ -84,7 +80,6 @@
                             @Html.Hidden("stampDutyICEcash")
                             @Html.Hidden("LevyICEcash")
                             @Html.HiddenFor(m => m.ErrorMessage)
-
                             @Html.HiddenFor(m => m.InsuranceId)
                         </div>
                         <div class="form-group-section">
@@ -93,7 +88,6 @@
                                 <br />
                                 <span> Name: <b>@customerDetail.FirstName  @customerDetail.LastName </b>,  Email: <b>@customerDetail.EmailAddress </b>  </span>
                             </div>
-
                             @if (Model.ErrorMessage != null)
                             {
                                 <div>
@@ -102,8 +96,6 @@
                                     </div>
                                 </div>
                             }
-
-
 
                             <div id="divVehicleList" style="display:block;">
                                 <table class="table table-striped" id="tblVehicleList">
@@ -125,7 +117,6 @@
                                 <hr class="higlighter" />
                             </div>
 
-
                             <div class="form-group-input">
                                 <div id="contact-form" class="contact-form">
                                     <div class="row">
@@ -144,9 +135,7 @@
                                                 @Html.ValidationMessageFor(m => m.RegistrationNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
-
                                     </div>
-
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 form-group-select">
                                             <div class="form-group">
@@ -166,7 +155,6 @@
                                         </div>
                                     </div>
 
-
                                     <fieldset @(Model.isUpdate ? "" : "disabled")>
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
@@ -184,7 +172,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div class="form-group">
@@ -195,8 +182,6 @@
                                             </div>
                                         </div>
 
-
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -204,7 +189,6 @@
                                                     @Html.TextBoxFor(m => m.SuggestedValue, new { @class = "form-control", @autocomplete = "off", @placeholder = "Suggested Value", @maxlength = "5" })
                                                     @*@Html.ValidatiVehicleSumInsuresonMessageFor(m => m.SumInsured, "", new { @class = "text-danger" })*@
                                                     @* @Html.ValidationMessageFor(m => m.SumInsured, "", new { @class = "text-danger" })*@
-
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6 form-group-text" id="divSumInsured">
@@ -226,7 +210,6 @@
                                                         @Html.ValidationMessageFor(m => m.CoverStartDate, "", new { @class = "text-danger" })
                                                         <span class="input-group-addon">
                                                             <span class="glyphicon glyphicon-calendar"></span>
-
                                                         </span>
                                                     </div>
                                                 </div>
@@ -244,7 +227,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div class="form-group">
@@ -253,16 +235,13 @@
                                                     @Html.DropDownListFor(x => x.BusinessSourceDetailId, new SelectList(ViewBag.Sources, "Value", "Text"), new { @class = "form-control" })
                                                 </div>
                                             </div>
-
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div class="form-group">
                                                     @Html.Label("Currency", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(x => x.CurrencyId, new SelectList(ViewBag.Currencies, "Id", "Name"), new { @class = "form-control" })
-
                                                 </div>
                                             </div>
                                         </div>
-
                                         <hr class="higlighter" />
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
@@ -298,7 +277,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -316,54 +294,41 @@
                                             </div>
                                         </div>
                                         <hr class="higlighter" />
-
                                         <div class="row">
-
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group margin-0">
                                                     @Html.Label("Optional Covers", new { @class = "gender-label fontSize18px" })
                                                 </div>
                                                 <div class="form-group-list">
                                                     <ul class="list-inline">
-
                                                         <li>
                                                             @Html.CheckBoxFor(x => x.ExcessBuyBack)
                                                             @Html.Label("Excess BuyBack", new { @class = "gender-label" })
-
                                                         </li>
                                                         <li>
                                                             @Html.CheckBoxFor(x => x.RoadsideAssistance)
                                                             @Html.Label("Roadside Assistance", new { @class = "gender-label" })
-
                                                         </li>
                                                         <li>
                                                             @Html.CheckBoxFor(x => x.MedicalExpenses)
                                                             @Html.Label("Medical Expenses", new { @class = "gender-label" })
-
                                                         </li>
                                                     </ul>
-
                                                 </div>
-
                                             </div>
                                             <div class="col-sm-6 col-md-6 form-group-text" id="Containernumberofpersons">
                                                 <div class="form-group">
-
                                                     <div class="row-checkbox">
                                                         @Html.CheckBoxFor(x => x.PassengerAccidentCover)
                                                         @Html.Label("Passenger Accident Cover", new { @class = "gender-label font13px" })
 
-
                                                     </div>
-
 
                                                     @Html.Label("Number of Persons", new { @class = "gender-label font13px" })
                                                     @Html.TextBoxFor(x => x.NumberofPersons, null, new { @class = "form-control inputDisabled size192", @autocomplete = "off", @placeholder = "Number of Persons" })
                                                 </div>
                                             </div>
-
                                         </div>
-
                                         <div id="thridparty" class="row">
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div id="thirdpartycheck" class="form-group">
@@ -380,7 +345,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="row" style="display:none">
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -391,7 +355,6 @@
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                         </span>
                                                     </div>
-
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6 form-group-text">
@@ -403,19 +366,15 @@
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                         </span>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
-
-
 
                                         <div class="row" style="display:none">
                                             <div class="col-sm-6 col-md-6 form-group-select">
                                                 <div class="form-group">
                                                     @Html.Label("Excess Type", new { @class = "gender-label" })
                                                     @Html.DropDownListFor(x => x.ExcessType, ViewBag.eExcessTypeData as SelectList, new { @class = "form-control" })
-
                                                     @*@Html.Label("Excess Type", new { @class = "gender-label" })
                                                         <select name="ExcessType" class="form-control" id="ExcessType">
                                                             <option value="1">Percentage</option>
@@ -423,7 +382,6 @@
                                                         </select>*@
                                                 </div>
                                             </div>
-
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Excess", new { @class = "gender-label" })
@@ -431,8 +389,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
 
                                         <hr class="higlighter" />
                                         <div class="row">
@@ -443,8 +399,6 @@
                                                     @Html.TextBoxFor(m => m.PremiumWithDiscount, new { @class = "form-control", @autocomplete = "off", @placeholder = "Vehicle Basic Premium", @readonly = "readonly" })
                                                 </div>
                                             </div>
-
-
 
                                             <div class="col-sm-6 col-md-6 form-group-select" style="display:none;">
                                                 <div class="form-group">
@@ -461,7 +415,6 @@
                                             </div>
                                         </div>
                                         <div class="row">
-
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("ZTSC Levy", new { @class = "gender-label" })
@@ -482,9 +435,7 @@
                                                     @Html.Label("Include Radio License Cost", new { @class = "gender-label" })
                                                     @Html.CheckBoxFor(x => x.IncludeRadioLicenseCost, new { @style = "width: 40px;height: 36px;" })
                                                 </div>
-
                                             </div>
-
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
                                                     @Html.Label("Radio License Cost", new { @class = "gender-label" })
@@ -493,9 +444,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
-
 
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
@@ -504,7 +453,6 @@
                                                 </div>
                                             </div>
 
-
                                             <div class="col-sm-6 col-md-6 form-group-text">
                                                 <div class="form-group">
                                                     <br />
@@ -512,7 +460,6 @@
                                                     <b>  Our call center agent will contact you for the correct Zinara License Fee.  </b>
                                                 </div>
                                             </div>
-
 
                                         </div>
                                     </fieldset>
@@ -525,7 +472,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     @if (Model.isUpdate)
                                     {
                                         <hr />
@@ -537,13 +483,11 @@
                                                             <div class="back-left"><button type="button" style="padding:5px" onclick="cancelUpdate()" class="btn">Cancel</button></div>
                                                         </div>
                                                     </div>
-
                                                     <div class="col-sm-6 col-md-6">
                                                         <div class="text-right">
                                                             <button type="submit" style="padding:5px" class="btn">Update</button>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -559,9 +503,7 @@
                                                 <div class="form-group">
                                                     @Html.Label("Add More Vehicles ?", new { @class = "gender-label" })
                                                     @*@Html.CheckBoxFor(m => m.chkAddVehicles, new { @class = (Model.isUpdate ? "btnDisabled" : ""), @style = "width: 40px;height: 36px;" })*@
-
                                                     @Html.CheckBoxFor(m => m.chkAddVehicles, new { @class = "", @style = "width: 40px;height: 36px;" })
-
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">
@@ -571,7 +513,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <hr />
                                     <div class="row">
                                         <div class="col-md-12 next-btn">
@@ -582,13 +523,11 @@
                                                         <a style="display:none" id="previouselink" href="/CustomerRegistration/ProductDetail" class="back"></a>
                                                     </div>
                                                 </div>
-
                                                 <div class=@(Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] ? "col-sm-4 col-md-4" : "col-sm-6 col-md-6")>
                                                     <div class="text-right">
                                                         <button type="submit" id="btnGenerateQuote" class="btn @(Model.isUpdate ? "btnDisabled" : "")" style="padding:20px 10px;width: auto;">Submit & Generate Quote</button>
                                                     </div>
                                                 </div>
-
                                                 @if (Session["issummaryformvisited"] != null && (bool)Session["issummaryformvisited"] && Session["VehicleDetails"] != null && ((List<InsuranceClaim.Models.RiskDetailModel>)Session["VehicleDetails"]).Count > 0)
                                                 {
                                                     <div class="col-sm-4 col-md-4">
@@ -597,7 +536,6 @@
                                                         </div>
                                                     </div>
                                                 }
-
                                             </div>
                                         </div>
                                     </div>
@@ -609,7 +547,6 @@
                             <!-- Modal -->
                             <div class="modal fade" id="myAddressModal" role="dialog">
                                 <div class="modal-dialog">
-
                                     <!-- Modal content-->
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -635,7 +572,6 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-
                                                     <label class="col-sm-2 control-label"
                                                            for="inputcity">City</label>
                                                     <div class="col-sm-10">
@@ -680,7 +616,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </form>
                                         </div>
                                         <div class="modal-footer">
@@ -693,11 +628,12 @@
                         </div>
                     }
 
-
                 </div>
             </div>
         </div>
     </div>
+
+   
 </div>
 
 <script>

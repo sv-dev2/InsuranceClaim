@@ -14,150 +14,146 @@
 </div>
 
 <div class="body-content-section">
-    <div class="Process-step-section">
-        <div class="container">
-            <div class="row bs-wizard">
-                <div class="process-block">
-                    <div class="col-xs-2 bs-wizard-step active">
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Client Details</div>
-                    </div>
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- complete -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Risk Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Summary Details</div>
-                    </div>
-
-                    <div class="col-xs-2 bs-wizard-step disabled">
-                        <!-- active -->
-
-                        <div class="progress"><div class="progress-bar"></div></div>
-                        <a href="#" class="bs-wizard-dot"></a>
-                        <div class="text-center bs-wizard-stepnum">Payment Details</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
     <div class="form-section-top">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
-                    <div class="form-group-section">
-                        <div class="form-title">
-                            <h4>Client Details</h4>
+        <div class="form-section-top">
+
+            <div class="container">
+                <div class="row bs-wizard">
+                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                        <div class="Process-step-section process-block">
+                            <div class="col-sm-12 bs-wizard-step complete">
+                                <div class="progress"><div class="progress-bar"></div></div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="text-center bs-wizard-stepnum">Client Details</div>
+                            </div>
+
+
+                            <div class="col-sm-12 bs-wizard-step active">
+                                <!-- complete -->
+                                <div class="progress"><div class="progress-bar"></div></div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="text-center bs-wizard-stepnum">Risk Details</div>
+                            </div>
+
+                            <div class="col-sm-12 bs-wizard-step disabled">
+                                <!-- active -->
+                                <div class="progress"><div class="progress-bar"></div></div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="text-center bs-wizard-stepnum">Summary Details</div>
+                            </div>
+
+                            <div class="col-sm-12 bs-wizard-step disabled">
+                                <!-- active -->
+
+                                <div class="progress"><div class="progress-bar"></div></div>
+                                <a href="#" class="bs-wizard-dot"></a>
+                                <div class="text-center bs-wizard-stepnum">Payment Details</div>
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="form-group-input">
-                            @using (Ajax.BeginForm("RegisterUser", "Domestic", null, new AjaxOptions() { OnSuccess = "GoToDomesticProductDetail" }, null))
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 form-section-col">
+
+                        <div class="form-group-section">
+                            <div class="form-title">
+                                <h4>Client Details</h4>
+                            </div>
+                            <div class="form-group-input">
+                                @using (Ajax.BeginForm("RegisterUser", "Domestic", null, new AjaxOptions() { OnSuccess = "GoToDomesticProductDetail" }, null))
                             {
-                                <input type="hidden" id="clinetId" name="clinetId" />
-                                @Html.HiddenFor(x => x.Id)
-                                @Html.HiddenFor(x => x.UserID)
+                                    <input type="hidden" id="clinetId" name="clinetId" />
+                                    @Html.HiddenFor(x => x.Id)
+                                    @Html.HiddenFor(x => x.UserID)
 
-                                <div class="row">
-                                    <div class="col-sm-6 col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.LabelFor(x => x.FirstName, new { @class = "gender-label" })
-                                            @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", @name = "FirstName", @autocomplete = "off", @id = "FirstName", @placeholder = "First Name" })
-                                            @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.LabelFor(x => x.LastName, new { @class = "gender-label" })
-                                            @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", @name = "LastName", @autocomplete = "off", @id = "LastName", @placeholder = "Last Name" })
-                                            @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6 col-md-6 form-group-text">
-                                        <div class="row">
-                                            @*<div class="row @disableClass">*@
-
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
                                             <div class="form-group">
-                                                <div class="col-md-5">
-                                                    <div class="checkbox-label">
-                                                        @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
+                                                @Html.LabelFor(x => x.FirstName, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", @name = "FirstName", @autocomplete = "off", @id = "FirstName", @placeholder = "First Name" })
+                                                @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.LastName, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", @name = "LastName", @autocomplete = "off", @id = "LastName", @placeholder = "Last Name" })
+                                                @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="row">
+                                                @*<div class="row @disableClass">*@
+                                                <div class="form-group">
+                                                    <div class="col-md-5">
+                                                        <div class="checkbox-label">
+                                                            @Html.LabelFor(x => x.EmailAddress, new { @class = "gender-label" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "SetCustomerEmail();" }) No email address</label>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" })
+                                                        @Html.ValidationMessageFor(x => x.EmailAddress, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
-                                                <div class="col-md-7">
-                                                    <label>@Html.CheckBoxFor(m => m.IsCustomEmail, new { @onclick = "SetCustomerEmail();" }) No email address</label>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control", @name = "EmailAddress", @autocomplete = "off", @id = "EmailAddress", @placeholder = "Email Address" })
-                                                    @Html.ValidationMessageFor(x => x.EmailAddress, "", new { @class = "text-danger" })
-                                                </div>
                                             </div>
-
                                         </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.LabelFor(x => x.PhoneNumber, new { @class = "gender-label" })
-                                            @Html.DropDownListFor(x => x.CountryCode, new SelectList(ViewBag.Countries, "code", "DisplayName", "+263"), new { @class = "form-control countrycode" })
-                                            @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phonenumber", @name = "PhoneNumber", @autocomplete = "off", @id = "PhoneNumber", @placeholder = "Phone Number", @maxlength = "9", onkeypress = "return isNumber(event)" })
-                                            @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.LabelFor(x => x.Gender, new { @class = "gender-label" })
-                                            <div class="form-group-label">
-                                                <label>@Html.RadioButtonFor(model => model.Gender, "Male", true)<span class="outside"><span class="inside"></span></span><strong>Male</strong></label>
-                                                <label>@Html.RadioButtonFor(model => model.Gender, "Female", true)<span class="outside"><span class="inside"></span></span><strong>Female</strong></label>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.PhoneNumber, new { @class = "gender-label" })
+                                                @Html.DropDownListFor(x => x.CountryCode, new SelectList(ViewBag.Countries, "code", "DisplayName", "+263"), new { @class = "form-control countrycode" })
+                                                @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control phonenumber", @name = "PhoneNumber", @autocomplete = "off", @id = "PhoneNumber", @placeholder = "Phone Number", @maxlength = "9", onkeypress = "return isNumber(event)" })
+                                                @Html.ValidationMessageFor(x => x.PhoneNumber, "", new { @class = "text-danger" })
                                             </div>
-                                            @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
                                         </div>
+
                                     </div>
-                                    <div class="col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.LabelFor(x => x.DateOfBirth, new { @class = "gender-label" })
-                                            <div class="form-group-label">
-
-                                                <div class='input-group' id='datetimepicker1'>
-                                                    @Html.TextBoxFor(x => x.DateOfBirth, new { @class = "form-control", @autocomplete = "off", @placeholder = "DOB" })
-
-                                                    <span class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
+                                    <div class="row">
+                                        <div class="col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.Gender, new { @class = "gender-label" })
+                                                <div class="form-group-label">
+                                                    <label>@Html.RadioButtonFor(model => model.Gender, "Male", true)<span class="outside"><span class="inside"></span></span><strong>Male</strong></label>
+                                                    <label>@Html.RadioButtonFor(model => model.Gender, "Female", true)<span class="outside"><span class="inside"></span></span><strong>Female</strong></label>
                                                 </div>
-                                                @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.DateOfBirth, new { @class = "gender-label" })
+                                                <div class="form-group-label">
+                                                    <div class='input-group' id='datetimepicker1'>
+                                                        @Html.TextBoxFor(x => x.DateOfBirth, new { @class = "form-control", @autocomplete = "off", @placeholder = "DOB" })
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "text-danger" })
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6 col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.LabelFor(x => x.AddressLine1, new { @class = "gender-label" })
-                                            @Html.TextBoxFor(x => x.AddressLine1, new { @class = "form-control", @name = "AddressLine1", @autocomplete = "off", @id = "AddressLine1", @placeholder = "Address Line 1" })
-                                            @Html.ValidationMessageFor(x => x.AddressLine1, "", new { @class = "text-danger" })
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.AddressLine1, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.AddressLine1, new { @class = "form-control", @name = "AddressLine1", @autocomplete = "off", @id = "AddressLine1", @placeholder = "Address Line 1" })
+                                                @Html.ValidationMessageFor(x => x.AddressLine1, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.AddressLine2, new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.AddressLine2, new { @class = "form-control", @name = "AddressLine2", @autocomplete = "off", @id = "AddressLine2", @placeholder = "Address Line 2" })
+                                                @Html.ValidationMessageFor(x => x.AddressLine2, "", new { @class = "text-danger" })
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 col-md-6 form-group-text">
-                                        <div class="form-group">
-                                            @Html.LabelFor(x => x.AddressLine2, new { @class = "gender-label" })
-                                            @Html.TextBoxFor(x => x.AddressLine2, new { @class = "form-control", @name = "AddressLine2", @autocomplete = "off", @id = "AddressLine2", @placeholder = "Address Line 2" })
-                                            @Html.ValidationMessageFor(x => x.AddressLine2, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
 
 
                                     <div class="row">
@@ -190,7 +186,6 @@
                                     <div class="col-md-12 next-btn">
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
-
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="text-right">
@@ -200,12 +195,14 @@
                                         </div>
                                     </div>
                             }
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
-    </div>
+        </div>
 </div>
 
 

@@ -12,6 +12,7 @@ namespace InsuranceClaim.Models
         public List<PreviewReceiptListModel> listReceipt { get; set; }
         public int Id { get; set; }
         public int PolicyId { get; set; }
+        public int VehicleId { get; set; }
         public int CustomerId { get; set; }
         public string PolicyNumber { get; set; }
         public string FirstName { get; set; }
@@ -47,7 +48,11 @@ namespace InsuranceClaim.Models
 
         public decimal RadioCost { get; set; }
 
-     
+        public decimal TenderedAmount { get; set; }
+
+        public string BranchName { get; set; }
+
+        public string RenewPolicyNumber { get; set; }
 
     }
     public class ListReceiptModule

@@ -16,12 +16,9 @@
                     @*<button type="button" class="btn btn-primary">Add</button>*@
                     @*<input class="btn btn-primary" type="button" value="Generate PDF" id="generatePdf" />*@
                     <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
-
                 </div>
             </div>
-
         </div>
-
         @using (Html.BeginForm("DailyReceiptsSearchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             <div class="container-main">
@@ -30,7 +27,6 @@
                         <div class="row">
                             <div class="col-sm-3 col-md-3 form-group-text">
                                 <div class="form-group">
-
                                     <div class='input-group' id='datetimenew'>
                                         @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
                                         @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
@@ -42,7 +38,6 @@
                             </div>
                             <div class="col-sm-3 col-md-3 form-group-text">
                                 <div class="form-group">
-
                                     <div class='input-group' id='datetimenew12'>
                                         @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
                                         @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
@@ -65,101 +60,94 @@
                 </div>
             </div>
         }
-
         <div class="product-table-grid">
             <div class="table-responsive">
                 @*<table class="table table-striped tablesorter" style="width:1785px;" id="report2excel">*@
-                    <table class="table table-striped tablesorter" id="report2excel">
-                        <thead style='display:none;'>
+                <table class="table table-striped tablesorter" id="report2excel">
+                    <thead style='display:none;'>
 
+                        <tr>
+                            <td>
+                                <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+                                <script>
+                                    var dt = new Date();
+                                    document.getElementById("datetime").innerHTML = dt.toLocaleString();
+                                </script>
+                            </td>
+                            <td></td>
+                            <td>
+                                <h3><u>@ViewBag.Title</u></h3>
+                                <strong></strong>
+                                <strong></strong>
+                            </td>
+                            <td></td>
+                            <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
+                            <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
+                            <td></td>
+                            <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
+                            <td><label for="EndDate">@ViewBag.enddate</label></td>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th>Receipt No.</th>
+                            <th>Receipting Agent/ Delivery Agent</th>
+                            <th>Customer Name</th>
+                            @*<th>Contact Number</th>
+                                <th>Product</th>*@
+                            <th>Policy Number</th>
+                            <th>Created Date</th>
+                            <th>Receipt Number</th>
+                            <th>Currency</th>
+                            <th>Premium Due</th>
+                            <th>Amount Paid</th>
+                            <th>Radio License Cost</th>
+                            <th>Zinara License Cost</th>
+                            <th>Balance</th>
+                            <th>Reference</th>
+                            <th>Payment Type</th>
+                            <th>TenderedAmount</th>
+                            <td>Status</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            decimal premiumDueTotal = 0;
+                            decimal amountPaidTotal = 0;
+                            decimal balanceTotal = 0;
 
-                            <tr>
-                                <td>
-                                    <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
+                        }
+                        @foreach (var item in Model.DailyReceiptsReport)
+                        {
 
-                                    <script>
-                                var dt = new Date();
-                                document.getElementById("datetime").innerHTML = dt.toLocaleString();
-                                    </script>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <h3><u>@ViewBag.Title</u></h3>
-                                    <strong></strong>
-                                    <strong></strong>
-
-                                </td>
-                                <td></td>
-                                <td colspan="2" rowspan="2"><center><strong>Start Date :</strong></center></td>
-
-                                <td><label for="FromDate">@ViewBag.fromdate</label><br></td>
-                                <td></td>
-                                <td colspan="2" rowspan="2"><center><strong>End Date :</strong></center></td>
-                                <td><label for="EndDate">@ViewBag.enddate</label></td>
-                            </tr>
-
-                        </thead>
-                        <thead>
-                            <tr>
-                                <th>Receipt No.</th>
-                                <th>User/Call Center agent</th>
-                                <th>Customer Name</th>
-                                @*<th>Contact Number</th>
-        <th>Product</th>*@
-                                <th>Policy Number</th>
-                                <th>Transaction Date</th>
-                                <th>Receipt Number</th>
-                                <th>Currency</th>
-                                <th>Premium Due</th>
-                                <th>Amount Paid</th>
-                                <th>Radio License Cost</th>
-                                <th>Zinara License Cost</th>
-                                <th>Balance</th>
-                                <th>Transaction Reference</th>
-                                <th style="text-align:left;">Payment Type</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-
-                                decimal premiumDueTotal = 0;
-                                decimal amountPaidTotal = 0;
-                                decimal balanceTotal = 0;
-
-                            }
-                            @foreach (var item in Model.DailyReceiptsReport)
+                            if (item.AmountDue != null)
                             {
+                                premiumDueTotal += Math.Round(Convert.ToDecimal(item.AmountDue), 2);
+                            }
+                            else
+                            {
+                                premiumDueTotal = 0;
+                            }
 
-                                if (item.AmountDue != null)
-                                {
-                                    premiumDueTotal += Math.Round(Convert.ToDecimal(item.AmountDue), 2);
-                                }
-                                else
-                                {
-                                    premiumDueTotal = 0;
-                                }
-
-                                if (item.AmountPaid != 0)
-                                {
-                                    amountPaidTotal += Math.Round(Convert.ToDecimal(item.AmountPaid), 2);
-                                }
-                                else
-                                {
-                                    amountPaidTotal = 0;
-                                }
+                            if (item.AmountPaid != 0)
+                            {
+                                amountPaidTotal += Math.Round(Convert.ToDecimal(item.AmountPaid), 2);
+                            }
+                            else
+                            {
+                                amountPaidTotal = 0;
+                            }
 
 
-                                if (item.Balance != "")
-                                {
-                                    balanceTotal += Math.Round(Convert.ToDecimal(item.Balance), 2);
-                                }
-                                else
-                                {
-                                    balanceTotal = 0;
-                                }
+                            if (item.Balance != "")
+                            {
+                                balanceTotal += Math.Round(Convert.ToDecimal(item.Balance), 2);
+                            }
+                            else
+                            {
+                                balanceTotal = 0;
+                            }
                             <tr>
-
                                 <td>@item.Id</td>
                                 <td>@item.PolicyCreatedBy </td>
                                 <td>@item.CustomerName</td>
@@ -176,31 +164,46 @@
                                 <td>@Math.Round(Convert.ToDecimal(item.Balance), 2)</td>
                                 <td> @item.TransactionReference</td>
                                 <td>@item.paymentMethodType</td>
-                            </tr>
-                            }
-                        </tbody>
-                        <tfoot>
-                            <tr>
+                                <td>@item.TenderedAmount</td>
+                                <td>
+                                    @if (item.RenewPolicyNumber == null)
+                                    {
+                                    <td>New Business</td>
+                                    }
 
-                                <td><strong>Total:</strong></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><strong>@premiumDueTotal</strong></td>
-                                <td><strong>@amountPaidTotal</strong></td>
-                                <td><strong>@balanceTotal</strong></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                                    else if (Convert.ToInt16(item.RenewPolicyNumber.Split('-')[1]) > 1)
+                                    {
+                                        <td>Renewals</td>
+                                    }
+                                    else
+                                    {
+                                        <td>New Business</td>
+                                    }
+                                    </td>
 
+                                </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>@premiumDueTotal</strong></td>
+                            <td><strong>@amountPaidTotal</strong></td>
+                            <td><strong>@balanceTotal</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
-
     </div>
 </div>
 <script>

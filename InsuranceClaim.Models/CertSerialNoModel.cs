@@ -13,7 +13,8 @@ namespace InsuranceClaim.Models
         public string VRN { get; set; }
         public string CertSerialNo { get; set; }
         public string AgentName { get; set; }
-
+        public int ALMBranchId { get; set; }
+        public string BranchName { get; set; }
         public string CreatedOn { get; set; }
             
     }
@@ -24,6 +25,8 @@ namespace InsuranceClaim.Models
         public string FromDate { get; set; }
 
         public string EndDate { get; set; }
+     
+        public int? BranchId { get; set; }
 
         public List<CertSerialNoModel> List { get; set; }
     }
