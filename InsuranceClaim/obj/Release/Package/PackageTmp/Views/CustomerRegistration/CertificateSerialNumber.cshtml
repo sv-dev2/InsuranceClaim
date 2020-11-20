@@ -60,6 +60,12 @@
 
             }
 
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                <div id="pdfTag">
+                    <a id="lnkFile" href="">If you didn't get pdf file then click here to download licens pdf</a>
+                </div>
+            </div>
+
 
         </div>
     </div>
@@ -68,9 +74,14 @@
 
 
 <script type="text/javascript">
-
     $(document).ready(function () {
-        $("#SerialNumber").focus();
-    });
+        if ('@Model.FilePath' != null && '@Model.FilePath' != '') {
+            $("#pdfTag").show();
+            $("#lnkFile").attr("href", "@Model.FilePath");
+            window.open('@Model.FilePath', '_blank');
+        }
 
+        $("#SerialNumber").focus();
+        //RemoveCookies();
+    });
 </script>

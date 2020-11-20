@@ -1,3 +1,150 @@
+<<<<<<< HEAD
+﻿
+@model InsuranceClaim.Models.CertSerialNoReportModel
+
+    @{
+        ViewBag.Title = "CertSerialNoReport";
+        Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+    }
+
+    <div class="productsave-section">
+        <div class="container">
+
+            <br />
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
+                    <div class="head-title">
+                        <h2>Certficate Serial Number</h2>
+                    </div>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 add-btn">
+                    <div class="text-right">
+                        <input class="btn btn-primary" type="button" value="Generate Excel" id="generateExcel" />
+                    </div>
+                </div>
+            </div>
+
+
+            @using (Html.BeginForm("CertSerialNoSearchReport", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="container-main">
+                    <div class="form-group-section-date">
+                        <div class="form-group-input">
+                            <div class="row">
+                                <div class="col-sm-3 col-md-3 form-group-text">
+                                    <div class="form-group">
+                                        <div class='input-group' id='datetimenew'>
+                                            @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control", @placeholder = "Start Date" })
+                                            @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger" })
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-md-3 form-group-text">
+                                    <div class="form-group">
+
+                                        <div class='input-group' id='datetimenew12'>
+                                            @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "End Date" })
+                                            @Html.ValidationMessageFor(m => m.EndDate, "", new { @class = "text-danger" })
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-6 form-group-btn">
+                                    <div class="form-group">
+                                        <ul class="list-inline">
+                                            <li><button type="submit" class="btn btn-success">Search</button></li>
+                                            <li><button type="button" onclick="removeSearchBox();" class="btn btn-danger">Clear Search</button></li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+            <table class="table table-striped tablesorter" id="report2excel">
+                <thead>
+                    <tr>
+                        <td> AgentName</td>
+                        <td> PolicyNumber</td>
+                        <td> VRN</td>
+                        <td> CertSerialNo</td>
+                        <td> CreatedOn</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.List)
+                    {
+                        <tr>
+                            <td>@item.AgentName</td>
+                            <td>@item.PolicyNumber</td>
+                            <td>@item.VRN </td>
+                            <td>@item.CertSerialNo</td>
+                            <td>@item.CreatedOn</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#datetimenew").datetimepicker({
+                format: 'MM/D/YYYY'
+            });
+            $("#datetimenew12").datetimepicker({
+                format: 'MM/D/YYYY'
+            });
+        });
+
+
+        function removeSearchBox() {
+            window.location.href = "/Report/CertSerialNoReport";
+        }
+
+        var doc = new jsPDF({ format: [600, 600] });
+        var specialElementHandlers = {
+            '#editor': function (element, renderer) {
+                return true;
+            }
+        };
+
+        $('#generatePdf').click(function () {
+
+            doc.fromHTML($('#content').html(), 80, 15, {
+                'width': 500,
+                'elementHandlers': specialElementHandlers
+            });
+            doc.save('ZTSCLevyReport.pdf');
+
+        });
+
+
+
+        $("#generateExcel").click(function () {
+            debugger;
+            $("#report2excel").table2excel({
+                // exclude CSS class
+                exclude: ".noExl",
+                name: "Worksheet Name",
+                filename: "ZTSCLevyReport" //do not include extension
+            });
+
+        });
+
+    </script>
+=======
 ﻿
 @model InsuranceClaim.Models.CertSerialNoReportModel
 
@@ -161,3 +308,4 @@
         });
 
     </script>
+>>>>>>> 329a971a944f8bd9dbacf64de57f2a1986a92eb4

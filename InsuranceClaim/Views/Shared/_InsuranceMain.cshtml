@@ -1,3 +1,517 @@
+<<<<<<< HEAD
+﻿@using System.Security.Claims;
+@using Insurance.Domain;
+@using Microsoft.AspNet.Identity;
+
+@{
+    Layout = null;
+    bool userLoggedin = ((System.Web.HttpContext.Current.User != null) && (System.Web.HttpContext.Current.User.Identity.IsAuthenticated));
+    string userId = User.Identity.GetUserId();
+    var role = "";
+    var fname = "";
+    var lname = "";
+    
+    var LoyalyPoints = 0.00m;
+
+    if (userLoggedin)
+    {
+        var customer = InsuranceContext.Customers.Single(where: $"userid='{userId}'");
+        if (customer != null)
+        {
+            LoyalyPoints = Convert.ToDecimal(InsuranceContext.LoyaltyDetails.All(where: $"CustomerId={customer.Id}").Sum(x => x.PointsEarned));
+            role = System.Web.HttpContext.Current.User.IsInRole("Administrator") ? "Administrator" : (System.Web.HttpContext.Current.User.IsInRole("Customer") ? "Customer" : "");
+            fname = customer.FirstName;
+            lname = customer.LastName;
+            
+            ViewBag.user_id= customer.Id;
+        }
+    }
+
+}
+@{
+    var ErrorMessage = TempData["ErrorMessage"];
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GeneInsure</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+    <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+
+    @*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    @*<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>*@
+    <script src="~/Scripts/CustomerRegistration/CustomerRegistration.js"></script>
+
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>*@
+    <script src="~/Scripts/moment-with-locales.js"></script>
+
+    @*<script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>*@
+
+
+    <script src="~/Scripts/bootstrap-datetimepicker_new.js"></script>
+
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    @*<link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">*@
+    <link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+    <link href="~/Content/style-sorting.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.tablesorter.js"></script>
+    <link href="~/Content/select2.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.js"></script>
+    <script src="~/Scripts/jquery.table2excel.min.js"></script>
+    <script src="~/Scripts/jspdf.debug.js"></script>
+
+    <style>
+        .input-group-addon {
+            border: none !important;
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" id="ErrorMessage" value="@ErrorMessage" />
+
+    <div class="loading-area">
+        <div class="loading-svg">
+            <img src="~/Images/loading.svg" />
+        </div>
+        <div class="loading-overlay"></div>
+    </div>
+
+    <div class="top-header-section">
+        <div class="logo-section-details">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="top-logo-block">
+                        <div class="col-xs-9 col-sm-3 col-md-3 col-lg-2 logo-blocks">
+                            <div class="logo-img">
+                                <a href="~/InsuranceHome/Index/Index"><img src="~/Images/geneinsure-logo1.png" class="img-responsive"></a>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-9 col-sm-9 col-xs-12 col-lg-10">
+
+                            <!-- <div class="compare-bx-input">
+                               <ul class="list-inline text-right">
+                                  <li><input type="text" class="form-control" id="txtUserName" placeholder="Name"></li>
+                                  <li><input type="text" class="form-control" id="txtUserPhone" placeholder="Phone number"></li>
+                                  <li><button class="btn btn-success" onclick="CallBackoUser();" type="button"><i class="fa fa-phone"></i> Call me back</button></li>
+                               </ul>
+                            </div> -->
+
+
+                            <div class="menu-navigation">
+                                <nav class="navbar navbar-default">
+                                    <div class="">
+                                        <div class="">
+                                            <!-- Brand and toggle get grouped for better mobile display -->
+                                            <div class="navbar-header">
+                                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                                    <span class="sr-only">Toggle navigation</span>
+                                                    <span class="icon-bar"></span>
+                                                    <span class="icon-bar"></span>
+                                                    <span class="icon-bar"></span>
+                                                </button>
+                                            </div>
+
+                                            <!-- Collect the nav links, forms, and other content for toggling -->
+                                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                                                <ul class="nav navbar-nav">
+
+                                                    @*<li><a href="/Individual/RegisterUser">Individual motor</a></li>
+                                                        <li><a href="/Domestic/RegisterUser">Domestic</a></li>*@
+
+                                                    <li><a href="/InsuranceHome/Index">Home</a></li>
+
+                                                    @if (userLoggedin && (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Team Leaders")))
+                                                    {
+                                                        <li><a href="/CustomerRegistration/Index">Issue Quotation</a></li>
+                                                    }
+                                                    else if (userLoggedin == false)
+                                                    {
+                                                        <li><a onclick="RequestQuote();" href="javascript:void(0);">Request Quote</a></li>
+                                                    }
+
+
+                                                    <li><a href="#">Change Policy</a></li>
+                                                    <li><a href="#">Register Claim</a></li>
+                                                    @*<li><a href="#">Policy/Claim Detail</a></li>*@
+                                                    <li><a href="/Home/About">About Us</a></li>
+
+                                                    @*<li><a href="/Paypal/IceCashPayment">IceCash</a></li>*@
+
+                                                    @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("AgentStaff"))
+                                                    {
+                                                        @*<li><a href="/Account/PolicyList">Policy Management</a></li>*@
+                                                        <li><a href="/Account/PolicyManagement">Policy Management</a></li>
+                                                        <li><a href="/Account/CustomerManagementList">Customers</a></li>
+                                                        <li><a href="/CustomerRegistration/LicensePrint">License</a></li>
+                                                        <li><a href="/account/PayLaterPolicy">Pay Later</a></li>
+                                                    }
+
+                                                    @if (User.IsInRole("Agent"))
+                                                    {
+                                                        <li><a href="/AgentStaff/Index">Agent Staff</a></li>
+
+                                                    }
+
+                                                    @if (User.IsInRole("Claim"))
+                                                    {
+                                                        <li><a href="/Claimant/ClaimantList">Claim Management</a></li>
+                                                        <li><a href="/Account/Dashboard">Dashboard</a></li>
+
+                                                    }
+
+
+
+                                                    @*<li><a href="#">Contact</a></li>*@
+
+
+                                                    @if (User.IsInRole("Administrator"))
+                                                    {
+                                                        @*<li><a class="DashboardButton" href="@Url.Action("UserManagement","Account")">Claim User</a></li>*@
+
+                                                        <li><a href="/Account/UserManagement?id=0&Claim=1">Claim User</a></li>
+                                                    }
+
+                                                    @if (User.IsInRole("Administrator"))
+                                                    {
+                                                        <li><a class="DashboardButton" href="@Url.Action("LicenceTickets","Account")">LicenceTickets</a></li>
+                                                    }
+
+
+                                                    @if (User.IsInRole("Administrator"))
+                                                    {
+                                                        <li><a class="DashboardButton" href="@Url.Action("Dashboard","Account")">Dashboard</a></li>
+                                                    }
+
+
+                                                    @*@if (User.IsInRole("Finance"))
+                                                        {
+
+                                                            <li><a  href="@Url.Action("ReconciliationReport", "Report")">Reconciliation</a></li>
+
+                                                            <li><a  href="@Url.Action("ReceiptModule", "CustomerRegistration")">Receipt</a></li>
+                                                        }*@
+
+
+                                                    @if (User.IsInRole("Finance"))
+                                                    {
+                                                        <li><a class="DashboardButton" href="@Url.Action("Dashboard","Account")">Dashboard</a></li>
+                                                    }
+
+                                                    @if (User.IsInRole("AgentStaff"))
+                                                    {
+                                                        <li><a class="DashboardButton" href="@Url.Action("CustomerDetail","AgentMotor")">Create Policy</a></li>
+                                                    }
+
+
+                                                    @if (User.IsInRole("SuperUser"))
+                                                    {
+                                                        <li><a class="DashboardButton" href="@Url.Action("Index","Agent")">Agent</a></li>
+                                                    }
+                                                </ul>
+                                                <ul class="navbar-nav navbar-right login-btn" style="@(userLoggedin ? "display:none;" : "display:inline-block;")">
+                                                    <li><a href="/Account/Login">Login</a></li>
+                                                    @*<li><a href="">Register</a></li>*@
+                                                </ul>
+                                                <ul class="navbar-nav navbar-right login-btn dropdown-top" style="@(userLoggedin ? "display:block;" : "display:none;")">
+                                                    <li><a class="wallet-btn" href="javascript:void(0);">Wallet : $ @LoyalyPoints  </a></li>
+                                                    <li class="dropdown">
+                                                        <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@(userLoggedin ? "Hi " + " " + fname : "Welcome Guest") <span class="caret"></span></a>
+                                                        <div class="dropdown-menu">
+                                                            <ul class="list-inline">
+                                                                @if (userLoggedin)
+                                                                {
+                                                                    <li><a href="/Account/Logout">Logout</a></li>
+                                                                    <li><a href="/Account/MyPolicies">My Policies</a></li>
+                                                                    <li><a href="/Account/QuotationList">My Quotation</a></li>
+
+                                                                    if (User.IsInRole("Customer"))
+                                                                    {
+                                                                        <li><a href="/Account/Detail">Account</a></li>
+                                                                    }
+                                                                    @*if (User.IsInRole("Staff"))
+                                                                        {
+                                                                            <li><a href="/Endorsement/EndorsementDetail">Endorsement View</a></li>
+
+                                                                        }*@
+                                                                    <li><a href="/Account/ChangePassword">Change Password</a></li>
+                                                                }
+
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+
+                                            </div><!-- /.navbar-collapse -->
+                                        </div><!-- /.container-fluid -->
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div>
+        @RenderBody()
+
+
+
+
+
+
+    </div>
+    <div class="footer-section">
+        <div class="click-here">
+            <a href="">Click Here</a>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--  <div class="touch-heading text-center">
+                         <h3>Get in Touch</h3>
+                     </div> -->
+                </div>
+                <div class="col-sm-5 col-md-4 col-lg-3 footer-content-logo">
+                    <div class="logo-img">
+                        <img src="~/Images/geneinsure-logo1.png" class="img-responsive">
+                    </div>
+                </div>
+
+                <div class="col-sm-7 col-md-8 col-lg-9 footer-links">
+                    <div class="contact-details">
+                        <h4><strong>Key Contact Details:</strong></h4>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                <p><strong> Calls:</strong> 0867 722 3344</p>
+                                <p><strong>Whatsapp:</strong>  0719 884 884</p>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                <p><strong>Whatsapp:</strong> 0732 884 884</p>
+                                <p><strong>Email:</strong> info@gene.co.zw</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade custom-form" id="SearchVRNModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                @using (Html.BeginForm("SearchVrn", "InsuranceHome", FormMethod.Post))
+            {
+                    <div class="modal-body">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="banner-form">
+                                @Html.TextBox("RegistrationNum", "", new { @class = "form-control", @autocomplete = "off", @placeholder = "Registration Number" })
+                                @Html.TextBox("NationalId", "", new { @class = "dropdown tr-change-dropdown", @autocomplete = "off", @placeholder = "National Id" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Request Quote</button>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @*<div class="chat-box">
+            <div class="online-caht-box">
+                <h4>Online Chat <span class="online-dot"></span></h4>
+            </div>
+        </div>*@
+
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/Sidebar.js"></script>
+
+    <script>
+        $(document).ready(function () { // will trigger when the document is ready
+
+            $('.numeric').on('input', function (event) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            //$('.date').datetimepicker({
+             //   format: 'MM/D/YYYY'
+            //})
+
+            $('.non-editable').keyup(function () {
+                $('.non-editable').attr("disable", true)
+            })
+
+            $('#newReqModal').modal({ backdrop: 'static', keyboard: false })
+            //GetNewReqPopup();
+            SetActiveSidebar();
+        });
+
+
+        function GetNewReqPopup() {
+            $.ajax({
+                url: "@Url.Action("CheckNewRequestSession", "CustomerRegistration")",
+                type: "GET",
+                dataType: "json",
+                success: function (result) {
+                    debugger;
+                    if (result == false) {
+                        $("#newReqModal").modal('show');
+                    }
+                    else {
+                        $("#newReqModal").modal('hide');
+                    }
+                }
+            });
+        }
+
+        function Close() {
+            $.ajax({
+                url: "@Url.Action("SetNewRequestSession", "CustomerRegistration")",
+                type: "GET",
+                dataType: "json",
+                success: function (result) {
+                }
+            });
+        }
+
+        function RequestQuote() {
+            //toastr.error("Please Enter your Vehicle Registration Number.");
+            //window.location.href = "/";
+
+            $("#SearchVRNModal").modal("show");
+
+        }
+
+    </script>
+    <style>
+
+
+        .menu-navigation .navbar.navbar-default {
+            background: #fff;
+            margin: 0;
+            border: none;
+            border-top: 0px solid #e0e0e0;
+            border-radius: 0;
+            min-height: inherit;
+            padding: 15px 0 0;
+        }
+
+        .menu-navigation {
+            margin-top: 11px;
+            text-align: right;
+            float: right;
+        }
+
+        .gray-top-header {
+            background: #fff;
+            padding: 0px 0;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .skype-details {
+            margin: 0px 0 0px;
+            text-align: right;
+        }
+
+        .top-header-section {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .menu-navigation .navbar-collapse {
+            padding-right: 0px;
+        }
+
+        .menu-navigation .navbar-nav li a:hover {
+            color: #57c5d4;
+        }
+
+        .menu-navigation .navbar-nav.login-btn li a:hover {
+            color: #57c5d4;
+        }
+
+        .top-header-section {
+            font-family: 'Poppins', sans-serif;
+            border-bottom: #57c5d4 10px solid;
+        }
+
+        .menu-navigation {
+            margin-top: 11px;
+            text-align: right;
+            float: right;
+            margin-bottom: 15px;
+        }
+
+    </style>
+
+</body>
+
+</html>
+=======
 ﻿@using System.Security.Claims;
 @using Insurance.Domain;
 @using Microsoft.AspNet.Identity;
@@ -507,3 +1021,4 @@
 </body>
 
 </html>
+>>>>>>> 329a971a944f8bd9dbacf64de57f2a1986a92eb4

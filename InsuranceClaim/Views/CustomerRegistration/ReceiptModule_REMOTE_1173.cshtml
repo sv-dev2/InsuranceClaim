@@ -1,0 +1,287 @@
+﻿@model InsuranceClaim.Models.ReceiptModuleModel
+@{
+    ViewBag.Title = "ReceiptModule";
+    Layout = "~/Views/Shared/_InsuranceMain.cshtml";
+}
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+<div class="body-content-section">
+    <div class="form-section-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-section-col">
+                    <div class="form-group-section">
+                        <div class="form-title">
+                            <h4>Receipt Module</h4>
+                        </div>
+                        <div class="form-group-input">
+                            @using (Html.BeginForm("ReceiptModule", "CustomerRegistration", FormMethod.Post, new { @class = "form-horizontal" }))
+                            {
+                                @Html.HiddenFor(x => x.PolicyId, new { @Id = "hdnPolicyId" })
+                                @Html.HiddenFor(x => x.CustomerId, new { @Id = "hdnCustomerId" })
+                                @Html.HiddenFor(x => x.SummaryDetailId, new { @Id = "hdnSummaryDetailId" })
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.PolicyNumber, "Search by", new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.PolicyNumber, new { @class = "form-control", @autocomplete = "off", @placeholder = "Policy No./Customer/Invoice No.", @Id = "txtPolicyNumber" })
+                                           
+                                        </div>
+                                    </div>
+                                   
+                                        <div class="col-sm-12 form-group-text">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.Id, "Receipt No", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.Id, new { @class = "form-control", @placeholder = "Receipt No.", @Id = "ReceiptNo", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                        @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                  
+                                  
+                                
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.CustomerName, "Customer Name", new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.CustomerName, new { @class = "form-control", @placeholder = "Customer Name", @Id = "CustomerName", @readonly = "readonly" })
+
+                                        </div>
+                                        @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            @Html.LabelFor(x => x.InvoiceNumber, "Invoice No", new { @class = "gender-label" })
+                                            @Html.TextBoxFor(x => x.InvoiceNumber, new { @class = "form-control", @placeholder = "Invoice No.", @Id = "InvoiceNumber", @readonly = "readonly" })
+
+                                        </div>
+                                        @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            <div class='input-group'>
+                                                @Html.LabelFor(x => x.PolicyNumber, "Policy No.", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.PolicyNo, new { @class = "form-control", @placeholder = "Policy No.", @Id = "PolicyNo", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                        @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 form-group-select">
+                                        <div class="form-group">
+                                            <div class='input-group'>
+                                                @Html.LabelFor(x => x.PaymentMethodId, "Payment Method", new { @class = "gender-label" })
+                                                @*@Html.DropDownListFor(x => x.PaymentMethodId, new SelectList(ViewBag.PaymentMethod, "Id", "Name"), "Select Payment Method", new { @class = "form-control" })*@
+                                                @Html.DropDownListFor(x => x.PaymentMethodId, new SelectList(new List<SelectListItem> {
+             new SelectListItem { Text = "Cash", Value = "1"},
+             new SelectListItem { Text = "Ecocash", Value = "2"},
+              new SelectListItem { Text = "Swipe", Value = "3"},
+               new SelectListItem { Text = "MasterVisa Card", Value = "4"},
+         }, "Value", "Text"),
+    "Select Payment Method",
+     new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            <div class='input-group'>
+                                                @Html.LabelFor(x => x.AmountDue, "Amount Due", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.AmountDue, new { @class = "form-control", @placeholder = "Amount Due", @Id = "AmountDue", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                        @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            <div class='input-group'>
+                                                @Html.LabelFor(x => x.AmountPaid, "Receipt Amount", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.AmountPaid, new { @class = "form-control", @placeholder = "Receipt Amount", @Id = "ReceiptAmount" })
+                                            </div>
+                                        </div>
+                                        @*@Html.TextBoxFor(x => x.CoverEndDate, new { @class = "form-control", @autocomplete = "off", @placeholder = "Enter Cover End Date", @Id = "CoverEndDate" })*@
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            <div class='input-group'>
+                                                @Html.LabelFor(x => x.Balance, "Balance", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.Balance, new { @class = "form-control", @placeholder = "Balance", @Id = "Balance", @readonly = "readonly" })
+                                            </div>
+                                        </div>                                      
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            <div class='input-group'>
+                                                @Html.LabelFor(x => x.TransactionReference, "Transaction Reference", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.TransactionReference, new { @class = "form-control", @placeholder = "Transaction Reference", @Id = "TransactionReference" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-sm-6 col-md-4 form-group-text">
+                                        <div class="form-group">
+                                            <div class='input-group'>
+                                                @Html.LabelFor(x => x.TenderedAmount, "Tendered Amount", new { @class = "gender-label" })
+                                                @Html.TextBoxFor(x => x.TenderedAmount, new { @class = "form-control", @placeholder = "Tendered Amount" })                                                                  
+                                             </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    </div>
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="text-left">
+                                        <button type="submit" id="btnSubmit" onclick="return" name="Submit" class="btn btn-success">Submit</button>
+                                        @*<button type="submit" id="btnCancel" value="Cancel" name="Submit" class="btn btn-success">Cancel</button>*@
+                                   
+                                    
+                                     </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+<script>
+    $(document).ready(function () {
+        //$('#btnSubmit').prop('disabled', true);
+        chkPolicyNumber();
+        clear();
+        $("#DatePosted").datepicker({
+
+            dateFormat: "m/dd/yy",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-60:+0"
+        });
+        function chkPolicyNumber() {
+            var policyNumbr = $('#txtPolicyNumber').val();
+            if (policyNumbr != "") {
+                $('#btnSubmit').prop('disabled', false);
+                $('#btnCancel').prop('disabled', false);
+            } else {
+                $('#btnSubmit').prop('disabled', true);
+                $('#btnCancel').prop('disabled', true);
+            }
+        }
+
+        $("#btnCancel").click(function () {
+            // PolicyUpdate();
+            var policyNumbr = $('#txtPolicyNumber').val();
+            $.ajax({
+                url: "/CustomerRegistration/PolicyStatusUpdate",
+                type: "GET",
+                dataType: "json",
+                contentType: "Application/Json; charset:utf-8",
+                data: { PolicyNo: policyNumbr },
+                success: function () {
+                    alert("Status has been Changed To Cancelled");
+                    //location.reload();
+                },
+                error: function () {
+                    alert("Something has gone wrong!!")
+                }
+            })
+        })
+
+        //function PolicyUpdate() {
+
+        //}
+        function clear() {
+            $('#CustomerName').val('');
+            $('#InvoiceNumber').val('');
+            $('#PolicyNo').val('');
+            $('#AmountDue').val('');
+            $('#Balance').val('');
+            //$('#PaymentMethodId').val(0);
+        }
+        var policyNumbersArray = [];
+
+        //Getting Policy Numbers from database
+        getPolicyNumbers();
+
+        function getPolicyNumbers() {
+
+            debugger
+            $.ajax({
+                url: "/CustomerRegistration/GetAutoSuggestions",
+                type: "POST",
+                async: false,
+                dataType: "json",
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        policyNumbersArray.push(data[i].PolicyNumber + "," + data[i].CustomerName);
+                    }
+
+                }
+            })
+        };
+
+        $("#txtPolicyNumber").autocomplete({
+            source: policyNumbersArray
+
+        });
+        $("#txtPolicyNumber").blur(function () {
+            debugger;
+            chkPolicyNumber();
+            $("#txtPolicyNumber").val();
+            $.ajax({
+                url: "/CustomerRegistration/GetCustomername",
+                async: false,
+                data: { txtvalue: $("#txtPolicyNumber").val() },
+                success: function (data) {
+                    debugger;
+                    $("#CustomerName").val(data.CustomerName);
+
+                    $("#ReceiptNo").val(data.Id);
+                    $("#PolicyNumber").val(data.PolicyNumber);
+                    $('#PolicyNo').val(data.PolicyNo);
+                    $("#InvoiceNumber").val(data.InvoiceNumber);
+                    $("#AmountDue").val(data.AmountDue);
+                    $('#hdnPolicyId').val(data.PolicyId);
+                    $('#hdnCustomerId').val(data.CustomerId);
+                    $('#PaymentMethodId').val(data.PaymentMethodId);
+                    $('#hdnSummaryDetailId').val(data.SummaryDetailId);
+                    //var currentDate = getCurrentDate();
+                    //$("#DatePosted").val(currentDate);
+
+                },
+                error: function (error) {
+                    debugger;
+                    alert("error");
+                }
+            })
+
+
+        });
+        $("#ReceiptAmount").keyup(function () {
+            debugger;
+            var Balance = 0;
+            var receiptAmount = $(this).val();
+            var amountDue = $('#AmountDue').val();
+            Balance = ((amountDue) - (receiptAmount)).toFixed(2);
+            $('#Balance').val(Balance);
+        });
+        //get current date
+        function getCurrentDate() {
+            var d = new Date();
+
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+
+            var output = d.getFullYear() + '/' +
+                (month < 10 ? '0' : '') + month + '/' +
+                (day < 10 ? '0' : '') + day;
+            return output;
+        }
+
+    });
+</script>

@@ -166,6 +166,18 @@
                                                 @Html.ValidationMessageFor(x => x.Branch, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
+
+                                        <div class="col-sm-6 col-md-6 form-group-select">
+                                            <div class="form-group">
+                                                @Html.LabelFor(x => x.WorkTypeId, new { @class = "gender-label" })
+                                                @Html.DropDownListFor(x => x.WorkTypeId, new SelectList(ViewBag.WorkTypes, "Id", "Name"), "----Select Work type----", new { @class = "form-control " })
+                                                @Html.ValidationMessageFor(x => x.WorkTypeId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+
+
+
                                     </div>
 
 

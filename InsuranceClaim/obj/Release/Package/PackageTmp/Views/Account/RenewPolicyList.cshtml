@@ -8,8 +8,6 @@
 <div class="productsave-section">
     <div class="container-fluid">
 
-
-
         <div class="row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
                 <div class="head-title">
@@ -122,6 +120,7 @@
                         <th>Policy Number</th>
                         <th>Start date</th>
                         <th>End date</th>
+                        <th>Lic Exp date</th>
                         <th>VRN</th>
                         <th>Make </th>
                         <th>Model</th>
@@ -146,6 +145,7 @@
                             <td>@item.PolicyNumber</td>
                             <td>@item.startdate</td>
                             <td>@item.enddate</td>
+                            <td>@item.LicExpDate</td>
                             <td>@item.RegisterationNumber</td>
                             <td>@item.Make</td>
                             <td>@item.Model</td>
@@ -159,19 +159,21 @@
                                 }
                             </td>
                             <td> @item.TotalPremium</td>
-                            <td> Lapsed </td>
+                            <td>
+                                @item.PolicyStatus
+                                </td>
 
                             </tr>
 
 
                     }
-            </tbody>
+                </tbody>
 
 
 
-        </table>
+            </table>
+        </div>
     </div>
-</div>
 </div>
 
 

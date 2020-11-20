@@ -7,7 +7,8 @@
 <div class="productsave-section GrossWrittenPremiumReport">
 
     <div class="container-fluid" id="content">
-        <div class="row">
+       
+         <div class="row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 products-top">
                 <div class="head-title">
                     <h2>Gross Written Premium Report</h2>
@@ -19,9 +20,11 @@
                 </div>
             </div>
         </div>
+
         
         @using (Html.BeginForm("SearchGrossReports", "Report", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
+
             <div class="container-main">
                 <div class="form-group-section-date">
                     <div class="form-group-input">
@@ -50,7 +53,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 form-group-btn">
+
+
+                            <div class="col-sm-3 col-md-3 form-group-select">
+                                <div class="form-group">
+                                    @*@Html.LabelFor(x => x.EndDate, new { @class = "gender-label" })*@
+                                    <div class='input-group' >
+                                        @Html.DropDownListFor(x => x.ReportTypeId, new SelectList(ViewBag.ReportList, "Id", "ReportName"), new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-sm-3 col-md-3 form-group-btn">
                                 <div class="form-group">
                                     <ul class="list-inline">
                                         <li><button type="submit" class="btn btn-success">Search</button></li>
@@ -72,8 +88,6 @@
                 <table  class="table table-striped tablesorter"  id="report2excel">
 
                     <thead style='display:none;'>
-
-
                         <tr>
                             <td>
                                 <p><b><u>Report Generated Date:</u></b> <span id="datetime"></span></p>
@@ -82,6 +96,7 @@
                                     var dt = new Date();
                                     document.getElementById("datetime").innerHTML = dt.toLocaleString();
                                 </script>
+
                             </td>
                             <td></td>
                             <td>
@@ -122,19 +137,20 @@
                             <th>Term Period</th>
                             <th>Cover Type</th>
                             <th>Currency</th>
-
-                            <th>Premium</th>
-
+                            <th>SumInsured</th>
+                            <th>Premium</th>                           
                             <th>Stamp Duty</th>
                             <th>ZTSC Levy</th>
                             <th>Commission Detail</th>
                             <th>Radio Licence Cost</th>
                             <th>Zinara License Fee</th>
+                            <th>Grand Premium</th>
                             <th>Status</th>
                             <th>Policy Status</th>
                             <th>
                                 Business Source
                             </th>
+                            <th> Payment Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -160,6 +176,9 @@
                             //Newbusiness
                             decimal rtgstotal = 0;
                             decimal ustotal = 0;
+
+                            decimal GrandPremiumtotal = 0;
+                            
                             int rtgscount = 0;
                             int uscount = 0;
                             //Renewal
@@ -180,11 +199,13 @@
                                 if (item.Currency == "USD")
                                 {
                                     ustotal += item.Premium_due;
+
                                     uscount = uscount + 1;
                                 }
                                 if (item.Currency == "RTGS$")
                                 {
                                     rtgstotal += item.Premium_due;
+
                                     rtgscount = rtgscount + 1;
                                 }
                             }
@@ -240,6 +261,7 @@
                             }
 
                             sumInsuredTotal += item.Sum_Insured;
+                            GrandPremiumtotal += item.GrandPremium;
                             annualPremiumTotal += item.Annual_Premium;
                             premiumDueTotal += item.Premium_due;
                             netPremiumTotal += Convert.ToDecimal(item.Net_Premium);
@@ -274,7 +296,6 @@
                                     @item.RenewPolicyNumber
                                  }
 
-
                                 </td>
                                 <td>@item.CoverNoteNum</td>
                                 <td>
@@ -287,9 +308,12 @@
 
                                 <td>@item.CoverType</td>
                                 <td> @item.Currency </td>
+                                <td>@item.Sum_Insured</td>
                                 <td>
                                     @item.Premium_due
                                 </td>
+
+                                
 
                                 <td> @item.Stamp_duty</td>
                                 <td> @item.ZTSC_Levy</td>
@@ -299,6 +323,10 @@
                                 <td>@item.RadioLicenseCost</td>
                                 <td> @item.Zinara_License_Fee </td>
 
+
+                                <td>
+                                    @item.GrandPremium
+                                </td>
 
                                 @if (DateTime.Now > item.PolicyRenewalDate)
                                 {
@@ -313,7 +341,13 @@
                                     <td>In Force</td>
                                 }
 
-                                @if (item.RenewPolicyNumber == null)
+
+                                @if (item.PolicyRenewalDate != null && item.PolicyRenewalDate == DateTime.MinValue)
+                                {
+                                    <td>Endorsment</td>
+                                }
+
+                                else if (item.RenewPolicyNumber == null)
                                 {
                                     <td>New Business</td>
                                 }
@@ -329,6 +363,17 @@
 
                                 
                                 <td>@item.BusinessSourceName <span>-</span>   </td>
+
+                                <td> @if (item.PaymentMethodId == (int)InsuranceClaim.Models.paymentMethod.PayLater)
+                                {
+                                    <span>PayLater</span>
+                                }
+                                else
+                                {
+                                    <span>Paid</span>
+                                }
+
+                                 </td>
                                 
 
                                 @*@item.SourceDetailName*@
@@ -346,6 +391,8 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
+                            
                             <td>
                                 <b> @premiumDueTotal </b>
                             </td>
@@ -356,6 +403,8 @@
                             </td>
                             <td><strong>@radioLicenseCostTotal</strong></td>
                             <td><strong> @ZinaraLicenseFee </strong> </td>
+                            <td><strong> @GrandPremiumtotal</strong> </td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td colspan="2"></td>
@@ -382,95 +431,95 @@
 
                         <tr>
                           
-                            <td colspan="8"></td>                       
+                            <td colspan="10"></td>                       
                             <td colspan="3"><strong>Currency</strong></td>
                             <td colspan="3"><strong>Amount</strong></td>
                             <td colspan="3"><strong>Count</strong></td>   
                             
-                            <td colspan="2"></td>  
+                            <td colspan="3"></td>  
                                       
                         </tr>
 
                         <tr>
-                            <td colspan="8"><strong>New Business:</strong></td>
+                            <td colspan="10"><strong>New Business:</strong></td>
                            
                            
                             <td colspan="3">USD</td>
                             <td colspan="3">@ustotal</td>
                             <td colspan="3">@uscount</td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                             
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@rtgstotal</td>
                             <td colspan="3">@rtgscount</td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                           
                         </tr>
 
                         <tr>
-                            <td colspan="17"></td>
-                            <td colspan="2"></td>
+                            <td colspan="19"></td>
+                            <td colspan="3"></td>
                         </tr>
                         <tr>
-                            <td colspan="8"><strong>Renewals</strong></td>
+                            <td colspan="10"><strong>Renewals</strong></td>
                           
                             <td colspan="3">USD</td>
                             <td colspan="3">@Reustotal</td>
                             <td colspan="3">@Reuscount</td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                             
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">RTGS$</td>
                            
                             <td colspan="3" >@Rertgstotal</td>
                             <td colspan="3">@Rertgscount</td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                        
                         </tr>
 
                         <tr>
-                            <td colspan="17"></td>
-                            <td colspan="2"></td>
+                            <td colspan="19"></td>
+                            <td colspan="3"></td>
                         </tr>
 
 
                         <tr>
-                            <td colspan="8"><strong>Grand Total</strong></td>
+                            <td colspan="10"><strong>Grand Total</strong></td>
                           
                            
                             <td colspan="3"> USD</td>
                             <td colspan="3">@(ustotal + Reustotal)</td>
                             <td colspan="3"> @(uscount + Reuscount) </td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                            
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">RTGS$</td>
                             <td colspan="3">@(rtgstotal + Rertgstotal)</td>
                             <td colspan="3">@(  rtgscount  + Rertgscount)</td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                            
                         </tr>
                         <tr>
                          
-                            <td colspan="8"></td>
+                            <td colspan="10"></td>
                            
                             <td colspan="3">TOTAL RTGS$</td>
                             <td colspan="3">@(ustotal + Reustotal + rtgstotal + Rertgstotal)</td>
                             <td colspan="3">@( uscount + Reuscount + rtgscount  + Rertgscount)</td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                            
                         </tr>
                     </tfoot>

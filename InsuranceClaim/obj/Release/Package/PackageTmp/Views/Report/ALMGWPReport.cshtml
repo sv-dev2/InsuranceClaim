@@ -142,26 +142,27 @@
 
                         <thead>*@
                         <tr>
-                            <th style="width: 170px;">User/Call center agent</th>
-                            <th style="width:170px;">Branch</th>
-                            <th style="width: 170px;">Customer Name</th>
-                            <th style="width: 180px;">Policy Number</th>
+                            <th>User/Call center agent</th>
+                            <th>Branch</th>
+                            <th>Customer Name</th>
+                            <th>Policy Number</th>
                             <th>Cover Note</th>
-                            <th style="width:170px;">Policy Dates</th>
-                            <th style="width:170px;">Payment Detail</th>
-                            <th style="width:170px;">Term Period</th>
+                            <th>Policy Dates</th>
+                            <th>Payment Detail</th>
+                            <th>Term Period</th>
                             <th>Cover Type</th>
                             <th>Currency</th>
 
-                            <th style="width:170px;">Total Premium</th>
-                            <th style="width:170px;">Net Premium</th>
-                            <th width="170px;">Stamp Duty</th>
+                            <th> Premium</th>
+                            
+                            <th>Stamp Duty</th>
                             <th>ZTSC Levy</th>
                             @*<th>Commission Detail</th>*@
                             <th>Radio Licence Cost</th>
                             <th>Zinara License Fee</th>
                             <th>Status</th>
                             <th>Policy Status</th>
+                            <th>Grand total</th>
                             @*<th>
                                 Business Source
                             </th>*@
@@ -173,6 +174,7 @@
                                 decimal sumInsuredTotal = 0;
                                 decimal annualPremiumTotal = 0;
                                 decimal premiumDueTotal = 0;
+                                decimal premiumTotal = 0;
                                 decimal netPremiumTotal = 0;
                                 decimal stampdutyTotal = 0;
                                 decimal ztscLevyTotal = 0;
@@ -197,6 +199,7 @@
                                 decimal Reustotal = 0;
                                 int Rertgscount = 0;
                                 int Reuscount = 0;
+                                decimal sumOfBasicPremium = 0;
 
 
                             }
@@ -204,16 +207,21 @@
                             @foreach (var item in Model.ListGrossWrittenPremiumReportdata.ToList())
                             {
                                 //15 may D
+
+                                decimal premium = Convert.ToDecimal(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy + item.Zinara_License_Fee + item.RadioLicenseCost));
+
+
+
                                 if (item.RenewPolicyNumber == null)
                                 {
                                     if (item.Currency == "US$ FCA")
                                     {
-                                        ustotal += item.Premium_due;
+                                        ustotal += premium;
                                         uscount = uscount + 1;
                                     }
                                     if (item.Currency == "RTGS$")
                                     {
-                                        rtgstotal += item.Premium_due;
+                                        rtgstotal += premium;
                                         rtgscount = rtgscount + 1;
                                     }
                                 }
@@ -222,12 +230,12 @@
                                 {
                                     if (item.Currency == "US$ FCA")
                                     {
-                                        Reustotal += item.Premium_due;
+                                        Reustotal += premium;
                                         Reuscount = Reuscount + 1;
                                     }
                                     if (item.Currency == "RTGS$")
                                     {
-                                        Rertgstotal += item.Premium_due;
+                                        Rertgstotal += premium;
                                         Rertgscount = Rertgscount + 1;
                                     }
                                 }
@@ -235,12 +243,12 @@
                                 {
                                     if (item.Currency == "US$ FCA")
                                     {
-                                        ustotal += item.Premium_due;
+                                        ustotal += premium;
                                         uscount = uscount + 1;
                                     }
                                     if (item.Currency == "RTGS$")
                                     {
-                                        rtgstotal += item.Premium_due;
+                                        rtgstotal += premium;
                                         rtgscount = rtgscount + 1;
                                     }
                                 }
@@ -248,34 +256,42 @@
 
                                 if (item.Currency == "US$ FCA")
                                 {
-                                    TotalUs += item.Premium_due;
+                                    TotalUs += premium;
                                     count = count + 1;
                                 }
                                 if (item.Currency == "RTGS$")
                                 {
-                                    TotalRTGS += item.Premium_due;
+                                    TotalRTGS += premium;
                                     count1 = count1 + 1;
                                 }
                                 if (item.Currency == "USD" || item.Currency == null)
                                 {
-                                    TotalUSD += item.Premium_due;
+                                    TotalUSD += premium;
                                     count2 = count2 + 1;
                                 }
                                 if (item.Currency == "INR")
                                 {
-                                    TotalINR += item.Premium_due;
+                                    TotalINR += premium;
                                     count3 = count3 + 1;
                                 }
 
+
+                                sumOfBasicPremium += premium;
                                 sumInsuredTotal += item.Sum_Insured;
                                 annualPremiumTotal += item.Annual_Premium;
+                                premiumTotal += premium;
                                 premiumDueTotal += item.Premium_due;
+
                                 netPremiumTotal += Convert.ToDecimal(item.Net_Premium);
                                 stampdutyTotal += item.Stamp_duty;
                                 ztscLevyTotal += item.ZTSC_Levy;
                                 commissionAmountTotal += item.Comission_Amount;
                                 radioLicenseCostTotal += Convert.ToDecimal(item.RadioLicenseCost);
                                 ZinaraLicenseFee += Convert.ToDecimal(item.Zinara_License_Fee);
+
+
+
+
                                 <tr>
                                     <td>
                                         @item.PolicyCreatedBy
@@ -306,11 +322,9 @@
 
                                     <td>@item.CoverType</td>
                                     <td> @item.Currency </td>
+
                                     <td>
-                                        @item.Premium_due
-                                    </td>
-                                    <td>
-                                        @(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy))
+                                       @(item.Premium_due - (item.Stamp_duty + item.ZTSC_Levy + item.Zinara_License_Fee + item.RadioLicenseCost))
                                     </td>
 
                                     <td> @item.Stamp_duty</td>
@@ -353,7 +367,9 @@
                                     <td>@item.BusinessSourceName <span>-</span>   @item.SourceDetailName</td>
                                     *@
 
-
+                                    <td>
+                                        @item.Premium_due
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -368,9 +384,9 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>
-                                    <b> @premiumDueTotal </b>
-                                </td>
+                                <td></td>
+                                <td><b>@premiumTotal </b>  </td>
+                                
                                 <td><strong>@stampdutyTotal</strong></td>
                                 <td><strong>@ztscLevyTotal</strong></td>
                                 @*<td>
@@ -378,9 +394,12 @@
                                 </td>
                                 <td><strong>@radioLicenseCostTotal</strong></td>
                                 <td><strong> @ZinaraLicenseFee </strong> </td>*@
-                                <td></td>
-                                <td></td>
-                                <td colspan="4"></td>
+                                <td>@radioLicenseCostTotal</td>
+                                <td>@ZinaraLicenseFee</td>
+                                <td colspan="2"></td>
+                                <td>
+                                    <b> @premiumDueTotal </b>
+                                </td>
 
                             </tr>
                             @*<tr>

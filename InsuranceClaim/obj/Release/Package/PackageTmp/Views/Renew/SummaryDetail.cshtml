@@ -103,7 +103,7 @@
                                             <div class="choose-plan-box active" planpurchase="1" style="cursor:pointer" onclick="SelectPlan(this);">
                                                 <h4>Annual</h4>
                                                 <div class="plan-white-box">
-                                                    <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                    <h3>$@Math.Round(Convert.ToDecimal(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                     <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                     <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 12 MONTHS</a>
                                                 </div>
@@ -113,7 +113,7 @@
                                             <div class="choose-plan-box" planpurchase="2" style="cursor:pointer" onclick="SelectPlan(this);">
                                                 <h4>Monthly</h4>
                                                 <div class="plan-white-box">
-                                                    <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                    <h3>$@Math.Round(Convert.ToDecimal(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                     <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                     <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 1 MONTHS</a>
                                                 </div>
@@ -125,7 +125,7 @@
                                                 <h4>Quarterly</h4>
                                                 <div class="plan-white-box">
                                                     @*<h3>$ @Math.Round(Convert.ToDouble(Model.TotalPremium)/4,2)</h3>*@
-                                                    <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                    <h3>$@Math.Round(Convert.ToDecimal(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                     <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                     <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 3 MONTHS</a>
                                                 </div>
@@ -136,7 +136,7 @@
                                             <div class="choose-plan-box" planpurchase="4" style="cursor:pointer" onclick="SelectPlan(this);">
                                                 <h4>Termly</h4>
                                                 <div class="plan-white-box">
-                                                    <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                    <h3>$@Math.Round(Convert.ToDecimal(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                     <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                     <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR 4 MONTHS</a>
                                                 </div>
@@ -151,7 +151,7 @@
                                                 <div class="choose-plan-box" planpurchase="4" style="cursor:pointer" onclick="SelectPlan(this);">
                                                     <h4>Termly</h4>
                                                     <div class="plan-white-box">
-                                                        <h3>$@Math.Round(Convert.ToDouble(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
+                                                        <h3>$@Math.Round(Convert.ToDecimal(vehicleList.Premium + vehicleList.StampDuty + vehicleList.ZTSCLevy + vehicleList.VehicleLicenceFee + (Convert.ToBoolean(vehicleList.IncludeRadioLicenseCost) ? vehicleList.RadioLicenseCost : 0.00m)), 2)</h3>
                                                         <p>Vehicle Model : @Insurance.Domain.InsuranceContext.VehicleModels.Single(where: $"ModelCode='{vehicleList.ModelId}'").ModelDescription</p>
                                                         <a href="javascript:void(0);" style="pointer-events:none;">PAY FOR @vehicleList.PaymentTermId MONTHS</a>
                                                     </div>
@@ -386,13 +386,13 @@
 
 
 
-                                                        @if (User.IsInRole("Staff") || User.IsInRole("Renewals"))
+                                                        @if (User.IsInRole("Staff") || User.IsInRole("Renewals") || User.IsInRole("Team Leaders"))
                                                         {
 
                                                             <li id="payment_1" class="payment_type active" onclick="PaymentMethod(1)">  Cash   </li>
 
                                                             // 1008 for test 7 for live
-                                                            <li id="payment_7" class="payment_type" onclick="PaymentMethod(7)">Pay Later</li>
+                                                            <li id="payment_6" class="payment_type" onclick="PaymentMethod(6)">Pay Later</li>
                                                        }
 
 
@@ -435,13 +435,13 @@
                                                                 @*<a style="display:none" id="previouselink" href="/Renew/RiskDetail" class="back"></a>*@
                                                             </li>
                                                             <li class="pull-right">
-                                                                @*@if ((ViewBag.CurrentUserRole == "Staff" || ViewBag.CurrentUserRole == "Web Customer" || ViewBag.CurrentUserRole == "") && ViewBag.SummaryDetailId == 0)
+                                                                @if ((ViewBag.CurrentUserRole == "Staff" || ViewBag.CurrentUserRole == "Web Customer" || ViewBag.CurrentUserRole == "") )
                                                             {
                                                                 <div class="text-right">
                                                                     <button type="submit" id="btnNext1" name="btnSendQuatation" value="sendQuatation" class="btn">Send Quotation</button>
 
                                                                 </div>
-                                                            }*@
+                                                            }
                                                                 <div class="text-right">
                                                                     <button type="submit" id="btnNext" onclick="return checkAmountPaid();" class="btn">Next</button>
                                                                 </div>

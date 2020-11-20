@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{91022542-0A04-430F-AFE0-D0172C5C866E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Insurance.Domain</RootNamespace>
+    <AssemblyName>Insurance.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebHelpers.3.2.6\lib\net45\Microsoft.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Security, Version=4.0.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Security.4.3.2\lib\net46\System.Net.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebMatrix.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.3.2.6\lib\net45\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.3.2.6\lib\net45\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\CmdLine\CmdLineMgr.cs" />
+    <Compile Include="Code\Logging\ILog.cs" />
+    <Compile Include="Code\Logging\LogEventArgs.cs" />
+    <Compile Include="Code\Logging\Logger.cs" />
+    <Compile Include="Code\Logging\LogSeverity.cs" />
+    <Compile Include="Code\Logging\ObserverLogToConsole.cs" />
+    <Compile Include="Code\Logging\ObserverLogToDatabase.cs" />
+    <Compile Include="Code\Logging\ObserverLogToEmail.cs" />
+    <Compile Include="Code\Logging\ObserverLogToEventlog.cs" />
+    <Compile Include="Code\Logging\ObserverLogToFile.cs" />
+    <Compile Include="Code\Logging\ObserverLogToStdOut.cs" />
+    <Compile Include="Code\RunMgr\LoggedIn.cs" />
+    <Compile Include="Code\RunMgr\RunMgr.cs" />
+    <Compile Include="Code\Settings\CustomAssembly.cs" />
+    <Compile Include="Data\Data.partial.cs" />
+    <Compile Include="Data\InsuranceData.cs" />
+    <Compile Include="Domain\AgeExcess.cs" />
+    <Compile Include="Domain\AgentCommission.cs" />
+    <Compile Include="Domain\AgentLogo.cs" />
+    <Compile Include="Domain\AspNetUsersDetail.cs" />
+    <Compile Include="Domain\AspNetUsersUpdate.cs" />
+    <Compile Include="Domain\BannerImage.cs" />
+    <Compile Include="Domain\BasicExcess.cs" />
+    <Compile Include="Domain\BirthdayMessage.cs" />
+    <Compile Include="Domain\Branches.cs" />
+    <Compile Include="Domain\BusinessSource.cs" />
+    <Compile Include="Domain\Checklist.cs" />
+    <Compile Include="Domain\ClaimAdjustment.cs" />
+    <Compile Include="Domain\ClaimDetailsProvider.cs" />
+    <Compile Include="Domain\ClaimDocument.cs" />
+    <Compile Include="Domain\ClaimNotification.cs" />
+    <Compile Include="Domain\ClaimRegistration.cs" />
+    <Compile Include="Domain\ClaimRegistrationProviderDetial.cs" />
+    <Compile Include="Domain\ClaimSetting.cs" />
+    <Compile Include="Domain\ClaimStatus.cs" />
+    <Compile Include="Domain\CoverType.cs" />
+    <Compile Include="Domain\Currency.cs" />
+    <Compile Include="Domain\Customer.cs" />
+    <Compile Include="Domain\CustomerWallet.cs" />
+    <Compile Include="Domain\EndorsementCustomer.cs" />
+    <Compile Include="Domain\EndorsementPaymentInformation.cs" />
+    <Compile Include="Domain\EndorsementPolicyDetail.cs" />
+    <Compile Include="Domain\EndorsementSummaryDetail.cs" />
+    <Compile Include="Domain\EndorsementSummaryVehicleDetail.cs" />
+    <Compile Include="Domain\EndorsementVehicleDetail.cs" />
+    <Compile Include="Domain\Entity.partial.cs" />
+    <Compile Include="Domain\InflationFactor.cs" />
+    <Compile Include="Domain\LicenceDiskDeliveryAddress.cs" />
+    <Compile Include="Domain\LicenceTicket.cs" />
+    <Compile Include="Domain\LicenseDelivery.cs" />
+    <Compile Include="Domain\LoyaltyDetail.cs" />
+    <Compile Include="Domain\MachineBranches.cs" />
+    <Compile Include="Domain\PaymentInformation.cs" />
+    <Compile Include="Domain\PaymentMethod.cs" />
+    <Compile Include="Domain\PaymentTerm.cs" />
+    <Compile Include="Domain\PolicyDetail.cs" />
+    <Compile Include="Domain\PolicyDocument.cs" />
+    <Compile Include="Domain\PolicyInsurer.cs" />
+    <Compile Include="Domain\PolicyRenewReminderSetting.cs" />
+    <Compile Include="Domain\PolicyStatus.cs" />
+    <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\QRCode.cs" />
+    <Compile Include="Domain\ReceiptModuleHistory.cs" />
+    <Compile Include="Domain\RefundPolicy.cs" />
+    <Compile Include="Domain\RegistrationDocument.cs" />
+    <Compile Include="Domain\Reinsurance.cs" />
+    <Compile Include="Domain\ReinsuranceBroker.cs" />
+    <Compile Include="Domain\ReinsuranceTransaction.cs" />
+    <Compile Include="Domain\ReinsurerDetail.cs" />
+    <Compile Include="Domain\ReminderFailed.cs" />
+    <Compile Include="Domain\ServiceProvider.cs" />
+    <Compile Include="Domain\ServiceProviderPaymentHistory.cs" />
+    <Compile Include="Domain\ServiceProviderType.cs" />
+    <Compile Include="Domain\Setting.cs" />
+    <Compile Include="Domain\SmsLog.cs" />
+    <Compile Include="Domain\SourceDetail.cs" />
+    <Compile Include="Domain\SpecificExcess.cs" />
+    <Compile Include="Domain\SummaryDetail.cs" />
+    <Compile Include="Domain\SummaryVehicleDetail.cs" />
+    <Compile Include="Domain\TokenRequest.cs" />
+    <Compile Include="Domain\UserManagementView.cs" />
+    <Compile Include="Domain\VehicleCoverType.cs" />
+    <Compile Include="Domain\VehicleDetail.cs" />
+    <Compile Include="Domain\VehicleMake.cs" />
+    <Compile Include="Domain\VehicleModel.cs" />
+    <Compile Include="Domain\VehicleUsage.cs" />
+    <Compile Include="DTO\InflationVehicleDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\AgeExcesses.cs" />
+    <Compile Include="Repository\AgentCommissions.cs" />
+    <Compile Include="Repository\AgentLogos.cs" />
+    <Compile Include="Repository\AspNetUsersDetails.cs" />
+    <Compile Include="Repository\AspNetUsersUpdates.cs" />
+    <Compile Include="Repository\BannerImages.cs" />
+    <Compile Include="Repository\BasicExcesses.cs" />
+    <Compile Include="Repository\BirthdayMessages.cs" />
+    <Compile Include="Repository\BusinessSources.cs" />
+    <Compile Include="Repository\CertSerialNoDetails.cs" />
+    <Compile Include="Repository\Checklists.cs" />
+    <Compile Include="Repository\Cities.cs" />
+    <Compile Include="Repository\ClaimAdjustments.cs" />
+    <Compile Include="Repository\ClaimDetailsProviders.cs" />
+    <Compile Include="Repository\ClaimDocuments.cs" />
+    <Compile Include="Repository\ClaimNotifications.cs" />
+    <Compile Include="Repository\ClaimRegistrationProviderDetials.cs" />
+    <Compile Include="Repository\ClaimRegistrations.cs" />
+    <Compile Include="Repository\ClaimSettings.cs" />
+    <Compile Include="Repository\ClaimStatuss.cs" />
+    <Compile Include="Repository\CoverTypes.cs" />
+    <Compile Include="Repository\Currencies.cs" />
+    <Compile Include="Repository\Customers.cs" />
+    <Compile Include="Repository\CustomerWallets.cs" />
+    <Compile Include="Repository\DomesticPayments.cs" />
+    <Compile Include="Repository\DomesticSummaryDetails.cs" />
+    <Compile Include="Repository\DomesticVehicleSummaries.cs" />
+    <Compile Include="Repository\Domestic_Products.cs" />
+    <Compile Include="Repository\Domestic_RiskCovers.cs" />
+    <Compile Include="Repository\Domestic_RiskItems.cs" />
+    <Compile Include="Repository\Domestic_Vehicles.cs" />
+    <Compile Include="Repository\EndorsementCustomers.cs" />
+    <Compile Include="Repository\EndorsementPaymentInformations.cs" />
+    <Compile Include="Repository\EndorsementPolicyDetails.cs" />
+    <Compile Include="Repository\EndorsementSummaryDetails.cs" />
+    <Compile Include="Repository\EndorsementSummaryVehicleDetails.cs" />
+    <Compile Include="Repository\EndorsementVehicleDetails.cs" />
+    <Compile Include="Repository\InflationFactors.cs" />
+    <Compile Include="Repository\LicenceDiskDeliveryAddresses.cs" />
+    <Compile Include="Repository\LicenceTickets.cs" />
+    <Compile Include="Repository\LicenseDeliveries.cs" />
+    <Compile Include="Repository\LogDetailTbls.cs" />
+    <Compile Include="Repository\LoyaltyDetails.cs" />
+    <Compile Include="Repository\PartialPayment.cs" />
+    <Compile Include="Repository\Partner.cs" />
+    <Compile Include="Repository\PartnerCommission.cs" />
+    <Compile Include="Repository\PaymentInformations.cs" />
+    <Compile Include="Repository\PaymentMethods.cs" />
+    <Compile Include="Repository\PaymentTerms.cs" />
+    <Compile Include="Repository\PolicyDetails.cs" />
+    <Compile Include="Repository\PolicyDocuments.cs" />
+    <Compile Include="Repository\PolicyInsurers.cs" />
+    <Compile Include="Repository\PolicyRenewReminderSettings.cs" />
+    <Compile Include="Repository\PolicyStatuses.cs" />
+    <Compile Include="Repository\Products.cs" />
+    <Compile Include="Repository\QRCodes.cs" />
+    <Compile Include="Repository\ReceiptModuleHistorys.cs" />
+    <Compile Include="Repository\RefundPolicies.cs" />
+    <Compile Include="Repository\RegistrationDocuments.cs" />
+    <Compile Include="Repository\ReinsuranceBrokers.cs" />
+    <Compile Include="Repository\Reinsurances.cs" />
+    <Compile Include="Repository\ReinsuranceTransactions.cs" />
+    <Compile Include="Repository\ReinsurerDetails.cs" />
+    <Compile Include="Repository\ReminderFaileds.cs" />
+    <Compile Include="Repository\Repository.partial.cs" />
+    <Compile Include="Repository\RiskCoverItems.cs" />
+    <Compile Include="Repository\ServiceProviderPaymentHistories.cs" />
+    <Compile Include="Repository\ServiceProviders.cs" />
+    <Compile Include="Repository\ServiceProviderTypes.cs" />
+    <Compile Include="Repository\Settings.cs" />
+    <Compile Include="Repository\SmsLogs.cs" />
+    <Compile Include="Repository\SourceDetails.cs" />
+    <Compile Include="Repository\SpecificExcesses.cs" />
+    <Compile Include="Repository\SummaryDetails.cs" />
+    <Compile Include="Repository\SummaryVehicleDetails.cs" />
+    <Compile Include="Repository\TokenRequests.cs" />
+    <Compile Include="Repository\UniqeTransactions.cs" />
+    <Compile Include="Repository\UniqueCustomer.cs" />
+    <Compile Include="Repository\UserManagementViews.cs" />
+    <Compile Include="Repository\VehicleCoverTypes.cs" />
+    <Compile Include="Repository\VehicleDetails.cs" />
+    <Compile Include="Repository\VehicleMakes.cs" />
+    <Compile Include="Repository\VehicleModels.cs" />
+    <Compile Include="Repository\VehicleTaxClasses.cs" />
+    <Compile Include="Repository\VehicleUsages.cs" />
+    <Compile Include="Repository\WorkType.cs" />
+    <Compile Include="UnitOfWork\UnitOfWork.partial.cs" />
+    <Compile Include="_Spark\Core.cs" />
+    <Compile Include="_Spark\Data.cs" />
+    <Compile Include="_Spark\Domain.cs" />
+    <Compile Include="_Spark\Generator\DomainGenerator1.cs" />
+    <Compile Include="_Spark\Repository.cs" />
+    <Compile Include="_Spark\UnitOfWork.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
